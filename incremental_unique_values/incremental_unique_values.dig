@@ -1,0 +1,31 @@
+timezone: UTC
+
+schedule:
+  daily>: 04:00:00
+
+_export:
+  td:
+    source_db: sample_datasets
+    source_table: nasdaq
+    target_field: symbol
+    dest_db: testdb
+    dest_table: nasdaq_symbols
+
++setup:
+  echo>: start ${session_time}
+
++initial_calculation:
+  td>: queries/initial.sql
+  database: ${td.source_db}
+
++incremental_calculation:
+  td>: queries/incremental.sql
+  database: ${td.source_db}
+
++replace:
+  td_ddl>:
+  database: ${td.dest_db}
+  rename_tables: [{from: "${td.dest_table}_${session_date_compact}", to: "${td.dest_table}"}]
+
++teardown:
+  echo>: finish ${session_time}
