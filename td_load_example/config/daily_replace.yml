@@ -1,0 +1,12 @@
+---
+in:
+  type: mysql
+  host: ${secret:mysql.host}
+  port: ${secret:mysql.port}
+  user: ${secret:mysql.user}
+  password: ${secret:mysql.password}
+  database: source_db
+  query: "select * from `source_table` limit 10"
+out: {}
+exec: {}
+filters: []
