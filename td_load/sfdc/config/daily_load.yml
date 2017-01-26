@@ -1,0 +1,13 @@
+---
+in:
+  type: sfdc
+  username: ${secret:sfdc.username}
+  password: ${secret:sfdc.password}
+  client_id: ${secret:sfdc.client_id}
+  client_secret: ${secret:sfdc.client_secret}
+  security_token: ${secret:sfdc.security_token}
+  login_url: ${secret:sfdc.login_url}
+  target: Lead
+out: {}
+exec: {}
+filters: []
