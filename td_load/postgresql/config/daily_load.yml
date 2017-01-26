@@ -1,0 +1,15 @@
+# For advanced config options, please check this URL.
+# @see https://github.com/embulk/embulk-input-jdbc/tree/master/embulk-input-postgresql
+---
+in:
+  type: postgresql
+  host: ${secret:postgresql.host}
+  port: ${secret:postgresql.port}
+  user: ${secret:postgresql.user}
+  password: ${secret:postgresql.password}
+  schema: public
+  database: source_db
+  query: "select * from `source_table` limit 10"
+out: {}
+exec: {}
+filters: []

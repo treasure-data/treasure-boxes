@@ -1,3 +1,5 @@
+# For more advanced config options, please check this URL.
+# @see https://github.com/embulk/embulk-input-jdbc/tree/master/embulk-input-mysql
 ---
 in:
   type: mysql
