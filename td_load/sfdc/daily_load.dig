@@ -15,13 +15,9 @@ _export:
     dest_db: dest_db
     dest_table: dest_table
 
-+prepare_db:
-  td_ddl>:
-  database: ${td.dest_db}
-  create_databases: ["${td.dest_db}"]
-
 +prepare_table:
   td_ddl>:
+  create_databases: ["${td.dest_db}"]
   create_tables: ["${td.dest_table}"]
   database: ${td.dest_db}
 
