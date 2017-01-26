@@ -10,7 +10,15 @@ sla:
     subject: This workflow is taking long time to finish
     to: [me@example.com]
 
-+load:
-  td_load>: config/daily_load.yml
-  database: dest_db
-  table: dest_table
+_export:
+  td:
+    database: sample_db
+    engine: presto
+
++task1:
+  td>: queries/daily_open.sql
+  create_table: daily_open
+
++task2:
+  td>: queries/monthly_open.sql
+  create_table: monthly_open

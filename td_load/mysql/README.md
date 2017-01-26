@@ -24,7 +24,7 @@ Now, you can upload the workflow and trigger the session manually.
     $ td wf push td_load_example
     
     # Run
-    $ td wf start td_laod_example daily_load --session now
+    $ td wf start td_load_example daily_load --session now
     
 # Next Step
 
