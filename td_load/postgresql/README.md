@@ -16,7 +16,7 @@ First, please set database credentials by `td wf secrets` command.
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 
-- https://github.com/treasure-data/workflow-examples/blob/master/td_load_example/config/daily_replace.yml
+- https://github.com/treasure-data/workflow-examples/blob/master/td_load_example/config/daily_load.yml
 
 Now, you can upload the workflow and trigger the session manually.
 
@@ -24,7 +24,7 @@ Now, you can upload the workflow and trigger the session manually.
     $ td wf push td_load_example
     
     # Run
-    $ td wf start td_laod_example daily_replace --session now
+    $ td wf start td_laod_example daily_load --session now
     
 # Next Step
 
