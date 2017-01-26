@@ -22,3 +22,10 @@ _export:
 +task2:
   td>: queries/monthly_open.sql
   create_table: monthly_open
+
++my_group_task:
+  _parallel: True
+  +subtask1:
+    td>: queries/nasdaq_count.sql
+  +subtask2:
+    td>: queries/nasdaq_count.sql
