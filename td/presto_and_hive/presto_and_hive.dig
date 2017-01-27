@@ -1,0 +1,21 @@
+timezone: UTC
+
+schedule:
+  daily>: 02:00:00
+
+sla:
+  time: 08:00
+  +notice:
+    mail>: {body: Treasure Workflow Notification}
+    subject: This workflow is taking long time to finish
+    to: [me@example.com]
+
++task1:
+  td>: queries/presto.sql
+  database: sample_datasets
+  engine: presto
+
++task2:
+  td>: queries/hive.sql
+  database: sample_datasets
+  engine: hive
