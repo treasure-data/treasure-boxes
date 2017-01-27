@@ -1,4 +1,4 @@
-# Workflow: td_load Example (SFDC)
+# Workflow: td_load Example (Amazon S3)
 
 This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for Amazon S3](https://docs.treasuredata.com/articles/data-connector-s3) with [td_load](http://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
 
@@ -15,7 +15,7 @@ First, please set database credentials by `td wf secrets` command.
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 
-- https://github.com/treasure-data/workflow-examples/blob/master/td_load/sfdc/config/daily_load.yml
+- [config/daily_load.yml](config/daily_load.yml)
 
 Now, you can upload the workflow and trigger the session manually.
 
