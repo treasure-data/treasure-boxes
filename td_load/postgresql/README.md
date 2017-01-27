@@ -1,4 +1,4 @@
-# Workflow: td_load_example
+# Workflow: td_load example (PostgreSQL)
 
 This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for PostgreSQL](https://docs.treasuredata.com/articles/data-connector-postgresql) with [td_load](http://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
 

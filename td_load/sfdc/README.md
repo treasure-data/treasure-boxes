@@ -1,4 +1,4 @@
-# Workflow: td_load_example
+# Workflow: td_load Example (SFDC)
 
 This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for Salesforce](https://docs.treasuredata.com/articles/data-connector-salesforce) with [td_load](http://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
 
