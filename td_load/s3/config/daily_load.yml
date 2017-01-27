@@ -1,0 +1,32 @@
+# For more advanced config options, please check these URLs.
+# @see https://docs.treasuredata.com/articles/data-connector-amazon-s3
+# @see https://github.com/embulk/embulk-input-s3
+---
+in:
+  type: s3
+  endpoint: ${secret:s3.endpoint}
+  access_key_id: ${secret:s3.access_key_id}
+  secret_access_key: ${secret:s3.secret_access_key}
+  bucket: bucket-name
+  path_prefix: /
+  parser:
+    charset: UTF-8
+    newline: CRLF
+    type: csv
+    delimiter: ','
+    quote: '"'
+    escape: ''
+    skip_header_lines: 1
+    columns:
+    - name: id
+      type: long
+    - name: company
+      type: string
+    - name: customer
+      type: string
+    - name: created_at
+      type: timestamp
+      format: '%Y-%m-%d %H:%M:%S'
+out: {}
+exec: {}
+filters: []

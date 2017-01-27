@@ -1,4 +1,5 @@
-# For more advanced config options, please check this URL.
+# For more advanced config options, please check these URLs.
+# @see https://docs.treasuredata.com/articles/data-connector-mysql
 # @see https://github.com/embulk/embulk-input-jdbc/tree/master/embulk-input-mysql
 ---
 in:
