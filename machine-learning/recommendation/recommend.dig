@@ -1,0 +1,35 @@
+_export:
+  td:
+    apikey: ${TD_API_KEY}
+    database: movielens10m
+    engine: hive
+
++prepare:
+  call>: common/prepare_data.dig
+
++main:
+  +mean:
+    td>: queries/compute_mean.sql
+    store_last_results: true
+    engine: presto
+
+  +mf_train:
+    td>: queries/mf_train.sql
+    create_table: mf_model
+
+  +top_k:
+    td>: queries/top_k.sql
+    # since the query consists of WITH clause,
+    #   INSERT OVERWRITE TABLE `top_k`
+    # is manually inserted into the .sql file.
+
+  +recommend:
+    td>: queries/recommend.sql
+    create_table: recommendation
+
+  # +evaluate:
+  #   td>: queries/evaluate_ranking.sql
+  #   store_last_results: true
+  #
+  # +show_accuracy:
+  #   echo>: "NDCG: ${td.last_results.ndcg}"
