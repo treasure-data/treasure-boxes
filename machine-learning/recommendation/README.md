@@ -2,13 +2,13 @@
 Top-k Item Recommendation Template
 ===
 
-**Top-k recommendation** is an important task to improve customers' engagement on online services. 
+**Top-k recommendation** is an important task to improve customers' engagement in online services. 
 
 This page introduces a workflow template to get top-k item recommendation for each user. You can easily build a recommendation workflow following this guide.
 
 ## Input
 
-This workflow takes a table of following form:
+This workflow takes a table of the following form:
 
 | userid<br/>`long` | itemid<br/>`long` | rating<br/>`float/double` |
 |---:|---:|:---:|
@@ -17,7 +17,7 @@ This workflow takes a table of following form:
 |32294|188|2.0|
 | ... |...|...|
 
-_**Caution:** `rating` would be the number of clicks/views/conversions/boughts depending on your problem._
+_**Caution:** `rating` would be the number of clicks/views/conversions/boughts/scores depending on your problem._
 
 The table should be named `input` that includes userid of type `long`, itemid of type `long`, and rating of type `float/double`. 
 
@@ -45,8 +45,8 @@ The output of workflow is a table that contains a list of recommended items for 
 
 ## Conclusion
 
-Treasure Workflow provides an easy way to generate such recommendations. What you need to prepare is a training table.
+Treasure Workflow provides an easy way to generate top-k recommendations. What you need to prepare is just a training table.
 
 For further reading for algorithm and/or workflow details, please refer [this page](docs/more.md). 
 
-[Contact us](https://www.treasuredata.com/contact_us) if you interested in [a payed consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
+[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
