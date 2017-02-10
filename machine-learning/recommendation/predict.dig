@@ -1,0 +1,29 @@
+_export:
+  td:
+    apikey: ${TD_API_KEY}
+    database: movielens10m
+    engine: hive
+
++prepare:
+  call>: common/prepare_data.dig
+
++main:
+  +mean:
+    td>: queries/compute_mean.sql
+    store_last_results: true
+    engine: presto
+
+  +mf_train:
+    td>: queries/mf_train.sql
+    create_table: mf_model
+
+  +mf_predict:
+    td>: queries/mf_predict.sql
+    create_table: prediction
+
+  +evaluate:
+    td>: queries/evaluate_predict.sql
+    store_last_results: true
+
+  +show_accuracy:
+    echo>: "MAE: ${td.last_results.mae}, RMSE: ${td.last_results.rmse}"
