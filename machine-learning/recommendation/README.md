@@ -43,10 +43,12 @@ The output of workflow is a table that contains a list of recommended items for 
 | 12 |[4886,1721,27611,8636,4226,356,296,2396,2501,6776]|
 | ... |...|
 
+## How This Workflow Works
+
+For further reading for algorithm and/or workflow details, please refer [this page](docs/more.md). 
+
 ## Conclusion
 
 Treasure Workflow provides an easy way to generate top-k recommendations. What you need to prepare is just a training table.
-
-For further reading for algorithm and/or workflow details, please refer [this page](docs/more.md). 
 
 [Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
