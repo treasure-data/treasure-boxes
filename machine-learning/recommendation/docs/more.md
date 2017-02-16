@@ -70,15 +70,35 @@ By just computing matrix multiplication of ***P*** and ***Q***, we can obtain pr
 
 ## What the workflow did
 
+### Data format
+
 We are now assuming you already have a user-item-rating table as an input:
 
 || userid | itemid | rating |
 |:--:|:---:|:---:|:---:|
 |**type**| long |long|double|
 
-Note that, unlike the previous example, user and item IDs are long values. 
-
 It should be noted that a column `rating` can be used for not only actual "ratings" but also a wide variety of real-valued data such as number of accesses and purchases.
+
+Unlike the previous example, user and item IDs are long values. If your user/item IDs are not long, run `map_id.dig` and create intermediate mapping tables for users and items:
+
+```
+$ td wf run map_id -p TD_API_KEY={YOUR_API_KEY}
+```
+
+In order to map the original user/item IDs to unique long values, the workflow creates new tables, `users` and `items`, on TD as:
+
+|| userid_original | userid |
+|:--:|:---:|:---:|
+|**type**| *non-long* |long|
+
+|| itemid_original | itemid |
+|:--:|:---:|:---:|
+|**type**| *non-long* |long|
+
+You can use these intermediate tables to generate a user-item-rating matrix in an appropriate format.
+
+### Tasks
 
 Here, let us see `recommend.dig`, the workflow we demonstrated at the beginning `$ td wf run ...`. This workflow basically follows several sub-steps to make recommendation on TD:
 

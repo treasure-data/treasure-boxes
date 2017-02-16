@@ -1,0 +1,16 @@
+_export:
+  td:
+    apikey: ${TD_API_KEY}
+    database: movielens10m
+    engine: hive
+
++map:
+  _parallel: true
+
+  +userid:
+    td>: queries/map_userid.sql
+    create_table: users
+
+  +itemid:
+    td>: queries/map_itemid.sql
+    create_table: items
