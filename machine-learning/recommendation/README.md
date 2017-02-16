@@ -31,6 +31,8 @@ $ td wf run recommend.dig -P config/params.yml -p apikey={YOUR_API_KEY} -p datab
 
 * [recommend.dig](recommend.dig) - TD workflow script for top-k item recommendation using [Matrix Factorization](https://docs.treasuredata.com/articles/hivemall-movielens20m-mf)
 * [config/params.yml](config/params.yml) - defines configurable parameters for the recommendation workflow such as `k` of top-k. By the default, the workflow recommends top-10 items for each user.
+
+[<img src="docs/img/capture.png" alt="capture" max_height=300 />](http://showterm.io/31b8df49efcfbc2bfc5ef#fast)
   
 ## Output
 
