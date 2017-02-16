@@ -102,8 +102,8 @@ You can use these intermediate tables to generate a user-item-rating matrix in a
 
 Here, let us see `recommend.dig`, the workflow we demonstrated at the beginning `$ td wf run ...`. This workflow basically follows several sub-steps to make recommendation on TD:
 
-1. Split rows in the original table into **training** and **testing** rows.
-2. Build a recommendation model for the training data; that is, apply the MF technique for a training user-item-rating matrix.
+1. Split rows in the original table into **80% training** and **20% testing** rows.
+2. Build a recommendation model for the 80% training data; that is, apply the MF technique for a training user-item-rating matrix.
 3. Predict ratings for missing user-item pairs based on matrix multiplication.
 4. For each user, select top-k highest-predicted items as a recommendation list.
 
@@ -181,7 +181,7 @@ k: 10
 
 ### Evaluating the accuracy of recommendation
 
-In Step 3, the accuracy of prediction can be measured by using the testing samples. 
+We separated the data into 80% training and 20% testing samples. Thus, in Step 3, the accuracy of prediction can be measured by using the testing samples. 
 
 There are two different metrics: **[Root Mean Squared Error](https://en.wikipedia.org/wiki/Root-mean-square_deviation)** (RMSE) and **[Mean Absolute Error](https://en.wikipedia.org/wiki/Mean_absolute_error)** (MAE). Both metrics return a real value which shows the degree of accuracy; smaller RMSE and MAE are better.
 
