@@ -1,7 +1,7 @@
 _export:
   td:
-    apikey: ${TD_API_KEY}
-    database: movielens10m
+    apikey: ${apikey}
+    database: ${database}
     engine: hive
 
 +map:

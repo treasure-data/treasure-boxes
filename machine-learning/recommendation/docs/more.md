@@ -83,7 +83,7 @@ It should be noted that a column `rating` can be used for not only actual "ratin
 Unlike the previous example, user and item IDs are long values. If your user/item IDs are not long, run `map_id.dig` and create intermediate mapping tables for users and items:
 
 ```
-$ td wf run map_id -p TD_API_KEY={YOUR_API_KEY}
+$ td wf run map_id -p apikey={YOUR_API_KEY} -p database=movielens10m -p table=ratings
 ```
 
 In order to map the original user/item IDs to unique long values, the workflow creates new tables, `users` and `items`, on TD as:
@@ -112,8 +112,8 @@ The content of `recommend.dig` is:
 ```yml
 _export:
   td:
-    apikey: ${TD_API_KEY}
-    database: movielens10m
+    apikey: ${apikey}
+    database: ${database}
     engine: hive
 
 # Step 1
@@ -145,7 +145,7 @@ _export:
 It should be noticed that our workflow loaded external file `config/params.yml` through a `-P` option:
 
 ```
-$ td wf run recommend -P config/params.yml -p TD_API_KEY={YOUR_API_KEY}
+$ td wf run recommend -P config/params.yml -p apikey={YOUR_API_KEY} -p database=movielens10m -p table=ratings
 ```
 
 This file describes several parameters that we need to choose before launching MF:
@@ -188,7 +188,7 @@ There are two different metrics: **[Root Mean Squared Error](https://en.wikipedi
 Following `predict.dig` workflow runs this evaluation procedure after splitting training and testing samples:
 
 ```
-$ td wf run predict -P config/params.yml -p TD_API_KEY={YOUR_API_KEY}
+$ td wf run predict -P config/params.yml -p apikey={YOUR_API_KEY} -p database=movielens10m -p table=ratings
 ```
 
 If everything works correctly, you eventually gets the following output:
@@ -239,5 +239,7 @@ You notice that the MovieLens data has time-stamped 5-level rating events.
 That's it. Now, you can try the workflow:
 
 ```
-$ td wf run recommend -P config/params.yml -p TD_API_KEY={YOUR_API_KEY}
+$ td wf run recommend -P config/params.yml -p apikey={YOUR_API_KEY} -p database=movielens10m -p table=ratings
 ```
+
+It is possible to specify different database and source table name through the parameters `database` and `table`, of course.

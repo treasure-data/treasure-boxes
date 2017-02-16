@@ -4,5 +4,5 @@ SELECT
   itemid,
   rating
 FROM
-  ratings
+  ${table}
 ;
