@@ -63,7 +63,7 @@ t5 as (
     where train.userid = u.userid and train.itemid = i.itemid
   )
 )
-INSERT OVERWRITE TABLE `top_k`
+-- DIGDAG_INSERT_LINE
 select * from t1
 union all
 select * from t2
