@@ -1,3 +1,7 @@
+# Data:
+source: sample_datasets.movielens # input table
+target: recommendation # output database
+
 # Parameters for Matrix Factoriszation:
 
 # (1) Number of latent factors

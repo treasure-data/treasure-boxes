@@ -83,7 +83,7 @@ It should be noted that a column `rating` can be used for not only actual "ratin
 Unlike the previous example, user and item IDs are long values. If your user/item IDs are not long, run `map_id.dig` and create intermediate mapping tables for users and items:
 
 ```
-$ td wf run map_id -p apikey={YOUR_API_KEY} -p database=movielens1m -p table=ratings
+$ td wf run map_id -P config/params.yml -p apikey={YOUR_API_KEY}
 ```
 
 In order to map the original user/item IDs to unique long values, the workflow creates new tables, `users` and `items`, on TD as:
@@ -113,7 +113,7 @@ The content of `recommend.dig` is:
 _export:
   td:
     apikey: ${apikey}
-    database: ${database}
+    database: ${target}
     engine: hive
 
 # Step 1
@@ -145,12 +145,16 @@ _export:
 It should be noticed that our workflow loaded external file `config/params.yml` through a `-P` option:
 
 ```
-$ td wf run recommend -P config/params.yml -p apikey={YOUR_API_KEY} -p database=movielens1m -p table=ratings
+$ td wf run recommend -P config/params.yml -p apikey={YOUR_API_KEY}
 ```
 
 This file describes several parameters that we need to choose before launching MF:
 
 ```yml
+# Data:
+source: sample_datasets.movielens # input table
+target: recommendation # output database
+
 # Parameters for Matrix Factoriszation:
 
 # (1) Number of latent factors
@@ -188,7 +192,7 @@ There are two different metrics: **[Root Mean Squared Error](https://en.wikipedi
 Following `predict.dig` workflow runs this evaluation procedure after splitting training and testing samples:
 
 ```
-$ td wf run predict -P config/params.yml -p apikey={YOUR_API_KEY} -p database=movielens1m -p table=ratings
+$ td wf run predict -P config/params.yml -p apikey={YOUR_API_KEY}
 ```
 
 If everything works correctly, you eventually gets the following output:
@@ -205,9 +209,9 @@ Note that a `--goal +main` option skips the train-test splitting step; we do not
 
 ## Data preparation
 
-We recommend you to start with publicly available data. In particular, we use [MovieLens 1M Dataset](https://grouplens.org/datasets/movielens/1m/), one of the most famous public data for recommendation.
+So far, we used a sample table `sample_datasets.movielens` as data source. The data is [MovieLens 1M Dataset](https://grouplens.org/datasets/movielens/1m/), one of the most famous public data for recommendation.
 
-You can get and prepare the data as follows:
+You can manually get and prepare the data as follows:
 
 ```
 $ curl -o ml-1m.zip -L http://files.grouplens.org/datasets/movielens/ml-1m.zip
@@ -239,7 +243,7 @@ You notice that the MovieLens data has time-stamped 5-level rating events.
 That's it. Now, you can try the workflow:
 
 ```
-$ td wf run recommend -P config/params.yml -p apikey={YOUR_API_KEY} -p database=movielens1m -p table=ratings
+$ td wf run recommend -P config/params.yml -p apikey={YOUR_API_KEY} -p source=movielens1m.ratings -p target=movielens1m
 ```
 
-It is possible to specify different database and source table name through the parameters `database` and `table`, of course.
+It is possible to specify different database and source table name through the parameters `source` and `target`, of course.

@@ -26,7 +26,8 @@ The table should be named `input` that includes userid of type `long`, itemid of
 We prepared a basic workflow for top-k item recommendation.
 
 ```sh
-$ td wf run recommend.dig -P config/params.yml -p apikey={YOUR_API_KEY} -p database=movielens1m -p table=ratings
+$ td db:create recommendation # results will be stored in this DB
+$ td wf run recommend -P config/params.yml -p apikey={YOUR_API_KEY}
 ```
 
 * [recommend.dig](recommend.dig) - TD workflow script for top-k item recommendation using [Matrix Factorization](https://docs.treasuredata.com/articles/hivemall-movielens20m-mf)
