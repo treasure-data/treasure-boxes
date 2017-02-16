@@ -19,7 +19,7 @@ This workflow takes a table of the following form:
 
 _**Caution:** `rating` would be the number of clicks/views/conversions/boughts/scores depending on your problem._
 
-The table should be named `input` that includes userid of type `long`, itemid of type `long`, and rating of type `float/double`. 
+The table should be named `input` that includes userid of type `long`, itemid of type `long`, and rating of type `float/double`. You can use [map_id.dig](https://github.com/treasure-data/workflow-examples/blob/master/machine-learning/recommendation/map_id.dig) for creating those id mapping from the original user/item representation.
 
 ## Workflow
 
