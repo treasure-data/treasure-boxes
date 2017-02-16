@@ -12,9 +12,9 @@ This workflow takes a table of the following form:
 
 | userid<br/>`long` | itemid<br/>`long` | rating<br/>`float/double` |
 |---:|---:|:---:|
-|64893|1|4.5|
-|64892|1073|4.0|
-|32294|188|2.0|
+|3077|2046|4.0|
+|3078|1252|4.0|
+|3078|736|1.0|
 | ... |...|...|
 
 _**Caution:** `rating` would be the number of clicks/views/conversions/boughts/scores depending on your problem._
@@ -26,7 +26,7 @@ The table should be named `input` that includes userid of type `long`, itemid of
 We prepared a basic workflow for top-k item recommendation.
 
 ```sh
-$ td wf run recommend.dig -P config/params.yml -p apikey={YOUR_API_KEY} -p database=movielens10m -p table=ratings
+$ td wf run recommend.dig -P config/params.yml -p apikey={YOUR_API_KEY} -p database=movielens1m -p table=ratings
 ```
 
 * [recommend.dig](recommend.dig) - TD workflow script for top-k item recommendation using [Matrix Factorization](https://docs.treasuredata.com/articles/hivemall-movielens20m-mf)
