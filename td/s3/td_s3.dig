@@ -1,0 +1,14 @@
+timezone: UTC
+
+_export:
+  s3accesskey: "XXXXXXXXXXXXX"
+  s3secretkey: "YYYYYYYYYYYYY"
+  bucketname: bucketname
+  datetime: ${moment(session_time).format("YYYYMMDD")} 
+  td:
+    database: sample_datasets
+
++td-result-into-s3:
+  td>: queries/sample.sql
+  result_url: "s3://${s3accesskey}:${s3secretkey}@/${bucketname}/file_${datetime}.csv.gz?compression=gz"
+  # url encoding is required for above url. see https://docs.treasuredata.com/articles/result-into-s3
