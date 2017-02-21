@@ -83,7 +83,7 @@ It should be noted that a column `rating` can be used for not only actual "ratin
 Unlike the previous example, user and item IDs are long values. If your user/item IDs are not long, run `map_id.dig` and create intermediate mapping tables for users and items:
 
 ```
-$ td wf run map_id -P config/params.yml -p apikey={YOUR_API_KEY}
+$ td wf run map_id -p apikey={YOUR_API_KEY}
 ```
 
 In order to map the original user/item IDs to unique long values, the workflow creates new tables, `users` and `items`, on TD as:
@@ -111,6 +111,7 @@ The content of `recommend.dig` is:
 
 ```yml
 _export:
+  !include : config/params.yml
   td:
     apikey: ${apikey}
     database: ${target}
@@ -142,13 +143,7 @@ _export:
 
 ### Configurable parameters
 
-It should be noticed that our workflow loaded external file `config/params.yml` through a `-P` option:
-
-```
-$ td wf run recommend -P config/params.yml -p apikey={YOUR_API_KEY}
-```
-
-This file describes several parameters that we need to choose before launching MF:
+It should be noticed that our workflow loaded external file `config/params.yml`. This file describes several parameters that we need to choose before launching MF:
 
 ```yml
 # Data:
@@ -192,7 +187,7 @@ There are two different metrics: **[Root Mean Squared Error](https://en.wikipedi
 Following `predict.dig` workflow runs this evaluation procedure after splitting training and testing samples:
 
 ```
-$ td wf run predict -P config/params.yml -p apikey={YOUR_API_KEY}
+$ td wf run predict -p apikey={YOUR_API_KEY}
 ```
 
 If everything works correctly, you eventually gets the following output:
@@ -240,10 +235,16 @@ Check a `ratings` table on a `movielens1m` database:
 
 You notice that the MovieLens data has time-stamped 5-level rating events.
 
+Finally, source table and target database should be manually configured in `config/params.yml` as:
+
+```yml
+# Data:
+source: movielens1m.ratings # input table
+target: movielens1m # output database
+```
+
 That's it. Now, you can try the workflow:
 
 ```
-$ td wf run recommend -P config/params.yml -p apikey={YOUR_API_KEY} -p source=movielens1m.ratings -p target=movielens1m
+$ td wf run recommend -p apikey={YOUR_API_KEY}
 ```
-
-It is possible to specify different database and source table name through the parameters `source` and `target`, of course.
