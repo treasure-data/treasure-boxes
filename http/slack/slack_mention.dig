@@ -2,12 +2,12 @@ timezone: Asia/Tokyo
 
 _export:
   td:
-    database: console_production
+    database: sample_datasets
     engine: presto
 
 +task1:
   td>:
-  query: SELECT TD_TIME_FORMAT(time, 'yyyy-MM-dd', 'JST') as day, COUNT(1) AS PV FROM access WHERE TD_TIME_RANGE(time, TD_TIME_ADD(TD_DATE_TRUNC('day',${session_unixtime}, 'JST'), '-1d', 'JST'), NULL, 'JST') GROUP BY 1 ORDER BY 1 DESC
+  query: SELECT TD_TIME_FORMAT(time, 'yyyy-MM-dd', 'JST') as day, COUNT(1) AS PV FROM www_access WHERE TD_TIME_RANGE(time, TD_TIME_ADD(TD_DATE_TRUNC('day',${session_unixtime}, 'JST'), '-1d', 'JST'), NULL, 'JST') GROUP BY 1 ORDER BY 1 DESC
   store_last_results: true
 
 +task2:
