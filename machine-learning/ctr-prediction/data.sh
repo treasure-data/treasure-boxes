@@ -21,14 +21,17 @@ mkdir criteo
 tar xvzf criteo.tar.gz -C criteo
 cd criteo
 
+# insert row number to the first column
+awk '{print NR "\t" $0}' dac_sample.txt > criteo.tsv
+
 td db:create criteo_sample
 td table:create criteo_sample samples
 td import:auto \
   --format tsv \
-  --columns label,i1,i2,i3,i4,i5,i6,i7,i8,i9,i10,i11,i12,i13,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26 \
-  --column-types int,int,int,int,int,int,int,int,int,int,int,int,int,int,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string \
+  --columns rowid,label,i1,i2,i3,i4,i5,i6,i7,i8,i9,i10,i11,i12,i13,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26 \
+  --column-types long,int,int,int,int,int,int,int,int,int,int,int,int,int,int,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string \
   --time-value `date +%s` \
-  --auto-create criteo_sample.samples ./dac_sample.txt
+  --auto-create criteo_sample.samples ./criteo.tsv
 
 cd ..
 rm criteo.tar.gz
