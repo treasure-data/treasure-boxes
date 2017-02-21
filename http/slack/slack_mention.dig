@@ -1,0 +1,21 @@
+timezone: Asia/Tokyo
+
+_export:
+  td:
+    database: console_production
+    engine: presto
+
++task1:
+  td>:
+  query: SELECT TD_TIME_FORMAT(time, 'yyyy-MM-dd', 'JST') as day, COUNT(1) AS PV FROM access WHERE TD_TIME_RANGE(time, TD_TIME_ADD(TD_DATE_TRUNC('day',${session_unixtime}, 'JST'), '-1d', 'JST'), NULL, 'JST') GROUP BY 1 ORDER BY 1 DESC
+  store_last_results: true
+
++task2:
+  http>: https://hooks.slack.com/services/xxxxx/yyyyy/zzzzzzzzzzzzzz
+  method: POST
+  content:
+    username: "Workflow bot"
+    channel: "#slackroom" # Or, @xxxx
+    text: "The query result at ${session_date} is https://console.treasuredata.com/app/jobs/${td.last_job_id}.\nThe first 1 row of the result is ${td.last_results}."
+  content_format: json
+
