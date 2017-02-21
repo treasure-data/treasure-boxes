@@ -1,0 +1,11 @@
+# Data:
+source: criteo_sample.samples # input table
+target: criteo_sample # output database
+
+# Parameters for Factorization Machines:
+
+# (1) Number of latent factors
+factor: 8
+
+# (2) Number of iterations
+iters: 50

@@ -1,0 +1,61 @@
+_export:
+  !include : config/params.yml
+  td:
+    apikey: ${apikey}
+    database: ${target}
+    engine: hive
+
++main:
+  +count:
+    td>: queries/count.sql
+    store_last_results: true
+
+  +split:
+    _parallel: true
+
+    +train:
+      td>: queries/split_train.sql
+      engine: presto
+      create_table: train
+
+    +test:
+      td>: queries/split_test.sql
+      engine: presto
+      create_table: test
+
+  +preprocess_quantative:
+    _parallel: true
+
+    +train:
+      td>: queries/preprocess_quantative_train.sql
+      create_table: train_quantative
+
+    +test:
+      td>: queries/preprocess_quantative_test.sql
+      create_table: test_quantative
+
+  +preprocess_categorical:
+    _parallel: true
+
+    +train:
+      td>: queries/preprocess_categorical_train.sql
+      create_table: train_categorical
+
+    +test:
+      td>: queries/preprocess_categorical_test.sql
+      create_table: test_categorical
+
+  +fm_train:
+    td>: queries/fm_train.sql
+    create_table: fm_model
+
+  +fm_predict:
+    td>: queries/fm_predict.sql
+    create_table: prediction
+
+  +evaluate:
+    td>: queries/evaluate.sql
+    store_last_results: true
+
+  +show_accuracy:
+    echo>: "Logloss (smaller is better): ${td.last_results.logloss}"
