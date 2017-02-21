@@ -17,7 +17,7 @@ with train_nonzero as (
   from
     train
 ),
-quantative as (
+quantitative as (
   select rowid, 16777217 + 1 as feature, i1 as value from train_nonzero
   union all
   select rowid, 16777217 + 2 as feature, i2 as value from train_nonzero
@@ -44,17 +44,17 @@ quantative as (
   union all
   select rowid, 16777217 + 13 as feature, i13 as value from train_nonzero
 ),
-quantative_stats as (
+quantitative_stats as (
   select
     feature,
     min(value) as min,
     max(value) as max
   from
-    quantative
+    quantitative
   group by
     feature
 ),
-quantative_normalized as (
+quantitative_normalized as (
   select
     t1.rowid,
     collect_list(
@@ -63,8 +63,8 @@ quantative_normalized as (
       )
     ) as features
   from
-    quantative t1
-    JOIN quantative_stats t2 ON (t1.feature = t2.feature)
+    quantitative t1
+    JOIN quantitative_stats t2 ON (t1.feature = t2.feature)
   group by
     t1.rowid
 )
@@ -72,5 +72,5 @@ quantative_normalized as (
 SELECT
   rowid, features
 FROM
-  quantative_normalized
+  quantitative_normalized
 ;

@@ -3,7 +3,7 @@ with fm_test_samples as (
     t1.rowid,
     concat_array(t1.features, t2.features) as features
   from
-    test_quantative t1
+    test_quantitative t1
     left outer join test_categorical t2 on (t2.rowid = t1.rowid)
 ),
 fm_test_exploded as (
