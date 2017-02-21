@@ -9,3 +9,15 @@ factor: 8
 
 # (2) Number of iterations
 iters: 50
+
+# (3) Regularization parameters:
+# In order to achieve better reuslts, it is necessary
+# to set these parameters appropriately.
+# Too large or small values lead poor accuracy.
+lambda_w0: 0.01
+lambda_wi: 0.01
+lambda_v: 0.01
+
+# (4) Learning rate:
+# Too large/small => poor accuracy
+eta: 0.01
