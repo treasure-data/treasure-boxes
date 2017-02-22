@@ -1,0 +1,25 @@
+_export:
+  !include : config/params.yml
+  td:
+    apikey: ${apikey}
+    database: ${target}
+    engine: hive
+
++prepare:
+  call>: common/prepare_data.dig
+
++main:
+  +logress_train:
+    td>: queries/logress_train.sql
+    create_table: logress_model
+
+  +logress_predict:
+    td>: queries/logress_predict.sql
+    create_table: prediction
+
+  +evaluate:
+    td>: queries/evaluate.sql
+    store_last_results: true
+
+  +show_accuracy:
+    echo>: "Logloss (smaller is better): ${td.last_results.logloss}"
