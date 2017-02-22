@@ -1,5 +1,6 @@
 _export:
-  !include : config/params.yml
+  !include : config/database.yml
+  !include : config/fm.yml
   td:
     apikey: ${apikey}
     database: ${target}
