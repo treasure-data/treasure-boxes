@@ -16,7 +16,7 @@ For instance, this workflow takes a table of the following form:
 | 3 | 0 | 35 | 44| ... | "California" | "Safari" | ... |
 | ... |...|...| ...|...|...|...|...|
 
-You can apply this template for arbitrary dataset as long as samples consist of a set of `int` (quantitative) and `string` (categorical) variables.
+Here, each row represents user's single impression for an ad. Impressions can be written by a set of `int` (quantitative) and `string` (categorical) variables such as users' demographics. A column `label` shows whether a user clicked an ad.
 
 ## Workflow
 
@@ -24,15 +24,15 @@ We prepared a basic workflow for CTR prediction:
 
 ```sh
 $ ./data.sh # prepare data
-$ td wf run predict -p apikey={YOUR_API_KEY}
+$ td wf run predict_logress -p apikey={YOUR_API_KEY}
 ```
 
-* [predict.dig](predict.dig) - TD workflow script for CTR prediction using [Factorization Machines](https://hivemall.incubator.apache.org/userguide/recommend/movielens_fm.html)
-* [config/params.yml](config/params.yml) - defines configurable parameters for the prediction workflow such as `factor` of Factorization Machines.
+* [predict_logress.dig](predict_logress.dig) - TD workflow script for CTR prediction using [Logistic Regression](https://hivemall.incubator.apache.org/userguide/binaryclass/a9a_lr.html)
+* [config/params.yml](config/params.yml) - defines configurable parameters for the prediction.
   
 ## Output
 
-The output of workflow is a table that contains predicted CTRs for validation samples:
+The output of workflow is a table that contains predicted CTRs for possible future impressions:
 
 | rowid<br/>`long` | predicted_ctr<br/>`double` |
 |:---:|:---:|
