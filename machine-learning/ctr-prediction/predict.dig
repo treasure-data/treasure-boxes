@@ -5,46 +5,10 @@ _export:
     database: ${target}
     engine: hive
 
++prepare:
+  call>: common/prepare_data.dig
+
 +main:
-  +count:
-    td>: queries/count.sql
-    store_last_results: true
-
-  +split:
-    _parallel: true
-
-    +train:
-      td>: queries/split_train.sql
-      engine: presto
-      create_table: train
-
-    +test:
-      td>: queries/split_test.sql
-      engine: presto
-      create_table: test
-
-  +preprocess_quantitative:
-    _parallel: true
-
-    +train:
-      td>: queries/preprocess_quantitative_train.sql
-      create_table: train_quantitative
-
-    +test:
-      td>: queries/preprocess_quantitative_test.sql
-      create_table: test_quantitative
-
-  +preprocess_categorical:
-    _parallel: true
-
-    +train:
-      td>: queries/preprocess_categorical_train.sql
-      create_table: train_categorical
-
-    +test:
-      td>: queries/preprocess_categorical_test.sql
-      create_table: test_categorical
-
   +fm_train:
     td>: queries/fm_train.sql
     create_table: fm_model
