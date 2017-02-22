@@ -29,7 +29,8 @@ select
       concat("c25#", c25),
       concat("c26#", c26)
     )
-  ) as features
+  ) as features,
+  label
 from
   test
 ;
