@@ -1,18 +1,10 @@
-with logress_test_samples as (
-  select
-    t1.rowid,
-    concat_array(t1.features, t2.features) as features
-  from
-    test_quantitative t1
-    left outer join test_categorical t2 on (t2.rowid = t1.rowid)
-),
-logress_test_exploded as (
+with logress_test_exploded as (
   select
     rowid,
     extract_feature(fv) as feature,
     extract_weight(fv) as value
   from
-    logress_test_samples t1 LATERAL VIEW explode(features) t2 as fv
+    test t1 LATERAL VIEW explode(features) t2 as fv
 )
 -- DIGDAG_INSERT_LINE
 select

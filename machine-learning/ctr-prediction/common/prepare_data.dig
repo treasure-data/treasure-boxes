@@ -8,31 +8,32 @@
   +train:
     td>: ../queries/split_train.sql
     engine: presto
-    create_table: train
+    create_table: samples_train
 
   +test:
     td>: ../queries/split_test.sql
     engine: presto
-    create_table: test
+    create_table: samples_test
 
-+preprocess_quantitative:
++preprocess:
   _parallel: true
 
   +train:
-    td>: ../queries/preprocess_quantitative_train.sql
-    create_table: train_quantitative
+    +minmax:
+      td>: ../queries/minmax_train.sql
+      engine: presto
+      store_last_results: true
+
+    +run:
+      td>: ../queries/preprocess_train.sql
+      create_table: train
 
   +test:
-    td>: ../queries/preprocess_quantitative_test.sql
-    create_table: test_quantitative
+    +minmax:
+      td>: ../queries/minmax_test.sql
+      engine: presto
+      store_last_results: true
 
-+preprocess_categorical:
-  _parallel: true
-
-  +train:
-    td>: ../queries/preprocess_categorical_train.sql
-    create_table: train_categorical
-
-  +test:
-    td>: ../queries/preprocess_categorical_test.sql
-    create_table: test_categorical
+    +run:
+      td>: ../queries/preprocess_test.sql
+      create_table: test
