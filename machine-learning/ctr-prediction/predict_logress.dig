@@ -13,6 +13,11 @@ _export:
     td>: queries/logress_train.sql
     create_table: logress_model
 
+  +compute_downsampling_rate:
+    td>: queries/downsampling_rate.sql
+    engine: presto
+    store_last_results: true
+
   +logress_predict:
     td>: queries/logress_predict.sql
     create_table: prediction

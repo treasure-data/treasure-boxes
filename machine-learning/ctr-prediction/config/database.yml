@@ -1,3 +1,6 @@
 # Data:
 source: criteo_sample.samples # input table
 target: criteo_sample # output database
+
+# For training, positive samples will be over-sampled x-times
+pos_oversampling: 1

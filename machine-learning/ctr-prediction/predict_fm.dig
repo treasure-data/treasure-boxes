@@ -14,6 +14,11 @@ _export:
     td>: queries/fm_train.sql
     create_table: fm_model
 
+  +compute_downsampling_rate:
+    td>: queries/downsampling_rate.sql
+    engine: presto
+    store_last_results: true
+
   +fm_predict:
     td>: queries/fm_predict.sql
     create_table: prediction

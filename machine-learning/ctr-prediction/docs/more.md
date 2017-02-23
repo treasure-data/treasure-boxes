@@ -53,6 +53,11 @@ _export:
     create_table: logress_model
 
 	# Step 3
+  +compute_downsampling_rate:
+  td>: queries/downsampling_rate.sql
+  engine: presto
+  store_last_results: true
+
   +logress_predict:
     td>: queries/logress_predict.sql
     create_table: prediction
@@ -91,12 +96,16 @@ Note that, for efficient computation, features can be passed to hash functions i
 
 ### Configurable parameters
 
-You can specify arbitrary source table and target database in `config/database.yml`:
-	
+You can specify arbitrary source table and target database in `config/database.yml`. In addition, you can configure `pos_oversampling` in the file. This value controls the number of over-sampled positive samples; if you set greater than 1 to the parameter, positive samples will be over-sampled in training step.
+
 ```yml
 source: criteo_sample.samples # input table
 target: criteo_sample # output database
+
+pos_oversampling: 1
 ```
+
+The following paper describes about the oversampling technique: [Practical Lessons from Predicting Clicks on Ads at Facebook](https://research.fb.com/publications/practical-lessons-from-predicting-clicks-on-ads-at-facebook/)
 
 For `predict_fm.dig`, there are additional parameters we need to set. These are in `config/fm.yml`:
 	
