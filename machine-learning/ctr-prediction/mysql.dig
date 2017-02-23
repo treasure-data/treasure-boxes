@@ -1,7 +1,7 @@
 _export:
   !include : config/database.yml
   td:
-    apikey: ${secret:apikey}
+    apikey: ${apikey}
     database: ${target}
 
 +export_model:
