@@ -4,7 +4,12 @@ This example workflow ingests data in daily basis, using [Treasure Data's Writin
 
 # How to Run
 
-First, please set sftp credentials by `td wf secrets` command with json file which has Multiple credentials. For more details, please see **Multiple secrets can be read from a single file in JSON format.** section in [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+First, please upload your workflow project by `td wf push` command.
+
+    # Upload
+    $ td wf push td_sftp
+
+Second, please set sftp credentials by `td wf secrets` command with json file which has Multiple credentials. For more details, please see **Multiple secrets can be read from a single file in JSON format.** section in [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project td_sftp --set @secrets.json
@@ -29,14 +34,11 @@ First, please set sftp credentials by `td wf secrets` command with json file whi
 
 Now you can reference these credentials by `${secret:}` syntax in the dig file.
 
-You can upload the workflow and trigger the session manually.
+You can trigger the session manually.
 
-    # Upload
-    $ td wf push td_sftp
-    
     # Run
     $ td wf start td_sftp td_sftp --session now
-    
+
 # Supplemental
 
 JSON format of Result Output to SFTP is the followings.
