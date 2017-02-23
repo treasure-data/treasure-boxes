@@ -20,7 +20,7 @@ You can upload the workflow and trigger the session manually.
     $ td wf push sample_project
     
     # Run
-    $ td wf start sample_project sample --session now
+    $ td wf start sample_project sample_project --session now
     
 # Supplemental
 
