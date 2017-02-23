@@ -7,10 +7,10 @@ This example workflow ingests data in daily basis, using [Treasure Data's Writin
 First, please set ftp credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_ftp --set ftp.password=xyzxyzxyzxyz
+    $ td wf secrets --project td_ftp --set ftp_password=xyzxyzxyzxyz
 
     # Set Secrets on your local for testing
-    $ td wf secrets --local --set ftp.password=xyzxyzxyzxyz
+    $ td wf secrets --local --set ftp_password=xyzxyzxyzxyz
 
 Now you can reference these credentials by `${secret:}` syntax in the dig file.
 
