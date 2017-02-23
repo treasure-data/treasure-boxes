@@ -41,7 +41,7 @@ You can upload the workflow and trigger the session manually.
 
 JSON format of Result Output to SFTP is the followings.
 
-- result_url: '{"type":"sftp","host":"${sftp.host}","port":${sftp.port},"username":"${sftp.username}","secret_key_file":"{\"content\":\"${secret:sftp_secret_key_file}\"}","secret_key_passphrase":"${secret:sftp_secret_key_passphrase}","user_directory_is_root":${sftp.user_directory_is_root},"path_prefix":"${sftp.path_prefix}_${datetime}","file_ext":"${sftp.file_ext}","sequence_format":"${sftp.sequence_format}","header_line":${sftp.header_line},"quote_policy":"${sftp.quote_policy}","delimiter":"${sftp.delimiter}","null_string":"${sftp.null_string}","newline":"${sftp.newline}"}'
+- result_url: '{"type":"sftp","host":"xx.xx.xx.xx","port":22,"username":"xxxx","secret_key_file":"{\"content\":\"-----BEGIN RSA PRIVATE KEY-----\nABCDEFJ\nABCDEFJ\n-----END RSA PRIVATE KEY-----\"}","secret_key_passphrase":"xxxxxx", "user_directory_is_root":true,"path_prefix":"/path/to/file","file_ext":".csv","sequence_format":"","header_line":true,"quote_policy":"MINIMAL","delimiter":",","null_string":"","newline":"CRLF"}'
 
 For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-sftp#usage-from-cli)
 
