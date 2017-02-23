@@ -73,33 +73,15 @@ select
       )
     ),
     -- feature_hashing(
-      array(
-        concat("c1#", c1),
-        concat("c2#", c2),
-        concat("c3#", c3),
-        concat("c4#", c4),
-        concat("c5#", c5),
-        concat("c6#", c6),
-        concat("c7#", c7),
-        concat("c8#", c8),
-        concat("c9#", c9),
-        concat("c10#", c10),
-        concat("c11#", c11),
-        concat("c12#", c12),
-        concat("c13#", c13),
-        concat("c14#", c14),
-        concat("c15#", c15),
-        concat("c16#", c16),
-        concat("c17#", c17),
-        concat("c18#", c18),
-        concat("c19#", c19),
-        concat("c20#", c20),
-        concat("c21#", c21),
-        concat("c22#", c22),
-        concat("c23#", c23),
-        concat("c24#", c24),
-        concat("c25#", c25),
-        concat("c26#", c26)
+      categorical_features(
+        array(
+          "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10",
+          "c11", "c12", "c13", "c14", "c15", "c16", "c17", "c18", "c19", "c20",
+          "c21", "c22", "c23", "c24", "c25", "c26"
+        ),
+        c1, c2, c3, c4, c5, c6, c7, c8, c9, c10,
+        c11, c12, c13, c14, c15, c16, c17, c18, c19, c20,
+        c21, c22, c23, c24, c25, c26
       )
     -- )
   ) as features,
