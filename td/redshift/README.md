@@ -28,7 +28,7 @@ You can trigger the session manually.
 
 URL format of Result Output to Redshift is the following.
 
-- redshift://<username>:<password>@<hostname>:<port>/<database>/<table>
+- redshift://username:password@hostname:port/database/table
 
 For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-redshift)
 
