@@ -96,7 +96,7 @@ Note that, for efficient computation, features can be passed to hash functions i
 
 ### Configurable parameters
 
-You can specify arbitrary source table and target database in `config/database.yml`. In addition, you can configure `pos_oversampling` in the file. This value controls the number of over-sampled positive samples; if you set greater than 1 to the parameter, positive samples will be over-sampled in training step.
+You can specify arbitrary source table and target database in `config/general.yml`. In addition, you can configure `pos_oversampling` in the file. This value controls the number of over-sampled positive samples; if you set greater than 1 to the parameter, positive samples will be over-sampled in training step.
 
 ```yml
 source: criteo_sample.samples # input table

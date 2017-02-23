@@ -1,5 +1,5 @@
 _export:
-  !include : config/database.yml
+  !include : config/general.yml
   !include : config/fm.yml
   td:
     apikey: ${apikey}
