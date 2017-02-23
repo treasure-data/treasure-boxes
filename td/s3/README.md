@@ -4,7 +4,12 @@ This example workflow ingests data in daily basis, using [Treasure Data's Writin
 
 # How to Run
 
-First, please set s3 credentials by `td wf secrets` command.
+First, please upload your workflow project by `td wf push` command.
+
+    # Upload
+    $ td wf push sample_project
+
+Second, please set s3 credentials by `td wf secrets` command.
 
     # Set Secrets
     $ td wf secrets --project sample_project --set s3.access_key_id=xyzxyzxyzxyz
@@ -16,14 +21,11 @@ First, please set s3 credentials by `td wf secrets` command.
 
 Now you can reference these credentials by `${secret:}` syntax in the dig file.
 
-You can upload the workflow and trigger the session manually.
+You can trigger the session manually.
 
-    # Upload
-    $ td wf push sample_project
-    
     # Run
     $ td wf start sample_project td_s3 --session now
-    
+
 # Supplemental
 
 URL format of Result Output to s3 is the following.
