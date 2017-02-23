@@ -1,0 +1,29 @@
+timezone: UTC
+
+_export:
+  ftp:
+    host: hostname
+    port: portnumber
+    username: username
+    path_prefix: /path/file
+    file_ext: .csv
+    sequence_format: ""
+    header_line: true
+    quote_policy: MINIMAL
+    delimiter: ","
+    null_string: ""
+    newline: CRLF
+    #FTPS# passive_mode: true
+    #FTPS# ascii_mode: true
+    #FTPS# ssl: true
+    #FTPS# ssl_explicit: true
+    #FTPS# ssl_verify: false
+    #FTPS# ssl_verify_hostname: false
+  datetime: ${moment(session_time).format("YYYYMMDD")}
+
++td-result-output-ftp
+  td>: queries/sample.sql
+  database: sample_datasets
+  result_url: '{"type":"ftp","host":"${ftp.host}","port":${ftp.port},"username":"${ftp.username}","password":"${secret:ftp_password}","path_prefix":"${ftp.path_prefix}_${datetime}","file_ext":"${ftp.file_ext}","sequence_format":"${ftp.sequence_format}","header_line":${ftp.header_line},"quote_policy":"${ftp.quote_policy}","delimiter":"${ftp.delimiter}","null_string":"${ftp.null_string}","newline":"${ftp.newline}"}'
+
+  #FTPS# result_url: '{"type":"ftp","host":"${ftp.host}","port":${ftp.port},"username":"${ftp.username}","password":"${secret:ftp_password}","passive_mode":${ftp.passive_mode},"ascii_mode":${ftp.ascii_mode},"ssl":${ftp.ssl},"ssl_explicit":${ftp.ssl_explicit},"ssl_verify":${ftp.ssl_verify},"ssl_verify_hostname":${ftp.ssl_verify_hostname},"path_prefix":"${ftp.path_prefix}_${datetime}","file_ext":"${ftp.file_ext}","sequence_format":"${ftp.sequence_format}","header_line":${ftp.header_line},"quote_policy":"${ftp.quote_policy}","delimiter":"${ftp.delimiter}","null_string":"${ftp.null_string}","newline":"${ftp.newline}"}'
