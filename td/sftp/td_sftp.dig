@@ -1,0 +1,22 @@
+timezone: UTC
+
+_export:
+  sftp:
+    host: hostname
+    port: portnumber
+    username: username
+    user_directory_is_root: true
+    path_prefix: /path/file
+    file_ext: .csv
+    sequence_format: ""
+    header_line: true
+    quote_policy: MINIMAL
+    delimiter: ","
+    null_string: ""
+    newline: CRLF
+  datetime: ${moment(session_time).format("YYYYMMDD")} 
+
++td-result-output-sftp:
+  td>: queries/sample.sql
+  database: sample_datasets
+  result_url: '{"type":"sftp","host":"${sftp.host}","port":${sftp.port},"username":"${sftp.username}","secret_key_file":"{\"content\":\"${secret:sftp_secret_key_file}\"}","secret_key_passphrase":"${secret:sftp_secret_key_passphrase}","user_directory_is_root":${sftp.user_directory_is_root},"path_prefix":"${sftp.path_prefix}_${datetime}","file_ext":"${sftp.file_ext}","sequence_format":"${sftp.sequence_format}","header_line":${sftp.header_line},"quote_policy":"${sftp.quote_policy}","delimiter":"${sftp.delimiter}","null_string":"${sftp.null_string}","newline":"${sftp.newline}"}'
