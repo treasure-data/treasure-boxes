@@ -4,6 +4,6 @@ _export:
     apikey: ${secret:apikey}
     database: ${target}
 
-+test:
++export_model:
   td>: queries/export_model.sql
-  result_url: 'mysql://${secret:mysql.user}:${secret:mysql.password}@${secret:mysql.host}/${secret:mysql.database}/logress_model?mode=truncate'
+  result_url: 'mysql://${secret:mysql.user}:${secret:mysql.password}@${secret:mysql.host}/${secret:mysql.database}/logress_model'
