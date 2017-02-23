@@ -30,7 +30,7 @@ JSON format of Result Output to FTP(S) is the followings.
 - FTPS: '{"type":"ftp","host":"xx.xx.xx.xx","port":990,"username":"xxxx","password":"xxxxx","passive_mode":true,"ascii_mode":true,"ssl":true,"ssl_explicit":false,"ssl_verify":false,"ssl_verify_hostname":false,"path_prefix":"/path/to/file","file_ext":".csv","sequence_format":"","header_line":true,"quote_policy":"MINIMAL","delimiter":",","null_string":"","newline":"CRLF"}'
 - FTPES: '{"type":"ftp","host":"xx.xx.xx.xx","port":21,"username":"xxxx","password":"xxxxx","passive_mode":true,"ascii_mode":true,"ssl":true,"ssl_explicit":true,"ssl_verify":false,"ssl_verify_hostname":false,"path_prefix":"/path/to/file","file_ext":".csv","sequence_format":"","header_line":true,"quote_policy":"MINIMAL","delimiter":",","null_string":"","newline":"CRLF"}'
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-ftp)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-ftp#usage-from-cli)
 
 # Next Step
 
