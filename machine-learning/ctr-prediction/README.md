@@ -53,7 +53,7 @@ Once the prediction workflow has been successfully completed, exporting the pred
 
 ```sql
 create table logress_model (
-  feature int,
+  feature varchar(255),
   weight double
 );
 
@@ -81,15 +81,15 @@ from
       extract_feature(f) as feature,
       extract_value(f) as value
     from (
-      select 'quantitative_feature_1:value_1' as f
+      select 'i1:23' as f
       union all
-      select 'quantitative_feature_2:value_2' as f
+      select 'i2:1' as f
       union all
       ...
       union all
-      select 'categorical_feature_1' as f
+      select 'c1#Ohio' as f
       union all
-      select 'categorical_feature_2' as f
+      select 'c2#Firefox' as f
       union all
       ...
     ) t1

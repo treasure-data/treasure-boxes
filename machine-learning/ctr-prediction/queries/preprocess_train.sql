@@ -3,19 +3,8 @@ select
   concat_array(
     quantitative_features(
       array(
-        16777217 + 1,
-        16777217 + 2,
-        16777217 + 3,
-        16777217 + 4,
-        16777217 + 5,
-        16777217 + 6,
-        16777217 + 7,
-        16777217 + 8,
-        16777217 + 9,
-        16777217 + 10,
-        16777217 + 11,
-        16777217 + 12,
-        16777217 + 13
+        "i1", "i2", "i3", "i4", "i5", "i6", "i7",
+        "i8", "i9", "i10", "i11", "i12", "i13"
       ),
       rescale(
         if( i1 is null, 0, i1),
@@ -83,7 +72,7 @@ select
         ${td.last_results.train_max13}
       )
     ),
-    feature_hashing(
+    -- feature_hashing(
       array(
         concat("c1#", c1),
         concat("c2#", c2),
@@ -112,7 +101,7 @@ select
         concat("c25#", c25),
         concat("c26#", c26)
       )
-    )
+    -- )
   ) as features,
   label
 from

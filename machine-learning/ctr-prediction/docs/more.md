@@ -70,9 +70,9 @@ After Step 2, weights for the features are stored in `logress_model`:
 	
 | feature | weight |
 |:---:|:---:|
-|1000204 | 0.02274639531970024|
-|10001949 | -0.0026124739088118076 |
-|10001886 | -0.002054039388895035|
+| i1      |   0.2616434097290039 |
+| i2      |  0.43628165125846863 |
+| i3      | 0.001486081164330244 |
 | ... | ...|
 
 By using the weights, prediction should be:
@@ -86,6 +86,8 @@ By using the weights, prediction should be:
 
 
 `predict_fm.dig` is actually different from `predict_logress.dig` in terms of algorithm, but basic structure of the workflows is same.
+
+Note that, for efficient computation, features can be passed to hash functions in practice. This strategy is called **feature hashing**. You can learn more about the technique from [HERE](http://hivemall.incubator.apache.org/userguide/ft_engineering/hashing.html), and try it by modifying [preprocess_train.sql](../queries/preprocess_train.sql) and [preprocess_test.sql](../queries/preprocess_test.sql).
 
 ### Configurable parameters
 

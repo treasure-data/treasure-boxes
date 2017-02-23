@@ -6,7 +6,7 @@ drop function if exists sigmoid;
 delimiter $$
 
 create function extract_feature(f varchar(255))
-  returns int
+  returns varchar(255)
 begin
   declare feature varchar(255);
   if f like '%:%' then
@@ -14,7 +14,7 @@ begin
   else
     set feature = f;
   end if;
-  return cast(feature as unsigned);
+  return feature;
 end $$
 
 create function extract_value(f varchar(255))
