@@ -1,0 +1,14 @@
+timezone: UTC
+
+_export:
+  td:
+    database: sample_datasets
+  another_td:
+    endpoint: destination_endpoint
+    database: destination_database_name
+    table: destination_table_name
+    mode: append
+
++td-result-output-another-td:
+  td>: queries/sample.sql
+  result_url: 'td://${secret:another_td_apikey}@${another_td.endpoint}/${another_td.database}/${another_td.table}?mode=${another_td.mode}'
