@@ -1,6 +1,6 @@
 # Data:
-source: sample_datasets.movielens # input table
-target: recommendation # output database
+source: movielens.ratings # input table
+target: movielens # output database
 
 # Parameters for Matrix Factoriszation:
 

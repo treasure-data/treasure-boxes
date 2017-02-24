@@ -83,7 +83,7 @@ It should be noted that a column `rating` can be used for not only actual "ratin
 Unlike the previous example, user and item IDs are long values. If your user/item IDs are not long, run `map_id.dig` and create intermediate mapping tables for users and items:
 
 ```
-$ td wf run map_id -p apikey={YOUR_API_KEY}
+$ td wf start recommendation map_id --session now -p apikey=${YOUR_TD_API_KEY}
 ```
 
 In order to map the original user/item IDs to unique long values, the workflow creates new tables, `users` and `items`, on TD as:
@@ -100,7 +100,7 @@ You can use these intermediate tables to generate a user-item-rating matrix in a
 
 ### Tasks
 
-Here, let us see `recommend.dig`, the workflow we demonstrated at the beginning `$ td wf run ...`. This workflow basically follows several sub-steps to make recommendation on TD:
+Here, let us see `recommend.dig`, the workflow we demonstrated at the beginning `$ td wf start ...`. This workflow basically follows several sub-steps to make recommendation on TD:
 
 1. Split rows in the original table into **80% training** and **20% testing** rows.
 2. Build a recommendation model for the 80% training data; that is, apply the MF technique for a training user-item-rating matrix.
@@ -147,8 +147,8 @@ It should be noticed that our workflow loaded external file `config/params.yml`.
 
 ```yml
 # Data:
-source: sample_datasets.movielens # input table
-target: recommendation # output database
+source: movielens.ratings # input table
+target: movielens # output database
 
 # Parameters for Matrix Factoriszation:
 
@@ -187,7 +187,7 @@ There are two different metrics: **[Root Mean Squared Error](https://en.wikipedi
 Following `predict.dig` workflow runs this evaluation procedure after splitting training and testing samples:
 
 ```
-$ td wf run predict -p apikey={YOUR_API_KEY}
+$ td wf start recommendation predict --session now -p apikey={YOUR_API_KEY}
 ```
 
 If everything works correctly, you eventually gets the following output:
@@ -204,26 +204,15 @@ Note that a `--goal +main` option skips the train-test splitting step; we do not
 
 ## Data preparation
 
-So far, we used a sample table `sample_datasets.movielens` as data source. The data is [MovieLens 1M Dataset](https://grouplens.org/datasets/movielens/1m/), one of the most famous public data for recommendation.
+So far, we used [MovieLens 1M Dataset](https://grouplens.org/datasets/movielens/1m/), one of the most famous public data for recommendation.
 
-You can manually get and prepare the data as follows:
-
-```
-$ curl -o ml-1m.zip -L http://files.grouplens.org/datasets/movielens/ml-1m.zip
-$ unzip ml-1m.zip
-$ cd ml-1m
-$ sed 's/::/,/g' ratings.dat > ratings.csv
-```
-
-Next, let us import the public data into TD:
+You can get and prepare the data by:
 
 ```
-$ td db:create movielens1m
-$ td table:create movielens1m ratings
-$ td import:auto --format csv --columns userid,itemid,rating,timestamp --column-types long,long,double,long --time-value `date +%s` --auto-create movielens1m.ratings ./ratings.csv
+$ ./data.sh
 ```
 
-Check a `ratings` table on a `movielens1m` database:
+Check a `ratings` table on a `movielens` database:
 
 | userid | itemid | rating |timestamp|
 |---:|---:|:---:|:---:|
@@ -235,16 +224,16 @@ Check a `ratings` table on a `movielens1m` database:
 
 You notice that the MovieLens data has time-stamped 5-level rating events.
 
-Finally, source table and target database should be manually configured in `config/params.yml` as:
+Finally, source table and target database can be manually configured in `config/params.yml` as:
 
 ```yml
 # Data:
-source: movielens1m.ratings # input table
-target: movielens1m # output database
+source: source_db.table_name # input table
+target: target_db # output database
 ```
 
 That's it. Now, you can try the workflow:
 
 ```
-$ td wf run recommend -p apikey={YOUR_API_KEY}
+$ td wf start recommendation recommend --session now -p apikey={YOUR_API_KEY}
 ```
