@@ -23,7 +23,10 @@ from (
       features, label,
       "-c -factor ${factor} -iters ${iters} -lambda_w0 ${lambda_w0} -lambda_wi ${lambda_wi} -lambda_v ${lambda_v} -eta ${eta}"
     ) as (feature, Wi, Vif)
-  from
-    train_oversampling
-) t
+  from (
+    select features, label
+    from train_oversampling
+    CLUSTER BY rand(1) -- random shuffling
+  ) t1
+) t2
 group by feature;
