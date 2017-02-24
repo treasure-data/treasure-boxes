@@ -1,0 +1,1 @@
+select 'fn123' as FirstName, 'ln123' as LastName;
