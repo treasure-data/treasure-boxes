@@ -103,6 +103,38 @@ In particular, when a user visits to a site, what your ad server needs to do is:
 2. Construct queries as shown above and compute predicted CTRs.
 3. Display highest-scored ad(s) to the target user.
 
+Another option is to predict CTRs programmatically by just reading the prediction model from MySQL DB, as demonstrated in the following code snippet:
+
+```ruby
+$model = read_model_from_mysql()
+
+def scoring(i, a)
+  # list of [feature, value] pairs
+  features = [
+    # quantitative variables
+    ['i0', i.user_generation],
+    ['i1', i.user_age],
+    ...,
+    # categorical features
+    ["c1##{i.user_address}", 1.0],
+    ["c2##{i.user_browser}", 1.0],
+    ["c3##{a.ad_id}", 1.0],
+    ["c4##{i.publisher_id}", 1.0],
+    ["c5##{a.advertiser_id}", 1.0],
+    ["c6##{a.campaign_id}", 1.0],
+    ["c7##{a.creative_id}", 1.0],
+    ...
+  ]
+
+  # compute weighted sum
+  features.inject(0) { |sum, f| sum += ($model[f.first] || 0) * f.last }
+end
+
+impression = ... # target impression
+ads = [ ... ] # list of possible ads
+best_performing_ad = ads.map{|ad| [scoring(impression, ad), ad]}.sort.last[1]
+```
+
 Further readings:
 
 - [How to Get More Clicks for Digital Advertising: Step by Step Guide to Optimizing CTRs with Real-time Data + Machine Learning](https://blog.treasuredata.com/blog/2014/10/13/how-to-get-more-clicks-for-digital-advertising-step-by-step-guide-to-optimizing-ctrs-with-real-time-data-machine-learning/)
