@@ -1,11 +1,9 @@
 timezone: UTC
 
 _export:
-  azure_account_name: ${secret:azure.account_name}
-  azure_account_key: ${secret:azure.account_key}
   td:
     database: sample_datasets
 
 +td-result-into-azureblobstorage:
   td>: queries/sample.sql
-  result_url: '{"type":"azure_blob_storage","account_name":"${azure_account_name}","account_key":"${azure_account_key}","container":"td-system-test","path_prefix":"/nodatest/file","file_ext":".csv","sequence_format":"","header_line":true,"quote_policy":"MINIMAL","delimiter":",","null_string":"","newline":"CRLF"}'
+  result_url: '{"type":"azure_blob_storage","account_name":"${secret:azure.account_name}","account_key":"${secret:azure.account_key}","container":"td-system-test","path_prefix":"/path/file","file_ext":".csv","sequence_format":"","header_line":true,"quote_policy":"MINIMAL","delimiter":",","null_string":"","newline":"CRLF"}'

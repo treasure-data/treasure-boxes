@@ -24,7 +24,7 @@ Now you can reference these credentials by `${secret:}` syntax in the dig file.
 You can trigger the session manually.
 
     # Run
-    $ td wf start sample_project td_microsoft_azure_blob_storage --session now
+    $ td wf start sample_project td_azure_blob_storage --session now
     
 # Supplemental
 
