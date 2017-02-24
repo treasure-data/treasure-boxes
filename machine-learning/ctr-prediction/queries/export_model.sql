@@ -1,1 +1,1 @@
-select * from logress_model;
+select feature, weight from logress_model;
