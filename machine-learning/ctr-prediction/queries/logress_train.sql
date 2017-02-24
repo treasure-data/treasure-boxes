@@ -19,7 +19,10 @@ select
 from (
   select
     logress(features, label) as (feature, weight)
-  from
-    train_oversampling
-) t
+  from (
+    select features, label
+    from train_oversampling
+    CLUSTER BY rand(1) -- random shuffling
+  ) t1
+) t2
 group by feature;
