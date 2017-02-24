@@ -1,0 +1,19 @@
+timezone: Asia/Tokyo
+
+_export:
+  td:
+    engine: presto
+  mailchimp:
+    list_id: xxxxxxxx
+    update_existing: true
+    email_column: email
+    fname_column: first_name
+    lname_column: last_name
+    grouping_columns: ["usage_segment"]
+    replace_interests: false
+    double_optin: false
+
++extract_email:
+  td>: extract_email.sql
+  database: sample_datasets
+  result_url: '{"type":"mailchimp","list_id":"${mailchimp.list_id}","update_existing":${mailchimp.update_existing},"email_column":"${mailchimp.email_column}","fname_column":"${mailchimp.fname_column}","lname_column":"${mailchimp.lname_column}","grouping_columns":${mailchimp.grouping_columns},"replace_interests":false,"double_optin":false,"apikey":"${secret:mailchimp.apikey}"}'
