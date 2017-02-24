@@ -30,6 +30,11 @@ URL format of Result Output to TD is the following.
 
 - td://APIKEY@endpoint/database/table?mode=append
 
+Endpoints are below.
+
+- AWS US: api.treasuredata.com
+- IDCF  : api.ybi.idcfcloud.net
+
 For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-td#two-ways-to-modify-data-appendreplace)
 
 # Next Step
