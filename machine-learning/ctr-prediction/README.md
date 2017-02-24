@@ -33,7 +33,8 @@ We prepared a basic workflow for CTR prediction:
 
 ```sh
 $ ./data.sh # prepare data
-$ td wf run predict_logress -p apikey={YOUR_API_KEY}
+$ td wf push ctr-prediction # push workflow to TD
+$ td wf start ctr-prediction predict_logress --session now -p apikey=${YOUR_TD_API_KEY}
 ```
 
 * [predict_logress.dig](predict_logress.dig) - TD workflow script for CTR prediction using [Logistic Regression](https://hivemall.incubator.apache.org/userguide/binaryclass/a9a_lr.html)
@@ -59,8 +60,8 @@ The output of workflow is a table that contains predicted CTRs for possible futu
 Once the prediction workflow has been successfully completed, exporting the prediction model to your own MySQL database is easy:
 
 1. Configure your MySQL DB information in [config/secrets.yml](config/secrets_sample.yml)
-2. Load the information to TD workflow:<br/>`$ td wf secrets --local --set @config/secrets.yml`
-3. Export a `logress_model` table to your MySQL DB:<br/>`$ td wf run mysql -p apikey={YOUR_API_KEY}`
+2. Load the information to TD workflow:<br/>`$ td wf secrets --project ctr-prediction --set @config/secrets.yml`
+3. Export a `logress_model` table to your MySQL DB:<br/>`td wf start ctr-prediction mysql --session now -p apikey=${YOUR_TD_API_KEY}`
 
 ***Note:*** *Make sure a table `logress_model` exists on your MySQL DB as follows.*
 
