@@ -18,6 +18,15 @@ For instance, this workflow takes a table of the following form:
 
 Here, each row represents user's single impression for an ad. Impressions can be written by a set of `int` (quantitative) and `string` (categorical) variables such as users' demographics. A column `label` shows whether a user clicked an ad.
 
+**Note:** This template supports tables which have 13 quantitative (i1-i13) and 26 categorical (c1-c26) variables by default.
+
+If you have more/less quantitative and/or categorical features in a table, you need to modify the following queries appropriately:
+
+- [queries/minmax_train.sql](queries/minmax_train.sql)
+- [queries/minmax_test.sql](queries/minmax_test.sql)
+- [queries/preprocess_train.sql](queries/preprocess_train.sql)
+- [queries/preprocess_test.sql](queries/preprocess_test.sql)
+
 ## Workflow
 
 We prepared a basic workflow for CTR prediction:
@@ -28,7 +37,9 @@ $ td wf run predict_logress -p apikey={YOUR_API_KEY}
 ```
 
 * [predict_logress.dig](predict_logress.dig) - TD workflow script for CTR prediction using [Logistic Regression](https://hivemall.incubator.apache.org/userguide/binaryclass/a9a_lr.html)
-* [config/params.yml](config/params.yml) - defines configurable parameters for the prediction.
+* [config/general.yml](config/general.yml) - defines configurable parameters for the prediction.
+
+[<img src="docs/img/capture.png" alt="capture" height=300 />](http://showterm.io/de1678afb369ad82a04bc)
   
 ## Output
 
@@ -42,6 +53,8 @@ The output of workflow is a table that contains predicted CTRs for possible futu
 | ... | ... |
 
 ## Using the Prediction Model in Production System
+
+<img src="docs/img/hivemall_mysql_ctr.png" alt="hivemall_mysql_ctr" width=500 />
 
 Once the prediction workflow has been successfully completed, exporting the prediction model to your own MySQL database is easy:
 
