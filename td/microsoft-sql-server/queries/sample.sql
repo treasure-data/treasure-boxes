@@ -9,5 +9,5 @@ SELECT
 FROM 
   nasdaq
 WHERE
-  TD_TIME_RANGE(time, '2014-01-01','2014-04-01')
+  TD_TIME_RANGE(time, '2014-01-01','2014-02-01')
 ;
