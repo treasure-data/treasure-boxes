@@ -13,7 +13,7 @@ t1 as (
     each_top_k(${k}, u.userid, mf_predict(u.pu, i.qi, u.bu, i.bi, ${td.last_results.mu}),
                u.userid, itemid) as (rank, score, userid, itemid)
   from (select userid, pu, bu from u_rnd where rnd < 0.2) u
-  cross join i
+  left outer join i
   where not exists (
     select userid from training_mf train
     where train.userid = u.userid and train.itemid = i.itemid
@@ -24,7 +24,7 @@ t2 as (
     each_top_k(${k}, u.userid, mf_predict(u.pu, i.qi, u.bu, i.bi, ${td.last_results.mu}),
                u.userid, itemid) as (rank, score, userid, itemid)
   from (select userid, pu, bu from u_rnd where rnd >= 0.2 and rnd < 0.4) u
-  cross join i
+  left outer join i
   where not exists (
     select userid from training_mf train
     where train.userid = u.userid and train.itemid = i.itemid
@@ -35,7 +35,7 @@ t3 as (
     each_top_k(${k}, u.userid, mf_predict(u.pu, i.qi, u.bu, i.bi, ${td.last_results.mu}),
                u.userid, itemid) as (rank, score, userid, itemid)
   from (select userid, pu, bu from u_rnd where rnd >= 0.4 and rnd < 0.6) u
-  cross join i
+  left outer join i
   where not exists (
     select userid from training_mf train
     where train.userid = u.userid and train.itemid = i.itemid
@@ -46,7 +46,7 @@ t4 as (
     each_top_k(${k}, u.userid, mf_predict(u.pu, i.qi, u.bu, i.bi, ${td.last_results.mu}),
                u.userid, itemid) as (rank, score, userid, itemid)
   from (select userid, pu, bu from u_rnd where rnd >= 0.6 and rnd < 0.8) u
-  cross join i
+  left outer join i
   where not exists (
     select userid from training_mf train
     where train.userid = u.userid and train.itemid = i.itemid
@@ -57,7 +57,7 @@ t5 as (
     each_top_k(${k}, u.userid, mf_predict(u.pu, i.qi, u.bu, i.bi, ${td.last_results.mu}),
                u.userid, itemid) as (rank, score, userid, itemid)
   from (select userid, pu, bu from u_rnd where rnd >= 0.8) u
-  cross join i
+  left outer join i
   where not exists (
     select userid from training_mf train
     where train.userid = u.userid and train.itemid = i.itemid
