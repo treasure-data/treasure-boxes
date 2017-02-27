@@ -1,5 +1,5 @@
 select
-  ndcg(t1.rec_items, t2.truth_items) as ndcg
+  ndcg(t1.recommended_items, t2.truth_items) as ndcg
 from
   recommendation t1 join (
     select
