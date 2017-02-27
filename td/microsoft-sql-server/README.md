@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Microsoft SQL Server)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into SQL Server tables](https://docs.treasuredata.com/articles/result-into-microsoft-sql-server) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into SQL Server, using [Treasure Data's Writing Job Results into SQL Server tables](https://docs.treasuredata.com/articles/result-into-microsoft-sql-server) with [td](http://docs.digdag.io/operators/td.html) operator.
 
 # How to Run
 
@@ -22,7 +22,7 @@ Now you can reference these credentials by `${secret:}` syntax in the dig file.
 You can trigger the session manually.
 
     # Run
-    $ td wf start sample_project td_microsoft_sql_server --session now
+    $ td wf start sample_project td_sql_server --session now
     
 # Supplemental
 
