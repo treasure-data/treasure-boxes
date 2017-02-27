@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Microsoft Azure Blob Storage)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into Microsoft Azure Blob Storage](https://docs.treasuredata.com/articles/result-into-microsoft-azure-blob-storage) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into Microsoft Azure Blob Storage, using [Treasure Data's Writing Job Results into Microsoft Azure Blob Storage](https://docs.treasuredata.com/articles/result-into-microsoft-azure-blob-storage) with [td](http://docs.digdag.io/operators/td.html) operator.
 
 # How to Run
 
