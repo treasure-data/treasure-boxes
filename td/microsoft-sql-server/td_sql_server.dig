@@ -1,0 +1,9 @@
+timezone: UTC
+
+_export:
+  td:
+    database: sample_datasets
+
++td-result-into-sqlserver:
+  td>: queries/sample.sql
+  result_url: '{"type":"sqlserver","host":"host","port":"1433","username":"user","password":"${secret:sqlserver.password}","database":"database","table":"table","batch_size":16777216,"mode":"insert"}'
