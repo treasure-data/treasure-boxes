@@ -2,12 +2,9 @@ timezone: UTC
 
 _export:
   web_server:
-    hostname: host_name
-    port: port_number
-    username: user_name
     path_prefix: path
 
 +td-result-output-web-server:
   td>: queries/sample.sql
   database: sample_datasets
-  result_url: 'web://${web_server.username}:${secret:web_server_password}@${web_server.hostname}:${web_server.port}/${web_server.path_prefix}'
+  result_url: 'web://${secret:web_server.user}:${secret:web_server.password}@${secret:web_server.host}:${secret:web_server.port}/${web_server.path_prefix}'

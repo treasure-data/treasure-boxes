@@ -12,10 +12,16 @@ First, please upload your workflow project by `td wf push` command.
 Second, please set credential by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project web_server --set web_server_password=xyzxyzxyzxyz
+    $ td wf secrets --project web_server --set web_server.host=hostname
+    $ td wf secrets --project web_server --set web_server.port=8080
+    $ td wf secrets --project web_server --set web_server.user=username
+    $ td wf secrets --project web_server --set web_server.password=xyzxyzxyzxyz
 
     # Set Secrets on your local for testing
-    $ td wf secrets --local --set web_server_password=xyzxyzxyzxyz
+    $ td wf secrets --local --set web_server.host=hostname
+    $ td wf secrets --local --set web_server.port=8080
+    $ td wf secrets --local --set web_server.user=username
+    $ td wf secrets --local --set web_server.password=xyzxyzxyzxyz
 
 Now you can reference these credential by `${secret:}` syntax in the dig file.
 
