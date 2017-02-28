@@ -12,10 +12,16 @@ First, please upload your workflow project by `td wf push` command.
 Second, please set credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project sample_project --set mongodb.password=xyzxyzxyzxyz
+    $ td wf secrets --project sample_project --set mongodb.host=hostname
+    $ td wf secrets --project sample_project --set mongodb.port=27017
+    $ td wf secrets --project sample_project --set mongodb.user=username
+    $ td wf secrets --project sample_project --set mongodb.password=password
 
     # Set Secrets on your local for testing
-    $ td wf secrets --local --set mongodb.password=xyzxyzxyzxyz
+    $ td wf secrets --local --set mongodb.host=hostname
+    $ td wf secrets --local --set mongodb.port=27017
+    $ td wf secrets --local --set mongodb.user=username
+    $ td wf secrets --local --set mongodb.password=password
 
 Now you can reference these credentials by `${secret:}` syntax in the dig file.
 
