@@ -1,0 +1,20 @@
+timezone: UTC
+
+_export:
+  td:
+    database: sample_datasets
+  azure:
+    container: container_name
+    path_prefix: /path/file
+    file_ext: .csv
+    sequence_format: ""
+    header_line: true
+    quote_policy: MINIMAL
+    delimiter: ","
+    null_string: ""
+    newline: CRLF
+  datetime: ${moment(session_time).format("YYYYMMDD")}
+
++td-result-into-azureblobstorage:
+  td>: queries/sample.sql
+  result_url: '{"type":"azure_blob_storage","account_name":"${secret:azure.account_name}","account_key":"${secret:azure.account_key}","container":"${azure.container}","path_prefix":"${azure.path_prefix}_${datetime}","file_ext":"${azure.file_ext}","sequence_format":"${azure.sequence_format}","header_line":${azure.header_line},"quote_policy":"${azure.quote_policy{","delimiter":"${azure.delimiter}","null_string":"${azure.null_string}","newline":"${azure.newline}"}'
