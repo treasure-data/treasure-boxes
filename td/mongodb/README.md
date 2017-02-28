@@ -32,7 +32,7 @@ You can trigger the session manually.
     
 # Supplemental
 
-JSON format of Result Output to MongoDB is the following.
+URL format of Result Output to MongoDB is the following.
 
 - mongodb://user:password@host:1234/database/collection?mode=append
 
