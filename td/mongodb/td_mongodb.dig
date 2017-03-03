@@ -1,0 +1,12 @@
+timezone: UTC
+
+_export:
+  td:
+    database: sample_datasets
+  mongodb:
+    database: database
+    collection: collection
+
++td-result-into-mongodb:
+  td>: queries/sample.sql
+  result_url: "mongodb://${secret:mongodb.user}:${secret:mongodb.password}@${secret:mongodb.host}:${secret:mongodb.port}/${mongodb.database}/${mongodb.collection}?mode=append"
