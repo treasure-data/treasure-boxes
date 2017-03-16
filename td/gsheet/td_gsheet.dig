@@ -1,0 +1,11 @@
+timezone: UTC
+
+_export:
+  gsheet_user: user123 #google spread sheet user
+  gsheet_domain: gmail.com #or your corporate domain
+
++td-result-output-gsheet:
+  td>: queries/sample.sql
+  database: sample_datasets
+  result_url: 'gspreadsheet://${gsheet_user}:${secret:gsheet.password}@${gsheet_domain}/sample_spreadsheet/sample_worksheet'
+  #For append mode: result_url: 'gspreadsheet://${gsheet_user}:${secret:gsheet.password}@${gsheet_domain}/sample_spreadsheet/sample_worksheet?mode=append'
