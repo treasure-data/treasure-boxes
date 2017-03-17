@@ -12,10 +12,10 @@ First, please upload your workflow project by `td wf push` command.
 Second, please set destination td account's master apikey by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set mysql.host=xyz
-    $ td wf secrets --project td_load_example --set mysql.port=3306
-    $ td wf secrets --project td_load_example --set mysql.user=abcde
-    $ td wf secrets --project td_load_example --set mysql.password=fghijklmn
+    $ td wf secrets --project td_mysql --set mysql.host=xyz
+    $ td wf secrets --project td_mysql --set mysql.port=3306
+    $ td wf secrets --project td_mysql --set mysql.user=abcde
+    $ td wf secrets --project td_mysql --set mysql.password=fghijklmn
 
     # Set Secrets on your local for testing
     $ td wf secrets --local --set mysql.host=xyz
