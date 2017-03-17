@@ -1,4 +1,4 @@
-# Workflow: td example (Result Output to Another TD Account)
+# Workflow: td example (Result Output to MySQL)
 
 This example workflow ingests data using [Treasure Data's Writing Job Results into MySQL Table)](https://docs.treasuredata.com/articles/result-into-mysql) with [td](http://docs.digdag.io/operators/td.html) operator.
 
