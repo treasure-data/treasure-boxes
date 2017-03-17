@@ -12,10 +12,10 @@ First, please upload your workflow project by `td wf push` command.
 Second, please set destination td account's master apikey by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set postgresql.host=xyz
-    $ td wf secrets --project td_load_example --set postgresql.port=5432
-    $ td wf secrets --project td_load_example --set postgresql.user=abcde
-    $ td wf secrets --project td_load_example --set postgresql.password=fghijklmn
+    $ td wf secrets --project td_postgresql --set postgresql.host=xyz
+    $ td wf secrets --project td_postgresql --set postgresql.port=5432
+    $ td wf secrets --project td_postgresql --set postgresql.user=abcde
+    $ td wf secrets --project td_postgresql --set postgresql.password=fghijklmn
 
     # Set Secrets on your local for testing
     $ td wf secrets --local --set postgresql.host=xyz
