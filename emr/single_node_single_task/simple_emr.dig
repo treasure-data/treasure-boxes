@@ -1,0 +1,13 @@
+timezone: UTC
+
++emr_cluster:
+  emr>:
+  cluster:
+    ec2:
+      key: my-ec2-key
+    logs: s3://my-bucket/logs/
+  bootstrap:
+    - install_conda.sh
+  steps:
+    - type: python
+      application: simple_pandas.py
