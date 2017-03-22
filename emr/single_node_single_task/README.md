@@ -48,7 +48,7 @@ This example workflow will pull the table Nasdaq into a pandas dataframe, averag
 
 - `region` is not supported. Thus EMR boots on us-east-1.
 - to_td is Streaming Import, if EMR cluster is down, the data might be lost. And, the import is not so fast.
-- For large dataset, upload it to S3, and use DataConnector for S3 would be better.
+- For large dataset, upload it to S3, and use DataConnector for S3 would be better. (Ex. Loading 10 million rows might take 3 hours.)
     
 # Next Step
 
