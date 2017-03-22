@@ -16,7 +16,7 @@ _export:
     # Creating a new cluster with 1 master and 1 node:
     ec2:
       # Your ec2_key_pair name (ex. keypair.pem)
-      key: toru-us-east
+      key: my-ec2-key
 
       # region is not supported yet. Allow only us-east-1
       # region: us-east-1
