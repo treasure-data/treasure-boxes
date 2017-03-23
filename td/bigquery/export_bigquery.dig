@@ -1,0 +1,16 @@
+timezone: UTC
+
++td-result-output-bigquery:
+  td>:
+  query: SELECT id, account,purchase, comment, CAST(TD_TIME_FORMAT(time, 'yyyy-MM-dd HH:mm:ss', 'UTC') AS TIMESTAMP) as time FROM table
+  database: test_db
+  result_connection: YOUR_BQ_CONNECTION_NAME
+  result_settings:
+    dataset: BQ_DATABASE
+    table: BQ_TABLE
+    mode: append
+    auto_create_table: true
+    max_bad_records: 0
+    ignore_unknown_values: false
+    allow_quoted_newlines: false
+    schema_file: '[{"name":"id","type":"INTEGER"},{"name":"account","type":"STRING"},{"name":"purchase","type":"STRING"},{"name":"comment","type":"STRING","mode":"REQUIRED"},{"name":"time","type":"TIMESTAMP","mode": "REQUIRED"}]'
