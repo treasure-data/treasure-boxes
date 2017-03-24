@@ -20,7 +20,7 @@ First, please upload your workflow project by `td wf push` command.
 You can trigger the session manually.
 
     # Run
-    $ td wf start td_bigquery export_gcs --session now
+    $ td wf start td_gcs export_gcs --session now
 
 ## Local mode
 
