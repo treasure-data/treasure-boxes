@@ -36,9 +36,9 @@ Then, please modify TD_APIKEY in the load.py
 Now, you can trigger the session manually.
     
     # Run on Local
-    $ td wf run pandas_emr.didg --session now
+    $ td wf run pandas_emr.dig --session now
     # Run on Server
-    $ td wf start td_emr_example simple_emr --session now
+    $ td wf start td_emr_example pandas_emr --session now
 
 # Results
 
