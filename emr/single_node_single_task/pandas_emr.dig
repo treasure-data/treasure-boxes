@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+timezone: UTC
+
+_export:
+  staging_path: YOUR_BUCKET/emr/
+  logs_path: YOUR_BUCKET/emr_log/
+
++run_emr_cluster:
+  emr>:
+  cluster:
+    name: digdag-emr-pandas
+
+    applications:
+      - hadoop
+
+    # Creating a new cluster with 1 master and 1 node:
+    ec2:
+      # Your ec2_key_pair name (ex. keypair.pem)
+      key: my-ec2-key
+
+      # region is not supported yet. Allow only us-east-1
+      # region: us-east-1
+
+      # Cluster spec
+      # Default: m3.2xlarge x single node
+      #master:
+      #  type: m3.xlarge
+      #core:
+      #  type: m3.xlarge
+      #  count: 1
+
+    # EMR log directory
+    logs: s3://${logs_path}
+
+    bootstrap:
+      - bootstrap.sh
+
+  # staging is a directory for your application
+  staging: s3://${staging_path}
+
+  steps:
+    - type: script
+      script: load.py
+
