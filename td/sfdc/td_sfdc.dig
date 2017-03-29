@@ -1,0 +1,13 @@
+timezone: UTC
+
+_export:
+  sfdc_user: test_user%40gmail.com
+  sfdc_hostname: na35.salesforce.com
+
++td-result-output-sfdc:
+  td>: queries/sample.sql
+  database: sample_datasets
+  result_url: 'sfdc://${sfdc_user}:${secret:sfdc.password}${secret:sfdc.securitytoken}@${sfdc_hostname}/Contact'
+  # default is append mode
+  # For truncate mode: result_url: 'sfdc://${sfdc_user}:${secret:sfdc.password}${secret:sfdc.securitytoken}@${sfdc_hostname}/Contact?mode=truncate'
+  # For update mode: result_url: 'sfdc://${sfdc_user}:${secret:sfdc.password}${secret:sfdc.securitytoken}@${sfdc_hostname}/Contact?mode=update&unique=CustomerId__c&upsert=false'
