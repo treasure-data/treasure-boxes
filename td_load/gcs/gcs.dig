@@ -1,0 +1,16 @@
+_export:
+  td:
+    dest_db: support
+    dest_table: gcs_table
+  gcs:
+    bucket: test_bucket
+
++prepare_table:
+  td_ddl>:
+  create_tables: ["${td.dest_table}"]
+  database: ${td.dest_db}
+
++load:
+  td_load>: config/gcs.yml
+  database: ${td.dest_db}
+  table: ${td.dest_table}
