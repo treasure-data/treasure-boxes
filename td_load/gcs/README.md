@@ -20,7 +20,7 @@ First, please set database credentials by `td wf secrets` command.
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 
-- [config/daily_load.yml](config/daily_load.yml)
+- [config/gcs.yml](config/gcs.yml)
 
 Now, you can run the workflow and trigger the session manually.
 
@@ -40,7 +40,7 @@ Next, please set database credentials by `td wf secrets` command.
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 
-- [config/daily_load.yml](config/daily_load.yml)
+- [config/gcs.yml](config/gcs.yml)
 
 Finally, you can trigger the session manually.
 
