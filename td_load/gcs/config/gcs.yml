@@ -1,0 +1,31 @@
+in:
+  type: gcs
+  auth_method: json_key
+  json_keyfile:
+    content: "${secret:gcp.jsonkey}"
+  bucket: "${gcs.bucket}"
+  path_prefix: "/filename_${session_date}.csv"
+  decoders:
+    - {type: gzip}
+  parser:
+    charset: UTF-8
+    newline: CRLF
+    type: csv
+    delimiter: ','
+    quote: '"'
+    escape: '"'
+    trim_if_not_quoted: false
+    skip_header_lines: 1
+    allow_extra_columns: false
+    allow_optional_columns: false
+    columns:
+    - {name: user, type: string}
+    - {name: host, type: string}
+    - {name: path, type: string}
+    - {name: referer, type: string}
+    - {name: code, type: long}
+    - {name: agent, type: string}
+    - {name: size, type: long}
+    - {name: method, type: string}
+    - {name: time, type: long}
+out: {}
