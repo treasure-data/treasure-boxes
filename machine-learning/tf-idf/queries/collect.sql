@@ -1,7 +1,7 @@
 select
-  docid, 
+  docid,
   collect_list(feature(word, tfidf)) as tfidf
-from 
+from
   tfidf
 group by
   docid

@@ -1,16 +1,15 @@
-WITH excluded_stopwords AS(
+WITH excluded_stopwords AS (
   select
-    *
+    t.docid,
+    t.word
   from
     exploded t
   where
-    t.word NOT IN (
-      select s.word from ${stopwords} s
-    )
+    t.word NOT IN (select s.word from ${stopwords} s)
 ),
-tf AS(
+tf AS (
   select
-    docid, 
+    docid,
     word,
     freq
   from (
@@ -21,12 +20,12 @@ tf AS(
       excluded_stopwords
     group by
       docid
-  ) t 
+  ) t
   LATERAL VIEW explode(word2freq) t2 as word, freq
 ),
-df AS(
+df AS (
   select
-    word, 
+    word,
     count(distinct docid) docs
   from
     excluded_stopwords
@@ -36,11 +35,11 @@ df AS(
 -- DIGDAG_INSERT_LINE
 select
   tf.docid,
-  tf.word, 
-  -- tf.freq * (log(10, CAST(${td.last_results.n_docs} as FLOAT)/max2(1,df.docs)) + 1.0) as tfidf
+  tf.word,
+  -- tf.freq * (log(10, CAST(${td.last_results.n_docs} as FLOAT) / max2(1, df.docs)) + 1.0) as tfidf
   tfidf(tf.freq, df.docs, ${td.last_results.n_docs}) as tfidf
 from
-  tf 
+  tf
   JOIN df ON (tf.word = df.word)
-order by 
+order by
   tfidf desc
