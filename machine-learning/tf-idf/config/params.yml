@@ -1,5 +1,5 @@
 # Data:
-source: tfidf.wikipage # input table
+source: tfidf.docs # input table
 target: tfidf # output database
 stopwords: stopwords.stopwords # stopwrods table
 
