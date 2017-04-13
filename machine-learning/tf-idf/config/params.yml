@@ -1,0 +1,13 @@
+# Data:
+source: tfidf.docs # input table
+target: tfidf # output database
+stopwords: stopwords.stopwords # stopwrods table
+
+# language of documents
+# if english => english: true, japanese: false
+# if japanese => english: false, japanese: true
+english: true
+japanese: false
+
+# Top k keywords for each document
+k: 3

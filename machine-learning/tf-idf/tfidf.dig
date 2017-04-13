@@ -1,0 +1,41 @@
+_export:
+  !include : config/params.yml
+  td:
+    apikey: ${apikey}
+    database: ${target}
+    engine: hive
+
++explode:
+  _parallel: true
+
+  +if_english:
+    if>: ${english}
+    _do:
+      td>: queries/explode.sql
+      create_table: exploded
+
+  +if_japanese:
+    if>: ${japanese}
+    _do:
+      td>: queries/explode_japanese.sql
+      create_table: exploded
+
++count:
+  td>: queries/count.sql
+  store_last_results: true
+  engine: presto
+
++main:
+  td>: queries/tfidf.sql
+  create_table: tfidf
+
++output:
+  _parallel: true
+
+  +collect:
+    td>: queries/collect.sql
+    create_table: collected
+
+  +top_k:
+    td>: queries/top_k.sql
+    create_table: top_k
