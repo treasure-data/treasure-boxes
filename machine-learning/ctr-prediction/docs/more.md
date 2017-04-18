@@ -47,12 +47,12 @@ _export:
   call>: common/prepare_data.dig
 
 +main:
-	# Step 2
+  # Step 2
   +logress_train:
     td>: queries/logress_train.sql
     create_table: logress_model
 
-	# Step 3
+  # Step 3
   +compute_downsampling_rate:
   td>: queries/downsampling_rate.sql
   engine: presto
@@ -62,7 +62,7 @@ _export:
     td>: queries/logress_predict.sql
     create_table: prediction
 
-	# Step 4
+  # Step 4
   +evaluate:
     td>: queries/evaluate.sql
     store_last_results: true
