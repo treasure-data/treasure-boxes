@@ -6,7 +6,7 @@ schedule:
 sla:
   time: 08:00
   +notice:
-    mail>: {body: Treasure Workflow Notification}
+    mail>: {data: Treasure Workflow Notification}
     subject: This workflow is taking long time to finish
     to: [me@example.com]
 
