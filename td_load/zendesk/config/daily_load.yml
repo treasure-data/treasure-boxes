@@ -1,0 +1,45 @@
+
+in:
+  type: zendesk
+  login_url: ${secret:zendesk.login_url}
+  auth_method: token
+  username: ${secret:zendesk.username}
+  token: ${secret:zendesk.token}
+  target: tickets
+  start_time: ${start_time}
+  columns:
+  - {name: assignee_id, type: long}
+  - {name: brand_id, type: long}
+  - {name: collaborator_ids, type: json}
+  - {name: created_at, type: timestamp, format: "%Y-%m-%dT%H:%M:%S%z"}
+  - {name: custom_fields, type: json}
+  - {name: description, type: string}
+  - {name: due_at, type: string}
+  - {name: external_id, type: string}
+  - {name: fields, type: json}
+  - {name: followup_ids, type: json}
+  - {name: forum_topic_id, type: string}
+  - {name: group_id, type: long}
+  - {name: has_incidents, type: boolean}
+  - {name: id, type: long}
+  - {name: organization_id, type: long}
+  - {name: priority, type: string}
+  - {name: problem_id, type: string}
+  - {name: raw_subject, type: string}
+  - {name: recipient, type: string}
+  - {name: requester_id, type: long}
+  - {name: satisfaction_probability, type: string}
+  - {name: satisfaction_rating, type: string}
+  - {name: sharing_agreement_ids, type: json}
+  - {name: status, type: string}
+  - {name: subject, type: string}
+  - {name: submitter_id, type: long}
+  - {name: tags, type: json}
+  - {name: ticket_form_id, type: long}
+  - {name: type, type: string}
+  - {name: updated_at, type: timestamp, format: "%Y-%m-%dT%H:%M:%S%z"}
+  - {name: url, type: string}
+  - {name: via, type: json}
+filters: []
+out: {}
+exec: {}
