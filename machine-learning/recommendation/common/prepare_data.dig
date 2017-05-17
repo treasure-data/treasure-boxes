@@ -1,7 +1,6 @@
 +shuffle:
   td>: ../queries/shuffle.sql
   create_table: ratings_mf
-  engine: hive
 
 +split:
   _parallel: true
@@ -9,9 +8,7 @@
   +train:
     td>: ../queries/split_train.sql
     create_table: training_mf
-    engine: presto
 
   +test:
     td>: ../queries/split_test.sql
     create_table: testing_mf
-    engine: presto
