@@ -1,0 +1,15 @@
+in:
+  type: google_analytics
+  json_key_content: |
+    ${secret:json_key_content}
+  view_id: ${ga.view_id}
+  time_series: "ga:dateHour"
+
+  dimensions:
+    - "ga:browser"
+  metrics:
+    - "ga:visits"
+    - "ga:pageviews"
+filters: []
+out: {}
+exec: {}
