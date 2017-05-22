@@ -1,0 +1,19 @@
+timezone: UTC
+
+_export:
+  td:
+    database: sample_datasets
+  tableau:
+    datasource: datasource_name
+    site_id: site_id
+    project: project_name
+    mode: append
+
++td-result-output-tableau:
+  td>: queries/sample.sql
+  result_connection: tableau_connection
+  result_settings:
+    datasource: ${tableau.datasource}
+    site_id: ${tableau.site_id}
+    project: ${tableau.project}
+    mode: ${tableau.mode}
