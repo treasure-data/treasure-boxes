@@ -37,6 +37,7 @@ You can trigger the session manually.
 - datasource (required)
 - site_id (optional)
 - project (optional)
+- mode (required)
 
 # Next Step
 
