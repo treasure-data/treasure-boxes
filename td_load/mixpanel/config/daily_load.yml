@@ -1,0 +1,73 @@
+in:
+  type: mixpanel
+  api_key: ${secret:mixpanel.api_key}
+  api_secret: ${secret:mixpanel.api_secret}
+  timezone: ${mixpanel.timezone}
+  from_date: ${mixpanel.from_date}
+  fetch_days: ${mixpanel.fetch_days}
+  columns:
+  - name: event
+    type: string
+  - name: "$browser"
+    type: string
+  - name: "$browser_version"
+    type: long
+  - name: "$city"
+    type: string
+  - name: "$current_url"
+    type: string
+  - name: "$initial_referrer"
+    type: string
+  - name: "$initial_referring_domain"
+    type: string
+  - name: "$lib_version"
+    type: string
+  - name: "$os"
+    type: string
+  - name: "$referrer"
+    type: string
+  - name: "$referring_domain"
+    type: string
+  - name: "$region"
+    type: string
+  - name: "$screen_height"
+    type: long
+  - name: "$screen_width"
+    type: long
+  - name: ENV
+    type: string
+  - name: RAILS_ENV
+    type: string
+  - name: distinct_id
+    type: long
+  - name: from
+    type: string
+  - name: job_id
+    type: long
+  - name: mp_country_code
+    type: string
+  - name: mp_lib
+    type: string
+  - name: name
+    type: string
+  - name: time
+    type: long
+out: {}
+exec: {}
+filters:
+- type: rename
+  rules:
+  - rule: upper_to_lower
+  - rule: character_types
+    pass_types: ["a-z", "0-9"]
+    pass_characters: "_"
+    replace: "_"
+  - rule: first_character_types
+    pass_types: ["a-z"]
+    pass_characters: "_"
+    prefix: "_"
+  - rule: unique_number_suffix
+    max_length: 128
+- type: add_time
+  to_column: {name: time}
+  from_value: {mode: upload_time}
