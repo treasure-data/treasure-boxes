@@ -1,0 +1,27 @@
+in:
+  type: sftp
+  host: ${secret:sftp.host}
+  port: ${secret:sftp.port}
+  user: ${secret:sftp.user}
+  secret_key_file: {"content": "${secret:sftp.secret_key_file}"}
+  secret_key_passphrase: ${secret:sftp.secret_key_passphrase}
+  user_directory_is_root: ${sftp.user_directory_is_root}
+  timeout: ${sftp.timeout}
+  path_prefix: ${sftp.path_prefix}
+  parser:
+    charset: UTF-8
+    newline: LF
+    type: csv
+    delimiter: ","
+    quote: "\""
+    escape: "\""
+    trim_if_not_quoted: false
+    skip_header_lines: 1
+    allow_extra_columns: false
+    allow_optional_columns: false
+    columns:
+    - {name: time, type: long}
+    - {name: id, type: long}
+    - {name: name, type: string}
+    - {name: category, type: string}
+out: {}
