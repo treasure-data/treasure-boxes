@@ -1,0 +1,33 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${target}
+
++prepare:
+  call>: common/prepare_data.dig
+
++main:
+  _export:
+    task: opportunity
+
+  +split:
+    _parallel: true
+
+    +train:
+      td>: queries/split_experiment_train.sql
+      create_table: samples_train_${task}
+
+    +test:
+      td>: queries/split_experiment_test.sql
+      create_table: samples_test_${task}
+
+  +run:
+    call>: common/run.dig
+
+  +evaluate:
+    td>: queries/evaluate.sql
+    store_last_results: true
+    engine: hive
+
+  +show_accuracy:
+    echo>: "logloss = ${td.last_results.logloss} (smaller is better)"

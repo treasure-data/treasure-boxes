@@ -1,0 +1,27 @@
++extract:
+  _parallel: true
+
+  +contact:
+    td>: ../queries/contact.sql
+    create_table: contact
+
+  +account:
+    td>: ../queries/account.sql
+    create_table: account
+
+  +opportunity:
+    td>: ../queries/opportunity.sql
+    create_table: opportunity
+
++join_data:
+  td>: ../queries/data.sql
+  create_table: data
+
++compute_levenshtein:
+  td>: ../queries/levenshtein.sql
+  insert_into: title_levenshtein
+  engine: hive
+
++shuffle:
+  td>: ../queries/shuffle.sql
+  create_table: samples

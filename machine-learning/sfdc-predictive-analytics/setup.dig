@@ -1,0 +1,42 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${source}
+
++initialize:
+  +database:
+    td_ddl>:
+    empty_databases: ['${target}']
+
+  +tables:
+    _parallel: true
+
+    +free_domain:
+      +create:
+        td_ddl>:
+        empty_tables: ['${target}.free_domain']
+
+      +import:
+        sh>: tasks/free_domain.sh
+
+    +title_mapping:
+      +create:
+        td_ddl>:
+        empty_tables: ['${target}.title_mapping']
+
+      +generate:
+        if>: ${generate_title_mapping}
+        _do:
+          +download:
+            td>: queries/title.sql
+            download_file: resources/title.csv
+            engine: hive
+
+          +mapping:
+            py>: tasks.TitleMappingGenerator.run
+
+      +import:
+        sh>: tasks/title_mapping.sh
+
+    +title_levenshtein_with_schema:
+        sh>: tasks/title_levenshtein.sh

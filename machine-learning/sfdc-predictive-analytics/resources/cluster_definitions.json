@@ -1,0 +1,54 @@
+{
+  "job" : {
+    "student": [
+      "student", "intern", "学生", "インターン"
+    ],
+    "sales": [
+      "sales", "sale", "account", "営業", "アカウント", "販売"
+    ],
+    "marketing": [
+      "market", "digital", "publish", "media", "マーケ", "メディア", "広報"
+    ],
+    "designing": [
+      "design", "product", "experience", "brand", "ux", "デザイ"
+    ],
+    "customer": [
+      "business", "customer", "consumer", "client", "user", "support", "ビジネス"
+    ],
+    "consulting": [
+      "consul", "architec", "solution", "コンサル", "アーキ", "ソリューション"
+    ],
+    "tech": [
+      "engineer", "eng", "dev", "techn", "software", "cloud", "infra", "network",
+      "db", "security", "system", "r&d", "research", "information", "it", "hack", "program",
+      "エンジニア", "クラウド", "開発", "システム", "研究", "SE", "技術"
+    ],
+    "data analysis": [
+      "data", "scien", "analy", "machine learn", "intelligence", "bi", "データ", "分析", "アナ"
+    ],
+    "corporate": [
+      "human", "operat", "corporate", "strateg", "company",
+      "financ", "legal", "compliance", "law", "partner", "admi",
+      "人事", "コーポレート", "経営", "経理", "企画"
+    ]
+  },
+  "role": {
+    "executive": [
+      "chief", "executive", "officer", "vice", "president",
+      "執行役員", "役員", "取締役", "代表", "最高", "責任者"
+    ],
+    "manager": [
+      "manag", "マネージャ", "部長"
+    ],
+    "director": [
+       "director", "associate", "head",
+       "ディレクター"
+    ],
+    "advisory": [
+      "founder", "owner", "advisor", "advisory"
+    ],
+    "advanced employee": [
+      "specialist", "lead", "principal", "senior", "スペシャリスト", "シニア", "上級", "主席"
+    ]
+  }
+}
