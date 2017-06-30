@@ -2,3 +2,5 @@
 .digdag
 .DS_Store
 *.pyc
+out/
+td-bulk-import.log
