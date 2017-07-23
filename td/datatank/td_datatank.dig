@@ -1,0 +1,26 @@
+timezone: UTC
+
++td-result-output-datatanks:
+  td>:
+  query: SELECT * FROM www_access
+  database: sample_datasets
+  result_connection: datatank
+  result_settings:
+    database: datatank
+    table: testing_${session_date_compact} # session_date_compact format is 20160130
+    mode: replace
+    method: copy
+    schema: public
+
++td-result-output-datatanks_cstore:
+  td>:
+  query: SELECT * FROM www_access
+  database: sample_datasets
+  result_connection: datatank_cstore
+  result_settings:
+    database: datatank
+    table: testing_cstore_${session_date_compact} # session_date_compact format is 20160130
+    mode: append
+    method: copy
+    schema: public
+    fdw: cstore
