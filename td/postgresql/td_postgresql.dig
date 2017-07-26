@@ -3,13 +3,11 @@ timezone: UTC
 _export:
   td:
     database: sample_datasets
-  postgresql:
-    # schema: schema_name
-    database: database_name
-    table: table_name
-    mode: append
-    ssl: true
 
 +td-result-output-postgresql:
   td>: queries/sample.sql
-  result_url: 'postgresql://${secret:postgresql.user}:${secret:postgresql.password}@${secret:postgresql.host}:${secret:postgresql.port}/${postgresql.database}/${postgresql.table}?mode=${postgresql.mode}&ssl=${postgresql.ssl}'
+  result_connections: your_connections_name
+  result_settings:
+    database: database_name
+    table: table_name
+    mode: append
