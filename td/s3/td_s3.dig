@@ -1,12 +1,13 @@
 timezone: UTC
 
 _export:
-  bucketname: bucketname
-  datetime: ${moment(session_time).format("YYYYMMDD")} 
   td:
     database: sample_datasets
 
 +td-result-into-s3:
   td>: queries/sample.sql
-  result_url: "s3://${secret:access_key_id}:${secret:secret_access_key}@/${bucketname}/file_${datetime}.csv.gz?compression=gz"
-  # url encoding is required for above url.
+  result_connection: your_connections_name
+  result_settings:
+    bucket: your_bucket
+    path: /path/file_${moment(session_time).format("YYYYMMDD")}.csv.gz
+    compression: gz
