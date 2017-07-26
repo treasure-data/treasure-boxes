@@ -26,6 +26,18 @@ You can trigger the session manually.
     # Run
     $ td wf start td_postgresql td_postgresql --session now
 
+# Supplemental
+
+Available parameters for `result_settings` are here.
+
+- database: (string, required)
+- table: (string, required)
+- mode: (string(append|replace|truncate|update), default append)
+- unique: (string, available for update mode)
+- method: (string(copy|insert), default copy)
+- schema: (string, optional)
+- fdw: (string(None|cstore), default None)
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.
