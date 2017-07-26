@@ -6,9 +6,9 @@ This example workflow ingests data using [Treasure Data's Writing Job Results in
 
 In order to register your credential in TreasureData, please create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
 
-![](
+![](https://t.gyazo.com/teams/treasure-data/3d686ed4b6d0f5842c8b3b6be0f3696e.png)
 
-![](
+![](https://t.gyazo.com/teams/treasure-data/a48831f1b3230ededbfccb3266e850e7.png)
 
 The connection name is used in the dig file.
 
