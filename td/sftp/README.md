@@ -34,6 +34,11 @@ You can trigger the session manually.
     # Run
     $ td wf start td_sftp td_sftp --session now
 
+## Local mode
+
+    # Run
+    $ td wf run td_sftp.dig
+
 # Supplemental
 
 Available parameters for `result_settings` are here.
