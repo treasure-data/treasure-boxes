@@ -37,7 +37,7 @@ You can trigger the session manually.
 ## Local mode
 
     # Run
-    $ td wf run td_postgresql.dig
+    $ td wf run td_mysql.dig
 
 # Supplemental
 
