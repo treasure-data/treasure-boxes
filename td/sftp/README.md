@@ -6,9 +6,9 @@ This example workflow ingests data in daily basis, using [Treasure Data's Writin
 
 In order to register your credential in TreasureData, please create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
 
-![](https://treasure-data.gyazo.com/fc51459feff2d086df97f5f7eb8f6f72)
+![](https://t.gyazo.com/teams/treasure-data/fc51459feff2d086df97f5f7eb8f6f72.png)
 
-![](https://treasure-data.gyazo.com/43dec12525f6cd0ee5ba7240bbc08892)
+![](https://t.gyazo.com/teams/treasure-data/43dec12525f6cd0ee5ba7240bbc08892.png)
 
 The connection name is used in the dig file.
 
