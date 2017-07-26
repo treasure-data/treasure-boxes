@@ -2,6 +2,16 @@
 
 This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into SFTP](https://docs.treasuredata.com/articles/result-into-sftp) with [td](http://docs.digdag.io/operators/td.html) operator.
 
+# Prerequisites
+
+In order to register your credential in TreasureData, please create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
+
+![](https://treasure-data.gyazo.com/fc51459feff2d086df97f5f7eb8f6f72)
+
+![](https://treasure-data.gyazo.com/43dec12525f6cd0ee5ba7240bbc08892)
+
+The connection name is used in the dig file.
+
 # How to Run
 
 First, please upload your workflow project by `td wf push` command.
@@ -9,30 +19,15 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push td_sftp
 
-Second, please set sftp credentials by `td wf secrets` command with json file which has Multiple credentials. For more details, please see **Multiple secrets can be read from a single file in JSON format.** section in [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
-    $ td wf secrets --project td_sftp --set @secrets.json
+    $ td wf secrets --project td_sftp --set key=value
 
     # Set Secrets on your local for testing
-    $ td wf secrets --local --set @secrets.json
+    $ td wf secrets --local --set key=value
 
-`secret_key_file` has to care Line Feed Code using escape key.
-
-    # secret_key_file format for secret
-    "sftp_secret_key_file": "-----BEGIN RSA PRIVATE KEY-----\\\\nProc-Type: 4,ENCRYPTED\\\\nDEK-Info: AAAAAAAAAAAAAAAAAAAAA\\\\n\\\\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\\\\nCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC\\\\nDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD\\\\n-----END RSA PRIVATE KEY-----",
-
-    # Original secret_key_file
-      -----BEGIN RSA PRIVATE KEY-----
-      Proc-Type: 4,ENCRYPTED
-      DEK-Info: AAAAAAAAAAAAAAAAAAAAA
-
-      BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-      CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-      -----END RSA PRIVATE KEY-----
-
-Now you can reference these credentials by `${secret:}` syntax in the dig file.
+Now you can use these secrets by `${secret:}` syntax in the dig file.
 
 You can trigger the session manually.
 
@@ -41,9 +36,17 @@ You can trigger the session manually.
 
 # Supplemental
 
-JSON format of Result Output to SFTP is the followings.
+Available parameters for `result_settings` are here.
 
-    result_url: '{"type":"sftp","host":"xx.xx.xx.xx","port":22,"username":"xxxx","secret_key_file":"{\"content\":\"-----BEGIN RSA PRIVATE KEY-----\nABCDEFJ\nABCDEFJ\n-----END RSA PRIVATE KEY-----\"}","secret_key_passphrase":"xxxxxx", "user_directory_is_root":true,"path_prefix":"/path/to/file","file_ext":".csv","sequence_format":"","header_line":true,"quote_policy":"MINIMAL","delimiter":",","null_string":"","newline":"CRLF"}'
+- user_directory_is_root: (boolean(true|false), default true)
+- path_prefix: Prefix of output paths (string, required)
+- format: (string(csv|tsv), default csv)
+- compression: (string(None|gz|bzip2), default None)
+- header_line: (boolean(true|false), default true)
+- delimiter: (string(","|"\t"|"tab"), default ",")
+- quote_policy: (string(ALL|MINIMAL|NONE))
+- null_string: (string(""|"\N"|NULL|null), default "")
+- newline: (string(CRLF|CR|LF), default CRLF)
 
 For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-sftp#usage-from-cli)
 
