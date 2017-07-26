@@ -1,14 +1,13 @@
 timezone: UTC
 
 _export:
-  redshift_user: user
-  redshift_host: host
-  redshift_port: 5439
-  redshift_database: sample_database
-  redshift_table: sample_table
   td:
     database: sample_datasets
 
 +td-result-into-redshift:
   td>: queries/sample.sql
-  result_url: "redshift://${redshift_user}:${secret:redshift.password}@${redshift_host}:${redshift_port}/${redshift_database}/${redshift_table}?mode=append"
+  result_connections: your_connections_name
+  result_settings:
+    database: sample_database
+    table: sample_table
+    mode: append
