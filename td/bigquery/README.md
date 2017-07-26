@@ -14,8 +14,6 @@ The connection name is used in the dig file.
 
 # How to Run
 
-## Server mode
-
 First, please upload your workflow project by `td wf push` command.
 
     # Upload
@@ -41,7 +39,7 @@ You can trigger the session manually.
     # Run
     $ td wf run export_bigquery.dig
 
-# TODO
+# Supplemental
 
 Available parameters for `result_settings` are here.
 
@@ -53,6 +51,8 @@ Available parameters for `result_settings` are here.
 - ignore_unknown_values: (boolean, default false)
 - allow_quoted_newlines: (boolean, default false)
 - schema_file: (string(json), optional)
+
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-google-bigquery#use-from-cli)
 
 # Next Step
 
