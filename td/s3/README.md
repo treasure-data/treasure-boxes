@@ -54,6 +54,8 @@ Available parameters for `result_settings` are here.
 - quote: (string, optional)
 - escape: (string, optional)
 
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-s3#usage)
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.
