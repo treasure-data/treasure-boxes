@@ -3,11 +3,11 @@ timezone: UTC
 _export:
   td:
     database: sample_datasets
-  mysql:
-    database: database_name
-    table: table_name
-    mode: append
 
 +td-result-output-mysql:
   td>: queries/sample.sql
-  result_url: 'mysql://${secret:mysql.user}:${secret:mysql.password}@${secret:mysql.host}:${secret:mysql.port}/${mysql.database}/${mysql.table}?mode=${mysql.mode}'
+  result_connections: your_connections_name
+  result_settings:
+    database: database_name
+    table: table_name
+    mode: append
