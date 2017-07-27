@@ -16,28 +16,39 @@ The connection name is used in the dig file.
 
 # How to Run
 
-## Server mode
-
 First, please upload your workflow project by `td wf push` command.
 
     # Upload
-    $ td wf push td_tableau
+    $ td wf push tableau
+
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+
+    # Set Secrets
+    $ td wf secrets --project tableau --set key=value
+
+    # Set Secrets on your local for testing
+    $ td wf secrets --local --set key=value
+
+Now you can use these secrets by `${secret:}` syntax in the dig file.
 
 You can trigger the session manually.
 
     # Run
-    $ td wf start td_tableau tableau --session now
+    $ td wf start tableau tableau --session now
 
 ## Local mode
 
     # Run
     $ td wf run tableau.dig
 
-## List of Result Settings
-- datasource (required)
-- site_id (optional)
-- project (optional)
-- mode (required)
+# Supplemental
+
+Available parameters for `result_settings` are here.
+
+- datasource (string, required)
+- site_id (string, optional)
+- project (string, optional)
+- mode (string(append|replace), required)
 
 # Next Step
 
