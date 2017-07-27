@@ -8,13 +8,10 @@ timezone: UTC
   result_settings:
     bucket: BUCKET_NAME
     path_prefix: /filename.csv
-    allow_empty_sequence_format: false
     sequence_format: .%1d
-    formatter:
-      type: csv
-      header_line: true
-      quote_policy: MINIMAL
-      delimiter: ","
-      null_string: ""
-      newline: CRLF
+    format: csv
+    header_line: true
+    delimiter: ","
+    null_string: ""
+    newline: CRLF
     compression: gz
