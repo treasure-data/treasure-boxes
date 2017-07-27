@@ -3,12 +3,12 @@ timezone: UTC
 _export:
   td:
     database: sample_datasets
-  es:
-    nodes: "host1:9300,host2:9300,..."
-    index: index
-    index_type: index_type
-    mode: insert
 
 +td-result-into-elasticsearch:
   td>: queries/sample.sql
-  result_url: '{"type":"elasticsearch","nodes":"${es.nodes}","index":"${es.index}","index_type":"${es.index_type}","mode":"${es.mode}"}'
+  result_connection: your_connections_name
+  result_settings:
+    mode: insert
+    index: index
+    index_type: index_type
+
