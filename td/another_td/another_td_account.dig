@@ -9,5 +9,5 @@ _export:
   result_connection: your_connections_name
   result_settings:
     user_database_name: destination_database_name
-    user_table_table: destination_table_name
+    user_table_name: destination_table_name
     mode: append
