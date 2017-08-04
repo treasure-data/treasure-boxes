@@ -15,6 +15,7 @@ _export:
     timezone: "US/Pacific"
     from_date: "${last_session_date}"
     fetch_days: 1
+    incremental_column: mp_processing_time_ms
   td:
     dest_db: dest_db
     dest_table: dest_table
@@ -24,7 +25,15 @@ _export:
   database: ${td.dest_db}
   create_tables: ["${td.dest_table}"]
 
++query_latest_fetched_time:
+  td_run>: latest_fetched_time_query
+  database: ${td.dest_db}
+  store_last_results: true
+
+
+
 +load:
   td_load>: config/daily_load.yml
   database: ${td.dest_db}
   table: ${td.dest_table}
+

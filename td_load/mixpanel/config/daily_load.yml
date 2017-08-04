@@ -5,54 +5,54 @@ in:
   timezone: ${mixpanel.timezone}
   from_date: ${mixpanel.from_date}
   fetch_days: ${mixpanel.fetch_days}
+  latest_fetched_time: ${last_results.latest_fetched_time}
+  incremental_column: ${mixpanel.incremental_column}
   columns:
-  - name: event
-    type: string
-  - name: "$browser"
-    type: string
-  - name: "$browser_version"
-    type: long
-  - name: "$city"
-    type: string
-  - name: "$current_url"
-    type: string
-  - name: "$initial_referrer"
-    type: string
-  - name: "$initial_referring_domain"
-    type: string
-  - name: "$lib_version"
-    type: string
-  - name: "$os"
-    type: string
-  - name: "$referrer"
-    type: string
-  - name: "$referring_domain"
-    type: string
-  - name: "$region"
-    type: string
-  - name: "$screen_height"
-    type: long
-  - name: "$screen_width"
-    type: long
-  - name: ENV
-    type: string
-  - name: RAILS_ENV
-    type: string
-  - name: distinct_id
-    type: long
-  - name: from
-    type: string
-  - name: job_id
-    type: long
-  - name: mp_country_code
-    type: string
-  - name: mp_lib
-    type: string
-  - name: name
-    type: string
-  - name: time
-    type: long
-out: {}
+  - {name: time, type: long}
+  - {name: event, type: string}
+  - {name: distinct_id, type: string}
+  - {name: $app_build_number, type: long}
+  - {name: $app_release, type: long}
+  - {name: $app_version, type: string}
+  - {name: $app_version_string, type: string}
+  - {name: $bluetooth_enabled, type: boolean}
+  - {name: $bluetooth_version, type: string}
+  - {name: $brand, type: string}
+  - {name: $carrier, type: string}
+  - {name: $city, type: string}
+  - {name: $google_play_services, type: string}
+  - {name: $has_nfc, type: boolean}
+  - {name: $has_telephone, type: boolean}
+  - {name: $lib_version, type: string}
+  - {name: $manufacturer, type: string}
+  - {name: $model, type: string}
+  - {name: $os, type: string}
+  - {name: $os_version, type: string}
+  - {name: $region, type: string}
+  - {name: $screen_dpi, type: long}
+  - {name: $screen_height, type: long}
+  - {name: $screen_width, type: long}
+  - {name: $wifi, type: boolean}
+  - {name: APK_version, type: string}
+  - {name: AssetID, type: string}
+  - {name: ClientID, type: string}
+  - {name: ClinicID, type: long}
+  - {name: ClinicName, type: string}
+  - {name: ExamRoom, type: string}
+  - {name: TimeStamp, type: long}
+  - {name: asset, type: string}
+  - {name: content-type, type: string}
+  - {name: date, type: timestamp, format: '%Y-%m-%dT%H:%M:%S'}
+  - {name: display-seconds, type: long}
+  - {name: freq, type: long}
+  - {name: full-screen, type: boolean}
+  - {name: is-sponsor, type: boolean}
+  - {name: mp_country_code, type: string}
+  - {name: mp_lib, type: string}
+  - {name: mp_processing_time_ms, type: long}
+  - {name: salesforce-campaign-id, type: string}
+  - {name: sponsor-name, type: string}
+  out: {}
 exec: {}
 filters:
 - type: rename
