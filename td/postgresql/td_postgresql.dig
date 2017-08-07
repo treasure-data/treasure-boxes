@@ -6,7 +6,7 @@ _export:
 
 +td-result-output-postgresql:
   td>: queries/sample.sql
-  result_connections: your_connections_name
+  result_connection: your_connections_name
   result_settings:
     database: database_name
     table: table_name
