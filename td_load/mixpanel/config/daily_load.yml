@@ -7,6 +7,7 @@ in:
   fetch_days: ${mixpanel.fetch_days}
   latest_fetched_time: ${last_results.latest_fetched_time}
   incremental_column: ${mixpanel.incremental_column}
+  back_fill_time: ${mixpanel.back_fill_time}
   columns:
   - {name: time, type: long}
   - {name: event, type: string}

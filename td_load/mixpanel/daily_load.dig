@@ -16,6 +16,7 @@ _export:
     from_date: "${last_session_date}"
     fetch_days: 1
     incremental_column: mp_processing_time_ms
+    back_fill_time: 5
   td:
     dest_db: dest_db
     dest_table: dest_table
