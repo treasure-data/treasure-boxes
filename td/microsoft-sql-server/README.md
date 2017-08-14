@@ -2,33 +2,51 @@
 
 This example workflow exports TD job results into SQL Server, using [Treasure Data's Writing Job Results into SQL Server tables](https://docs.treasuredata.com/articles/result-into-microsoft-sql-server) with [td](http://docs.digdag.io/operators/td.html) operator.
 
+# Prerequisites
+
+In order to register your credential in TreasureData, please create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
+
+![](https://t.gyazo.com/teams/treasure-data/158223144cabe1bc78ae6a87eccb241f.png)
+
+The connection name is used in the dig file.
+
 # How to Run
 
-First, please upload your workflow project by td wf push command.
+First, please upload your workflow project by `td wf push` command.
 
     # Upload
-    $ td wf push sample_project
+    $ td wf push td_sql_server
 
-Second, please set Microsoft Azure credentials by `td wf secrets` command.
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
-    $ td wf secrets --project sample_project --set sqlserver.password=xyzxyzxyzxyz
+    $ td wf secrets --project td_sql_server --set key=value
 
     # Set Secrets on your local for testing
-    $ td wf secrets --local --set sqlserver.password=xyzxyzxyzxyz
+    $ td wf secrets --local --set key=value
 
-Now you can reference these credentials by `${secret:}` syntax in the dig file.
+Now you can use these secrets by `${secret:}` syntax in the dig file.
 
 You can trigger the session manually.
 
     # Run
-    $ td wf start sample_project td_sql_server --session now
-    
+    $ td wf start td_sql_server td_sql_server --session now
+
+## Local mode
+
+    # Run
+    $ td wf run td_sql_server.dig
+
 # Supplemental
 
-JSON format of Result Output to Microsoft SQL Server is the following.
+Available parameters for `result_settings` are here.
 
-- {"type":"sqlserver","host":"host","username":"username","password":"password","database":"database","table":"table","batch_size":16777216,"mode":"insert"}
+- instance: (string, required)
+- database: (string, required)
+- table: (string, required)
+- timezone: (string, default: UTC)
+- batch_size: (integer, default: 16777216)
+- mode: (string(insert|insert_direct|truncate_insert|replace), default insert)
 
 For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-microsoft-sql-server)
 

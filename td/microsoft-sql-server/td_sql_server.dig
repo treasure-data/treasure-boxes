@@ -6,4 +6,10 @@ _export:
 
 +td-result-into-sqlserver:
   td>: queries/sample.sql
-  result_url: '{"type":"sqlserver","host":"host","port":"1433","username":"user","password":"${secret:sqlserver.password}","database":"database","table":"table","batch_size":16777216,"mode":"insert"}'
+  result_connection: your_connections_name
+  result_settings:
+    instance: instance_name
+    database: database_name
+    table: table_name
+    batch_size: 16777216
+    mode: insert
