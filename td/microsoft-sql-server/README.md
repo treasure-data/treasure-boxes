@@ -6,6 +6,8 @@ This example workflow exports TD job results into SQL Server, using [Treasure Da
 
 In order to register your credential in TreasureData, please create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
 
+![](https://t.gyazo.com/teams/treasure-data/8a127ce5e761638959c822a69d384f7b.png)
+
 ![](https://t.gyazo.com/teams/treasure-data/158223144cabe1bc78ae6a87eccb241f.png)
 
 The connection name is used in the dig file.
