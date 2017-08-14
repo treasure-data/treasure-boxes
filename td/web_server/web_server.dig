@@ -1,10 +1,8 @@
 timezone: UTC
 
-_export:
-  web_server:
-    path_prefix: path
-
 +td-result-output-web-server:
   td>: queries/sample.sql
   database: sample_datasets
-  result_url: 'web://${secret:web_server.user}:${secret:web_server.password}@${secret:web_server.host}:${secret:web_server.port}/${web_server.path_prefix}'
+  result_connection: your_connection_name
+  result_settings:
+    path_prefix: path/data.csv
