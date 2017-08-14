@@ -7,35 +7,51 @@ This example workflow exports TD job results into Salesforce [Treasure Data's Wr
 Salesforce.com organization and username, password, and security token for API integration
 https://docs.treasuredata.com/articles/result-into-salesforce#prerequisites
 
-# Running workflow
+![](https://t.gyazo.com/teams/treasure-data/0153ad6cb81d8a2ca71d3c55fe6c21e1.png)
 
-### Local Testing
-    # Set Secrets on your local for testing
-    $ td wf secrets --local --set sfdc.password=******
-    $ td wf secrets --local --set sfdc.securitytoken=********
-    #Run it locally
-    $ td wf run td_sfdc
+![](https://t.gyazo.com/teams/treasure-data/66f7e0bd60707e80a80649ba92a22639.png)
 
-### Server Testing
-    #Push to server
-    $ td wf push result_sfdc
+The connection name is used in the dig file.
+
+# How to Run
+
+First, please upload your workflow project by `td wf push` command.
+
+    # Upload
+    $ td wf push td_sfdc
+
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+
     # Set Secrets
-    $ td wf secrets --project result_sfdc --set sfdc.password=******
-    $ td wf secrets --project result_sfdc --set sfdc.securitytoken=********
-    
+    $ td wf secrets --project td_sfdc --set key=value
+
+    # Set Secrets on your local for testing
+    $ td wf secrets --local --set key=value
+
+Now you can use these secrets by `${secret:}` syntax in the dig file.
+
 You can trigger the session manually.
 
     # Run
-    $ td wf start result_sfdc td_sfdc --session now
+    $ td wf start td_sfdc td_sfdc --session now
+
+## Local mode
+
+    # Run
+    $ td wf run td_sfdc.dig
 
 # Supplemental
 
-Example URL formats of Result Output to Salesforce with different modes:
+Available parameters for `result_settings` are here.
 
-- sfdc://user%40treasure-data.com:PASSWORDSECURITYTOKEN@login.salesforce.com/Contact              #(default: mode=append)
-- sfdc://user%40treasure-data.com:PASSWORDSECURITYTOKEN@login.salesforce.com/Contact?mode=truncate  #truncate mode
-- sfdc://user%40treasure-data.com:PASSWORDSECURITYTOKEN@login.salesforce.com/Contact?mode=update&unique=CustomerId__c&upsert=false' #update mode
-
+- object: (string, required)
+- mode: (string(append|truncate|update), default append)
+- upsert: (boolean, available for update mode, default true)
+- unique: (string, available for update mode)
+- hard_delete: (boolean, available for truncate mode, default false)
+- concurrency_mode: (string(parallel|serial), default parallel)
+- retry: (integer, default 2)
+- split_records: (integer, default 10000)
 
 For more details on Result output to Salesforce, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-salesforce)
 
