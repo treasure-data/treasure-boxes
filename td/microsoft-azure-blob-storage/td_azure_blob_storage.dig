@@ -10,7 +10,6 @@ timezone: UTC
     file_ext: csv.gz
     format: csv
     compression: gz
-    quote_policy: MINIMAL
     delimiter: ","
     null_string: ""
     newline: CRLF
