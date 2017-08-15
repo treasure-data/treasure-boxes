@@ -1,0 +1,36 @@
+in:
+  type: marketo/${type}
+  endpoint: ${secret:marketo.endpoint}
+  wsdl: ${secret:marketo.wsdl}
+  user_id: ${marketo.user_id}
+  encryption_key: ${secret:marketo.encryption_key}
+  from_datetime: ${marketo.from_datetime}
+  columns:
+  - {name: id, type: long}
+  - {name: email, type: string}
+  - {name: Address, type: string}
+  - {name: Address_lead, type: string}
+...
+...
+  - {name: adTech, type: boolean}
+  - {name: Website, type: string}
+  - {name: websiteActivity, type: long}
+out: {}
+exec: {}
+filters:
+- type: rename
+  rules:
+  - rule: upper_to_lower
+  - rule: character_types
+    pass_types: ["a-z", "0-9"]
+    pass_characters: "_"
+    replace: "_"
+  - rule: first_character_types
+    pass_types: ["a-z"]
+    pass_characters: "_"
+    prefix: "_"
+  - rule: unique_number_suffix
+    max_length: 128
+- type: add_time
+  to_column: {name: time}
+  from_value: {mode: upload_time}
