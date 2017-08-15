@@ -1,0 +1,43 @@
+in:
+  type: marketo/${type}
+  endpoint: ${secret:marketo.endpoint}
+  wsdl: ${secret:marketo.wsdl}
+  user_id: ${marketo.user_id}
+  encryption_key: ${secret:marketo.encryption_key}
+  from_datetime: ${marketo.from_datetime}
+  columns:
+  - {name: id, type: long}
+  - {name: activity_date_time, type: timestamp, format: "%Y-%m-%dT%H:%M:%S%:z"}
+  - {name: activity_type, type: string}
+  - {name: mktg_asset_name, type: string}
+  - {name: mkt_person_id, type: long}
+  - {name: Webpage ID, type: long}
+  - {name: Webpage URL, type: string}
+  - {name: Query Parameters, type: string}
+  - {name: Referrer URL, type: string}
+  - {name: Client IP Address, type: string}
+  - {name: User Agent, type: string}
+  - {name: Search Engine, type: string}
+  - {name: Search Query, type: string}
+  - {name: Message Id, type: long}
+  - {name: Created At, type: timestamp, format: "%Y-%m-%d %H:%M:%S"}
+  - {name: Lead ID, type: long}
+out: {}
+exec: {}
+filters:
+- type: rename
+  rules:
+  - rule: upper_to_lower
+  - rule: character_types
+    pass_types: ["a-z", "0-9"]
+    pass_characters: "_"
+    replace: "_"
+  - rule: first_character_types
+    pass_types: ["a-z"]
+    pass_characters: "_"
+    prefix: "_"
+  - rule: unique_number_suffix
+    max_length: 128
+- type: add_time
+  to_column: {name: time}
+  from_value: {mode: upload_time}
