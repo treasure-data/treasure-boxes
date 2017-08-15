@@ -1,0 +1,77 @@
+in:
+  type: netsuite
+  target: ${netsuite.target}
+  email: ${secret:netsuite.email}
+  password: ${secret:netsuite.password}
+  account: ${secret:netsuite.account}
+  role: ${secret:netsuite.role}
+  sandbox: ${netsuite.sandbox}
+  columns:
+  - {name: access_role_external_id, type: string}
+  - {name: access_role_internal_id, type: long}
+  - {name: access_role_name, type: string}
+  - {name: access_role_type, type: string}
+  - {name: comments, type: string}
+  - {name: company_name, type: string}
+  - {name: credit_hold_override, type: string}
+  - {name: currency_external_id, type: string}
+  - {name: currency_internal_id, type: long}
+  - {name: currency_name, type: string}
+  - {name: currency_type, type: string}
+  - {name: custom_fields, type: json}
+  - {name: date_created, type: timestamp, format: "%Y-%m-%d %H:%M:%S %z"}
+  - {name: days_overdue, type: long}
+  - {name: default_address, type: string}
+  - {name: email, type: string}
+  - {name: email_preference, type: string}
+  - {name: email_transactions, type: boolean}
+  - {name: entity_id, type: string}
+  - {name: entity_status_external_id, type: string}
+  - {name: entity_status_internal_id, type: long}
+  - {name: entity_status_name, type: string}
+  - {name: entity_status_type, type: string}
+  - {name: fax, type: string}
+  - {name: fax_transactions, type: boolean}
+  - {name: give_access, type: boolean}
+  - {name: is_budget_approved, type: boolean}
+  - {name: is_inactive, type: boolean}
+  - {name: is_person, type: boolean}
+  - {name: language, type: string}
+  - {name: last_modified_date, type: timestamp, format: "%Y-%m-%d %H:%M:%S %z"}
+  - {name: phone, type: string}
+  - {name: print_transactions, type: boolean}
+  - {name: sales_rep_external_id, type: string}
+  - {name: sales_rep_internal_id, type: long}
+  - {name: sales_rep_name, type: string}
+  - {name: sales_rep_type, type: string}
+  - {name: stage, type: string}
+  - {name: subsidiary_external_id, type: string}
+  - {name: subsidiary_internal_id, type: long}
+  - {name: subsidiary_name, type: string}
+  - {name: subsidiary_type, type: string}
+  - {name: taxable, type: boolean}
+  - {name: terms_external_id, type: string}
+  - {name: terms_internal_id, type: long}
+  - {name: terms_name, type: string}
+  - {name: terms_type, type: string}
+  - {name: unbilled_orders, type: string}
+  - {name: url, type: string}
+out: {}
+exec: {}
+filters:
+- type: rename
+  rules:
+  - rule: upper_to_lower
+  - rule: character_types
+    pass_types: ["a-z", "0-9"]
+    pass_characters: "_"
+    replace: "_"
+  - rule: first_character_types
+    pass_types: ["a-z"]
+    pass_characters: "_"
+    prefix: "_"
+  - rule: unique_number_suffix
+    max_length: 128
+- type: add_time
+  to_column: {name: time}
+  from_value: {mode: upload_time}
