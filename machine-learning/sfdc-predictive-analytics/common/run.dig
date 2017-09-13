@@ -1,0 +1,36 @@
++preprocess:
+  _parallel: true
+
+  +train:
+    +minmax:
+      td>: ../queries/minmax_train.sql
+      store_last_results: true
+
+    +run:
+      td>: ../queries/${task}/preprocess_train.sql
+      create_table: train_${task}
+      engine: hive
+
+  +test:
+    +minmax:
+      td>: ../queries/minmax_test.sql
+      store_last_results: true
+
+    +run:
+      td>: ../queries/${task}/preprocess_test.sql
+      create_table: test_${task}
+      engine: hive
+
++train:
+  td>: ../queries/train.sql
+  create_table: model_${task}
+  engine: hive
+
++compute_downsampling_rate:
+  td>: ../queries/downsampling_rate.sql
+  store_last_results: true
+
++predict:
+  td>: ../queries/predict.sql
+  create_table: prediction_${task}
+  engine: hive

@@ -1,0 +1,32 @@
+timezone: UTC
+
+schedule:
+  # <Minute> <Hour> <Day_of_the_Month> <Month_of_the_Year> <Day_of_the_Week>
+  cron>: 0 4 * * *
+
+_export:
+  !include : config/params.yml
+  td:
+    database: ${target}
+
++prepare:
+  call>: common/prepare_data.dig
+
++main:
+  for_each>:
+    task: [qualified_lead, opportunity]
+  _parallel: true
+  _do:
+    +split:
+      _parallel: true
+
+      +train:
+        td>: queries/split_predict_train.sql
+        create_table: samples_train_${task}
+
+      +test:
+        td>: queries/${task}/split_predict_test.sql
+        create_table: samples_test_${task}
+
+    +run:
+      call>: common/run.dig

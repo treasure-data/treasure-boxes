@@ -1,0 +1,10 @@
+source: sfdc
+target: sfdc_predictive_analytics
+
+# For training, positive samples will be over-sampled x-times
+pos_oversampling: 3
+
+# If true, generate title-category mapping table on your own data
+# by using Python script;
+# you need to make sure if Python environment exists on your local environment
+generate_title_mapping: false
