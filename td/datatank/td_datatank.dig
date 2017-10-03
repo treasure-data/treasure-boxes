@@ -24,3 +24,16 @@ timezone: UTC
     method: copy
     schema: public
     fdw: cstore
+
++td-result-output-datatanks-for-update:
+  td>:
+  query: SELECT id,name,values FROM sample
+  database: database_name
+  result_connection: datatank
+  result_settings:
+    database: datatank
+    table: target_table_name_on_datatanks
+    mode: update
+    unique: id,name
+    method: copy
+    schema: public
