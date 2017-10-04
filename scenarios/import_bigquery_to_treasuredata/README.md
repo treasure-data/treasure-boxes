@@ -19,12 +19,12 @@ First, please upload the workflow.
     # Upload
     $ td wf push bq_to_td
 
-Next, please set database credentials by `td wf secrets` command.
+Next, please set database credentials by `td wf secrets` command. Please see [example](https://github.com/treasure-data/workflow-examples/tree/master/td_load/gcs) for `td_load>:` operator.
 
     # Set Secrets for `bq>:` and `bq_extract>:` operators
     $ td wf secrets --project bq_to_td --set gcp.credential=@credential.json
     
-    # Set Secrets for `td_load>:` operator [See example](https://github.com/treasure-data/workflow-examples/tree/master/td_load/gcs)
+    # Set Secrets for `td_load>:` operator
     $ td wf secrets --project bq_to_td --set gcp.jsonkey=@converted.json
     $ td wf secrets --project bq_to_td --set td.apikey=YOURAPIKEY
 
