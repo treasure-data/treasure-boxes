@@ -26,6 +26,7 @@ Next, please set database credentials by `td wf secrets` command.
     
     # Set Secrets for `td_load>:` operator [See example](https://github.com/treasure-data/workflow-examples/tree/master/td_load/gcs)
     $ td wf secrets --project bq_to_td --set gcp.jsonkey=@converted.json
+    $ td wf secrets --project bq_to_td --set td.apikey=YOURAPIKEY
 
 Now you can reference these credentials by `${secret:}` syntax in yml file of `td_load` operator.
 
