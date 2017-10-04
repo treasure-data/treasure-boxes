@@ -1,0 +1,30 @@
+timezone: Asia/Tokyo
+
+_export:
+  bq:
+    dataset: bq_db
+    tablename: www_access_for_td_${moment(session_time).format("YYYYMMDDHHmmss")}
+  gcs:
+    bucket: gcs_bucket
+    filepath: demo/www_access_from_bq_${moment(session_time).format("YYYYMMDDHHmmss")}.csv.gz
+  td:
+    database: td_db
+    tablename: www_accsss_from_bq_${moment(session_time).format("YYYYMMDDHHmmss")}
+
++task1_bq_to_bq:
+  bq>: queries/bq_to_bq.sql
+  destination_table: ${bq.tablename}
+
++task2_bq_to_gcs:
+  bq_extract>: ${bq.dataset}.${bq.tablename}
+  destination: gs://${gcs.bucket}/${gcs.filepath}
+  compression: GZIP
+
++task3_gcs_to_td:
+  +prepare:
+    td_ddl>:
+    create_tables: ["${td.tablename}"]
+
+  +import:
+    td_load>: config/load_gcs.yml
+    table: ${td.tablename}
