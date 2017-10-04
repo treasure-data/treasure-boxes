@@ -1,0 +1,8 @@
+_export:
+  td:
+    database: db_name
+
++initial_load:
+  td>: queries/initial.sql
+  create_table: pageviews_intermediate
+  engine: hive

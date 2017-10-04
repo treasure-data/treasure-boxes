@@ -1,0 +1,17 @@
+timezone: UTC
+
+_export:
+  td:
+    database: db_name
+
+schedule:
+  daily>: 01:00:00
+
++update_intermediate_table:
+  td>: queries/intermediate.sql
+  insert_into: pageviews_intermediate
+  engine: hive
+
++analytics:
+  td>: queries/analytics.sql
+  engine: hive
