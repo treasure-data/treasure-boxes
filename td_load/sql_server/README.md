@@ -20,13 +20,11 @@ Second, please register it without schedule. ([Create the schedule](https://docs
 You don't need to set database credentials as `secrets` because the Connector Job defined it.
 
 So, you can upload the workflow and trigger the session manually.
+You must NOT push "load.yml" because it has credential infomation. It's already registered on Data Connector job.
 
     # Upload
     $ td wf push td_load_example
-
-* You must NOT push "load.yml" because it has credential infomation. It's already registered on Data Connector job.
-
-
+    
     # Run
     $ td wf start td_load_example daily_load --session now
 
