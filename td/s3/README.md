@@ -50,7 +50,7 @@ Available parameters for `result_settings` are here.
 - header: (boolean, default true)
 - delimiter: (string(","|"tab"|"|"), default ",")
 - null: (string(""|"\N"|NULL|null), default "")
-- new_line: (string(\r\n(CRLF)|\r(CR)|\n(LF)), default \r\n(CRLF))
+- newline: (string(\r\n(CRLF)|\r(CR)|\n(LF)), default \r\n(CRLF))
 - quote: (string, optional)
 - escape: (string, optional)
 
