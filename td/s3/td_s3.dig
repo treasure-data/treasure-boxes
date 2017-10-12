@@ -11,3 +11,4 @@ _export:
     bucket: your_bucket
     path: /path/file_${moment(session_time).format("YYYYMMDD")}.csv.gz
     compression: gz
+    new_line: \r\n
