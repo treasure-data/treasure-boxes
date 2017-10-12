@@ -24,7 +24,7 @@ So, you can upload the workflow and trigger the session manually.
     # Upload
     $ td wf push td_load_example
 
-NOTE: You must NOT push "load.yml" because it has credential infomation. It's already registered on Data Connector job.
+* You must NOT push "load.yml" because it has credential infomation. It's already registered on Data Connector job.
     
     # Run
     $ td wf start td_load_example daily_load --session now
@@ -33,10 +33,10 @@ NOTE: You must NOT push "load.yml" because it has credential infomation. It's al
 
 You can check the `last_record` of imported records.
 
-   # Sample Command & Result
-   td connector:show connector_job_name
-   
-   ---
+    # Sample Command & Result
+    td connector:show connector_job_name
+    
+    ---
     Name     : connector_job_name
     Cron     :
     Timezone : UTC
