@@ -1,0 +1,13 @@
+in:
+  type: sqlserver
+  host: host_name
+  port: port_num
+  user: user_name
+  password: password
+  database: sqlserver_db
+  table: sqlserver_table
+  incremental: true
+  incremental_columns: [id, time]
+out: {mode: append}
+exec: {}
+filters: []
