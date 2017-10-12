@@ -25,7 +25,7 @@ So, you can upload the workflow and trigger the session manually.
     $ td wf push td_load_example
 
 * You must NOT push "load.yml" because it has credential infomation. It's already registered on Data Connector job.
-    
+
     # Run
     $ td wf start td_load_example daily_load --session now
 
