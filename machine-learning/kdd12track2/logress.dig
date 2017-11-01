@@ -1,0 +1,36 @@
+_export:
+  !include : config/params.yml
+  td:
+    engine: hive
+    database: work
+
++prepare:
+
+  +min_max:
+    td>: queries/min_max.sql
+    engine: presto
+    store_last_results: true
+
+  +train_test_tbl:
+    _parallel: true
+    _export:
+       min_depth: ${td.last_results.min_depth}
+       max_depth: ${td.last_results.max_depth}
+       min_pos: ${td.last_results.min_pos}
+       max_pos: ${td.last_results.max_pos}
+
+    +train_tbl:
+       td>: queries/train_tbl.sql
+       create_table: kddcup_train
+
+    +test_tbl:
+      td>: queries/test_tbl.sql
+      create_table: kddcup_test
+
++train:
+  td>: queries/train_amplified.sql
+  create_table: kddcup_lr_model
+
++predict:
+  td>: queries/predict.sql
+  create_table: kddcup_lr_predict
