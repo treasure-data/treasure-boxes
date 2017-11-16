@@ -4,7 +4,7 @@ This is a public repository of example workflows for the Treasure Data Workflow 
 
 It is referred to by the [Workflow Examples](https://docs.treasuredata.com/articles/workflows-examples) page in the Treasure Data Online documentation.
 
-# Publishing Examples
+## Publishing Examples
 
 In order to publish new example or updates to existing example, simply commit the changes to the master branch, either by:
 * direct commit to the master branch
