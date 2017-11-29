@@ -46,7 +46,7 @@ First, please upload the workflow.
 You can trigger the session manually to watch it execute.
 
     # Run
-    $ td wf start bq_to_td main.dig --session now
+    $ td wf start bq_to_td main --session now
 
 
 # Next Step

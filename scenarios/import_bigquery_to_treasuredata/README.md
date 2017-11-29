@@ -33,7 +33,7 @@ Now you can reference these credentials by `${secret:}` syntax in yml file of `t
 Finally, you can trigger the session manually.
 
     # Run
-    $ td wf start bq_to_td main.dig --session now
+    $ td wf start bq_to_td main --session now
 
 # Next Step
 
