@@ -6,10 +6,10 @@ The workflow also uses [Secrets](https://docs.treasuredata.com/articles/workflow
 
 # Prerequisites
 
-In order to register your GCP's json_key in Secrets, please convert "\n" to "\\n" in your json file.
+In order to register your GCP's json_key in Secrets, please convert ``\n`` to ``\\n`` in your json file.
 
     # Convert json_key for Secrets
-    $ awk '{gsub("\\\\n","\\\\n"); print $0;}' credential.json > converted.json
+    $ awk '{gsub(/\\\n/,"\\\\\\\n"); print $0;}' credential.json > converted.json
 
 # How to Run for Local Mode
 
