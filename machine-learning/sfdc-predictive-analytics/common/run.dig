@@ -1,25 +1,24 @@
++minmax:
+  +train:
+    td>: ../queries/minmax_train.sql
+    store_last_results: true
+
+  +test:
+    td>: ../queries/minmax_test.sql
+    store_last_results: true
+
 +preprocess:
   _parallel: true
 
   +train:
-    +minmax:
-      td>: ../queries/minmax_train.sql
-      store_last_results: true
-
-    +run:
-      td>: ../queries/${task}/preprocess_train.sql
-      create_table: train_${task}
-      engine: hive
+    td>: ../queries/${task}/preprocess_train.sql
+    create_table: train_${task}
+    engine: hive
 
   +test:
-    +minmax:
-      td>: ../queries/minmax_test.sql
-      store_last_results: true
-
-    +run:
-      td>: ../queries/${task}/preprocess_test.sql
-      create_table: test_${task}
-      engine: hive
+    td>: ../queries/${task}/preprocess_test.sql
+    create_table: test_${task}
+    engine: hive
 
 +train:
   td>: ../queries/train.sql
