@@ -8,7 +8,7 @@ SELECT
       rescale(
         IF(
           annualrevenue IS NULL,
-          ${td.last_results.test_avg_annualrevenue},
+          ${td.last_results.train_avg_annualrevenue},
           annualrevenue
         ),
         ${td.last_results.test_min_annualrevenue},
@@ -17,7 +17,7 @@ SELECT
       rescale(
         IF(
           numberofemployees IS NULL,
-          ${td.last_results.test_avg_numberofemployees},
+          ${td.last_results.train_avg_numberofemployees},
           numberofemployees
         ),
         ${td.last_results.test_min_numberofemployees},

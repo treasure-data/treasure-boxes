@@ -6,9 +6,6 @@ SELECT
   ${td.last_results.train_min_annualrevenue} AS train_min_annualrevenue,
   ${td.last_results.train_max_numberofemployees} AS train_max_numberofemployees,
   ${td.last_results.train_min_numberofemployees} AS train_min_numberofemployees,
-  -- fill NULLs w/ mean values
-  AVG(annualrevenue) AS test_avg_annualrevenue,
-  AVG(numberofemployees) AS test_avg_numberofemployees,
   -- min-max for testing should be computed on all of observed samples (i.e., train + test samples)
   greatest(MAX(annualrevenue), ${td.last_results.train_max_annualrevenue}) AS test_max_annualrevenue,
   least(MIN(annualrevenue), ${td.last_results.train_min_annualrevenue}) AS test_min_annualrevenue,
