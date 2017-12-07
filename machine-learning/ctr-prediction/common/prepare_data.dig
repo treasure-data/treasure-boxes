@@ -15,25 +15,24 @@
     engine: presto
     create_table: samples_test
 
++minmax:
+  +train:
+    td>: ../queries/minmax_train.sql
+    engine: presto
+    store_last_results: true
+
+  +test:
+    td>: ../queries/minmax_test.sql
+    engine: presto
+    store_last_results: true
+
 +preprocess:
   _parallel: true
 
   +train:
-    +minmax:
-      td>: ../queries/minmax_train.sql
-      engine: presto
-      store_last_results: true
-
-    +run:
-      td>: ../queries/preprocess_train.sql
-      create_table: train
+    td>: ../queries/preprocess_train.sql
+    create_table: train
 
   +test:
-    +minmax:
-      td>: ../queries/minmax_test.sql
-      engine: presto
-      store_last_results: true
-
-    +run:
-      td>: ../queries/preprocess_test.sql
-      create_table: test
+    td>: ../queries/preprocess_test.sql
+    create_table: test
