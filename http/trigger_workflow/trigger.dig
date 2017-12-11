@@ -1,0 +1,18 @@
+timezone: Asia/Tokyo
+
+_export:
+  baseurl: https://api-workflow.treasuredata.com/
+  apikey: YOUR_TD_APIKEY
+  workflow_id: WORKFLOW_ID
+
++task1:
+  http>: "${baseurl}api/attempts"
+  method: PUT
+  content:
+    workflowId: ${workflow_id}
+    sessionTime: ${session_time}
+    params: {}
+  content_format: json
+  content_type: application/json
+  headers:
+    - Authorization: "TD1 ${apikey}"
