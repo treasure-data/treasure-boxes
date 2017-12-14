@@ -2,5 +2,9 @@
 source: criteo_sample.samples # input table
 target: criteo_sample # output database
 
+# Decide how many samples are used for training
+# test_sample_rate = 1.0 - train_sample_rate
+train_sample_rate: 0.8
+
 # For training, positive samples will be over-sampled x-times
 pos_oversampling: 1

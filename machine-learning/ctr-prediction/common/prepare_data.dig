@@ -1,6 +1,7 @@
-+count:
-  td>: ../queries/count.sql
-  store_last_results: true
++shuffle:
+  td>: ../queries/shuffle.sql
+  engine: presto
+  create_table: samples_shuffled
 
 +split:
   _parallel: true
