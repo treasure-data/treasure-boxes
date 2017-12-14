@@ -2,7 +2,9 @@ SELECT
   C.*,
   T.role,
   T.job,
-  rand() AS rnd
+  -- stratified sampling
+  count(1) over (partition by is_won) as per_label_count,
+  rank() over (partition by is_won order by rand(41)) as rank_in_label
 FROM
   data C LEFT
 JOIN

@@ -1,5 +1,3 @@
 select *
-from ${source}
-where rowid <= ${td.last_results.n_train}
-order by rowid asc
-;
+from samples_shuffled
+where rank_in_label <= (per_label_count * ${train_sample_rate})
