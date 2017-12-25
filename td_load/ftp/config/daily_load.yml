@@ -1,0 +1,26 @@
+in:
+  type: ftp
+  host: ${secret:ftp.host}
+  port: ${secret:ftp.port}
+  user: ${secret:ftp.user}
+  password: ${secret:ftp.password}
+  path_prefix: ${ftp.path_prefix}
+  ssl: ${ftp.ssl}
+  ssl_verify: ${ftp.ssl_verify}
+  parser:
+    charset: UTF-8
+    newline: LF
+    type: csv
+    delimiter: ","
+    quote: "\""
+    escape: "\""
+    trim_if_not_quoted: false
+    skip_header_lines: 1
+    allow_extra_columns: false
+    allow_optional_columns: false
+    columns:
+    - {name: time, type: long}
+    - {name: id, type: long}
+    - {name: name, type: string}
+    - {name: category, type: string}
+out: {}
