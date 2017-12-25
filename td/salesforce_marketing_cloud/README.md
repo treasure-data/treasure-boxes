@@ -17,7 +17,7 @@ The connection name is used in the dig file.
 First, please upload your workflow project by `td wf push` command.
 
     # Upload
-    $ td wf push td_sftp
+    $ td wf push td_sfmc
 
 If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
 
