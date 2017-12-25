@@ -1,0 +1,15 @@
+timezone: UTC
+
++td-result-output-sfmc:
+  td>: queries/sample.sql
+  database: tmp
+  result_connection: your_connection_name
+  result_settings:
+    path_prefix: import/list_from_TD_${moment(session_time).format("YYYY-MM-DD")}.csv
+    format: csv
+    compression: none
+    header_line: true
+    delimiter: ","
+    quote_policy: MINIMAL
+    null_string: ""
+    newline: CRLF
