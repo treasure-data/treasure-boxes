@@ -1,0 +1,9 @@
+_export:
+#  mail: ##For Local Mode##
+#   from: "mailfrom@mail.com"   ##For Local Mode##
+  common_word: Send Email test!
+
++send_email:
+  mail>: body.txt
+  subject: [${common_word}] Email from workflow
+  to: ["mailto@mail.com"]
