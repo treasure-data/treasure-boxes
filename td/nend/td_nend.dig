@@ -1,0 +1,12 @@
+timezone: UTC
+
++td-result-output-nend:
+  td>: queries/sample.sql
+  database: tmp
+  result_connection: your_connection_name
+  result_settings:
+    target_type: idfa
+    target_name: name
+    retry_initial_wait_sec: 5
+    retry_limit: 4
+    mode: replace
