@@ -2,7 +2,7 @@
 
 This example manipulates tables in Treasure Data daily basis.
 
-The workflow uses [td_run](http://docs.digdag.io/operators.html#td-run-treasure-data-saved-queries) operator to execute the saved queries.
+The workflow uses [td_ddl](http://docs.digdag.io/operators/td_ddl.html) operaton.
 
 # How to Run
 
