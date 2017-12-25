@@ -1,0 +1,29 @@
+timezone: UTC
+
+_export:
+  td:
+    database: www_access
+
+schedule:
+  daily>: 02:00:00
+
++create_empty_new_table:
+  td_ddl>:
+  empty_tables: ["my_table_${session_date_compact}"]
+
++insert_data:
+  td>:
+  query: select count(*) from tab;
+  insert_into: my_table_${session_date_compact}
+
++swap_table1:
+  td_ddl>:
+  rename_tables: [{from: "my_table", to: "my_table_${session_date_compact}_old"}]
+
++swap_table2:
+  td_ddl>:
+  rename_tables: [{from: "my_table_${session_date_compact}", to: "my_table"}]
+
++drop_old_table:
+  td_ddl>:
+  drop_tables: ["my_table_${session_date_compact}_old"]
