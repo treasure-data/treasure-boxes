@@ -1,0 +1,20 @@
+_export:
+  pg:
+    host: hostname
+    port: portnum
+    database: postgre_db
+    user: postgre_user
+    ssl: true
+    schema: myschema
+    # strict_transaction: false
+
++upsert_master_table:
+  pg>: queries/upsert_master_table.sql
+
++append_summary_table:
+  pg>: queries/append_summary_data.sql
+  insert_into: pg_summary
+
++analyze_data:
+  pg>: queries/join_master_summary.sql
+  create_table: analyzed_table
