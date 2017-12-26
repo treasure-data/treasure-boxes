@@ -1,0 +1,25 @@
+timezone: UTC
+
+_export:
+  td:
+    database: db_name
+
++step1:
+  td>: queries/step1.sql
+  store_last_results: true
+  engine: presto
+
++group:
+  for_each>:
+    result1: ["${td.last_results.cnt}"]
+
+  _do:
+    +step2:
+      td>: queries/step2.sql
+      store_last_results: true
+      engine: presto
+
+    +step3:
+      if>: ${result1 == td.last_results.cnt}
+      _do:
+        echo>: Same count!
