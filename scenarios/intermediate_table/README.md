@@ -12,7 +12,7 @@ Steps 2 and 3 can be made into a Treasure Workflow which enables you to define r
 
 You can read additional information:
 1. [Efficiently Analyze Infinitely Growing Data with Incremental Queries](https://blog.treasuredata.com/blog/2017/07/25/analyze-infinitely-growing-data-incremental-queries/)
-2. [Treasure Workflow Docs](https://blog.treasuredata.com/blog/2017/07/25/analyze-infinitely-growing-data-incremental-queries/)
+2. [Treasure Workflow Docs](https://docs.treasuredata.com/articles/workflows)
 
 ## Scenario
 
@@ -24,12 +24,12 @@ The purpose of this scenario is to get the number of unique users who accessed t
 
 In this scenario, some workflow operators are used. Please refer to the documentation for each operator.
 
- - `td>: operator`: [td>: Running Treasure Data Query](https://docs.treasuredata.com/articles/workflows)
+ - `td>: operator`: [td>: Running Treasure Data Query](http://docs.digdag.io/operators/td.html)
 
 # How to use
 
 ## Initial Load
-The initial load file (initial_task.dig) run the first query that creates the intermediate table that subsequent queries will run against.
+The initial load file ([initial_task.dig](initial_task.dig)) run the first query that creates the intermediate table that subsequent queries will run against.
 
 ## Daily Run
 The daily run file is scheduled to run every day at 1:00. It performs two tasks. 
@@ -46,7 +46,7 @@ First, please upload the workflow.
 You can trigger the session manually to watch it execute.
 
     # Run
-    $ td wf start bq_to_td main --session now
+    $ td wf start intermediate_table main --session now
 
 
 # Next Step
