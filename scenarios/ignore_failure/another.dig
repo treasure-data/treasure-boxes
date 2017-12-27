@@ -1,0 +1,4 @@
++failed_task:
+  td>:
+  query: SSELECT count(*) FROM nasdaq
+  database: sample_datasets
