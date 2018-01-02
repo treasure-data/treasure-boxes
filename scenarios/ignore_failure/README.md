@@ -1,15 +1,15 @@
-# Workflow: Scenario (Ignore failued task)
+# Workflow: Scenario (Ignore failed task)
 
 ## What is the purpose of this scenario?
-Basically, workflow should end in error if there is a task that fails even if at least one fails. However, users occasinally want to skip failed task.
-This scenario will be useful if you want to ignore the task that caused the error and make the workflow succeed.
+The normal behavior for a workflow is that it should fail if atleast one task in the workflow fails. However there are scenarios where you would want the workflow to skip a failed task and still run to completion. This scenario will allow you to ignore the failed task that caused the error and make the workflow succeed.
+
 
 ## Scenario
 
 The purpose of this scenario is to make the workflow succeed regardless of whether the task fails or not.
 
 *Requirement*
-Digdag has 2 type of operators to execute another dig. The `ignore_failure` parameter is supported by `require>` operator only. So you have to use `require>` operator if you want to ignore failure.
+Digdag has 2 types of operators to execute another dig. The `ignore_failure` parameter is supported by `require>` operator only. So you have to use `require>` operator if you want to ignore failure.
 
  - `td>: operator`: [td>: Running Treasure Data Query](http://docs.digdag.io/operators/td.html)
  - `require>: [require>: Depends on another workflow](http://docs.digdag.io/operators/require.html)
