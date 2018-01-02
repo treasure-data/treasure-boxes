@@ -3,7 +3,7 @@
 ## Scenario
 
 The purpose of this scenario is to compare the results of different td queries.
-The `store_last_results` can store the first 1 row of the query results to ${td.last_results} variable. However it will be unavailable if following `td>` operator uses `store_last_results`. If you want to compare the last results betweem differemt jobs, you need to shape the tasks.
+The `store_last_results` can store the first 1 row of the query results to ${td.last_results} variable. However it will be unavailable if following `td>` operator uses `store_last_results`. If you want to compare the last results between different jobs, you need to split the tasks.
 
 *Steps*
 1. Run a query with `store_last_results` parameter.
