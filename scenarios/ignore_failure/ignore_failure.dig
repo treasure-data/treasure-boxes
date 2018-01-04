@@ -1,0 +1,9 @@
++task1:
+  echo>: Start workflow!
+
++exec_another_dig:
+  require>: another.dig
+  ignore_failure: true
+
++task2:
+  echo>: Return from another dig even executed workflow failed.
