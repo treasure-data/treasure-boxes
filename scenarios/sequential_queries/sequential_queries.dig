@@ -1,0 +1,29 @@
+timezone: UTC
+
+schedule:
+  monthly>: 1,01:00:00
+
+_export:
+  td:
+    database: db_name
+  month: ${moment(session_date).add(-1, 'days').format("YYYY-MM")}
+  days: ${moment(session_date).add(-1, 'days').format("DD")}
+
++clear_table:
+  td_ddl>:
+  empty_tables: ["aggregated_table"]
+
++looping:
+  loop>: ${days}
+  _do:
+    +ranking_of_the_day:
+      td>: queries/ranking_of_the_day.sql
+      insert_into: aggregated_table
+
++create_table:
+  td_ddl>:
+  create_tables: ["ranking_of_the_month"]
+
++ranking_of_the_month:
+  td>: queries/ranking_of_the_month.sql
+  insert_table: ranking_of_the_month
