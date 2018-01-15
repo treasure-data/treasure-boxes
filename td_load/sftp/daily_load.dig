@@ -11,14 +11,13 @@ sla:
     to: [me@example.com]
 
 _export:
-  date: ${moment(session_time).format("YYYYMMDD")} 
   td:
     dest_db: dest_db
     dest_table: dest_table
   sftp:
     user_directory_is_root: false
     timeout: 600
-    path_prefix: "/path/file_${date}.csv"
+    path_prefix: "/path/file_${moment(session_time).format("YYYYMMDD")}.csv"
 
 +prepare_table:
   td_ddl>:
