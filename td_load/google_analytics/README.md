@@ -19,6 +19,10 @@ Second, please set Google Analytics credentials by `td wf secrets` command with 
     # Set Secrets on your local for testing
     $ td wf secrets --local --set json_key_content=@secrets.txt
 
+## Configuration (v0.9.21 or earlier)
+
+NOTE: Latest version fixes this issue.
+
 `private_key` part in `json_key_content` has to care Line Feed Code using escape key.
 
     # private_key in secret_key_file format for secret
