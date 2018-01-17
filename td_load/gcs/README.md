@@ -4,7 +4,9 @@ This example workflow ingests data in daily basis, using [Treasure Data's Data C
 
 The workflow also uses [Secrets](https://docs.treasuredata.com/articles/workflows-secrets) feature, so that you don't have to include your database credentials to your workflow files.
 
-# Prerequisites
+# Prerequisites (v0.9.21 or earlier)
+
+NOTE: Latest version fixes this issue.
 
 In order to register your GCP's json_key in Secrets, please convert "\n" to "\\n" in your json file.
 
