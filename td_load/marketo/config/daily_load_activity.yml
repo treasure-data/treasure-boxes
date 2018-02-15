@@ -1,6 +1,6 @@
 in:
   type: marketo
-  target: lead
+  target: activity
   account_id: ${secret:marketo.account_id}
   client_id: ${secret:marketo.client_id}
   client_secret: ${secret:marketo.client_secret}
