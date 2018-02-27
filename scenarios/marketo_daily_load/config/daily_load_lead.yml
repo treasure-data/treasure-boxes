@@ -1,0 +1,30 @@
+in:
+  type: marketo
+  target: lead
+  account_id: ${secret:marketo.account_id}
+  client_id: ${secret:marketo.client_id}
+  client_secret: ${secret:marketo.client_secret}
+  from_date: ${marketo.from_date}
+  fetch_days: 7
+  escape: "\""
+  quote: "\""
+  bulk_job_timeout_second: 7200
+out: {mode: append}
+exec: {}
+filters:
+- type: rename
+  rules:
+  - rule: upper_to_lower
+  - rule: character_types
+    pass_types: ["a-z", "0-9"]
+    pass_characters: "_"
+    replace: "_"
+  - rule: first_character_types
+    pass_types: ["a-z"]
+    pass_characters: "_"
+    prefix: "_"
+  - rule: unique_number_suffix
+    max_length: 128
+- type: add_time
+  to_column: {name: time}
+  from_value: {mode: upload_time}
