@@ -20,7 +20,7 @@ Second, please set datasource credentials by `td wf secrets` command.
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 
-- [config/daily_load_activity_log.yml](config/daily_load_activity_log.yml)
+- [config/daily_load_activity.yml](config/daily_load_activity.yml)
 - [config/daily_load_lead.yml](config/daily_load_lead.yml)
 
 If you use Treasure Workflow UI, overwrite above parameters into ${secret:marketo.xxxx} in yml files directly.
