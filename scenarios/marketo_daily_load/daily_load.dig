@@ -22,7 +22,9 @@ _export:
           table: ${marketo.type[i]}
         +delete_for_dedup:
           td>: queries/deduplication.sql
+          database: ${td.dest_db}
         +insert_dedup_data:
           td>: queries/insert_dedup.sql
           insert_into: ${marketo.type[i]}_dedup
+          database: ${td.dest_db}
 
