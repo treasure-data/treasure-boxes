@@ -27,4 +27,5 @@ _export:
           td>: queries/insert_dedup.sql
           insert_into: ${marketo.type[i]}_dedup
           database: ${td.dest_db}
+          engine: hive
 
