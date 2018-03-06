@@ -31,6 +31,11 @@ Now, you can trigger the session manually.
     $ td wf start td_load_example daily_load --session now
 
 Before you trigger, confirm whether there is a target database and tables.
+
+After the table schema is created, the following operations are required.
+
+1 - Remove rnk column from xxx_dedup.
+2 - Turn off `include v column` and `auto schema update` in xxx_dedup.
     
 # Next Step
 
