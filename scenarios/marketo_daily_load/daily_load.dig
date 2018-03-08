@@ -13,7 +13,7 @@ _export:
 
 +parallel_task:
     loop>: 2
-    _parallel: true
+    _parallel: false
     _do:
       +parallel_subtask:
         +load_data:
@@ -23,6 +23,9 @@ _export:
         +delete_for_dedup:
           td>: queries/deduplication.sql
           database: ${td.dest_db}
+        +generate_column_names:
+          td>: queries/generate_column_names.sql
+          store_last_results: true
         +insert_dedup_data:
           td>: queries/insert_dedup.sql
           insert_into: ${marketo.type[i]}_dedup
