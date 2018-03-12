@@ -9,7 +9,6 @@ FROM (
     FROM
       information_schema.columns
     WHERE
-      table_schema = '${marketo.type[i]}_dedup'
-      AND table_name = '${marketo.type[i]}_dedupbulkload'
-      AND column_name != 'rnk'
+      table_schema = '${td.dest_db}'
+      AND table_name = '${marketo.type[i]}'
   ) t1
