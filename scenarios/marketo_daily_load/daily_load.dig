@@ -25,6 +25,7 @@ _export:
           database: ${td.dest_db}
         +generate_column_names:
           td>: queries/generate_column_names.sql
+          database: ${td.dest_db}
           store_last_results: true
         +insert_dedup_data:
           td>: queries/insert_dedup.sql
