@@ -1,0 +1,9 @@
+in_db: cf_wf
+out_db: cf_wf
+
+topk_similar_items: 10
+recent_items: 5
+max_recommended_items: 5
+
+dimsum_similarity_threshold: 0.3
+
