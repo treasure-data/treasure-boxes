@@ -5,7 +5,8 @@ in:
   client_id: ${secret:marketo.client_id}
   client_secret: ${secret:marketo.client_secret}
   from_date: ${marketo.from_date}
-  fetch_days: 7
+  fetch_days: ${marketo.fetch_days}
+  incremental: false
   escape: "\""
   quote: "\""
   bulk_job_timeout_second: 7200

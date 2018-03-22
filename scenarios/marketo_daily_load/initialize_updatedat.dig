@@ -1,0 +1,19 @@
+timezone: Asia/Tokyo
+
+_export:
+  marketo:
+    type: ["activity","lead"]
+    from_date: "${moment(session_time).add(-30, 'day').format('YYYY-MM-DD')}"
+    fetch_days: 7
+  td:
+    dest_db: support
+
++initialize_tables:
+  td_ddl>:
+  database: ${td.dest_db}
+  empty_tables: ["${marketo.type[0]}", "${marketo.type[1]}", "${marketo.type[0]}_dedup", "${marketo.type[1]}_dedup"]
++initial_load_marketo_lead:
+  td_load>: config/daily_load_${marketo.type[1]}.yml
+  database: ${td.dest_db}
+  table: ${marketo.type[1]}
+

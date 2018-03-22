@@ -1,12 +1,13 @@
 in:
   type: marketo
-  target: activity
+  target: lead
   account_id: ${secret:marketo.account_id}
   client_id: ${secret:marketo.client_id}
   client_secret: ${secret:marketo.client_secret}
   from_date: ${marketo.from_date}
   fetch_days: ${marketo.fetch_days}
   incremental: false
+  use_updated_at: true
   escape: "\""
   quote: "\""
   bulk_job_timeout_second: 7200

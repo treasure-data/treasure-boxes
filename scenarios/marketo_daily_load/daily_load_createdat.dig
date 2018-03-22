@@ -1,0 +1,37 @@
+timezone: Asia/Tokyo
+
+# Enable schedule
+# schedule:
+#   daily>: 02:00:00
+
+_export:
+  marketo:
+    type: ["activity","lead"]
+    dedup_key: ["marketoguid","mk_id"]
+    from_date: "${moment(session_time).add(-7, 'day').format('YYYY-MM-DD')}"
+    fetch_days: 7
+  td:
+    dest_db: support
+
++parallel_task:
+    loop>: 2
+    _parallel: false
+    _do:
+      +parallel_subtask:
+        +load_data:
+          td_load>: config/daily_load_${marketo.type[i]}.yml
+          database: ${td.dest_db}
+          table: ${marketo.type[i]}
+        +delete_for_dedup:
+          td>: queries/deduplication.sql
+          database: ${td.dest_db}
+        +generate_column_names:
+          td>: queries/generate_column_names.sql
+          database: ${td.dest_db}
+          store_last_results: true
+        +insert_dedup_data:
+          td>: queries/insert_dedup.sql
+          insert_into: ${marketo.type[i]}_dedup
+          database: ${td.dest_db}
+          engine: hive
+

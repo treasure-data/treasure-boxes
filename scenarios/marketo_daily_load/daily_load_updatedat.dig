@@ -1,13 +1,16 @@
 timezone: Asia/Tokyo
 
-schedule:
-  daily>: 02:00:00
+# Enable schedule
+# schedule:
+#  daily>: 02:00:00
 
 _export:
   marketo:
     type: ["activity","lead"]
+    filename: ["activity","lead_updatedat"]
     dedup_key: ["marketoguid","mk_id"]
-    from_date: "${moment(session_time).add(-7, 'day').format('YYYY-MM-DD')}"
+    from_date: "${moment(session_time).add(-3, 'day').format('YYYY-MM-DD')}"
+    fetch_days: 3
   td:
     dest_db: support
 
@@ -17,7 +20,7 @@ _export:
     _do:
       +parallel_subtask:
         +load_data:
-          td_load>: config/daily_load_${marketo.type[i]}.yml
+          td_load>: config/daily_load_${marketo.filename[i]}.yml
           database: ${td.dest_db}
           table: ${marketo.type[i]}
         +delete_for_dedup:
