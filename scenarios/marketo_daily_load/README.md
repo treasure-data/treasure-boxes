@@ -6,7 +6,7 @@ This example workflow take care of such limitations
 
 # How to Run
 
-## For Filter by CreatedAt
+## Filter by CreatedAt for Lead and Activity
 
 First, you can upload the workflow and trigger the session manually.
 
@@ -34,7 +34,7 @@ Now, you can trigger the session manually.
 
 Before you trigger, confirm whether there is a target database and tables.
 
-## For Filter by CreatedAt in Lead
+## Filter by CreatedAt for Lead
 
 Lead by Data Connector for Marketo supports a filter with updateAt column (mk_updatedat), but updatedAt don't support incremental ingestion.
 By using the following workflows, you can ingest data Lead filtered by using updatedat.
