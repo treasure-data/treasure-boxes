@@ -4,7 +4,7 @@ _export:
   marketo:
     type: ["activity","lead"]
     from_date: "${moment(session_time).add(-30, 'day').format('YYYY-MM-DD')}"
-    fetch_days: 7
+    fetch_days: 30
   td:
     dest_db: support
 
