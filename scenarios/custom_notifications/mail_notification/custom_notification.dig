@@ -1,0 +1,14 @@
+timezone: UTC
+
+_export:
+  td:
+    database: sample_datasets
+    engine: presto
+
+_error:
+  mail>: body.txt
+  subject: "[ERROR] Workflow failed!!"
+  to: [me@example.com]
+
++step1:
+  td>: select.sql

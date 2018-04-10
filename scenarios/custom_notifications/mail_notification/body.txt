@@ -1,0 +1,5 @@
+Hi ${to},
+
+The workflow session ${session_id} failed due to following error.
+
+${error.message}
