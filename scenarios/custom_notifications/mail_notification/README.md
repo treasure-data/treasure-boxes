@@ -2,7 +2,7 @@
 
 ## Scenario
 
-The defalt notification is not able to manage addresses by user. So, the purpose of this scenario is to notify via email if workflow fail.
+By default the notification on a workflow failure will only go to the owner of the workflow. The purpose of this scenario is to illustrate how to send an email notification to any address when the workflow encounters and error. 
 
 *Steps*
 1. Run an incorrect query, then workflow fails.
