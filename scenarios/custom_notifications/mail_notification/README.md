@@ -2,20 +2,18 @@
 
 ## Scenario
 
-The purpose of this scenario is to compare the results of different td queries.
-The `store_last_results` can store the first 1 row of the query results to ${td.last_results} variable. However it will be unavailable if following `td>` operator uses `store_last_results`. If you want to compare the last results between different jobs, you need to split the tasks.
+By default the notification on a workflow failure will only go to the owner of the workflow. The purpose of this scenario is to illustrate how to send an email notification to any address when the workflow encounters and error. 
 
 *Steps*
-1. Run a query with `store_last_results` parameter.
-2. Keep a stored last result to variable using `for_each>` operator.
-3. Run an another query with `store_last_results` parameter as subtask in `for_each>`.
-4. Compare the results using `if>` operator.
+1. Run an incorrect query, then workflow fails.
+2. Kick the `_error` task, then mail operator sends notification including error message.
+3. Receive notification email.
 
 In this scenario, some workflow operators are used. Please refer to the documentation for each operator.
 
  - `td>: operator`: [td>: Running Treasure Data Query](https://docs.treasuredata.com/articles/workflows)
- - `for_each>: operator`: [for_each>: Repeat tasks for values](http://docs.digdag.io/operators/for_each.html)
- - `if>: operator`: [if>: Conditional execution](http://docs.digdag.io/operators/if.html)
+ - `mail>: operator`: [for_each>: Repeat tasks for values](http://docs.digdag.io/operators/mail.html)
+ - `_error: task`: [_error:](http://docs.digdag.io/concepts.html?highlight=_error#dynamic-task-generation-and-check-error-tasks)
 
 # How to use
 
@@ -24,12 +22,12 @@ In this scenario, some workflow operators are used. Please refer to the document
 First, please upload the workflow.
 
     # Upload
-    $ td wf push compare_last_results
+    $ td wf push custom_notification
 
 You can trigger the session manually to watch it execute.
 
     # Run
-    $ td wf start compare_last_results step1 --session now
+    $ td wf start custom_notification custom_notification --session now
 
 
 # Next Step
