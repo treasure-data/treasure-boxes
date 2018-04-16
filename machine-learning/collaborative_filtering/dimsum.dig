@@ -1,0 +1,48 @@
+_export:
+  !include : config/params.yml
+  td:
+    engine: hive
+    database: ${out_db}
+
+# timezone: Asia/Tokyo
+# timezone: America/Los_Angeles
+
+# schedule:
+#   daily>: 5:00:00
+#  weekly>: Sun,09:00:00
+
++user_item_interaction:
+  td>: queries/user_item.sql
+  create_table: user_item
+  engine: presto
+
++similarity_computation:
+
+  +item_similarity:
+    td>: queries/item_similarity.sql
+    create_table: item_similarity
+    engine: hive
+
+  +topk_similar_items:
+    td>: queries/topk_similar_items.sql
+    create_table: topk_similar_items
+    engine: hive
+
++recommendation:
+  # Recommend top-k items based on users' recently purchased items
+
+  # Find items that user recently purchased/accessed
+  +recent_item_contacts:
+    td>: queries/recent_item_contacts.sql
+    create_table: recent_item_contacts
+    engine: hive
+
+  # Co-occurence of user purchases in Item-Item matrix is used for finding a similar items
+  +topk_recommended_items:
+    td>: queries/topk_recommended_items.sql
+    create_table: topk_recommended_items
+    engine: hive
+
++cleanup:
+  td_ddl>:
+  drop_tables: ['user_item', 'similarity_upper_triangular', 'item_similarity', 'recent_item_contacts']
