@@ -1,0 +1,29 @@
+timezone: UTC
+
+_export:
+  td:
+    database: sample_datasets
+    engine: presto
+
+_error:
+  http>: https://hooks.slack.com/services/WebhookURL
+  method: POST
+  content:
+    username: "workflow_alert"
+    channel: "channel_name"
+    attachments:
+      - color: danger
+        title: "[Error] The workflow session ${session_id} failed"
+        title_link: https://console.treasuredata.com/app/workflows
+        text: The workflow session ${session_id} failed due to following error.
+        fields:
+          - title: Error message
+            value: "```${error.message}```"
+          - title: Stack Trace
+            value: "```${error.stacktrace}```"
+          - title: What should we do?
+            value: "Please check the failed workflow and fix the problem. Then, please rerun it."
+  content_format: json
+
++step1:
+  td>: select.sql
