@@ -15,7 +15,7 @@ WITH topk as (
       AND NOT EXISTS (
         SELECT a.itemid FROM user_item a
         WHERE a.userid = t1.userid AND a.itemid = t2.other
---        AND a.count <= 1 -- optional filtering
+          AND a.count <= ${min_cooccurence_filter} -- optional filtering
       )
     group by
       t1.userid, t2.other

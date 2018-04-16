@@ -1,3 +1,4 @@
+-- @TD distribute_strategy: aggressive
 with item_magnitude as ( -- compute magnitude of each item vector
   select
     to_map(j, mag) as mags
@@ -24,14 +25,13 @@ item_features as (
 ),
 partial_result as (
   select
-    dimsum_mapper(f.feature_vector, m.mags, '-threshold ${dimsum_similarity_threshold} -disable_symmetric_output')
+    dimsum_mapper(f.feature_vector, m.mags, '-threshold ${dimsum_similarity_threshold}')
       as (itemid, other, score)
   from
     item_features f
     left outer join item_magnitude m
 ),
-similarity_upper_triangular as (
-  -- if similarity of (i1, i2) pair is in this table, (i2, i1)'s similarity is omitted
+similarity as (
   select
     itemid, 
     other,
@@ -40,11 +40,6 @@ similarity_upper_triangular as (
     partial_result
   group by
     itemid, other
-),
-similarity as ( -- copy (i1, i2)'s similarity as (i2, i1)'s one
-  select itemid, other, similarity from similarity_upper_triangular
-  union all
-  select other as itemid, itemid as other, similarity from similarity_upper_triangular
 ),
 topk as (
   select

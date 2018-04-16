@@ -15,7 +15,7 @@ To push the workflow to TD:
 
 To run the workflow:
 
-`td wf start collaborative_filtering cf`
+`td wf start --session now collaborative_filtering dimsum`
 
 ## Input
 

@@ -26,7 +26,7 @@ _export:
   +topk_similar_items:
     td>: queries/topk_similar_items.sql
     create_table: topk_similar_items
-    engine: presto
+    engine: hive
 
 +recommendation:
   # Recommend top-k items based on users' recently purchased items
@@ -45,5 +45,4 @@ _export:
 
 +cleanup:
   td_ddl>:
-  drop_tables: ['user_item', 'item_similarity', 'recent_item_contacts']
- 
+  drop_tables: ['user_item', 'similarity_upper_triangular', 'item_similarity', 'recent_item_contacts']
