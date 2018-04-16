@@ -2,12 +2,12 @@
 
 ## Scenario
 
-By default the notification on a workflow failure will only go to the owner of the workflow. The purpose of this scenario is to illustrate how to send notification to the slack channel when the workflow encounters and error. 
+By default the notification on a workflow failure will only go to the owner of the workflow. The purpose of this scenario is to illustrate how to send a notification to a slack channel when a workflow encounters an error. 
 
 *Steps*
-1. Run an incorrect query, then workflow fails.
-2. Kick the `_error` task, then http operator sends notification including error message.
-3. Receive notification slack message.
+1. Run an incorrect query that results in a workflow failure.
+2. Kick the `_error` task, the http operator will then send a notification including the error message.
+3. Receive the slack message notification indicating that the workflow has failed.
 
 In this scenario, some workflow operators are used. Please refer to the documentation for each operator.
 
@@ -32,4 +32,4 @@ You can trigger the session manually to watch it execute.
 
 # Next Step
 
-If you have any questions, please contact to support@treasuredata.com.
+If you have any questions, please contact support @ support@treasuredata.com.
