@@ -27,4 +27,4 @@ _export:
     store_last_results: true
 
   +show_accuracy:
-    echo>: "Logloss (smaller is better): ${td.last_results.logloss}"
+    echo>: "Logloss (smaller is better): ${td.last_results.logloss}\nArea under the ROC curve (value in [0.7, 0.9] is reasonable): ${td.last_results.auc}"
