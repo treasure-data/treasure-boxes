@@ -5,7 +5,6 @@ if [ -z $(which td) ]; then
   exit 1
 fi
 
-# Caution: You
 echo "You need to accept and agree with CRITEO LABS DATA TERM OF USE at: http://labs.criteo.com/2014/02/dataset/\n"
 while true; do
   read -p "Have you accepted? [Y/n] " yn
