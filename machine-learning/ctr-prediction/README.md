@@ -34,7 +34,7 @@ We prepared a basic workflow for CTR prediction:
 ```sh
 $ ./data.sh # prepare data
 $ td wf push ctr-prediction # push workflow to TD
-$ td wf start ctr-prediction predict_logress --session now -p apikey=${YOUR_TD_API_KEY}
+$ td wf start ctr-prediction predict_logress --session now
 ```
 
 * [predict_logress.dig](predict_logress.dig) - TD workflow script for CTR prediction using [Logistic Regression](https://hivemall.incubator.apache.org/userguide/binaryclass/a9a_lr.html)

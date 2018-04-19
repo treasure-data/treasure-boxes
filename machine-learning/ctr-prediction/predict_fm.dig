@@ -2,7 +2,6 @@ _export:
   !include : config/general.yml
   !include : config/fm.yml
   td:
-    apikey: ${apikey}
     database: ${target}
     engine: hive
 
