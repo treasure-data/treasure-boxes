@@ -1,6 +1,6 @@
-# Treasure Data Workflow Examples
+# Treasure Workflow Examples
 
-This is a public repository of example workflows for the Treasure Data Workflow engine.
+This is a public repository of example workflows for the Treasure Workflow engine.
 
 It is referred to by the [Workflow Examples](https://docs.treasuredata.com/articles/workflows-examples) page in the Treasure Data Online documentation.
 
