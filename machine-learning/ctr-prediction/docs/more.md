@@ -113,7 +113,7 @@ For `predict_fm.dig`, there are additional parameters we need to set. These are 
 # Parameters for Factorization Machines:
 
 # (1) Number of latent factors
-factor: 8
+factors: 8
 
 # (2) Number of iterations
 iters: 50
