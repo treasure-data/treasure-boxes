@@ -3,7 +3,8 @@ in:
   bucket: ${gcs.bucket}
   path_prefix: ${gcs.filepath}
   auth_method: json_key
-  json_keyfile: "${secret:gcp.jsonkey}"
+  json_keyfile:
+    content: "${secret:gcp.jsonkey}"
   decoders:
   - {type: gzip}
   parser:
