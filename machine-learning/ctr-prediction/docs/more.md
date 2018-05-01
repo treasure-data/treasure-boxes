@@ -1,8 +1,10 @@
 ## What the workflow did
 
-We prepared two workflows, `predict_logress.dig` and `predict_fm.dig`. In order to predict CTRs from a set of features, the former uses a well-known machine learning algorithm called **Logistic Regression**. An algorithm used in the latter workflow, namely **Factorization Machines**, is much more complex.
+We prepared three workflows, `predict_logress.dig`, `predict_fm.dig` and `predict_rf.dif`. In order to predict CTRs from a set of features, these workflows employ machine learning algorithm **Logistic Regression**, **Factorization Machines** and **Random Forest**, respectively.
 
-We recommend you to first try `predict_logress.dig` because the number of parameters we need to configure is smaller than `predict_fm.dig`, and exporting the models to external databases such as MySQL should be easy for further integration of learnt models and production ad servers.
+We recommend you to first try `predict_logress.dig` because the number of parameters we need to configure is smaller than `predict_fm.dig`, and exporting Logistic Regression model to external databases such as MySQL is easy for further integration of learnt models and production ad servers.
+
+**Caution:** Currently, Logistic Regression is much more stable and accurate compared to Random Forest in our platform due to an implementation-related issue of underlying OSS library, [Hivemall](https://github.com/apache/incubator-hivemall).
 
 ### Data format
 
@@ -68,11 +70,11 @@ _export:
     store_last_results: true
 
   +show_accuracy:
-    echo>: "Logloss (smaller is better): ${td.last_results.logloss}"
+    echo>: "Logloss (smaller is better): ${td.last_results.logloss}\nArea under the ROC curve (value in [0.7, 0.9] is reasonable): ${td.last_results.auc}"
 ```
 
 After Step 2, weights for the features are stored in `logress_model`:
-	
+
 | feature | weight |
 |:---:|:---:|
 | i1      |   0.2616434097290039 |
@@ -81,16 +83,16 @@ After Step 2, weights for the features are stored in `logress_model`:
 | ... | ...|
 
 By using the weights, prediction should be:
-	
+
 | rowid<br/>`long` | predicted_ctr<br/>`double` |
 |:---:|:---:|
 |80038 |0.487177|
 |80043|0.9583734|
-|80046 | 0.9104515 | 
+|80046 | 0.9104515 |
 | ... | ... |
 
 
-`predict_fm.dig` is actually different from `predict_logress.dig` in terms of algorithm, but basic structure of the workflows is same.
+`predict_fm.dig` are actually different from `predict_logress.dig` in terms of algorithm, but basic structure of the workflows is same.
 
 Note that, for efficient computation, features can be passed to hash functions in practice. This strategy is called **feature hashing**. You can learn more about the technique from [HERE](http://hivemall.incubator.apache.org/userguide/ft_engineering/hashing.html), and try it by modifying [preprocess_train.sql](../queries/preprocess_train.sql) and [preprocess_test.sql](../queries/preprocess_test.sql).
 
@@ -108,7 +110,7 @@ pos_oversampling: 1
 The following paper describes about the oversampling technique: [Practical Lessons from Predicting Clicks on Ads at Facebook](https://research.fb.com/publications/practical-lessons-from-predicting-clicks-on-ads-at-facebook/)
 
 For `predict_fm.dig`, there are additional parameters we need to set. These are in `config/fm.yml`:
-	
+
 ```yml
 # Parameters for Factorization Machines:
 
@@ -136,14 +138,23 @@ eta: 0.01
 As a result of our workflows, you will ultimately see an output like:
 
 ```
-Logloss (smaller is better): 0.4828375322703703
+Logloss (smaller is better): 0.4830765741653266
+Area under the ROC curve (value in [0.7, 0.9] is reasonable): 0.7316643845183765
 ```
 
-This value indicates the accuracy of CTR prediction, and smaller value means that our predictor is better. 
+These values indicates the accuracy of CTR prediction, and smaller `Logloss` or larger `Area under the ROC curve` (AUC) value means that our predictor is better. For testing samples which satisfy `label` is 0 (1), we desire predicted CTR is small (large); the accuracy is computed based on a comparison between the expected and actual result.
 
-It should be noted that, for testing samples that `label` is 0, predicted CTR has to be small. On the other hand, if `label` is 1, higher predicted CTR is better.
+It should be noted that exceptionally good AUC value (i.e., more than 0.9) is a bad sign; it indicates the possibility of [data leakage](https://www.kaggle.com/dansbecker/data-leakage), and you should carefully check if your feature representation has no problem.
 
-If you are not satisfied with the accuracy, you can try the same workflow with different parameters by modifying `config/fm.yml`, or different set of variables by changing table schema. 
+By default, the accuracy of our workflow examples falls into somewhere around the following values:
+
+|Algorithm<br />`Workflow` | Logloss | AUC |
+|:---:|:---:|:---:|
+|Logistic Regression<br />`predict_logress.dig`| 0.483 | 0.732 |
+|Factorization Machines<br />`predict_fm.dig`| 0.687 | 0.680 |
+|RandomForest<br />`predict_rf.dig`| 2.200 | 0.645 |
+
+If you are not satisfied with the accuracy, you can try the same workflow with different parameters by modifying `config/fm.yml`, or different set of variables by changing table schema.
 
 ## Data preparation
 
