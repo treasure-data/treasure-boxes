@@ -1,5 +1,6 @@
 _export:
   !include : config/general.yml
+  !include : config/rf.yml
   td:
     database: ${target}
     engine: hive
@@ -8,17 +9,12 @@ _export:
   call>: common/prepare_data.dig
 
 +main:
-  +logress_train:
-    td>: queries/logress_train.sql
-    create_table: logress_model
+  +rf_train:
+    td>: queries/rf_train.sql
+    create_table: rf_model
 
-  +compute_downsampling_rate:
-    td>: queries/downsampling_rate.sql
-    engine: presto
-    store_last_results: true
-
-  +logress_predict:
-    td>: queries/logress_predict.sql
+  +rf_predict:
+    td>: queries/rf_predict.sql
     create_table: prediction
 
   +evaluate:
