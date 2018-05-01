@@ -1,0 +1,4 @@
+# Parameters for RandomForest:
+
+# Number of decision trees
+trees: 100

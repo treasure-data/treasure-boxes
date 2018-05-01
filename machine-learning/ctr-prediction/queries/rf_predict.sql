@@ -18,8 +18,7 @@ WITH ensembled AS (
 -- DIGDAG_INSERT_LINE
 SELECT
   rowid,
-  -- use calibrated CTR to prevent negative effect of over-sampling
-  pred.probabilities[1] / (pred.probabilities[1] + pred.probabilities[0] / ${td.last_results.downsampling_rate}) AS predicted_ctr
+  pred.probabilities[1] AS predicted_ctr
 FROM
   ensembled
 ;

@@ -1,5 +1,6 @@
 _export:
   !include : config/general.yml
+  !include : config/rf.yml
   td:
     database: ${target}
     engine: hive
@@ -11,11 +12,6 @@ _export:
   +rf_train:
     td>: queries/rf_train.sql
     create_table: rf_model
-
-  +compute_downsampling_rate:
-    td>: queries/downsampling_rate.sql
-    engine: presto
-    store_last_results: true
 
   +rf_predict:
     td>: queries/rf_predict.sql

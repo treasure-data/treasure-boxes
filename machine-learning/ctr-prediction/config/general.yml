@@ -7,4 +7,6 @@ target: criteo_sample # output database
 train_sample_rate: 0.8
 
 # For training, positive samples will be over-sampled x-times
+# NOTE: In order to handle imbalanced data, `predict_rf.dig` uses
+# `-stratified_sampling` instead of oversampling.
 pos_oversampling: 1
