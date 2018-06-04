@@ -21,7 +21,7 @@ from (
   select
     train_fm(
       features, label,
-      "-c -factor ${factor} -iters ${iters} -lambda_w0 ${lambda_w0} -lambda_wi ${lambda_wi} -lambda_v ${lambda_v} -eta ${eta}"
+      "-c -f ${factor} -iters ${iters} -lambda_w0 ${lambda_w0} -lambda_wi ${lambda_wi} -lambda_v ${lambda_v} -eta ${eta}"
     ) as (feature, Wi, Vif)
   from (
     select features, label
