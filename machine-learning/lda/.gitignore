@@ -1,0 +1,9 @@
+*~
+\#*#
+/.digdag-wrapper
+.digdag
+.resources/lda_c.txt
+out/
+td-bulk-import.log
+error-records/
+*.lck

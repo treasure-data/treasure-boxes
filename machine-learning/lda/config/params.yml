@@ -1,0 +1,20 @@
+# Database
+dbname: lda
+
+# input table
+source: docs
+
+# number of LDA topics
+num_topics: 7
+
+# number of training iterations
+iterations: 20
+
+# show top-k significant words for each topics
+topk_rank: 50
+
+# To use Japanese tokenizer or not (Please set false for English texts)
+japanese: false
+
+# whether to use TF-IDF for feature vector
+tfidf: true
