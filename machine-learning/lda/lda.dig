@@ -1,0 +1,52 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${dbname}
+    engine: hive
+
++tokenize:
+  +tokenize_ja:
+    if>: ${japanese == true}
+    _do:
+      td>: queries/tokenize_ja.sql
+      create_table: tokenized
+
+  +tokenize_en:
+    if>: ${japanese == false}
+    _do:
+      td>: queries/tokenize.sql
+      create_table: tokenized
+
++prepare_input_tbl:
+
+  +prepare_by_tfidf:
+    if>: ${tfidf == true}
+    _do:
+      call>: tfidf.dig
+
+  +prepare_by_wordcnt:
+    if>: ${tfidf == false}
+    _do:
+      td>: queries/prepare_wordcnt.sql
+      create_table: input
+
++train_lda:
+  td>: queries/train_lda.sql
+  create_table: lda_model
+
++post_train:
+  _parallel: true
+
+  +topicwords:
+    +ranking:
+      td>: queries/rankwords.sql
+      create_table: ranked_words
+      engine: presto
+
+    +collect_topicwords:
+      td>: queries/topicwords.sql
+      create_table: topicwords
+
+  +predict_topics:
+    td>: queries/predict_lda.sql
+    create_table: predicted_topics

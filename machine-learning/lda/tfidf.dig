@@ -1,0 +1,15 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${dbname}
+    engine: hive
+
++count:
+  td>: queries/count_docs.sql
+  store_last_results: true
+  engine: presto
+
++tfidf:
+  td>: queries/prepare_tfidf.sql
+  create_table: input
+  n_docs: ${td.last_results.n_docs}
