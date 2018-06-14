@@ -1,0 +1,9 @@
+timezone: UTC
+
++td-result-output-marketo:
+  td>: queries/sample.sql
+  database: sample_datasets
+  result_connection: your_connection_name
+  result_settings:
+    list_id: 13224
+    headers: "email,fname,lname"
