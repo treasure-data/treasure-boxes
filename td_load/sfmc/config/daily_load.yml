@@ -29,5 +29,5 @@ filters:
   from_value:
     mode: upload_time
 out:
-  mode: replace
+  mode: append
 
