@@ -1,0 +1,33 @@
+in:
+  type: salesforce_marketing_cloud
+  client_id: ${secret:sfmc.client_id}
+  client_secret: ${secret:sfmc.client_secret}
+  target: data_extension
+  data_extension_names: ["Test_2"] 
+  from_date: ${sfmc.from_date}
+  fetch_days: 1
+  incremental: true
+  incremental_column_name: mydatefield
+filters:
+- type: rename
+  rules:
+  - rule: upper_to_lower
+  - rule: character_types
+    pass_types: ["a-z","0-9"]
+    pass_characters: "_"
+    replace: "_"
+  - rule: first_character_types
+    pass_types: ["a-z"]
+    pass_characters: "_"
+    prefix: "_"
+  - rule: "unique_number_suffix"
+    max_length: 128
+- type: add_time
+  to_column:
+    name: time
+    type: timestamp
+  from_value:
+    mode: upload_time
+out:
+  mode: replace
+
