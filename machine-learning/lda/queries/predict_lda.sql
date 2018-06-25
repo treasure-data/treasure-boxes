@@ -1,3 +1,4 @@
+-- @TD reducers: 10
 WITH exploded as (
   select
     l.docid, 
