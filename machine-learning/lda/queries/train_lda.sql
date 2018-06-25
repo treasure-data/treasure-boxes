@@ -1,3 +1,4 @@
+-- @TD distribute_strategy: moderate
 SELECT
   label, word, avg(lambda) as lambda
 FROM (
