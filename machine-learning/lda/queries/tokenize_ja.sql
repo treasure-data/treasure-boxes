@@ -22,7 +22,7 @@ select
 from
   exploded l
 where
-  l.word NOT IN (select s.word from stopwords s) AND
+  l.word NOT IN (select s.word from stopwords s) AND -- remove stopwords
   NOT is_stopword(l.word) AND
-  length(l.word) >= 2 AND cast(l.word AS double) IS NULL
+  length(l.word) >= 2 AND cast(l.word AS double) IS NULL -- trim number and single word
 ;
