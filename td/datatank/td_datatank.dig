@@ -2,7 +2,7 @@ timezone: UTC
 
 +td-result-output-datatanks:
   td>:
-  data: SELECT * FROM www_access
+  query: SELECT * FROM www_access
   database: sample_datasets
   result_connection: datatank
   result_settings:
@@ -14,7 +14,7 @@ timezone: UTC
 
 +td-result-output-datatanks_cstore:
   td>:
-  data: SELECT * FROM www_access
+  query: SELECT * FROM www_access
   database: sample_datasets
   result_connection: datatank_cstore
   result_settings:
@@ -27,7 +27,7 @@ timezone: UTC
 
 +td-result-output-datatanks-for-update:
   td>:
-  data: SELECT id,name,values FROM sample
+  query: SELECT id,name,values FROM sample
   database: database_name
   result_connection: datatank
   result_settings:
