@@ -46,7 +46,7 @@ You can trigger the session manually.
 Available parameters for `result_settings` are here.
 
 - datasource (string, required)
-- site_id (string, optional)
+- site (string, optional)
 - project (string, optional)
 - mode (string(append|replace), required)
 
