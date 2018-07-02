@@ -5,10 +5,11 @@ This example workflow ingests data in daily basis, using [Treasure Data's Writin
 # Prerequisites
 
 In order to register your credential in TreasureData, please create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
+Salesforce Marketing Cloud (ExactTarget) uses SFTP connector. Please select SFTP from the menu of Connections.
 
-![](https://t.gyazo.com/teams/treasure-data/6e1b959a45fcca59a72466bb4984e047.png)
+![](https://t.gyazo.com/teams/treasure-data/fc51459feff2d086df97f5f7eb8f6f72.png)
 
-![](https://t.gyazo.com/teams/treasure-data/baf128c600fac7c65394a7537f863720.png)
+![](https://t.gyazo.com/teams/treasure-data/43dec12525f6cd0ee5ba7240bbc08892.png)
 
 The connection name is used in the dig file.
 
