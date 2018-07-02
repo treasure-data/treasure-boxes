@@ -14,6 +14,6 @@ _export:
   result_connection: tableau_connection
   result_settings:
     datasource: ${tableau.datasource}
-    site_id: ${tableau.site_id}
+    site: ${tableau.site_id}
     project: ${tableau.project}
     mode: ${tableau.mode}
