@@ -49,7 +49,7 @@ Available parameters for `result_settings` are here.
 - compression: (string(None|gz), default None)
 - header: (boolean, default true)
 - delimiter: (string(","|"tab"|"|"), default ",")
-- null: (string(""|"\N"|NULL|null), default "")
+- null: (string("empty" or "empty string"|"\N"|NULL|null), default "empty string")
 - newline: (string(\r\n(CRLF)|\r(CR)|\n(LF)), default \r\n(CRLF))
 - quote: (string, optional)
 - escape: (string, optional)
