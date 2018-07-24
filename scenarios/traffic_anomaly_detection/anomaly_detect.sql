@@ -10,4 +10,4 @@ FROM (
     WHERE td_host = '${domain}'
     ORDER BY day
 ) tbl
-WHERE day = TD_DATE_TRUNC('day', ${session_unixtime}-86400)
+WHERE day = TD_TIME_ADD( TD_DATE_TRUNC('day', ${session_unixtime}), '-1d' )
