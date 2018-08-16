@@ -50,7 +50,7 @@ Available parameters for `result_settings` are here.
 - max_bad_records: (int, optional, default 0)
 - ignore_unknown_values: (boolean, default false)
 - allow_quoted_newlines: (boolean, default false)
-- schema_file: (string(json), optional)
+- schema_file: (string(json), required)
 
 For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-google-bigquery#use-from-cli)
 
