@@ -1,0 +1,31 @@
++shuffle:
+  td>: ../queries/shuffle.sql
+  create_table: ${source}_shuffled
+
++split:
+  _parallel: true
+
+  +training:
+    td>: ../queries/split_train.sql
+    engine: presto
+    create_table: ${source}_${phase}
+
+  +test:
+    td>: ../queries/split_test.sql
+    engine: presto
+    phase: test
+    create_table: ${source}_${phase}
+
++vectorize:
+  _parallel: true
+
+  +training:
+    td>: ../queries/vectorize_features.sql
+    target_table: ${source}_${phase}
+    create_table: ${phase}
+  
+  +test:
+    td>: ../queries/vectorize_features.sql
+    phase: test
+    target_table: ${source}_${phase}
+    create_table: ${phase}

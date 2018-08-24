@@ -1,0 +1,8 @@
+# Database
+dbname: boston
+
+# Input table
+source: house_prices
+
+# Splitting ratio for training and test data
+training_ratio: 0.8

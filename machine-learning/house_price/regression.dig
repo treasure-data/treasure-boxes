@@ -1,0 +1,28 @@
+_export:
+  !include : config/params.yml
+  td:
+    apikey: ${apikey}
+    database: ${dbname}
+    engine: hive
+  
+  phase: training
+  target_table: house_prices_training
+
+# TODO: Add feature selection
++prepare:
+  call>: common/prepare_data.dig
+
++train:
+  td>: queries/train_regressor.sql
+  create_table: regressor
+  
++predict:
+  td>: queries/predict_regressor.sql
+  create_table: predictions
+
++evaluate:
+  td>: queries/evaluate.sql
+  store_last_results: true
+
++show_accuracy:
+  echo>: "RMSE: ${td.last_results.rmse}, MAE: ${td.last_results.mae}"
