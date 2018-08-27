@@ -2,8 +2,12 @@ select
   rowid
   ,array_concat(
     quantitative_features(
-      array("crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat")
-      ,crim,zn,indus,chas,nox,rm,age,dis,rad,tax,ptratio,b,lstat
+      array("crim","zn","indus","nox","rm","age","dis","tax","ptratio","b","lstat")
+      ,crim,zn,indus,nox,rm,age,dis,tax,ptratio,b,lstat
+    )
+    ,categorical_features(
+      array("chas","rad")
+      ,chas,rad
     )
   ) as features
   ,medv as price
