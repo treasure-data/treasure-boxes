@@ -8,7 +8,6 @@ _export:
   phase: training
   target_table: house_prices_training
 
-# TODO: Add feature selection
 +prepare:
   call>: common/prepare_data.dig
 
