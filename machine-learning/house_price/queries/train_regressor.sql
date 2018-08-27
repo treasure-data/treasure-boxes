@@ -6,3 +6,4 @@ select
   )
 from
   training
+;
