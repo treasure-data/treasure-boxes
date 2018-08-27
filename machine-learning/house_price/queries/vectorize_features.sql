@@ -14,7 +14,7 @@ select
     -- Use top 4 correlated features, `lstat`, `rm`, `ptratio`, `indus`:
     quantitative_features(
       array("indus","rm","ptratio","lstat")
-        ,indus,rm,ptratio,lstat
+      ,indus,rm,ptratio,lstat
     )
   ) as features
   ,medv as price

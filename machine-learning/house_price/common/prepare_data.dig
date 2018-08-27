@@ -1,3 +1,6 @@
+_export:
+  phase: training
+
 +shuffle:
   td>: ../queries/shuffle.sql
   create_table: ${source}_shuffled
@@ -16,6 +19,17 @@
     phase: test
     create_table: ${source}_${phase}
 
++scaling:
+  +train:
+    td>: ../queries/minmax_train.sql
+    engine: presto
+    store_last_results: true
+  
+  +test:
+    td>: ../queries/minmax_test.sql
+    engine: presto
+    store_last_results: true
+
 +vectorize:
   _parallel: true
 
@@ -29,3 +43,73 @@
     phase: test
     target_table: ${source}_${phase}
     create_table: ${phase}
+
+  ## Rescaling training and testing
+  # +training:
+  #   td>: ../queries/vectorize_normalized_features.sql
+  #   target_table: ${source}_${phase}
+  #   create_table: ${phase}
+
+  #   # Variables for min-max normalization
+
+  #   # crim_min: ${td.last_results.training_min_crim}
+  #   # crim_max: ${td.last_results.training_max_crim}
+  #   # zn_min: ${td.last_results.training_min_zn}
+  #   # zn_max: ${td.last_results.training_max_zn}
+  #   indus_min: ${td.last_results.training_min_indus}
+  #   indus_max: ${td.last_results.training_max_indus}
+  #   # chas_min: ${td.last_results.training_min_chas}
+  #   # chas_max: ${td.last_results.training_max_chas}
+  #   # nox_min: ${td.last_results.training_min_nox}
+  #   # nox_max: ${td.last_results.training_max_nox}
+  #   rm_min: ${td.last_results.training_min_rm}
+  #   rm_max: ${td.last_results.training_max_rm}
+  #   # age_min: ${td.last_results.training_min_age}
+  #   # age_max: ${td.last_results.training_max_age}
+  #   # dis_min: ${td.last_results.training_min_dis}
+  #   # dis_max: ${td.last_results.training_max_dis}
+  #   # rad_min: ${td.last_results.training_min_rad}
+  #   # rad_max: ${td.last_results.training_max_rad}
+  #   # tax_min: ${td.last_results.training_min_tax}
+  #   # tax_max: ${td.last_results.training_max_tax}
+  #   ptratio_min: ${td.last_results.training_min_ptratio}
+  #   ptratio_max: ${td.last_results.training_max_ptratio}
+  #   # b_min: ${td.last_results.training_min_b}
+  #   # b_max: ${td.last_results.training_max_b}
+  #   lstat_min: ${td.last_results.training_min_lstat}
+  #   lstat_max: ${td.last_results.training_max_lstat}
+
+
+  # +test:
+  #   td>: ../queries/vectorize_normalized_features.sql
+  #   target_table: ${source}_${phase}
+  #   create_table: ${phase}
+
+  #   # Variables for min-max normalization
+
+  #   # crim_min: ${td.last_results.test_min_crim}
+  #   # crim_max: ${td.last_results.test_max_crim}
+  #   # zn_min: ${td.last_results.test_min_zn}
+  #   # zn_max: ${td.last_results.test_max_zn}
+  #   indus_min: ${td.last_results.test_min_indus}
+  #   indus_max: ${td.last_results.test_max_indus}
+  #   # chas_min: ${td.last_results.test_min_chas}
+  #   # chas_max: ${td.last_results.test_max_chas}
+  #   # nox_min: ${td.last_results.test_min_nox}
+  #   # nox_max: ${td.last_results.test_max_nox}
+  #   rm_min: ${td.last_results.test_min_rm}
+  #   rm_max: ${td.last_results.test_max_rm}
+  #   # age_min: ${td.last_results.test_min_age}
+  #   # age_max: ${td.last_results.test_max_age}
+  #   # dis_min: ${td.last_results.test_min_dis}
+  #   # dis_max: ${td.last_results.test_max_dis}
+  #   # rad_min: ${td.last_results.test_min_rad}
+  #   # rad_max: ${td.last_results.test_max_rad}
+  #   # tax_min: ${td.last_results.test_min_tax}
+  #   # tax_max: ${td.last_results.test_max_tax}
+  #   ptratio_min: ${td.last_results.test_min_ptratio}
+  #   ptratio_max: ${td.last_results.test_max_ptratio}
+  #   # b_min: ${td.last_results.test_min_b}
+  #   # b_max: ${td.last_results.test_max_b}
+  #   lstat_min: ${td.last_results.test_min_lstat}
+  #   lstat_max: ${td.last_results.test_max_lstat}
