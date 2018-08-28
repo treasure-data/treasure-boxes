@@ -6,3 +6,7 @@ source: house_prices
 
 # Splitting ratio for training and test data
 training_ratio: 0.8
+
+eta0: 0.1
+
+iter: 100

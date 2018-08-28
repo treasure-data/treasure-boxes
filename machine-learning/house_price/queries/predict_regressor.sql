@@ -5,7 +5,7 @@ with features_exploded as (
     ,extract_weight(t.fv) as value
   from 
     test h
-    LATERAL VIEW explode(features) t as fv
+    LATERAL VIEW explode(add_bias(features)) t as fv
 )
 -- DIGDAG_INSERT_LINE
 select
