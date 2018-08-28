@@ -19,5 +19,4 @@ FROM
   ${source}_shuffled
 WHERE
   rnd <= ${training_ratio}
-CLUSTER BY rand(43)
 ;

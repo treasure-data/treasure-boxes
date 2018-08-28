@@ -17,4 +17,5 @@ SELECT
   ,medv
 FROM
   ${source}
+CLUSTER BY rand(43)
 ;
