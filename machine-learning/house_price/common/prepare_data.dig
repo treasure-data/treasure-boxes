@@ -1,0 +1,31 @@
++shuffle:
+  td>: ../queries/shuffle.sql
+  create_table: ${source}_shuffled
+
++split:
+  _parallel: true
+
+  +training:
+    td>: ../queries/split_train.sql
+    engine: presto
+    create_table: ${source}_training
+
+  +test:
+    td>: ../queries/split_test.sql
+    engine: presto
+    create_table: ${source}_test
+
++vectorize:
+  _parallel: true
+
+  ## Vectorizing with log1p rescaling
+  +training:
+    td>: ../queries/vectorize_log1p_features.sql
+    target_table: ${source}_training
+    create_table: training
+  
+  +test:
+    td>: ../queries/vectorize_log1p_features.sql
+    target_table: ${source}_test
+    create_table: test
+    
