@@ -46,7 +46,7 @@ _export:
 
   ## Rescaling training and testing
   # +training:
-  #   td>: ../queries/vectorize_normalized_features.sql
+  #   td>: ../queries/vectorize_minmax_features.sql
   #   target_table: ${source}_${phase}
   #   create_table: ${phase}
 
@@ -81,7 +81,7 @@ _export:
 
 
   # +test:
-  #   td>: ../queries/vectorize_normalized_features.sql
+  #   td>: ../queries/vectorize_minmax_features.sql
   #   target_table: ${source}_${phase}
   #   create_table: ${phase}
 
