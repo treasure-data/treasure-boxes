@@ -1,6 +1,3 @@
-_export:
-  phase: training
-
 +shuffle:
   td>: ../queries/shuffle.sql
   create_table: ${source}_shuffled
@@ -11,13 +8,12 @@ _export:
   +training:
     td>: ../queries/split_train.sql
     engine: presto
-    create_table: ${source}_${phase}
+    create_table: ${source}_training
 
   +test:
     td>: ../queries/split_test.sql
     engine: presto
-    phase: test
-    create_table: ${source}_${phase}
+    create_table: ${source}_test
 
 ## Enable if min-max scaling required
 # +minmax_preparation:
@@ -37,32 +33,30 @@ _export:
   ## Vectorize without feature scaling
   # +training:
   #   td>: ../queries/vectorize_features.sql
-  #   target_table: ${source}_${phase}
-  #   create_table: ${phase}
+  #   target_table: ${source}_training
+  #   create_table: training
   
   # +test:
   #   td>: ../queries/vectorize_features.sql
-  #   phase: test
-  #   target_table: ${source}_${phase}
-  #   create_table: ${phase}
+  #   target_table: ${source}_test
+  #   create_table: test
 
   ## log1p rescaling
   +training:
     td>: ../queries/vectorize_log1p_features.sql
-    target_table: ${source}_${phase}
-    create_table: ${phase}
+    target_table: ${source}_training
+    create_table: training
   
   +test:
     td>: ../queries/vectorize_log1p_features.sql
-    phase: test
-    target_table: ${source}_${phase}
-    create_table: ${phase}
+    target_table: ${source}_test
+    create_table: test
     
   ## Min-max rescaling for training and testing
   # +training:
   #   td>: ../queries/vectorize_minmax_features.sql
-  #   target_table: ${source}_${phase}
-  #   create_table: ${phase}
+  #   target_table: ${source}_training
+  #   create_table: training
 
   #   # Variables for min-max normalization
 
@@ -96,8 +90,8 @@ _export:
 
   # +test:
   #   td>: ../queries/vectorize_minmax_features.sql
-  #   target_table: ${source}_${phase}
-  #   create_table: ${phase}
+  #   target_table: ${source}_test
+  #   create_table: test
 
   #   # Variables for min-max normalization
 
