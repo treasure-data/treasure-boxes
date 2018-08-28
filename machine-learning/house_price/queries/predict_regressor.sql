@@ -13,7 +13,7 @@ select
   ,sum(m.weight * t.value) as predicted_price
 from
   features_exploded t
-  LEFT OUTER JOIN regressor m ON (t.feature = m.feature)
+  LEFT OUTER JOIN regressor${suffix} m ON (t.feature = m.feature)
 group by
   t.rowid
 ;
