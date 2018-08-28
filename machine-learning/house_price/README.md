@@ -29,7 +29,7 @@ By default, top 4 correlated columns with `medv` are used. If you want to change
 ```sh
 $ ./data.sh # prepare sample dataset
 $ tf wf push regressor # push workflow to TD
-$ tf wf start regressor regression --session now -p apikey=${YOUR_TD_API_KEY}
+$ tf wf start regressor regression --session now
 ```
 
 * [regression.dig](regression.dig) - TD workflow script for regression
