@@ -36,17 +36,17 @@ _export:
 #   _do:
 #     +train:
 #       td>: queries/train_regressor.sql
-#       suffix: ${eta0.toString().replace('.', '_')}
-#       create_table: regressor_${suffix}
+#       suffix: _${eta0.toString().replace('.', '_')}
+#       create_table: regressor${suffix}
       
 #     +predict:
 #       td>: queries/predict_regressor.sql
-#       suffix: ${eta0.toString().replace('.', '_')}
-#       create_table: predictions_${suffix}
+#       suffix: _${eta0.toString().replace('.', '_')}
+#       create_table: predictions${suffix}
 
 #     +evaluate:
 #       td>: queries/evaluate.sql
-#       suffix: ${eta0.toString().replace('.', '_')}
+#       suffix: _${eta0.toString().replace('.', '_')}
 #       store_last_results: true
 
 #     +show_accuracy:

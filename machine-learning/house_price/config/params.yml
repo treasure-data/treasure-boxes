@@ -8,6 +8,10 @@ source: house_prices
 # e.g.) 0.8: 80% for training and 20% for test
 training_ratio: 0.8
 
-eta0: 0.5
+## Hyper parameters
+eta0: 5
 
 iter: 100
+
+# Reguralization parameter. For `train_regressor()` function, `rda` with `adagrad` is used by default.
+reg: no
