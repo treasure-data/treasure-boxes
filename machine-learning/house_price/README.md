@@ -1,6 +1,6 @@
 # House pricing Prediction
 
-In this example, we predict house pricing using [Regression algorithm](http://hivemall.incubator.apache.org/userguide/regression/general.html).
+In this example, we predict house pricing using [Linear Regression predictor](http://hivemall.incubator.apache.org/userguide/regression/general.html).
 
 ## Input
 
@@ -46,6 +46,6 @@ This workflow outputs predicted price of houses in `predictions` table as follow
 
 ## Conclusion
 
-Treasure Workflow provides an easy way to predict continuous values, like a price or energy consumption.
+Treasure Workflow provides an easy way to predict continuous values, like a price or energy consumption, using Linear Regression predictor.
 
 [Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
