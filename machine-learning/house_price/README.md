@@ -43,3 +43,9 @@ This workflow outputs predicted price of houses in `predictions` table as follow
 | 1-10 |33.97034232809395|
 | 1-121 |30.3377696027913|
 | ... |...|
+
+## Conclusion
+
+Treasure Workflow provides an easy way to predict continuous values, like a price or energy consumption.
+
+[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
