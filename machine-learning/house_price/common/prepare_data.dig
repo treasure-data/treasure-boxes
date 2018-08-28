@@ -19,32 +19,46 @@ _export:
     phase: test
     create_table: ${source}_${phase}
 
-+scaling:
-  +train:
-    td>: ../queries/minmax_train.sql
-    engine: presto
-    store_last_results: true
+## Enable if min-max scaling required
+# +minmax_preparation:
+#   +train:
+#     td>: ../queries/minmax_train.sql
+#     engine: presto
+#     store_last_results: true
   
-  +test:
-    td>: ../queries/minmax_test.sql
-    engine: presto
-    store_last_results: true
+#   +test:
+#     td>: ../queries/minmax_test.sql
+#     engine: presto
+#     store_last_results: true
 
 +vectorize:
   _parallel: true
 
+  ## Vectorize without feature scaling
+  # +training:
+  #   td>: ../queries/vectorize_features.sql
+  #   target_table: ${source}_${phase}
+  #   create_table: ${phase}
+  
+  # +test:
+  #   td>: ../queries/vectorize_features.sql
+  #   phase: test
+  #   target_table: ${source}_${phase}
+  #   create_table: ${phase}
+
+  ## log1p rescaling
   +training:
-    td>: ../queries/vectorize_features.sql
+    td>: ../queries/vectorize_log1p_features.sql
     target_table: ${source}_${phase}
     create_table: ${phase}
   
   +test:
-    td>: ../queries/vectorize_features.sql
+    td>: ../queries/vectorize_log1p_features.sql
     phase: test
     target_table: ${source}_${phase}
     create_table: ${phase}
-
-  ## Rescaling training and testing
+    
+  ## Min-max rescaling for training and testing
   # +training:
   #   td>: ../queries/vectorize_minmax_features.sql
   #   target_table: ${source}_${phase}
