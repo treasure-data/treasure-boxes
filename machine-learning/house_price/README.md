@@ -18,11 +18,9 @@ This workflow assume a table as follows:
 
 `medv`, Median value of owner-occupied homes in $1000's, is the target value for regression. `chas` and `rad` is categorical values, and other features are quantitative.
 
-By default, top 4 correlated columns with `medv` are used. If you want to change explanatory variables, you can modify following files:
+By default, top 4 correlated columns with `medv` are used. If you want to change explanatory variables, you can modify following file:
 
-- [vectorize_features.sql](./queries/vectorize_features.sql)
-  - or [vectorize_normalized_features.sql](./queries/vectorize_features.sql) for using min-max normalization.
-  - Note: You need to change [prepare_data.dig](./common/prepare_data.dig) as well for enabling normalization.
+- [vectorize_log1p_features.sql](./queries/vectorize_features.sql)
 
 ## Workflow
 
