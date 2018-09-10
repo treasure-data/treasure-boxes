@@ -75,12 +75,20 @@ class FeatureSelector(object):
         feature_query = self._feature_column_query(
             selected_features, feature_types=feature_types)
 
-        self._create_vectorize_table(
-            engine_hive, dbname, "training", "{}_training".format(source_table),
-            feature_query)
-        self._create_vectorize_table(
-            engine_hive, dbname, "test", "{}_test".format(source_table),
-            feature_query)
+        # Store query if possible
+        try:
+            import digdag
+            digdag.env.store({'feature_query': feature_query})
+
+        except ImportError:
+            pass
+
+        # self._create_vectorize_table(
+        #     engine_hive, dbname, "training", "{}_training".format(source_table),
+        #     feature_query)
+        # self._create_vectorize_table(
+        #     engine_hive, dbname, "test", "{}_test".format(source_table),
+        #     feature_query)
 
     def _create_vectorize_table(self, engine, dbname, table_name, source_table,
                                 feature_query):
@@ -108,7 +116,6 @@ class FeatureSelector(object):
         '''.format_map({
             'output_table': table_name, 'source_table': source_table,
             'target_columns': textwrap.indent(feature_query, '    ')})
-        print(hql)
 
         pandas_td.read_td(hql, engine)
 
@@ -178,12 +185,3 @@ class FeatureSelector(object):
 
 if __name__ == '__main__':
     FeatureSelector().run()
-
-
-# class TestClass(object):
-#     def run(self):
-#         print("hello")
-
-
-# if __name__ == '__main__':
-#     TestClass().run()
