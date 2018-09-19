@@ -1,0 +1,6 @@
++task:
+  docker:
+    image: "python:3.6"
+  py>: bulk_import.main
+  _env:
+    td_apikey: ${secret:td.apikey}

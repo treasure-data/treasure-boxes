@@ -1,0 +1,6 @@
++task:
+  docker:
+    image: "python:3.6"
+  py>: query_result_input.main
+  _env:
+    td_apikey: ${secret:td.apikey} 

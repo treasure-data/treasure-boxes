@@ -1,0 +1,4 @@
++task:
+  docker:
+    image: "python:3.6"
+  py>: pandas_df_op.main
