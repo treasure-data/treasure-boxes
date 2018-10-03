@@ -13,22 +13,22 @@ class FeatureSelector(object):
 
     def run(self):
         import pandas as pd
-        import pandas_td
+        import pandas_td as td
         from sklearn.ensemble import ExtraTreesRegressor
         from sklearn.feature_selection import SelectFromModel
 
-        connection = pandas_td.connect(apikey=self.apikey, endpoint=self.endpoint)
+        connection = td.connect(apikey=self.apikey, endpoint=self.endpoint)
 
         dbname = self.dbname
         source_table = self.source_table
 
-        engine = pandas_td.create_engine(
+        engine = td.create_engine(
             'presto:{}'.format(dbname),
             con=connection
         )
 
         # Fetch 25% random sampled data
-        df = pandas_td.read_td(
+        df = td.read_td(
             """
             select *
             from {} tablesample bernoulli(25)
@@ -37,8 +37,8 @@ class FeatureSelector(object):
         )
         # You can use Hive instead:
         #
-        # engine_hive = pandas_td.create_engine('hive:{}'.format(dbname), con=connection)
-        # df = pandas_td.read_td(
+        # engine_hive = td.create_engine('hive:{}'.format(dbname), con=connection)
+        # df = td.read_td(
         #     """
         #     select *
         #     from {}_train
@@ -59,7 +59,7 @@ class FeatureSelector(object):
 
         feature_importances = pd.DataFrame(
             {'column': X.columns, 'importance': reg.feature_importances_})
-        pandas_td.to_td(
+        td.to_td(
             feature_importances, 'boston.feature_importances', con=connection,
             if_exists='replace', index=False)
 
@@ -95,7 +95,7 @@ class FeatureSelector(object):
     def _create_vectorize_table(self, engine, dbname, table_name, source_table,
                                 feature_query):
         import tdclient
-        import pandas_td
+        import pandas_td as td
 
         # Create feature vector table
         with tdclient.Client(apikey=self.apikey, endpoint=self.endpoint) as client:
@@ -119,7 +119,7 @@ class FeatureSelector(object):
             'output_table': table_name, 'source_table': source_table,
             'target_columns': textwrap.indent(feature_query, '    ')})
 
-        pandas_td.read_td(hql, engine)
+        td.read_td(hql, engine)
 
     def _feature_column_query(self, candidate_columns, feature_types=set(),
                               normalize=None):
