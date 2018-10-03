@@ -23,9 +23,8 @@
     td>: ../queries/vectorize_log1p_features.sql
     target_table: ${source}_training
     create_table: training
-  
+
   +test:
     td>: ../queries/vectorize_log1p_features.sql
     target_table: ${source}_test
     create_table: test
-    

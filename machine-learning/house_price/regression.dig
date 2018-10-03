@@ -3,8 +3,7 @@ _export:
   td:
     database: ${dbname}
     engine: hive
-  
-  target_table: house_prices_training
+
   suffix: ""
 
 +prepare:
@@ -13,7 +12,7 @@ _export:
 +train:
   td>: queries/train_regressor.sql
   create_table: regressor${suffix}
-  
+
 +predict:
   td>: queries/predict_regressor.sql
   create_table: predictions${suffix}
@@ -32,13 +31,13 @@ _export:
 #     eta0: [5.0, 1.0, 0.5, 0.1, 0.05, 0.01, 0.001]
 
 #   _parallel: true
-  
+
 #   _do:
 #     +train:
 #       td>: queries/train_regressor.sql
 #       suffix: _${eta0.toString().replace('.', '_')}
 #       create_table: regressor${suffix}
-      
+
 #     +predict:
 #       td>: queries/predict_regressor.sql
 #       suffix: _${eta0.toString().replace('.', '_')}

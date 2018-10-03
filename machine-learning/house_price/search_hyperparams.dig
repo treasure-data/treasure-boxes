@@ -5,7 +5,6 @@ _export:
     database: ${dbname}
     engine: hive
 
-  target_table: house_prices_training
   suffix: ""
 
 +prepare:
