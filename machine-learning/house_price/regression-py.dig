@@ -27,7 +27,7 @@ _export:
   +feature_selection:
     py>: tasks.FeatureSelector.run
     docker:
-      #image: 'python:3.6.5'
+      # Note: This image is temporary. It might change in the near future.
       image: 'chezou/td-ml-base:latest'
     _env:
       TD_API_KEY: ${secret:apikey}
