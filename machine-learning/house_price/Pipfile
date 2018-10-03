@@ -11,6 +11,7 @@ pandas-td = "*"
 "flake8" = "*"
 mypy = "*"
 black = "*"
+rope = "*"
 
 [requires]
 python_version = "3.7"
