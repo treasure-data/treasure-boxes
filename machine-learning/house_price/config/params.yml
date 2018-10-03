@@ -4,9 +4,9 @@ dbname: boston
 # Input table
 source: house_prices
 
-# Splitting ratio for training and test data
-# e.g.) 0.8: 80% for training and 20% for test
-training_ratio: 0.8
+# Splitting ratio for train and test data
+# e.g.) 0.8: 80% for train and 20% for test
+train_ratio: 0.8
 
 ## Hyper parameters
 eta0: 5

@@ -5,10 +5,10 @@
 +split:
   _parallel: true
 
-  +training:
+  +train:
     td>: ../queries/split_train.sql
     engine: presto
-    create_table: ${source}_training
+    create_table: ${source}_train
 
   +test:
     td>: ../queries/split_test.sql
@@ -19,10 +19,10 @@
   _parallel: true
 
   ## Vectorizing with log1p rescaling
-  +training:
+  +train:
     td>: ../queries/vectorize_log1p_features.sql
-    target_table: ${source}_training
-    create_table: training
+    target_table: ${source}_train
+    create_table: train
 
   +test:
     td>: ../queries/vectorize_log1p_features.sql

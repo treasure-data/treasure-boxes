@@ -14,10 +14,10 @@ _export:
   +split:
     _parallel: true
 
-    +training:
+    +train:
       td>: queries/split_train.sql
       engine: presto
-      create_table: ${source}_training
+      create_table: ${source}_train
 
     +test:
       td>: queries/split_test.sql
@@ -37,11 +37,11 @@ _export:
   +vectorize:
     _parallel: true
 
-    +training:
+    +train:
       td>: queries/vectorize_dynamic_features.sql
       feature_query: "${feature_query}"
-      target_table: ${source}_training
-      create_table: training
+      target_table: ${source}_train
+      create_table: train
 
     +test:
       td>: queries/vectorize_dynamic_features.sql

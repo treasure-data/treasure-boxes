@@ -41,7 +41,7 @@ class FeatureSelector(object):
         # df = pandas_td.read_td(
         #     """
         #     select *
-        #     from {}_training
+        #     from {}_train
         #     where rnd < 0.25
         #     """.format(source_table),
         #     engine_hive
@@ -86,7 +86,7 @@ class FeatureSelector(object):
             pass
 
         # self._create_vectorize_table(
-        #     engine_hive, dbname, "training", "{}_training".format(source_table),
+        #     engine_hive, dbname, "train", "{}_train".format(source_table),
         #     feature_query)
         # self._create_vectorize_table(
         #     engine_hive, dbname, "test", "{}_test".format(source_table),
