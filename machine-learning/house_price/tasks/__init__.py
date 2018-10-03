@@ -4,7 +4,7 @@ import textwrap
 
 class FeatureSelector(object):
     def __init__(self):
-        os.system('pip install pandas sklearn scipy td-client pandas-td')
+        os.system('pip install pandas scikit-learn scipy td-client pandas-td')
 
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
@@ -26,7 +26,6 @@ class FeatureSelector(object):
             'presto:{}'.format(dbname),
             con=connection
         )
-        engine_hive = pandas_td.create_engine('hive:{}'.format(dbname), con=connection)
 
         # Fetch 25% random sampled data
         df = pandas_td.read_td(
@@ -36,6 +35,9 @@ class FeatureSelector(object):
             """.format(source_table),
             engine
         )
+        # You can use Hive instead:
+        #
+        # engine_hive = pandas_td.create_engine('hive:{}'.format(dbname), con=connection)
         # df = pandas_td.read_td(
         #     """
         #     select *

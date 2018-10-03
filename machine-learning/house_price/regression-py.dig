@@ -17,12 +17,12 @@ _export:
 
     +training:
       td>: queries/split_train.sql
-      #engine: presto
+      engine: presto
       create_table: ${source}_training
 
     +test:
       td>: queries/split_test.sql
-      #engine: presto
+      engine: presto
       create_table: ${source}_test
 
   +feature_selection:
