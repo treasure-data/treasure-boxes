@@ -66,31 +66,4 @@ _export:
   store_last_results: true
 
 +show_accuracy:
-  echo>: "Accuracy for eta0: ${eta0} RMSE: ${td.last_results.rmse}, MAE: ${td.last_results.mae}"
-
-
-## For hyper parameter tuning, you can `for_each>:` as follows:
-# +parameter_tuning:
-#   for_each>:
-#     eta0: [5.0, 1.0, 0.5, 0.1, 0.05, 0.01, 0.001]
-
-#   _parallel: true
-  
-#   _do:
-#     +train:
-#       td>: queries/train_regressor.sql
-#       suffix: _${eta0.toString().replace('.', '_')}
-#       create_table: regressor${suffix}
-      
-#     +predict:
-#       td>: queries/predict_regressor.sql
-#       suffix: _${eta0.toString().replace('.', '_')}
-#       create_table: predictions${suffix}
-
-#     +evaluate:
-#       td>: queries/evaluate.sql
-#       suffix: _${eta0.toString().replace('.', '_')}
-#       store_last_results: true
-
-#     +show_accuracy:
-#       echo>: "Accuracy for eta0: ${eta0} RMSE: ${td.last_results.rmse}, MAE: ${td.last_results.mae}"
+  echo>: "RMSE: ${td.last_results.rmse}, MAE: ${td.last_results.mae}"

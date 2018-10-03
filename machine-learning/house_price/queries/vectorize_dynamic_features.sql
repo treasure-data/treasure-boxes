@@ -1,6 +1,6 @@
 select
   rowid
-  -- Use top 4 correlated features, `lstat`, `rm`, `ptratio`, `indus`:
+  -- Use selected features on py> operator:
   ,${feature_query}
   ,medv as price
 from
