@@ -14,7 +14,6 @@ _export:
     TD_API_SERVER: ${secret:endpoint}
     AWS_ACCESS_KEY_ID: ${secret:aws_access_key_id}
     AWS_SECRET_ACCESS_KEY: ${secret:aws_secret_access_key}
-    AWS_IAM_ROLE_ARN: ${secret:aws_iam_role_arn}
     S3_BUCKET: ${secret:s3_bucket}
     source_table: ${source_table}
     target_table: ${target_table}

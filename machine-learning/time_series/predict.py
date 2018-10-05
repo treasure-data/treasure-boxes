@@ -54,26 +54,18 @@ class TimeSeriesPredictor(object):
         # Upload figures to S3
         # boto3 assuming environment variables "AWS_ACCESS_KEY_ID" and "AWS_SECRET_ACCESS_KEY":
         # http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables
-        # client = boto3.client('sts')
-        # response = client.assume_role(
-        #     RoleArn=os.environ['AWS_IAM_ROLE_ARN'],
-        #     RoleSessionName='ml-prediction')
-        # session = boto3.Session(
-        #     aws_access_key_id=response['Credentials']['AccessKeyId'],
-        #     aws_secret_access_key=response['Credentials']['SecretAccessKey'],
-        #     aws_session_token=response['Credentials']['SessionToken'])
-        # s3 = session.resource('s3')
-        #
-        # predicted_fig_file = "predicted.png"
-        # component_fig_file = "component.png"
-        #
-        # # ACL should be chosen with your purpose
-        # s3.Object(os.environ['S3_BUCKET'], predicted_fig_file).put(
-        #     ACL='public-read', Body=predict_fig_data, ContentType='image/png'
-        # )
-        # s3.Object(os.environ['S3_BUCKET'], component_fig_file).put(
-        #     ACL='public-read', Body=component_fig_data, ContentType='image/png'
-        # )
+        s3 = boto3.resource('s3')
+
+        predicted_fig_file = "predicted.png"
+        component_fig_file = "component.png"
+
+        # ACL should be chosen with your purpose
+        s3.Object(os.environ['S3_BUCKET'], predicted_fig_file).put(
+            ACL='public-read', Body=predict_fig_data, ContentType='image/png'
+        )
+        s3.Object(os.environ['S3_BUCKET'], component_fig_file).put(
+            ACL='public-read', Body=component_fig_data, ContentType='image/png'
+        )
 
         # To avoid TypeError: can't serialize Timestamp, convert `pandas._libs.tslibs.timestamps.Timestamp` to `str`
         forecast.ds = forecast.ds.apply(str)
