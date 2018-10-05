@@ -1,0 +1,23 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${dbname}
+    engine: presto
+
++predict:
+  py>: predict.TimeSeriesPredictor.run
+  docker:
+    # Note: This image is temporary. It might change in the near future.
+    image: 'chezou/td-ml-base:latest'
+  _env:
+    TD_API_KEY: ${secret:apikey}
+    TD_API_SERVER: ${secret:endpoint}
+    AWS_ACCESS_KEY_ID: ${secret:aws_access_key_id}
+    AWS_SECRET_ACCESS_KEY: ${secret:aws_secret_access_key}
+    AWS_IAM_ROLE_ARN: ${secret:aws_iam_role_arn}
+    S3_BUCKET: ${secret:s3_bucket}
+    source_table: ${source_table}
+    target_table: ${target_table}
+    start_date: ${start_date}
+    end_date: ${end_date}
+    period: 3652
