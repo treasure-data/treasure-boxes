@@ -2,7 +2,15 @@
 
 ***This is an experimental workflow. It doesn't work on production environment yet***
 
-This example introduces time series prediction using [Facebook Prophet](https://facebook.github.io/prophet).
+This example introduces time series for sales data prediction using [Facebook Prophet](https://facebook.github.io/prophet).
+Details are described in [the official document](https://facebook.github.io/prophet/docs/non-daily_data.html#monthly-data). 
+
+This workflow will:
+
+1. Fetch past sales data from Treasure Data
+2. Build a model with Prophet
+3. Predict future sales and write back to Treasure Data
+4. Upload predicted figures to S3
 
 ## Workflow
 

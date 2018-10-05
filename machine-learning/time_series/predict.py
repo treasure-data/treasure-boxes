@@ -28,6 +28,7 @@ class TimeSeriesPredictor(object):
             con=con
         )
 
+        # Note: Prophet requires `ds` column as date string and `y` column as target value
         df = td.read_td(
             """
             select ds, y
