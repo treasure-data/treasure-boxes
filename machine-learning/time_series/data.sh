@@ -9,11 +9,9 @@ fi
 
 curl https://raw.githubusercontent.com/facebook/prophet/master/examples/example_retail_sales.csv --create-dirs -o ./resources/example_retail_sales.csv
 
-CONF_OPTION="-c $HOME/.td/td.dev.conf"
-
-td $CONF_OPTION db:create timeseries
-td $CONF_OPTION table:create timeseries retail_sales
-td $CONF_OPTION import:auto \
+td db:create timeseries
+td table:create timeseries retail_sales
+td import:auto \
     --format csv \
     --column-header \
     --column-types string,int \
