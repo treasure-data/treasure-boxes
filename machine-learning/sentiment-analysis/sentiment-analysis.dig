@@ -1,0 +1,28 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${dbname}
+    engine: hive
+
++prepare:
+  +shuffle:
+    _parallel: true
+
+    +train:
+      td>: queries/shuffle.sql
+      source: movie_review_train
+      create_table: movie_review_train_shuffled
+
+    +test:
+      td>: queries/shuffle.sql
+      source: movie_review_test
+      create_table: movie_review_test_shuffled
+
++train:
+  py>: sentiment.run
+  docker:
+    # Note: This image is temporary. It might change in the near future.
+    image: 'tensorflow/tensorflow:1.11.0-py3'
+  _env:
+    TD_API_KEY: ${secret:apikey}
+    TD_API_SERVER: ${secret:endpoint}

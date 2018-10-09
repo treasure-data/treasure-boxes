@@ -15,7 +15,7 @@ cd ..
 python data.py
 # rm -rf resources/aclImdb
 
-CONF_PARM="-c $HOME/.td/td.dev.conf"
+CONF_PARAM=""
 
 td ${CONF_PARAM} db:create sentiment
 td ${CONF_PARAM} table:create sentiment movie_review_train
