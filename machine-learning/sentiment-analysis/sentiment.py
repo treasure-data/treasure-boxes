@@ -1,5 +1,4 @@
 import os
-from common import get_export_dir
 from common import EXPORT_DIR_BASE
 import tarfile
 
@@ -82,15 +81,15 @@ def run():
         print("Training set accuracy: {accuracy}".format(**train_eval_result))
         print("Test set accuracy: {accuracy}".format(**test_eval_result))
 
-        # results = get_predictions(estimator, predict_test_input_fn)
+        results = get_predictions(estimator, predict_test_input_fn)
 
     # Store prediction results to Treasure Data
-    #
-    # test_df['predicted_polarity'] = results
-    #
-    # td.to_td(
-    #     test_df[['rowid', 'predicted_polarity']], 'sentiment.test_predicted_polarities', con=con,
-    #     if_exists='replace', index=False)
+
+    test_df['predicted_polarity'] = results
+
+    td.to_td(
+        test_df[['rowid', 'predicted_polarity']], 'sentiment.test_predicted_polarities', con=con,
+        if_exists='replace', index=False)
 
 
 if __name__ == '__main__':
