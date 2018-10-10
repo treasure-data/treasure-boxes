@@ -10,10 +10,10 @@ fi
 curl http://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz --create-dirs -o resources/aclImdb_v1.tar.gz
 cd resources
 tar xf aclImdb_v1.tar.gz
-# rm aclImdb_v1.tar.gz
+rm aclImdb_v1.tar.gz
 cd ..
 python data.py
-# rm -rf resources/aclImdb
+rm -rf resources/aclImdb
 
 CONF_PARAM=""
 
@@ -32,3 +32,6 @@ td ${CONF_PARAM} import:auto \
   --column-types string,int,int \
   --time-value `date +%s` \
   --auto-create sentiment.movie_review_test ./resources/test.csv
+
+rm -rf out
+rm resources/*
