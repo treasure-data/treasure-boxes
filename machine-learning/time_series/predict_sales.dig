@@ -22,24 +22,14 @@ _export:
     period: 3652
 
 +send_graph:
-  +predicted:
-    http>: ${secret:slack_webhook_url}
-    method: POST
-    content:
-      attachments:
-        - title: "Prediction finished"
-          text: "Sales predictions:"
-          image_url: "https://s3.amazonaws.com/${secret:s3_bucket}/predicted.png"
-          color: normal
-    content_format: json
-
-  +component:
-    http>: ${secret:slack_webhook_url}
-    method: POST
-    content:
-      attachments:
-        - title: "Prediction finished"
-          text: "Sales predictions:"
-          image_url: "https://s3.amazonaws.com/${secret:s3_bucket}/component.png"
-          color: normal
-    content_format: json
+  http>: ${secret:slack_webhook_url}
+  method: POST
+  content:
+    attachments:
+      - title: "Prediction finished"
+        text: "Predicted sales"
+        image_url: "https://s3.amazonaws.com/${secret:s3_bucket}/predicted.png"
+        color: normal
+      - text: "Component"
+        image_url: "https://s3.amazonaws.com/${secret:s3_bucket}/component.png"
+  content_format: json
