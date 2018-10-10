@@ -22,7 +22,7 @@ _export:
   py>: sentiment.run
   docker:
     # Note: This image is temporary. It might change in the near future.
-    image: 'tensorflow/tensorflow:1.11.0-py3'
+    image: 'chezou/td-ml-base:latest'
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
@@ -34,7 +34,7 @@ _export:
   py>: predict.run
   docker:
     # Note: This image is temporary. It might change in the near future.
-    image: 'tensorflow/tensorflow:1.11.0-py3'
+    image: 'chezou/td-ml-base:latest'
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
