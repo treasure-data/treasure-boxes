@@ -39,7 +39,7 @@ You can trigger the session manually.
 Available parameters for `result_settings` are here.
 
 - path_prefix: Prefix of output paths (string, required)
-- format: (string(csv|tsv), default csv)
+- file_ext: (string(csv|tsv), default csv)
 - sequence_format: (string, default: ".%03d.%02d")
 - compression: (string(None|gz|bzip2), default None)
 - header_line: (boolean(true|false), default true)
