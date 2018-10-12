@@ -2,7 +2,7 @@ _export:
   td:
     database: example_database
 
-+load_records:
++load_records_send_cust_aud:
   td>: queries/load_users.sql
   result_connection: your_connections_name
   result_settings:
