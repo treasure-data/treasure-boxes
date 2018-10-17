@@ -1,0 +1,30 @@
+_export:
+  td:
+    database: mktg_workflow
+  domain: 'www.your-domain.com'
+  source_table: pageviews_raw
+  outlier_threshold: 0.2
+
++setup:
+  +empty:
+    td_ddl>:
+    drop_tables: ['tmp_daily_rollup_${source_table}']
+
++daily_pv_rollup:
+  td>: daily_rollup.sql
+  create_table: tmp_daily_rollup_${source_table}
+
++calculate_anomaly:
+  td>: anomaly_detect.sql
+  engine: hive
+  store_last_results: true
+
++send_alert:
+  +check_if_anomaly:
+    if>: ${ td.last_results.message !== "" }
+    _do:
+      +slack:
+        http>: <YOUR SLACK WEBHOOK URL>
+        method: POST
+        content: '{"text":"${td.last_results.message}"}'
+        content_format: text
