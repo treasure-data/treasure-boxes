@@ -45,11 +45,12 @@ Available parameters for `result_settings` are here.
 - description: description of output Custom Audience (string, optional)
 - pre_hashed : Whether or not the data has already been hashed. If not, the plugin will automatically hash the data (boolean, default: false)
 - customer_file_source : Specify the source of the user information collected into this file (string, default: null, values: USER_PROVIDED_ONLY, PARTNER_PROVIDED_ONLY, BOTH_USER_AND_PARTNER_PROVIDED)
+- retryInitialWaitMsec: time to wait between retries (int, required, default: 60000). 
+- retryLimit: Number of times to retry on failure (int, optional, default: 5)
 
 
 For more details, please see [Treasure Data documentation (GUI)](https://support.treasuredata.com/hc/en-us/articles/360001262227-Treasure-Workflow-Quick-Start-Tutorial-for-the-GUI)
 or [Treasure Data documentation(CLI)](https://support.treasuredata.com/hc/en-us/articles/360001262207-Treasure-Workflow-Quick-Start-Tutorial-for-the-CLI)
 
 # Next Step
-
 If you have any questions, please contact support@treasuredata.com.
