@@ -3,7 +3,7 @@ with features_exploded as (
     h.rowid
     ,extract_feature(t.fv) as feature
     ,extract_weight(t.fv) as value
-  from 
+  from
     test h
     LATERAL VIEW explode(add_bias(features)) t as fv
 )

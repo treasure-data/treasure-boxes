@@ -1,0 +1,68 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${dbname}
+    engine: hive
+
+  suffix: ""
+
++prepare:
+  +shuffle:
+    td>: queries/shuffle.sql
+    create_table: ${source}_shuffled
+
+  +split:
+    _parallel: true
+
+    +train:
+      td>: queries/split_train.sql
+      engine: presto
+      create_table: ${source}_train
+
+    +test:
+      td>: queries/split_test.sql
+      engine: presto
+      create_table: ${source}_test
+
+  +feature_selection:
+    py>: tasks.FeatureSelector.run
+    docker:
+      # Note: This image is temporary. It might change in the near future.
+      image: 'chezou/td-ml-base:latest'
+    _env:
+      TD_API_KEY: ${secret:apikey}
+      TD_API_SERVER: ${secret:endpoint}
+      source_table: ${source}
+
+  +vectorize:
+    _parallel: true
+
+    +train:
+      td>: queries/vectorize_dynamic_features.sql
+      feature_query: "${feature_query}"
+      target_table: ${source}_train
+      create_table: train
+
+    +test:
+      td>: queries/vectorize_dynamic_features.sql
+      feature_query: "${feature_query}"
+      target_table: ${source}_test
+      create_table: test
+
+  +show_variable:
+    echo>: "Selected feature query: ${feature_query}"
+
++train:
+  td>: queries/train_regressor.sql
+  create_table: regressor${suffix}
+
++predict:
+  td>: queries/predict_regressor.sql
+  create_table: predictions${suffix}
+
++evaluate:
+  td>: queries/evaluate.sql
+  store_last_results: true
+
++show_accuracy:
+  echo>: "RMSE: ${td.last_results.rmse}, MAE: ${td.last_results.mae}"

@@ -1,0 +1,58 @@
+# Search best hyper parameters and save the best model. Assuming vectorizing features before run this workflow
+_export:
+  !include : config/params.yml
+  td:
+    database: ${dbname}
+    engine: hive
+
+  suffix: ""
+
++prepare:
+  td_ddl>:
+  empty_table: ['accuracy_test']
+
++parameter_tuning:
+  for_each>:
+    eta0: [5.0, 1.0, 0.5, 0.1, 0.05, 0.01, 0.001]
+    reg: ['no', 'rda', 'l1', 'l2', 'elasticnet']
+
+  _parallel: true
+
+  _do:
+    +train:
+      td>: queries/train_regressor.sql
+      suffix: _${reg}_${eta0.toString().replace('.', '_')}
+      create_table: regressor${suffix}
+
+    +evaluate:
+      td>: queries/evaluate_params.sql
+      insert_into: accuracy_test
+      suffix: _${reg}_${eta0.toString().replace('.', '_')}
+
++parsist_best:
+  +choose_best:
+    td>: queries/best_param.sql
+    engine: presto
+    measure: rmse
+    store_last_results: true
+
+  +show_accuracy:
+    echo>: "Best model reg: ${td.last_results.reg}, eta0: ${td.last_results.eta0} RMSE: ${td.last_results.rmse}, MAE: ${td.last_results.mae}"
+
+  +save_model:
+    td_ddl>:
+    suffix: _${td.last_results.reg}_${td.last_results.eta0.toString().replace('.', '_')}
+    rename_tables: [{from: "regressor${suffix}", to: regressor_best}]
+
+  +clean_up:
+    for_each>:
+      eta0: [5.0, 1.0, 0.5, 0.1, 0.05, 0.01, 0.001]
+      reg: ['no', 'rda', 'l1', 'l2', 'elasticnet']
+
+    _parallel: true
+
+    _do:
+      +drop_table:
+        td_ddl>:
+        suffix: _${reg}_${eta0.toString().replace('.', '_')}
+        drop_tables: ["regressor${suffix}"]

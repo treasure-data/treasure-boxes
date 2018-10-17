@@ -18,5 +18,5 @@ SELECT
 FROM
   ${source}_shuffled
 WHERE
-  rnd > ${training_ratio}
+  rnd > ${train_ratio}
 ;

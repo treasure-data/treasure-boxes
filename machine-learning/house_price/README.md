@@ -30,7 +30,19 @@ $ tf wf push regressor # push workflow to TD
 $ tf wf start regressor regression --session now
 ```
 
+If you want to run feature selection with py> operator, you can execute as follows:
+
+```sh
+$ ./data.sh
+$ td wf push regressor
+$ td wf secrets --project regressor --set apikey=$TD_API_KEY --set endpoint=$TD_API_SERVER
+$ td wf start regressor regression-py
+```
+
 * [regression.dig](regression.dig) - TD workflow script for regression
+* [regression-py.dig](regression-py.dig) - TD workflow script for regression with scikit-learn feature selection
+  * Note: `py>` operator on Treasure Data is not publicly available yet as of Oct 3rd, 2018
+* [search_hyperparams.dig](search_hyperparams.dig) - TD workflow script for searching hyperparameters. You need to run vectorizing before run this workflow.
 
 ## Output
 
