@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fbprophet = "==0.3.post2"
+ipython = "==7.0.1"
+jupyter = "*"
+ipykernel = "*"
+notebook = "*"
+pandas-td = "*"
+td-client = "*"
+matplotlib = "*"
+"boto3" = "*"
+
+[dev-packages]
+jupyter = "*"
+
+[requires]
+python_version = "3.7"
