@@ -9,7 +9,7 @@ timezone: UTC
     path_prefix: /path/file_${moment(session_time).format("YYYYMMDD")}
     file_ext: csv.gz
     format: csv
-    compression: gz
+    compression: 'gz'
     delimiter: ","
     null_string: ""
     newline: CRLF

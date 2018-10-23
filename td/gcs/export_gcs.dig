@@ -14,4 +14,4 @@ timezone: UTC
     delimiter: ","
     null_string: ""
     newline: CRLF
-    compression: gz
+    compression: 'gz'
