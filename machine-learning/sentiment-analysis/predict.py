@@ -1,32 +1,40 @@
-import tarfile
+import csv
 import os
+import tarfile
+import time
 from common import get_export_dir
 
 
 def run():
-    # FIXME: Need to create an image including pandas-td by default
-    os.system("pip install pandas-td boto3")
+    #os.system("pip install pandas-td boto3")
 
     import boto3
     import tensorflow as tf
     import numpy as np
-    import pandas_td as td
+    import tdclient
 
-    con = td.connect(apikey=os.environ['TD_API_KEY'], endpoint=os.environ['TD_API_SERVER'])
-    presto = td.create_engine('presto:sentiment', con=con)
-
-    test_df = td.read_td("""
-        select
-            rowid, sentence, sentiment, polarity
-        from
-            movie_review_test_shuffled
-    """, presto)
+    database = 'sentiment'
+    td = tdclient.Client(apikey=os.environ['TD_API_KEY'], endpoint=os.environ['TD_API_SERVER'])
+    job = td.query(
+        database,
+        """
+            select
+                rowid, sentence
+            from
+                movie_review_test_shuffled
+        """,
+        type="presto"
+    )
+    job.wait()
 
     examples = []
+    row_ids = []
+    for row in job.result():
+        rowid, sentence = row
+        row_ids.append(rowid)
 
-    for index, row in test_df.iterrows():
         feature = {'sentence': tf.train.Feature(
-            bytes_list=tf.train.BytesList(value=[row['sentence'].encode('utf-8')]))}
+            bytes_list=tf.train.BytesList(value=[sentence.encode('utf-8')]))}
         example = tf.train.Example(features=tf.train.Features(feature=feature))
         examples.append(example.SerializeToString())
 
@@ -44,12 +52,56 @@ def run():
         predict_fn = tf.contrib.predictor.from_saved_model(export_dir)
         predictions = predict_fn({'inputs': examples})
 
-    test_df['predicted_polarity'] = np.argmax(predictions['scores'], axis=1)
-    test_df['score'] = np.max(predictions['scores'], axis=1)
+    predicted_polarities = np.argmax(predictions['scores'], axis=1)
+    scores = np.max(predictions['scores'], axis=1)
 
-    td.to_td(
-        test_df[['rowid', 'predicted_polarity', 'score']], 'sentiment.test_predicted_polarities', con=con,
-        if_exists='replace', index=False)
+    table = 'test_predicted_polarities'
+    upload_prediction_result(td, row_ids, predicted_polarities, scores, database, table, ['rowid', 'predicted_polarity', 'score'])
+
+
+def upload_prediction_result(
+        client,
+        row_ids,
+        predicted_values,
+        scores,
+        database,
+        table,
+        fieldnames=['rowid', 'predicted_value', 'score']):
+
+    import sys
+    import tdclient
+
+    sys.stderr.write("Uploading prediction results to {}.{}\n".format(database, table))
+    # Upload prediction result to TD
+    temp_filename = 'resources/prediction_results.csv'
+    with open(temp_filename, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=['time'] + fieldnames)
+        writer.writeheader()
+        t = int(time.time())
+        for rowid, value, score in zip(row_ids, predicted_values, scores):
+            writer.writerow({'time': t, fieldnames[0]: rowid, fieldnames[1]: value, fieldnames[2]: score})
+
+    sys.stderr.write("Create/recreate table {}.{}\n".format(database, table))
+    try:
+        client.table(database, table)
+    except tdclient.errors.NotFoundError:
+        pass
+    else:
+        client.delete_table(database, table)
+    client.create_log_table(database, table)
+    client.import_file(database, table, 'csv', temp_filename)
+
+    os.remove(temp_filename)
+
+    # Wait for ingestion until the table will be available
+    while True:
+        job = client.query(database, "select count(predicted_polarity) from {}\n".format(table), type='presto')
+        job.wait()
+        if not job.error():
+            break
+        time.sleep(10)
+
+    sys.stderr.write("Upload finished")
 
 
 if __name__ == '__main__':
