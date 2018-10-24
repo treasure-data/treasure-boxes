@@ -10,8 +10,7 @@ def run():
     # Original code is published at official document of TensorFlow under Apache License Version 2.0
     # https://www.tensorflow.org/hub/tutorials/text_classification_with_tf_hub
 
-    # FIXME: Need to create an image including pandas-td by default
-    os.system("pip install pandas-td tensorflow_hub boto3")
+    #os.system("pip install pandas-td tensorflow_hub boto3")
 
     import boto3
     import tensorflow as tf

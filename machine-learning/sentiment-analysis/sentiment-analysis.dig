@@ -22,7 +22,7 @@ _export:
   py>: sentiment.run
   docker:
     # Note: This image is temporary. It might change in the near future.
-    image: 'chezou/td-ml-base:latest-gpu'
+    image: 'chezou/td-ml-base:latest'
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
