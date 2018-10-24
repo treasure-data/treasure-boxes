@@ -18,6 +18,7 @@ _export:
       source: movie_review_test
       create_table: movie_review_test_shuffled
 
+# Train with pre-trained model on TensorFlow Hub and store prediction results to TD
 +train:
   py>: sentiment.run
   docker:
