@@ -11,7 +11,7 @@ This workflow will:
 3. Store the model on S3
 4. Predict polarities for unknown review data and write back to Treasure Data
 
-Currently, storing model is not implemented yet.
+Currently, prediction with fetching model from S3 is not evaluated yet.
 
 ## Workflow
  ```bash
@@ -30,5 +30,5 @@ $ td workflow secrets \
   --set aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
 $ td workflow start sentiment sentiment-analysis --session now
 ```
- 
+
 * [sentiment-analysis.dig](sentiment-analysis.dig)
