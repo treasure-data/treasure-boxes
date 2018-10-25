@@ -49,6 +49,7 @@ Available parameters for `result_settings` are here.
 - site (string, optional)
 - project (string, optional)
 - mode (string(append|replace), required)
+- legacy (string('false'|'true'))
 
 # Next Step
 

@@ -8,6 +8,7 @@ _export:
     site_id: site_id
     project: project_name
     mode: append
+    legacy: false
 
 +td-result-output-tableau:
   td>: queries/sample.sql
@@ -17,3 +18,4 @@ _export:
     site: ${tableau.site_id}
     project: ${tableau.project}
     mode: ${tableau.mode}
+    legacy: ${tableau.legacy}
