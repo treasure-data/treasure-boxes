@@ -1,0 +1,44 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${dbname}
+    engine: hive
+
++prepare:
+  +shuffle:
+    _parallel: true
+
+    +train:
+      td>: queries/shuffle.sql
+      source: movie_review_train
+      create_table: movie_review_train_shuffled
+
+    +test:
+      td>: queries/shuffle.sql
+      source: movie_review_test
+      create_table: movie_review_test_shuffled
+
+# Train with pre-trained model on TensorFlow Hub and store prediction results to TD
++train:
+  py>: sentiment.run
+  docker:
+    # Note: This image is temporary. It might change in the near future.
+    image: 'chezou/td-ml-base:latest'
+  _env:
+    TD_API_KEY: ${secret:apikey}
+    TD_API_SERVER: ${secret:endpoint}
+    AWS_ACCESS_KEY_ID: ${secret:aws_access_key_id}
+    AWS_SECRET_ACCESS_KEY: ${secret:aws_secret_access_key}
+    S3_BUCKET: ${secret:s3_bucket}
+
+#+predict:
+#  py>: predict.run
+#  docker:
+#    # Note: This image is temporary. It might change in the near future.
+#    image: 'chezou/td-ml-base:latest'
+#  _env:
+#    TD_API_KEY: ${secret:apikey}
+#    TD_API_SERVER: ${secret:endpoint}
+#    AWS_ACCESS_KEY_ID: ${secret:aws_access_key_id}
+#    AWS_SECRET_ACCESS_KEY: ${secret:aws_secret_access_key}
+#    S3_BUCKET: ${secret:s3_bucket}
