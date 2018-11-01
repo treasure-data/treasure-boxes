@@ -1,0 +1,5 @@
+memory-profiler
+pandas-td
+tensorflow
+tensorflow-hub
+boto3
