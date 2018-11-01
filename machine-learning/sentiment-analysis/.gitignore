@@ -1,3 +1,5 @@
 .idea
 .venv
 .vscode
+tfmodels
+*.tar.gz
