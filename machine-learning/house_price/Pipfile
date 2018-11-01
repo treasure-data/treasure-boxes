@@ -12,6 +12,7 @@ pandas-td = "*"
 mypy = "*"
 black = "*"
 rope = "*"
+memory-profiler = "*"
 
 [requires]
 python_version = "3.7"
