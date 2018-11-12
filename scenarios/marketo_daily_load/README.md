@@ -16,9 +16,9 @@ First, you can upload the workflow and trigger the session manually.
 Second, please set datasource credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project marketo_daily_load --set marketo.account_id=xxxxxx
-    $ td wf secrets --project marketo_daily_load --set marketo.client_id=yyyyy
-    $ td wf secrets --project marketo_daily_load --set marketo.client_secret=zzzzz
+    $ td wf secrets --project marketo_daily_load --set marketo.account_id
+    $ td wf secrets --project marketo_daily_load --set marketo.client_id
+    $ td wf secrets --project marketo_daily_load --set marketo.client_secret
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 

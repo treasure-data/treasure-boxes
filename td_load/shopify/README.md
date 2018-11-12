@@ -14,9 +14,9 @@ First, you can upload the workflow and trigger the session manually.
 Second, please set datasource credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set shopify.apikey=xyzxyz
-    $ td wf secrets --project td_load_example --set shopify.password=xyzxyz
-    $ td wf secrets --project td_load_example --set shopify.store_name=xyzxyz
+    $ td wf secrets --project td_load_example --set shopify.apikey
+    $ td wf secrets --project td_load_example --set shopify.password
+    $ td wf secrets --project td_load_example --set shopify.store_name
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 

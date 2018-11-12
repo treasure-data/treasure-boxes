@@ -15,16 +15,16 @@ This example workflow also uses the [Sample Datasets](https://console.treasureda
 For local mode, register your AWS credentials at first
 
     # Set Secrets for local mode
-    $ td wf secrets --local --set aws.emr.access_key_id=xxxxx
-    $ td wf secrets --local --set aws.emr.secret_access_key=xxxxx
+    $ td wf secrets --local --set aws.emr.access_key_id
+    $ td wf secrets --local --set aws.emr.secret_access_key
 
 For server mode, upload the project to Treasure Data, and then register your AWS credentials into the uploaded project.
 
     # Upload
     $ td wf push td_emr_example
     # Set secrets
-    $ td wf secrets --project td_emr_example --set aws.emr.access_key_id=xxxxx
-    $ td wf secrets --project td_emr_example --set aws.emr.secret_access_key=xxxxx
+    $ td wf secrets --project td_emr_example --set aws.emr.access_key_id
+    $ td wf secrets --project td_emr_example --set aws.emr.secret_access_key
 
 Create a sample database for this workflow to push it's job to
 	

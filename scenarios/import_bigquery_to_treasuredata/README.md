@@ -26,7 +26,7 @@ Next, set database credentials by using the `td wf secrets` command. See [exampl
     
     # Set Secrets for `td_load>:` operator
     $ td wf secrets --project bq_to_td --set gcp.jsonkey=@converted.json
-    $ td wf secrets --project bq_to_td --set td.apikey=YOURAPIKEY
+    $ td wf secrets --project bq_to_td --set td.apikey
 
 Now you can reference these credentials by `${secret:}` syntax in yml file of `td_load` operator.
 

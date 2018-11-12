@@ -11,8 +11,8 @@ The workflow also uses [Secrets](https://docs.treasuredata.com/articles/workflow
 First, please set datasource credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --local --set sfmc.client_id=xyz
-    $ td wf secrets --local --set sfmc.client_secret=xyzyou can upload the workflow.
+    $ td wf secrets --local --set sfmc.client_id
+    $ td wf secrets --local --set sfmc.client_secret
 
     # Run
     $ td wf run daily_load.dig
@@ -27,8 +27,8 @@ You can upload the workflow.
 Please set datasource credentials by `td wf secrets` command for the project
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set sfmc.client_id=xyz
-    $ td wf secrets --project td_load_example --set sfmc.client_secret=xyz
+    $ td wf secrets --project td_load_example --set sfmc.client_id
+    $ td wf secrets --project td_load_example --set sfmc.client_secret
 
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.

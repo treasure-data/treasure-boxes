@@ -13,10 +13,10 @@ First, please make your dig file and mail text.
 Second, please set the secrets using `td wf secrets` command. The mail operator uses that secrets for sending email. For more details, please see digdag documentation [secrets](http://docs.digdag.io/command_reference.html#secrets) and [mail operator](http://docs.digdag.io/operators/mail.html#secrets).
 
     # Set Secrets on your local for testing
-    $ td wf secrets --local --set mail.host=xyzxyz    
-    $ td wf secrets --local --set mail.port=xyzx    
-    $ td wf secrets --local --set mail.username=xyzxyz    
-    $ td wf secrets --local --set mail.password=xyzxyz    
+    $ td wf secrets --local --set mail.host
+    $ td wf secrets --local --set mail.port
+    $ td wf secrets --local --set mail.username
+    $ td wf secrets --local --set mail.password
 
 Now, you can trigger the session manually.
 

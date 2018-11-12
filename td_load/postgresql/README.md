@@ -9,10 +9,10 @@ The workflow also uses [Secrets](https://docs.treasuredata.com/articles/workflow
 First, please set database credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set postgresql.host=xyz
-    $ td wf secrets --project td_load_example --set postgresql.port=5432
-    $ td wf secrets --project td_load_example --set postgresql.user=abcde
-    $ td wf secrets --project td_load_example --set postgresql.password=fghijklmn
+    $ td wf secrets --project td_load_example --set postgresql.host
+    $ td wf secrets --project td_load_example --set postgresql.port
+    $ td wf secrets --project td_load_example --set postgresql.user
+    $ td wf secrets --project td_load_example --set postgresql.password
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 

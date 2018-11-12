@@ -14,9 +14,9 @@ First, you can upload the workflow.
 Second, please set datasource credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set s3.endpoint=s3-us-west-1.amazonaws.com
-    $ td wf secrets --project td_load_example --set s3.access_key_id=xyzxyzxyzxyz
-    $ td wf secrets --project td_load_example --set s3.secret_access_key=xyzxyzxyzxyz
+    $ td wf secrets --project td_load_example --set s3.endpoint
+    $ td wf secrets --project td_load_example --set s3.access_key_id
+    $ td wf secrets --project td_load_example --set s3.secret_access_key
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 

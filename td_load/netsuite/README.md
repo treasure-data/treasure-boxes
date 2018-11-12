@@ -14,10 +14,10 @@ First, you can upload the workflow and trigger the session manually.
 Second, please set datasource credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set netsuite.email=xyzxyz
-    $ td wf secrets --project td_load_example --set netsuite.password=xyzxyz
-    $ td wf secrets --project td_load_example --set netsuite.account=xyzxyz
-    $ td wf secrets --project td_load_example --set netsuite.role=xyzxyz
+    $ td wf secrets --project td_load_example --set netsuite.email
+    $ td wf secrets --project td_load_example --set netsuite.password
+    $ td wf secrets --project td_load_example --set netsuite.account
+    $ td wf secrets --project td_load_example --set netsuite.role
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 
