@@ -9,10 +9,10 @@ The workflow also uses [Secrets](https://docs.treasuredata.com/articles/workflow
 First, please set database credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set mysql.host=xyz
-    $ td wf secrets --project td_load_example --set mysql.port=3306
-    $ td wf secrets --project td_load_example --set mysql.user=abcde
-    $ td wf secrets --project td_load_example --set mysql.password=fghijklmn
+    $ td wf secrets --project td_load_example --set mysql.host
+    $ td wf secrets --project td_load_example --set mysql.port
+    $ td wf secrets --project td_load_example --set mysql.user
+    $ td wf secrets --project td_load_example --set mysql.password
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 

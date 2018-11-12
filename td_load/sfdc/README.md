@@ -14,12 +14,12 @@ First, you can upload the workflow.
 Second, please set datasource credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set sfdc.username=xyz
-    $ td wf secrets --project td_load_example --set sfdc.password=xyz
-    $ td wf secrets --project td_load_example --set sfdc.client_id=xyz
-    $ td wf secrets --project td_load_example --set sfdc.client_secret=xyz
-    $ td wf secrets --project td_load_example --set sfdc.security_token=xyz
-    $ td wf secrets --project td_load_example --set sfdc.login_url=http://xyz
+    $ td wf secrets --project td_load_example --set sfdc.username
+    $ td wf secrets --project td_load_example --set sfdc.password
+    $ td wf secrets --project td_load_example --set sfdc.client_id
+    $ td wf secrets --project td_load_example --set sfdc.client_secret
+    $ td wf secrets --project td_load_example --set sfdc.security_token
+    $ td wf secrets --project td_load_example --set sfdc.login_url
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 

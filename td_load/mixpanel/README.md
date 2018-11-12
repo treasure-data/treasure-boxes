@@ -14,8 +14,8 @@ First, you can upload the workflow and trigger the session manually.
 Second, please set datasource credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set mixpanel.api_key=xyz
-    $ td wf secrets --project td_load_example --set mixpanel.api_secret=xyz
+    $ td wf secrets --project td_load_example --set mixpanel.api_key
+    $ td wf secrets --project td_load_example --set mixpanel.api_secret
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 

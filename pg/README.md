@@ -12,10 +12,10 @@ First, you can upload the workflow and trigger the session manually.
 Second, please set password for postgre server using `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
-    $ td wf secrets --project pg_example --set pg.password=xyzxyz
+    $ td wf secrets --project pg_example --set pg.password
 
     # Set Secrets on your local for testing
-    $ td wf secrets --local --set pg.password=xyzxyz    
+    $ td wf secrets --local --set pg.password
 
 Now, you can trigger the session manually.
 

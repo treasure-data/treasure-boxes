@@ -14,9 +14,9 @@ First, you can upload the workflow and trigger the session manually.
 Second, please set datasource credentials by `td wf secrets` command.
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set zendesk.login_url=https://xxxxxxxxx.zendesk.com
-    $ td wf secrets --project td_load_example --set zendesk.username=xyz
-    $ td wf secrets --project td_load_example --set zendesk.token=xyz
+    $ td wf secrets --project td_load_example --set zendesk.login_url
+    $ td wf secrets --project td_load_example --set zendesk.username
+    $ td wf secrets --project td_load_example --set zendesk.token
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 

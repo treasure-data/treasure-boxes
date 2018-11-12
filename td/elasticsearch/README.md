@@ -22,10 +22,10 @@ First, please upload your workflow project by `td wf push` command.
 If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
-    $ td wf secrets --project sample_project --set key=value
+    $ td wf secrets --project sample_project --set key
 
     # Set Secrets on your local for testing
-    $ td wf secrets --local --set key=value
+    $ td wf secrets --local --set key
 
 Now you can use these secrets by `${secret:}` syntax in the dig file.
 

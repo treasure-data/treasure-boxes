@@ -14,17 +14,17 @@ First, you can upload the workflow and trigger the session manually.
 Second, please set SFTP credentials by `td wf secrets` command. We recommend you to use text file for setting secret_key_file. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
-    $ td wf secrets --project td_load_example --set sftp.host=xyzxyz
-    $ td wf secrets --project td_load_example --set sftp.port=22
-    $ td wf secrets --project td_load_example --set sftp.user=xyzxyz
-    $ td wf secrets --project td_load_example --set sftp.secret_key_passphrase=xyzxyz
+    $ td wf secrets --project td_load_example --set sftp.host
+    $ td wf secrets --project td_load_example --set sftp.port
+    $ td wf secrets --project td_load_example --set sftp.user
+    $ td wf secrets --project td_load_example --set sftp.secret_key_passphrase
     $ td wf secrets --project td_load_example --set sftp.secret_key_file=@secret_key_file.txt
 
     # Set Secrets on your local for testing
-    $ td wf secrets --local --set sftp.host=xyzxyz
-    $ td wf secrets --local --set sftp.port=22
-    $ td wf secrets --local --set sftp.user=xyzxyz
-    $ td wf secrets --local --set sftp.secret_key_passphrase=xyzxyz
+    $ td wf secrets --local --set sftp.host
+    $ td wf secrets --local --set sftp.port
+    $ td wf secrets --local --set sftp.user
+    $ td wf secrets --local --set sftp.secret_key_passphrase
     $ td wf secrets --local --set sftp.secret_key_file=@secret_key_file.txt
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
