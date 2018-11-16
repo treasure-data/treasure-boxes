@@ -14,20 +14,19 @@ This workflow will:
 Currently, prediction with fetching model from S3 is not evaluated yet.
 
 ## Workflow
- ```bash
+
+```bash
 $ ./data.sh # prepare example data
 $ td workflow push sentiment
-# export TD_API_KEY=1/xxxxx
-# export TD_API_SERVER=https://api.treasuredata.com
-# export AWS_ACCESS_KEY_ID=AAAAAAAAAA
-# export AWS_SECRET_ACCESS_KEY=XXXXXXXXX
 $ td workflow secrets \
   --project sentiment \
-  --set apikey=$TD_API_KEY \
-  --set endpoint=$TD_API_SERVER \
-  --set s3_bucket=$S3_BUCKET \
-  --set aws_access_key_id=$AWS_ACCESS_KEY_ID \
-  --set aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
+  --set apikey \
+  --set endpoint \
+  --set s3_bucket \
+  --set aws_access_key_id \
+  --set aws_secret_access_key
+# Set secrets from STDIN like: apikey=1/xxxxx, endpoint=https://api.treasuredata.com, s3_bucket=$S3_BUCKET,
+#              aws_access_key_id=AAAAAAAAAA, aws_secret_access_key=XXXXXXXXX
 $ td workflow start sentiment sentiment-analysis --session now
 ```
 

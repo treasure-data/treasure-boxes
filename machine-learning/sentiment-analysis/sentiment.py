@@ -31,7 +31,7 @@ def run():
         select
             rowid, sentence, sentiment, polarity
         from
-            movie_review_test_shuffled    
+            movie_review_test_shuffled
     """, presto)
 
     # Shuffle has been done by HiveQL in the shuffle task

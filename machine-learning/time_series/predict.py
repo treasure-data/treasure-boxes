@@ -1,13 +1,12 @@
+import boto3
+import os
+import io
 # Need to plot graph for Prophet
 import matplotlib as mlp
 mlp.use('agg')
 from matplotlib import pyplot as plt
-
-import boto3
 import pandas_td as td
 from fbprophet import Prophet
-import os
-import io
 
 class TimeSeriesPredictor(object):
     def __init__(self):
@@ -33,7 +32,7 @@ class TimeSeriesPredictor(object):
             """
             select ds, y
             from {}
-            where ds between '{}' and '{}' 
+            where ds between '{}' and '{}'
             """.format(self.source_table, self.start, self.end),
             engine
         )

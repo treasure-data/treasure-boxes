@@ -17,17 +17,15 @@ This workflow will:
 ```bash
 $ ./data.sh # prepare example data
 $ td workflow push prophet
-# export TD_API_KEY=1/xxxxx
-# export TD_API_SERVER=https://api.treasuredata.com
-# export AWS_ACCESS_KEY_ID=AAAAAAAAAA
-# export AWS_SECRET_ACCESS_KEY=XXXXXXXXX
 $ td workflow secrets \
-  --project prophet \
-  --set apikey=$TD_API_KEY \
-  --set endpoint=$TD_API_SERVER \
-  --set s3_bucket=$S3_BUCKET \
-  --set aws_access_key_id=$AWS_ACCESS_KEY_ID \
-  --set aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
+ --project prophet \
+  --set apikey \
+  --set endpoint \
+  --set s3_bucket \
+  --set aws_access_key_id \
+  --set aws_secret_access_key
+# Set secrets from STDIN like: apikey=1/xxxxx, endpoint=https://api.treasuredata.com, s3_bucket=$S3_BUCKET,
+#              aws_access_key_id=AAAAAAAAAA, aws_secret_access_key=XXXXXXXXX
 $ td workflow start prophet predict_sales --session now
 ```
  
