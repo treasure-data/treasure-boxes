@@ -12,3 +12,4 @@ _export:
     path: /path/file_${moment(session_time).format("YYYYMMDD")}.csv.gz
     compression: 'gz'
     newline: \r\n
+    "null": "hoge"
