@@ -4,7 +4,7 @@ SELECT
   T.job,
   -- stratified sampling
   count(1) over (partition by is_won) as per_label_count,
-  rank() over (partition by is_won order by rand(41)) as rank_in_label
+  rank() over (partition by is_won order by rand()) as rank_in_label
 FROM
   data C LEFT
 JOIN
