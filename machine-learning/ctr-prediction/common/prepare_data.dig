@@ -3,6 +3,11 @@
   engine: presto
   create_table: samples_shuffled
 
+# Uncomment this task for repeatable shuffling with consistent random seed:
+#+shuffle_repeatable:
+#  td>: ../queries/shuffle_hive.sql
+#  create_table: samples_shuffled
+
 +split:
   _parallel: true
 
