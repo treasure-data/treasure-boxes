@@ -29,5 +29,9 @@ _export:
     store_last_results: true
     engine: hive
 
+  # Output may change every time the workflow is newly executed due to
+  # randomness in shuffling. Use Hive and its `rand(int seed)` function at
+  # `+shuffle` in `common/prepare_data.dig` for making the result repeatable
+  # with consistent random seed.
   +show_accuracy:
     echo>: "logloss = ${td.last_results.logloss} (smaller is better)"

@@ -18,7 +18,7 @@ For instance, this workflow takes a table of the following form:
 
 Here, each row represents user's single impression for an ad. Impressions can be written by a set of `int` (quantitative) and `string` (categorical) variables such as users' demographics. A column `label` shows whether a user clicked an ad.
 
-**Note:** This template supports tables which have 13 quantitative (i1-i13) and 26 categorical (c1-c26) variables by default.
+> **Note:** This template supports tables which have 13 quantitative (i1-i13) and 26 categorical (c1-c26) variables by default.
 
 If you have more/less quantitative and/or categorical features in a table, you need to modify the following queries appropriately:
 
@@ -41,7 +41,7 @@ $ td wf start ctr-prediction predict_logress --session now -p apikey=${YOUR_TD_A
 * [config/general.yml](config/general.yml) - defines configurable parameters for the prediction.
 
 [<img src="docs/img/capture.png" alt="capture" height=300 />](http://showterm.io/de1678afb369ad82a04bc)
-  
+
 ## Output
 
 The output of workflow is a table that contains predicted CTRs for possible future impressions:
@@ -50,8 +50,10 @@ The output of workflow is a table that contains predicted CTRs for possible futu
 |:---:|:---:|
 |80038 |0.487177|
 |80043|0.9583734|
-|80046 | 0.9104515 | 
+|80046 | 0.9104515 |
 | ... | ... |
+
+> **Note:** Output may change every time the workflow is newly executed due to [randomness in shuffling](./queries/shuffle.sql#L5). Use [Hive version](./queries/shuffle_hive.sql) of the query for making the result repeatable with consistent random seed.
 
 ## Using the Prediction Model in Production System
 
@@ -63,7 +65,7 @@ Once the prediction workflow has been successfully completed, exporting the pred
 2. Load the information to TD workflow:<br/>`$ td wf secrets --project ctr-prediction --set @config/secrets.yml`
 3. Export a `logress_model` table to your MySQL DB:<br/>`td wf start ctr-prediction mysql --session now -p apikey=${YOUR_TD_API_KEY}`
 
-***Note:*** *Make sure a table `logress_model` exists on your MySQL DB as follows.*
+> **Note:** Make sure a table `logress_model` exists on your MySQL DB as follows.
 
 ```sql
 create table logress_model (
@@ -156,7 +158,7 @@ Further readings:
 
 ## How This Workflow Works
 
-For further reading for algorithm and/or workflow details, please refer [this page](docs/more.md). 
+For further reading for algorithm and/or workflow details, please refer [this page](docs/more.md).
 
 ## Conclusion
 
