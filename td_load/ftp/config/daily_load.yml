@@ -4,7 +4,7 @@ in:
   port: ${secret:ftp.port}
   user: ${secret:ftp.user}
   password: ${secret:ftp.password}
-  path_prefix: ${ftp.path_prefix}
+  path_prefix: "/path/file_${moment(session_time).format("YYYYMMDD")}.csv"
   ssl: ${ftp.ssl}
   ssl_verify: ${ftp.ssl_verify}
   parser:
