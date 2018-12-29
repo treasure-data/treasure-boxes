@@ -1,18 +1,16 @@
 # Workflow: td example (Result Output to Google Spreadsheet)
 
-This example workflow exports TD job results into a Google Spreadsheet [Treasure Data's Writing Job Results into Google Spread](https://docs.treasuredata.com/articles/result-into-google-spreadsheet) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into a Google Spreadsheet [Treasure Data's Writing Job Results into Google Spread](https://support.treasuredata.com/hc/en-us/articles/360009671913-Writing-Job-Results-to-Google-Sheets) with [td](http://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
-Connect Treasure Data user account to your Google Account.
-https://docs.treasuredata.com/articles/result-into-google-spreadsheet#authorization
-![](https://t.gyazo.com/teams/treasure-data/0c86ab5766e404f4b4298d3151c5a790.png)
-
 Create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
 
-![](https://t.gyazo.com/teams/treasure-data/0570c45ad9128cdea82b8cdbbbf23371.png)
+![](https://support.treasuredata.com/hc/article_attachments/360021508813/google_sheet_catalog.png)
 
-![](https://t.gyazo.com/teams/treasure-data/840088cd65db23178651dcd8d85567c3.png)
+![](https://support.treasuredata.com/hc/article_attachments/360013354894/create-connection.png)
+
+You can find more details about creating and mainting your Google sheets connector [here](https://support.treasuredata.com/hc/en-us/articles/360009671913-Writing-Job-Results-to-Google-Sheets)
 
 The connection name is used in the dig file.
 
@@ -47,12 +45,12 @@ You can trigger the session manually.
 
 Available parameters for `result_settings` are here.
 
-- spreadsheet: (string, spreadsheet name or key is required)
-- key: (string, spreadsheet key or name is required)
-- worksheet: (string, required)
+- spreadsheet_title: (string, destination spreadsheet name, required if spreadsheet_id is not provided)
+- spreadsheet_id: (string, destination spreadsheet key, required if spreadsheet_title is not provided)
+- sheet_title: (string, title of single sheet to be updated, required)
 - mode: (string(replace|append), default replace)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-google-spreadsheet)
+For more details, please see [Treasure Data documentation](https://support.treasuredata.com/hc/en-us/articles/360009671913-Writing-Job-Results-to-Google-Sheets)
 
 # Next Step
 
