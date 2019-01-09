@@ -1,0 +1,151 @@
+_export:
+  !include : config/params.yml
+  source: titanic
+  td:
+    database: ${dbname}
+    engine: hive
+
+  suffix: ""
+
++preparetion:
+  +shuffle:
+    td>: queries/shuffle.sql
+    create_table: ${source}_shuffled
+
+  +split:
+    _parallel: true
+
+    +train:
+      td>: queries/split_train.sql
+      engine: presto
+      create_table: ${source}_train
+
+    +test:
+      td>: queries/split_test.sql
+      engine: presto
+      create_table: ${source}_test
+
+# +preparetion_stratified:
+#   +shuffle:
+#     td>: queries/shuffle_stratified.sql
+#     create_table: ${source}_shuffled
+
+#   +split:
+#     _parallel: true
+
+#     +train:
+#       td>: queries/split_train_stratified.sql
+#       engine: presto
+#       create_table: ${source}_train
+
+#     +test:
+#       td>: queries/split_test_stratified.sql
+#       engine: presto
+#       create_table: ${source}_test
+
++imputation:
+  +compute_stats:
+    _parallel: true
+
+    +whole:
+      td>: queries/stats.sql
+      engine: presto
+      create_table: ${source}_stats
+
+    +train:
+      td>: queries/stats.sql
+      engine: presto
+      source: titanic_train
+      create_table: ${source}_stats
+
+    +test:
+      td>: queries/stats.sql
+      engine: presto
+      source: titanic_test
+      create_table: ${source}_stats
+
+  +combine_train_test_stats:
+    td>: queries/combine_stats.sql
+    engine: presto
+    cond: ""
+    store_last_results: true
+
+  +impute:
+    _parallel: true
+
+    # Should have both numerical and categorical columns
+    +train:
+      td>: queries/impute.sql
+      engine: presto
+      source: titanic_train
+      create_table: titanic_imputed_train
+
+    +test:
+      td>: queries/impute.sql
+      engine: presto
+      source: titanic_test
+      create_table: titanic_imputed_test
+
++normalization:
+  +compute_stats:
+    _parallel: true
+
+    +train:
+      td>: queries/stats.sql
+      engine: presto
+      source: titanic_imputed_train
+      create_table: ${source}_stats
+
+    +test:
+      td>: queries/stats.sql
+      engine: presto
+      source: titanic_imputed_test
+      create_table: ${source}_stats
+
+  +combine_train_test_stats:
+    td>: queries/combine_stats.sql
+    engine: presto
+    source: titanic_imputed
+    store_last_results: true
+
+  +normalize:
+    _parallel: true
+
+    +train:
+      td>: queries/normalize.sql
+      source: titanic_imputed_train
+      create_table: titanic_norm_train
+
+    +test:
+      td>: queries/normalize.sql
+      source: titanic_imputed_test
+      create_table: titanic_norm_test
+
++vectorization:
+  _parallel: true
+
+  +train:
+    td>: queries/vectorize.sql
+    source: titanic_norm_train
+    create_table: train
+
+  +test:
+    td>: queries/vectorize.sql
+    source: titanic_norm_test
+    create_table: test
+
++main:
+  +train:
+    td>: queries/train.sql
+    create_table: model
+
+  +predict:
+    td>: queries/predict.sql
+    create_table: prediction
+
+  +evaluate:
+    td>: queries/evaluate.sql
+    store_last_results: true
+
+  +show_accuracy:
+    echo>: "Logloss: ${td.last_results.logloss}"

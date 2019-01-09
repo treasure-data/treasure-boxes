@@ -1,0 +1,30 @@
+# Same example with https://scikit-learn.org/stable/auto_examples/compose/plot_column_transformer_mixed_types.html
+numeric_columns:
+  columns:
+    - "age"
+    - "fare"
+  transformer:
+    - imputer:
+      strategy: "median" # median, mean, constant
+      phase: "train" # train, test, or `NULL` value
+    - normalizer:
+      strategy: "standardize"
+
+categorical_columns:
+  columns:
+    - "embarked"
+    - "sex"
+    - "pclass"
+  transformer:
+    - imputer:
+      strategy: "constant"
+      phase: "train"
+      fill_value: "missing"
+
+tuner:
+  strategy: "gridsearch" # gridsearch, randomsearch, python
+
+trainer:
+  train_classifier:
+    - features: "features"
+      target: "label"
