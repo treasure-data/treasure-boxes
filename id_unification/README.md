@@ -1,4 +1,4 @@
-#1.push workflow to TD 
+# 1. Push Workflow to TD 
 
 ```
 git clone https://github.com/treasure-data/workflow-examples
@@ -6,7 +6,7 @@ cd workflow-examples/id_unification
 td workflow push id_unification
 ```
 
-#2.create a table as data source for test 
+# 2. Create a Table As Data Source 
 
 ```
 td db:create test_id_unification
@@ -24,7 +24,7 @@ as select * from (values
 "
 ```
 
-#3.change db & table name in workflow dig file
+# 3. Change DB & Table Name in Workflow dig File
 
 ```
 _export:
@@ -40,17 +40,18 @@ _export:
     source_tbl: source_dataset
 ```
 
-4.select sql file to run
+# 4. Select SQL File to Run
 
 ```
 td>: unify_loop.sql
 #td>: unify_loop_heavy.sql
 ```
 
-5. run workflow id_unification
+# 5. Run Workflow id_unification
 
 ```
 td wf start id_unification id_unification --session now
 ```
 
-6. reasult will be written into new table source_dataset_unified
+# 6. Check Result 
+will be written into new table source_dataset_unified
