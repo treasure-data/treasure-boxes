@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS ${td.source_tbl}_unify_loop_0 AS SELECT 1;
+CREATE TABLE IF NOT EXISTS ${td.source_tbl}_unify_loop_1 AS SELECT 1;
+CREATE TABLE IF NOT EXISTS ${td.source_tbl}_unify_loop_2 AS SELECT 1;
+CREATE TABLE IF NOT EXISTS ${td.source_tbl}_unify_loop_3 AS SELECT 1;
+CREATE TABLE IF NOT EXISTS ${td.source_tbl}_unify_loop_4 AS SELECT 1;
+CREATE TABLE IF NOT EXISTS ${td.source_tbl}_unify_loop_5 AS SELECT 1;
+CREATE TABLE IF NOT EXISTS ${td.source_tbl}_unify_loop_6 AS SELECT 1;
+CREATE TABLE IF NOT EXISTS ${td.source_tbl}_unified_id_sets AS SELECT 1;
+CREATE TABLE IF NOT EXISTS ${td.source_tbl}_enriched AS SELECT 1;
+CREATE TABLE IF NOT EXISTS ${td.source_tbl}_unified AS SELECT 1;

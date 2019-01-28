@@ -1,0 +1,36 @@
+_export:
+  td:
+    database: id_unification
+    source_tbl: sample_dataset
+
++create_tables:
+  engine: presto
+  td>: create_tables.sql
+  
++extract_distinct_features:
+  engine: hive
+  td>: extract_distinct_features.sql
+
++hop:
+  for_each>:
+    i: [0, 1, 2, 3, 4, 5]
+  _do:
+    +unify_loop:
+      engine: hive
+      #td>: unify_loop.sql
+      td>: unify_loop_heavy.sql
+
++populate_unified_id_sets:
+  engine: hive
+  td>: populate_unified_id_sets.sql
+
++enrich_source_data:
+  engine: hive
+  td>: enrich_source_data.sql
+
++assign_td_id:
+  engine: hive
+  td>: assign_td_id.sql
+
++clean_up:
+  td>: drop_tables.sql
