@@ -3,15 +3,18 @@
 
 ## 1. Push Workflow to TD 
 
-Run the commands from local PC:
+Run the commands below from local PC:
 
 ```
 git clone https://github.com/treasure-data/workflow-examples
 cd workflow-examples/id_unification
 td workflow push id_unification
 ```
+Now you uploaded the workflow to TD side and should be able to see it from web console.
 
 ## 2. Create a Table As Data Source 
+
+Run the commands below from local PC:
 
 ```
 td db:create test_id_unification
