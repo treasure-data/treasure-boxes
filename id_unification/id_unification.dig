@@ -1,8 +1,12 @@
 _export:
   td:
-    database: id_unification
-    source_tbl: sample_dataset
-
+    database: test_id_unification
+    source_tbl: ${td.database}.pageviews
+    loops: 20
+    id1: email
+    id2: td_fingerprint_id
+    id3: td_client_id
+    
 +create_tables:
   engine: presto
   td>: create_tables.sql
@@ -11,26 +15,56 @@ _export:
   engine: hive
   td>: extract_distinct_features.sql
 
++log_this_step_extract:
+  engine: presto
+  table_name:  ${td.source_tbl}_unify_loop_0
+  td>: log_this_step.sql
+  
 +hop:
-  for_each>:
-    i: [0, 1, 2, 3, 4, 5]
+  loop>: ${td.loops}
   _do:
+    +create_table:
+      td_ddl>:
+      create_tables: ["${td.source_tbl}_unify_loop_${i+1}"]
     +unify_loop:
       engine: hive
-      #td>: unify_loop.sql
-      td>: unify_loop_heavy.sql
+      td>: unify_loop.sql
+      #td>: unify_loop_heavy.sql
+    +log_this_step_loop:
+      engine: presto
+      table_name:  ${td.source_tbl}_unify_loop_${i+1}
+      td>: log_this_step.sql
+    +drop_old_table: 
+      td_ddl>:
+      drop_tables: ["${td.source_tbl}_unify_loop_${i}"] 
+
 
 +populate_unified_id_sets:
   engine: hive
   td>: populate_unified_id_sets.sql
 
++log_this_step_id_sets:
+  engine: presto
+  table_name:  ${td.source_tbl}_unified_id_sets
+  td>: log_this_step.sql
+  
 +enrich_source_data:
   engine: hive
   td>: enrich_source_data.sql
 
++log_this_step_enrich:
+  engine: presto
+  table_name:  ${td.source_tbl}_enriched
+  td>: log_this_step.sql
+  
 +assign_td_id:
   engine: hive
   td>: assign_td_id.sql
 
++log_this_step_assign:
+  engine: presto
+  table_name:  ${td.source_tbl}_unified
+  td>: log_this_step.sql
+  
 +clean_up:
   td>: drop_tables.sql

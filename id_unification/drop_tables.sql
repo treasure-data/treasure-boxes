@@ -1,9 +1,3 @@
-DROP TABLE IF EXISTS ${td.source_tbl}_unify_loop_0;
-DROP TABLE IF EXISTS ${td.source_tbl}_unify_loop_1;
-DROP TABLE IF EXISTS ${td.source_tbl}_unify_loop_2;
-DROP TABLE IF EXISTS ${td.source_tbl}_unify_loop_3;
-DROP TABLE IF EXISTS ${td.source_tbl}_unify_loop_4;
-DROP TABLE IF EXISTS ${td.source_tbl}_unify_loop_5;
-DROP TABLE IF EXISTS ${td.source_tbl}_unify_loop_6;
+DROP TABLE IF EXISTS ${td.source_tbl}_unify_loop_${td.loops};
 DROP TABLE IF EXISTS ${td.source_tbl}_unified_id_sets;
 DROP TABLE IF EXISTS ${td.source_tbl}_enriched;

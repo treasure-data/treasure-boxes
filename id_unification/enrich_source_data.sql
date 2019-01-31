@@ -6,24 +6,24 @@ select
     -- otherwise, use the smallest id in the row itself
     data.join_id
   ) as canonical_id,
-  data.email,
-  data.fingerprint_id,
-  data.td_client_id
+  data.${id1},
+  data.${id2},
+  data.${id3}
 from (
   select coalesce(
       case
-        when email is null or email = '' then null
-        else concat('a:', email)
+        when ${id1} is null or ${id1} = '' then null
+        else concat('a:', ${id1})
       end,
  
       case
-        when fingerprint_id is null or fingerprint_id = '' then null
-        else concat('b:', fingerprint_id)
+        when ${id2} is null or ${id2} = '' then null
+        else concat('b:', ${id2})
       end,
 
       case
-        when td_client_id is null or td_client_id = '' then null
-        else concat('f:', td_client_id)
+        when ${id3} is null or ${id3} = '' then null
+        else concat('c:', ${id3})
       end
     ) as join_id,
     *

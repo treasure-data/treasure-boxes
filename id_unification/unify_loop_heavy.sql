@@ -43,3 +43,4 @@ from (
   select key, array_slice(sort_array(collect_set(follower)), 0, 10) as features
   from hs where h = 3 group by key having size(collect_set(follower)) > 1
 ) ds
+;

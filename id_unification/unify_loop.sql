@@ -17,9 +17,9 @@ from (
       feature as follower
     from ${td.source_tbl}_unify_loop_${i}
     lateral view explode(features) ex as feature
- 
+
     union all
- 
+
     -- emit other -> smallest
     select
       feature as key,
@@ -31,3 +31,4 @@ from (
 ) es
 -- 1-element rows were keys which did not connect
 where size(followers) > 1
+;
