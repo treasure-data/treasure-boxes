@@ -36,6 +36,7 @@ as select * from (values
 ```
 Now you created table test_id_unification.source_dataset with test data as below:
 
+[![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/c291b080e30f56ebf3b32795126e7f12.png)](https://treasure-data.gyazo.com/c291b080e30f56ebf3b32795126e7f12)
 
 ### 3. Setup Parameters in Workflow Dig File
 
