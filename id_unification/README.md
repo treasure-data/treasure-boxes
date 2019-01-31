@@ -102,7 +102,7 @@ Then you need to check table "source_dataset_loop_steps". It would be a good res
 
 ### Q: I have a source table with more than 3 id columns, how to use this workflow ?
 
-You would need to manually add extra columns you want in the following files. The existing columns id1, id2 and id3 would be good examples.
+You would need to manually add additional columns you want in the following files. The existing columns id1, id2 and id3 would be good examples.
 
 ```
 id_unification.dig
@@ -113,7 +113,9 @@ assign_td_id.sql
 
 ### Q: How long will the workflow run ?
 
-It depends on the source data you imported. 
+It depends on the source data you imported. I would suggest you check how long it runs for a single loop, then multiply it with parameter loops + extra tens minutes.
+
+[![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/4c9c6c08ed7240b3b79aaab9022e8bc4.png)](https://treasure-data.gyazo.com/4c9c6c08ed7240b3b79aaab9022e8bc4)
 
 
 ### Q: How big should I configure the parameter "loops" ?
