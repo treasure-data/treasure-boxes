@@ -4,7 +4,7 @@
 
 # How to Use It 
 
-## 1. Push Workflow to TD 
+### 1. Push Workflow to TD 
 
 Run the commands below from local PC:
 
@@ -15,7 +15,7 @@ td workflow push id_unification
 ```
 Now you uploaded the workflow to TD side and should be able to see it from web console.
 
-## 2. Create a Table as Data Source 
+### 2. Create a Table as Data Source 
 
 Run the commands below from local PC:
 
@@ -37,7 +37,7 @@ as select * from (values
 Now you created table test_id_unification.source_dataset with test data as below:
 
 
-## 3. Change DB & Table Name in Workflow dig File
+### 3. Change DB & Table Name in Workflow dig File
 
 Modify workflow dig file id_unification.dig on TD side by web-console:
 
@@ -66,7 +66,7 @@ _export:
     id3: td_client_id
 ```
 
-## 4. Select SQL File to Run
+### 4. Select SQL File to Run
 
 In same dig file, comment unify_loop_heavy.sql and un-comment unify_loop.sql.
 For most cases, data will be very small since the 3rd time of unification loop, 
@@ -77,14 +77,15 @@ td>: unify_loop.sql
 #td>: unify_loop_heavy.sql
 ```
 
-## 5. Run Workflow id_unification
+### 5. Run Workflow id_unification
 
 ```
 td wf start id_unification id_unification --session now
 ```
 
-## 6. Check Result 
+### 6. Check Result 
 
 Result can be found in a new table source_dataset_unified.
 
 
+# Q&A
