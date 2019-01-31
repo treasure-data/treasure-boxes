@@ -37,7 +37,7 @@ as select * from (values
 Now you created table test_id_unification.source_dataset with test data as below:
 
 
-### 3. Change DB & Table Name in Workflow dig File
+### 3. Setup Parameters in Workflow Dig File
 
 Modify workflow dig file id_unification.dig on TD side by web-console:
 
