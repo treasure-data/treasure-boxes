@@ -48,6 +48,10 @@ _export:
   td:
     database: xxxx
     source_tbl: xxxx
+    loops: xxxx
+    id1: xxxx
+    id2: xxxx
+    id3: xxxx
 ```
 After:
 
@@ -56,12 +60,17 @@ _export:
   td:
     database: test_id_unification
     source_tbl: ${td.database}.source_dataset
+    loops: 10
+    id1: email
+    id2: fingerprint_id
+    id3: td_client_id
 ```
 
 ## 4. Select SQL File to Run
 
 In same dig file, comment unify_loop_heavy.sql and un-comment unify_loop.sql.
-For most cases, data will be very small since loop of the 3rd time, so non-heavy sql statement would be enough.
+For most cases, data will be very small since the 3rd time of unification loop, 
+so non-heavy sql statement would be enough.
 
 ```
 td>: unify_loop.sql
@@ -77,3 +86,5 @@ td wf start id_unification id_unification --session now
 ## 6. Check Result 
 
 Result can be found in a new table source_dataset_unified.
+
+
