@@ -61,7 +61,7 @@ _export:
 ## 4. Select SQL File to Run
 
 In same dig file, comment unify_loop_heavy.sql and un-comment unify_loop.sql.
-Test data is very small, so we use non-heavy sql statement.
+For most cases, data will be very small since loop of the 3rd time, so non-heavy sql statement would be enough.
 
 ```
 td>: unify_loop.sql
