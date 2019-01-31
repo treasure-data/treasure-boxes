@@ -88,6 +88,7 @@ Alternately, you could do the same on web console.
 
 Result can be found in a new table source_dataset_unified. 
 
+[![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/f931cc76c1b7abb9464079befda69975.png)](https://treasure-data.gyazo.com/f931cc76c1b7abb9464079befda69975)
 
 Then you need to check table source_dataset_loop_steps. It would be a good result if the last several lines of loops have same rows count, what means the result has 100% accuracy. If not, please consider a greate number setup to parameter "loops". (min.5 ~ max.80)
 
