@@ -87,7 +87,7 @@ Result can be found in a new table "source_dataset_unified". Unified IDs have be
 
 [![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/ae9ef1725c495fa737000d08bf4b6cf2.png)](https://treasure-data.gyazo.com/ae9ef1725c495fa737000d08bf4b6cf2)
 
-Then you need to check table "source_dataset_loop_steps". It would be a good result if the last several lines of loops have same rows count, what means the result has 100% accuracy. If not, please consider a greate number setup to parameter "loops". (min.5 ~ max.80)
+Then you need to check table "source_dataset_loop_steps". It would be a good result if the last several lines of loops have same rows count, what means the result has 100% accuracy. If not, please consider a greater number setup to parameter "loops". (min.5 ~ max.80)
 
 In this case, it is clear that at the 3rd loop the result got max accuracy.
 
@@ -117,6 +117,6 @@ It depends on the source data you imported. I would suggest you check how long i
 [![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/4c9c6c08ed7240b3b79aaab9022e8bc4.png)](https://treasure-data.gyazo.com/4c9c6c08ed7240b3b79aaab9022e8bc4)
 
 
-### Q: How big should I configure the value of parameter "loops" ?
+### Q: What value should I set to the parameter "loops" ?
 
 It also depends on the source data and be difficult to estimate before you run the workflow. For 100% accuracy I would suggest to setup a big value enouth, for example 40, at first. Then you could check table "source_dataset_loop_steps" after the workflow is successfully done, to see at which steps it got max accuracy. If 40 is not big enough for your data, then set it to 60, or even 80 and run it once again.
