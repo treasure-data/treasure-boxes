@@ -113,7 +113,7 @@ assign_td_id.sql
 
 ### Q: How long will the workflow run ?
 
-It depends on the source data you imported. I would suggest you check how long it runs for a single loop, then multiply it with parameter loops + extra tens minutes.
+It depends on the source data you imported. I would suggest you check how long it runs for a single loop, then multiply it with parameter loops + extra tens minutes. For most cases, it will end within several hours.
 
 [![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/4c9c6c08ed7240b3b79aaab9022e8bc4.png)](https://treasure-data.gyazo.com/4c9c6c08ed7240b3b79aaab9022e8bc4)
 
