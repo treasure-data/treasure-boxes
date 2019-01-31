@@ -15,7 +15,7 @@ td workflow push id_unification
 ```
 Now you uploaded the workflow to TD side and should be able to see it from web console.
 
-## 2. Create a Table As Data Source 
+## 2. Create a Table as Data Source 
 
 Run the commands below from local PC:
 
