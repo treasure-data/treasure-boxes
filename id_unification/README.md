@@ -73,8 +73,10 @@ For most cases, data will be very small since the 3rd time of unification loop,
 so non-heavy sql statement would be enough.
 
 ```
-td>: unify_loop.sql
-#td>: unify_loop_heavy.sql
+    +unify_loop:
+      engine: hive
+      td>: unify_loop.sql
+      #td>: unify_loop_heavy.sql
 ```
 
 ### 5. Run Workflow id_unification
