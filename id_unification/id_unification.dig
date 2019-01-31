@@ -2,7 +2,8 @@ _export:
   td:
     database: test_id_unification
     source_tbl: source_dataset
-    loops: 10
+    # set value of min.5 ~ max.80 to loops
+    loops: 10 
     id1: email
     id2: fingerprint_id
     id3: td_client_id
