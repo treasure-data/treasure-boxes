@@ -68,9 +68,7 @@ _export:
 
 ### 4. Select SQL File to Run
 
-In same dig file, comment unify_loop_heavy.sql and un-comment unify_loop.sql.
-For most cases, data will be very small since the 3rd time of unification loop, 
-so non-heavy sql statement would be enough.
+In same dig file, comment unify_loop_heavy.sql and un-comment unify_loop.sql. For most cases, data will be not big since the 3rd time of unification loop, so non-heavy sql statement would work well enough.
 
 ```
     +unify_loop:
@@ -84,10 +82,24 @@ so non-heavy sql statement would be enough.
 ```
 td wf start id_unification id_unification --session now
 ```
+Alternately, you could do the same on web console.
 
 ### 6. Check Result 
 
-Result can be found in a new table source_dataset_unified.
+Result can be found in a new table source_dataset_unified. 
+
+
+Then you need to check table source_dataset_loop_steps. It would be a good result if the last several lines of loops have same rows count, what means the result has 100% accuracy. If not, please consider a greate number setup to parameter "loops". (min.5 ~ max.80)
+
+
+
 
 
 # Q&A
+
+Q: I have a source table with more than 3 id columns, how to use this workflow ?
+
+Q: How long will the workflow run ?
+
+Q: How big should I configure the parameter "loops" ?
+
