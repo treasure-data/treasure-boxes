@@ -1,12 +1,11 @@
 _export:
   td:
-    database: test_id_unification
-    source_tbl: source_dataset
-    # set value of min.5 ~ max.80 to loops
-    loops: 10 
-    id1: email
-    id2: fingerprint_id
-    id3: td_client_id
+    database: test_id_unification   # database name, result table will be generated here
+    source_tbl: source_dataset      # source table name
+    loops: 10                       # min.5 ~ max.80 
+    id1: email                      # column name 1 in source_tbl
+    id2: fingerprint_id             # column name 2 in source_tbl
+    id3: td_client_id               # column name 3 in source_tbl
     
 +create_tables:
   engine: presto
