@@ -67,7 +67,7 @@ _export:
     id3: td_client_id
 ```
 
-### 4. Select SQL File to Run
+### 4. Select SQL File
 
 In same dig file, comment unify_loop_heavy.sql and un-comment unify_loop.sql. For most cases, data will be not big since the 3rd time of unification loop, so non-heavy sql statement would work well enough.
 
