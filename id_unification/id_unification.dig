@@ -2,9 +2,9 @@ _export:
   td:
     database: test_id_unification
     source_tbl: source_dataset
-    loops: 10
+    loops: 20
     id1: email
-    id2: td_fingerprint_id
+    id2: fingerprint_id
     id3: td_client_id
     
 +create_tables:
