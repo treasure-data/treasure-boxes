@@ -1,7 +1,3 @@
-# What Is It
-
-# How Does IT Work
-
 # How to Use It 
 
 ### 1. Push Workflow to TD 
