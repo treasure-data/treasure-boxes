@@ -46,8 +46,8 @@ Before:
 ```
 _export:
   td:
-    database: id_unification
-    source_tbl: sample_dataset
+    database: xxxx
+    source_tbl: xxxx
 ```
 After:
 
@@ -55,7 +55,7 @@ After:
 _export:
   td:
     database: test_id_unification
-    source_tbl: source_dataset
+    source_tbl: ${td.database}.source_dataset
 ```
 
 ## 4. Select SQL File to Run
