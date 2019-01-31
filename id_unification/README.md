@@ -99,14 +99,17 @@ Then you need to check table "source_dataset_loop_steps". It would be a good res
 
 # Q&A
 
+
 ### Q: I have a source table with more than 3 id columns, how to use this workflow ?
 
 You would need to manually add extra columns you want in the following files. The existing columns id1, id2 and id3 would be good examples.
 
+```
 id_unification.dig
 extract_distinct_features.sql
 enrich_source_data.sql
 assign_td_id.sql
+```
 
 ### Q: How long will the workflow run ?
 
