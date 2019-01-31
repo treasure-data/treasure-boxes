@@ -59,7 +59,7 @@ After:
 _export:
   td:
     database: test_id_unification
-    source_tbl: ${td.database}.source_dataset
+    source_tbl: source_dataset
     loops: 10
     id1: email
     id2: fingerprint_id
