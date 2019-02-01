@@ -1,7 +1,9 @@
 # What Is It
 
 ID Stitching and ID Unification are foundational use cases for our CDP clients
+
 ID Stitching - Joining together disparate data sources that share a common ID (unification at a table-level)
+
 ID Unification - ID stitching at the most granular log-level of the data
 
 # How to Use It 
