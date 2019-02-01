@@ -4,6 +4,8 @@ ID Stitching and ID Unification are foundational use cases for our CDP clients
 
 - ID Stitching - Joining together disparate data sources that share a common ID (unification at a table-level)
 
+[![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/d632f99a48ff0faee80e836d28a0fb12.png)](https://treasure-data.gyazo.com/d632f99a48ff0faee80e836d28a0fb12)
+
 - ID Unification - ID stitching at the most granular log-level of the data
 
 [![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/f22984b4b3faed394075ed79d8e3e24c.png)](https://treasure-data.gyazo.com/f22984b4b3faed394075ed79d8e3e24c)
@@ -81,7 +83,7 @@ _export:
 
 ### 4. Select SQL File
 
-In same dig file, comment unify_loop_heavy.sql and un-comment unify_loop.sql. For most cases, data will be not big since the 3rd time of unification loop, so non-heavy sql statement would work well enough.
+In same dig file, comment unify_loop_heavy.sql and un-comment unify_loop.sql. For most cases, data will be not big since the 3rd or 4nd time of unification loop, so non-heavy sql statement would work well enough. If you find the rows count of each loop table is huge, consider to use heavy sql statement.
 
 ```
     +unify_loop:
