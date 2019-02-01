@@ -1,0 +1,14 @@
+timezone: UTC
+
++td-result-output-bigquery:
+  td>:
+  query: SELECT DISTINCT col1, col2, col3, col4 FROM “your_table”
+  database: your_db
+  result_connection: YOUR_BQ_CONNECTION_NAME
+  result_settings:
+    product: INVITE_ADVERTISER
+    entity_id: 1234567
+    columns: cookie:col1,list_name:col2,timestamp:col3,delete:col4
+    cookie_column_header: cookie_encrypted
+    membership_lifespan: 540
+
