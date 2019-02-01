@@ -54,7 +54,7 @@ Now you created table test_id_unification.source_dataset with test data as below
 
 [![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/c291b080e30f56ebf3b32795126e7f12.png)](https://treasure-data.gyazo.com/c291b080e30f56ebf3b32795126e7f12)
 
-### 3. Setup Parameters in Workflow Dig File
+### 3. Setup Workflow Parameters
 
 Modify workflow dig file id_unification.dig on TD side by web-console:
 
@@ -99,7 +99,7 @@ In same dig file, comment unify_loop_heavy.sql and un-comment unify_loop.sql. Fo
 ```
 td wf start id_unification id_unification --session now
 ```
-Alternately, you could do the same on web console.
+Alternately, you could also do the same on web console.
 
 ### 6. Check Result 
 
