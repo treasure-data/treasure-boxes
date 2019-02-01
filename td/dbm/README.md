@@ -1,4 +1,4 @@
-# Workflow: td example (Result Output to BigQuery)
+# Workflow: td example (Result Output to DoubleClick Bid Manager)
 
 This example workflow ingests data using [Treasure Data's Writing Job Results into Google BigQuery](https://docs.treasuredata.com/articles/result-into-google-bigquery) with [td](http://docs.digdag.io/operators/td.html) operator.
 
