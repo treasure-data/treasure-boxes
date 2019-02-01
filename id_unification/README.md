@@ -6,6 +6,14 @@ ID Stitching and ID Unification are foundational use cases for our CDP clients
 
 - ID Unification - ID stitching at the most granular log-level of the data
 
+[![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/f22984b4b3faed394075ed79d8e3e24c.png)](https://treasure-data.gyazo.com/f22984b4b3faed394075ed79d8e3e24c)
+
+Treasure Data implements a distributed union-find algorithm to deliver true ID unification across as many dimensions as necessary for our customers
+
+This model is configured to run efficiently across multiple hive cores, leveraging both the sophistican of union-find and Treasure Data’s massively parallel processing capabilities
+
+[![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/bb42b28f6929e52b72eedaaa106db88f.png)](https://treasure-data.gyazo.com/bb42b28f6929e52b72eedaaa106db88f)
+
 # How to Use It 
 
 ### 1. Push Workflow to TD 
