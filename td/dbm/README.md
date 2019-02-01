@@ -22,37 +22,36 @@ First, please upload your workflow project by `td wf push` command.
 If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
-    $ td wf secrets --project td_bigquery --set key
+    $ td wf secrets --project td_dbm --set product=xxx
+    $ td wf secrets --project td_dbm --set entity_id=xxx
 
     # Set Secrets on your local for testing
-    $ td wf secrets --local --set key
+    $ td wf secrets --local --set product=xxx
+    $ td wf secrets --local --set entity_id=xxx
 
 Now you can use these secrets by `${secret:}` syntax in the dig file.
 
 You can trigger the session manually.
 
     # Run
-    $ td wf start td_bigquery export_bigquery --session now
+    $ td wf start td_dbm export_dbm --session now
 
 ## Local mode
 
     # Run
-    $ td wf run export_bigquery.dig
+    $ td wf run export_dbm.dig
 
 # Supplemental
 
 Available parameters for `result_settings` are here.
 
-- project: (string, required)
-- dataset: (string, required)
-- table: (string, required)
-- auto_create_table: (boolean, default false)
-- max_bad_records: (int, optional, default 0)
-- ignore_unknown_values: (boolean, default false)
-- allow_quoted_newlines: (boolean, default false)
-- schema_file: (string(json), required)
+- product: (string, required)
+- entity_id: (string, required)
+- columns: (string, required)
+- cookie_column_header: (string, required)
+- membership_lifespan: (int, optional)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-google-bigquery#use-from-cli)
+For more details, please see [Treasure Data documentation](https://support.treasuredata.com/hc/en-us/articles/360001286367-Writing-Job-Results-into-Google-DoubleClick-Bid-Manager-on-the-DoubleClick-Data-Platform)
 
 # Next Step
 
