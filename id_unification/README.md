@@ -140,7 +140,7 @@ The complexity of an ID Unification use case depends on a few factors
 - Whether new events can unify IDs from the past that were previously thought to be separate IDs (requires a ‘bi-directional’ model)
 
 
-So depends on the source data you imported. I would suggest you check how long it runs for a single loop, then multiply it by the value of parameter loops, finally plus extra tens minutes. For most cases, it will end within several hours.
+So it depends on the source data you imported. I would suggest you check how long it runs for a single loop, then multiply it by the value of parameter loops, finally plus extra tens minutes. For most cases, it will end within several hours.
 
 [![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/4c9c6c08ed7240b3b79aaab9022e8bc4.png)](https://treasure-data.gyazo.com/4c9c6c08ed7240b3b79aaab9022e8bc4)
 
