@@ -147,4 +147,4 @@ So it depends on the source data you imported. I would suggest you check how lon
 
 ### Q: What value should I set to the parameter "loops" ?
 
-It also depends on the source data and be difficult to estimate before you run the workflow. For 100% accuracy I would suggest to setup a big value enouth, for example 40, at first. Then you could check table "source_dataset_loop_steps" after the workflow is successfully done, to see at which steps it got max accuracy. If 40 is not big enough for your data, then set it to 60, or even 80 and run it once again.
+It also depends on the source data and be difficult to estimate before you run the workflow. For 100% accuracy I would suggest to setup a big value enough, for example 40, at first. Then you could check table "source_dataset_loop_steps" after the workflow is successfully done, to see at which steps it got max accuracy. If 40 is not big enough for your data, then set it to 60, or even 80 and run it once again.
