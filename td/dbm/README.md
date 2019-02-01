@@ -1,5 +1,4 @@
-# Workflow: td example 
-(Result Output to DoubleClick Bid Manager)
+# Workflow: Result Output to DoubleClick Bid Manager
 
 This example workflow ingests data using [Writing Job Results into Google DoubleClick Bid Manager on the DoubleClick Data Platform](https://support.treasuredata.com/hc/en-us/articles/360001286367-Writing-Job-Results-into-Google-DoubleClick-Bid-Manager-on-the-DoubleClick-Data-Platform) with [td](http://docs.digdag.io/operators/td.html) operator.
 
