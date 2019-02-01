@@ -8,7 +8,7 @@ In order to register your credential in TreasureData, please create connection s
 
 [![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/aea8b1080bd9dbc8d343d967b0c7d3e5.png)](https://treasure-data.gyazo.com/aea8b1080bd9dbc8d343d967b0c7d3e5)
 
-![](https://t.gyazo.com/teams/treasure-data/87cf742b9afb364acb5a364a07f91e9c.png)
+[![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/e2479da555ccce101d2941a29ba31449.png)](https://treasure-data.gyazo.com/e2479da555ccce101d2941a29ba31449)
 
 The connection name is used in the dig file.
 
@@ -17,7 +17,7 @@ The connection name is used in the dig file.
 First, please upload your workflow project by `td wf push` command.
 
     # Upload
-    $ td wf push td_bigquery
+    $ td wf push td_dbm
 
 If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
 
