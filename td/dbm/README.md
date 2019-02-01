@@ -6,7 +6,7 @@ This example workflow ingests data using [Writing Job Results into Google Double
 
 In order to register your credential in TreasureData, please create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
 
-![](https://t.gyazo.com/teams/treasure-data/a44e6519d63b78dbdf7529ad6a5c7f46.png)
+[![Image from Gyazo](https://t.gyazo.com/teams/treasure-data/aea8b1080bd9dbc8d343d967b0c7d3e5.png)](https://treasure-data.gyazo.com/aea8b1080bd9dbc8d343d967b0c7d3e5)
 
 ![](https://t.gyazo.com/teams/treasure-data/87cf742b9afb364acb5a364a07f91e9c.png)
 
