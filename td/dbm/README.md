@@ -45,8 +45,6 @@ You can trigger the session manually.
 
 Available parameters for `result_settings` are here.
 
-- product: (string, required)
-- entity_id: (string, required)
 - columns: (string, required)
 - cookie_column_header: (string, required)
 - membership_lifespan: (int, optional)
