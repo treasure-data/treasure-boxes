@@ -19,18 +19,6 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push td_dbm
 
-If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
-
-    # Set Secrets
-    $ td wf secrets --project td_dbm --set product=xxx
-    $ td wf secrets --project td_dbm --set entity_id=xxx
-
-    # Set Secrets on your local for testing
-    $ td wf secrets --local --set product=xxx
-    $ td wf secrets --local --set entity_id=xxx
-
-Now you can use these secrets by `${secret:}` syntax in the dig file.
-
 You can trigger the session manually.
 
     # Run
