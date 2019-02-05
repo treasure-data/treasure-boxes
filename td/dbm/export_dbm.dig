@@ -1,6 +1,6 @@
 timezone: UTC
 
-+td-result-output-bigquery:
++td-result-output-dbm:
   td>:
   query: SELECT DISTINCT col1, col2 FROM “your_table”
   database: your_db
