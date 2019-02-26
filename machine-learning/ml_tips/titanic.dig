@@ -1,14 +1,16 @@
 _export:
-  '!include': config/params.yml
+  #!include : config/params.yml
   source: titanic
+  train_sample_rate: 0.8
   td:
     database: ml_tips
     engine: hive
-    train_sample_rate: 0.8
+
 +preparation:
   +shuffle:
     td>: queries/shuffle.sql
     create_table: ${source}_shuffled
+
   +split:
     _parallel: true
     +train:
@@ -19,6 +21,7 @@ _export:
       td>: queries/split_test.sql
       engine: presto
       create_table: ${source}_test
+
   +imputation:
     +compute_stats:
       _parallel: true
@@ -37,10 +40,12 @@ _export:
         engine: presto
         source: titanic_test
         create_table: ${source}_stats
+
     +combine_train_test_stats:
       td>: queries/combine_stats.sql
       engine: presto
       store_last_results: true
+
     +execute:
       _parallel: true
       +whole:
@@ -58,6 +63,7 @@ _export:
         engine: presto
         source: titanic_test
         create_table: titanic_imputed_test
+
   +normalization:
     +compute_stats:
       _parallel: true
@@ -76,10 +82,12 @@ _export:
         engine: presto
         source: titanic_imputed_test
         create_table: ${source}_stats
+
     +combine_train_test_stats:
       td>: queries/combine_stats.sql
       engine: presto
       store_last_results: true
+
     +execute:
       _parallel: true
       +whole:
@@ -97,6 +105,7 @@ _export:
         engine: hive
         source: titanic_imputed_test
         create_table: titanic_norm_test
+
 +vectorization:
   _parallel: true
   +whole:
@@ -111,6 +120,7 @@ _export:
     td>: queries/vectorize.sql
     source: titanic_norm_test
     create_table: test
+
 +main:
   +train:
     +train_0:
