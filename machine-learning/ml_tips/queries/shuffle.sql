@@ -1,8 +1,12 @@
--- Hive
 select
-  rowid() as id
-  , rand(31) as rnd
-  , pclass, survived, name, sex, age, sibsp, parch, ticket, fare, cabin, embarked, boat, body, home_dest
+  rowid() as rowid
+  , survived
+  , age
+  , fare
+  , embarked
+  , sex
+  , pclass
+  , rand(32) as rnd
 from
   ${source}
 cluster by rand(43)
