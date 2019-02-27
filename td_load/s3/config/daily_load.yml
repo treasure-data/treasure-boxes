@@ -8,7 +8,7 @@ in:
   access_key_id: ${secret:s3.access_key_id}
   secret_access_key: ${secret:s3.secret_access_key}
   bucket: bucket-name
-  path_prefix: /
+  path_prefix: filename_${moment(session_time).add(-1,'days').format('YYYYMMDD')} 
   parser:
     charset: UTF-8
     newline: CRLF
