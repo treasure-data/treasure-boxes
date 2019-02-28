@@ -5,7 +5,7 @@ This example workflow exports TD job results into a Google Spreadsheet with [td]
 # Prerequisites
 
 You need to create a new Authentication for Google Spread Sheet in advance.  
-Please refer to the section '1. Create a Google Sheets export connector in the V3 (current) console' in the [Treasure Data Documentation](https://support.treasuredata.com/hc/en-us/articles/360010360053-Migrating-from-a-Google-Sheets-Legacy-Export-Connector-to-an-OAuth-based-Google-Sheets-Export-Connector).
+Please refer to the section '2. Account authentication' in the [Treasure Data Documentation](https://support.treasuredata.com/hc/en-us/articles/360009671913-Writing-Job-Results-to-Google-Sheets) in order to find the procedure.
 
 The connection name is used in the dig file.
 
@@ -48,7 +48,7 @@ Available parameters for `result_settings` are here.
 
 **※You must choose to use either the *****spreadsheet_id***** OR *****spreadsheet_title.***** You cannot use both.**
 
-For more details, please see [Treasure Data documentation](https://support.treasuredata.com/hc/en-us/articles/360010360053-Migrating-from-a-Google-Sheets-Legacy-Export-Connector-to-an-OAuth-based-Google-Sheets-Export-Connector)
+For more details, please see [Treasure Data documentation](https://support.treasuredata.com/hc/en-us/articles/360009671913-Writing-Job-Results-to-Google-Sheets)
 
 # Next Step
 
