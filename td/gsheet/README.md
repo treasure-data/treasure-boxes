@@ -1,20 +1,14 @@
 # Workflow: td example (Result Output to Google Spreadsheet)
 
-This example workflow exports TD job results into a Google Spreadsheet [Treasure Data's Writing Job Results into Google Spread](https://docs.treasuredata.com/articles/result-into-google-spreadsheet) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into a Google Spreadsheet with [td](http://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
-Connect Treasure Data user account to your Google Account.
-https://docs.treasuredata.com/articles/result-into-google-spreadsheet#authorization
-![](https://t.gyazo.com/teams/treasure-data/0c86ab5766e404f4b4298d3151c5a790.png)
-
-Create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
-
-![](https://t.gyazo.com/teams/treasure-data/0570c45ad9128cdea82b8cdbbbf23371.png)
-
-![](https://t.gyazo.com/teams/treasure-data/840088cd65db23178651dcd8d85567c3.png)
+You need to create a new Authentication for Google Spread Sheet in advance.  
+Please refer to the section '1. Create a Google Sheets export connector in the V3 (current) console' in the [document](https://support.treasuredata.com/hc/en-us/articles/360010360053-Migrating-from-a-Google-Sheets-Legacy-Export-Connector-to-an-OAuth-based-Google-Sheets-Export-Connector).
 
 The connection name is used in the dig file.
+
 
 # How to Run
 
