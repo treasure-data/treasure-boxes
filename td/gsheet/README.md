@@ -5,7 +5,7 @@ This example workflow exports TD job results into a Google Spreadsheet with [td]
 # Prerequisites
 
 You need to create a new Authentication for Google Spread Sheet in advance.  
-Please refer to the section '1. Create a Google Sheets export connector in the V3 (current) console' in the [document](https://support.treasuredata.com/hc/en-us/articles/360010360053-Migrating-from-a-Google-Sheets-Legacy-Export-Connector-to-an-OAuth-based-Google-Sheets-Export-Connector).
+Please refer to the section '1. Create a Google Sheets export connector in the V3 (current) console' in the [Treasure Data Documentation](https://support.treasuredata.com/hc/en-us/articles/360010360053-Migrating-from-a-Google-Sheets-Legacy-Export-Connector-to-an-OAuth-based-Google-Sheets-Export-Connector).
 
 The connection name is used in the dig file.
 
@@ -41,12 +41,14 @@ You can trigger the session manually.
 
 Available parameters for `result_settings` are here.
 
-- spreadsheet: (string, spreadsheet name or key is required)
-- key: (string, spreadsheet key or name is required)
-- worksheet: (string, required)
-- mode: (string(replace|append), default replace)
+- spreadsheet_id: (string, spreadsheet key is required※)
+- spreadsheet_title: (string, spreadsheet name is required※)
+- sheet_title: (string, worksheet name is required)
+- mode: (string(replace|append), default replace)  
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-google-spreadsheet)
+**※You must choose to use either the *****spreadsheet_id***** OR *****spreadsheet_title.***** You cannot use both.**
+
+For more details, please see [Treasure Data documentation](https://support.treasuredata.com/hc/en-us/articles/360010360053-Migrating-from-a-Google-Sheets-Legacy-Export-Connector-to-an-OAuth-based-Google-Sheets-Export-Connector)
 
 # Next Step
 
