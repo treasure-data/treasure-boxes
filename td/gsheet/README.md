@@ -1,10 +1,10 @@
-# Workflow: td example (Result Output to Google Spreadsheet)
+# Workflow: td example (Result Output to Google Sheets)
 
-This example workflow exports TD job results into a Google Spreadsheet with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into a Google Sheets with [td](http://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
-You need to create a new Authentication for Google Spread Sheet in advance.  
+You need to create a new Authentication for Google Sheets in advance.  
 Please refer to the section '2. Account authentication' in the [Treasure Data Documentation](https://support.treasuredata.com/hc/en-us/articles/360009671913-Writing-Job-Results-to-Google-Sheets) in order to find the procedure.
 
 The connection name is used in the dig file.
