@@ -1,20 +1,14 @@
-# Workflow: td example (Result Output to Google Spreadsheet)
+# Workflow: td example (Result Output to Google Sheets)
 
-This example workflow exports TD job results into a Google Spreadsheet [Treasure Data's Writing Job Results into Google Spread](https://docs.treasuredata.com/articles/result-into-google-spreadsheet) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into a Google Sheets with [td](http://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
-Connect Treasure Data user account to your Google Account.
-https://docs.treasuredata.com/articles/result-into-google-spreadsheet#authorization
-![](https://t.gyazo.com/teams/treasure-data/0c86ab5766e404f4b4298d3151c5a790.png)
-
-Create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
-
-![](https://t.gyazo.com/teams/treasure-data/0570c45ad9128cdea82b8cdbbbf23371.png)
-
-![](https://t.gyazo.com/teams/treasure-data/840088cd65db23178651dcd8d85567c3.png)
+You need to create a new Authentication for Google Sheets in advance.  
+Please refer to the section '2. Account authentication' in the [Treasure Data Documentation](https://support.treasuredata.com/hc/en-us/articles/360009671913-Writing-Job-Results-to-Google-Sheets) in order to find the procedure.
 
 The connection name is used in the dig file.
+
 
 # How to Run
 
@@ -47,12 +41,14 @@ You can trigger the session manually.
 
 Available parameters for `result_settings` are here.
 
-- spreadsheet: (string, spreadsheet name or key is required)
-- key: (string, spreadsheet key or name is required)
-- worksheet: (string, required)
-- mode: (string(replace|append), default replace)
+- spreadsheet_id: (string, spreadsheet key is required※)
+- spreadsheet_title: (string, spreadsheet name is required※)
+- sheet_title: (string, worksheet name is required)
+- mode: (string(replace|append), default replace)  
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-google-spreadsheet)
+**※You must choose to use either the *****spreadsheet_id***** OR *****spreadsheet_title.***** You cannot use both.**
+
+For more details, please see [Treasure Data documentation](https://support.treasuredata.com/hc/en-us/articles/360009671913-Writing-Job-Results-to-Google-Sheets)
 
 # Next Step
 
