@@ -48,7 +48,7 @@ Available parameters for `result_settings` are here.
 - format: (string(csv|tsv), default csv)
 - compression: (string(None|gz|bzip2), default None)
 - header_line: (boolean(true|false), default true)
-- delimiter: (string(","|"\t"|"tab"), default ",")
+- delimiter: (string(","|"\t"), default ",")
 - quote_policy: (string(ALL|MINIMAL|NONE))
 - null_string: (string(""|"\N"|NULL|null), default "")
 - newline: (string(CRLF|CR|LF), default CRLF)
