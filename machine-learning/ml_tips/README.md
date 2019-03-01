@@ -10,7 +10,7 @@ Using [titanic data](https://github.com/amueller/scipy-2017-sklearn/blob/master/
 
 ## Input
 
-This workflow assume a table as follows:
+This workflow assumes a table as follows:
 
 |pclass<br/>`int`|survived<br/>`int`|name<br/>`string`|sex<br/>`string`|age<br/>`int`|sibsp<br/>`int`|parch<br/>`int`|ticket<br/>`string`|fare<br/>`double`|cabin<br/>`string`|embarked<br/>`string`|boat<br/>`string`|body<br/>`int`|home.dest<br/>`string`|
 |---------|------|---------|--------|-------|-------|-------|--------|-------|-------|-----------|--------|---------|-------|
@@ -50,7 +50,6 @@ $ td wf start ml_tips titanic --session now
 ```
 
 - [titanic.dig](titanic.dig) - TD workflow script for linear regression
-- [titanic_pipeline.yml](titanic_pipeline.yml) - Source file of dig file and queries for [molehill](https://github.com/chezou/molehill)
 
 ## Output
 
