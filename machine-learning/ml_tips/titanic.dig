@@ -1,7 +1,7 @@
 _export:
-  #!include : config/params.yml
   source: titanic
   train_sample_rate: 0.8
+  oversample_n_times: 3
   td:
     database: ml_tips
     engine: hive
