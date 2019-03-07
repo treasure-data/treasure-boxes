@@ -39,7 +39,7 @@ Here is a description of each column.
     body            Body Identification Number
     home.dest       Home/Destination
 
-In this workflow, you will predict a probability of `survival`.
+In this workflow, you will predict the probability of `survival`, taking a binary label survival as a response variable.
 
 ## Workflow
 
