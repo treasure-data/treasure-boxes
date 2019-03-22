@@ -1,0 +1,144 @@
+_export:
+  source: titanic
+  train_sample_rate: 0.8
+  oversample_n_times: 3
+  td:
+    database: ml_tips
+    engine: hive
+
++preparation:
+  +shuffle:
+    td>: queries/shuffle.sql
+    create_table: ${source}_shuffled
+
+  +split:
+    _parallel: true
+    +train:
+      td>: queries/split_train.sql
+      engine: presto
+      create_table: ${source}_train
+    +test:
+      td>: queries/split_test.sql
+      engine: presto
+      create_table: ${source}_test
+
+  +imputation:
+    +compute_stats:
+      _parallel: true
+      +whole:
+        td>: queries/stats.sql
+        engine: presto
+        source: titanic_shuffled
+        create_table: ${source}_stats
+      +train:
+        td>: queries/stats.sql
+        engine: presto
+        source: titanic_train
+        create_table: ${source}_stats
+      +test:
+        td>: queries/stats.sql
+        engine: presto
+        source: titanic_test
+        create_table: ${source}_stats
+
+    +combine_train_test_stats:
+      td>: queries/combine_stats.sql
+      engine: presto
+      store_last_results: true
+
+    +execute:
+      _parallel: true
+      +whole:
+        td>: queries/impute_whole.sql
+        engine: presto
+        source: titanic_shuffled
+        create_table: titanic_imputed
+      +train:
+        td>: queries/impute.sql
+        engine: presto
+        source: titanic_train
+        create_table: titanic_imputed_train
+      +test:
+        td>: queries/impute.sql
+        engine: presto
+        source: titanic_test
+        create_table: titanic_imputed_test
+
+  +normalization:
+    +compute_stats:
+      _parallel: true
+      +whole:
+        td>: queries/stats.sql
+        engine: presto
+        source: titanic_imputed
+        create_table: ${source}_stats
+      +train:
+        td>: queries/stats.sql
+        engine: presto
+        source: titanic_imputed_train
+        create_table: ${source}_stats
+      +test:
+        td>: queries/stats.sql
+        engine: presto
+        source: titanic_imputed_test
+        create_table: ${source}_stats
+
+    +combine_train_test_stats:
+      td>: queries/combine_stats.sql
+      engine: presto
+      store_last_results: true
+
+    +execute:
+      _parallel: true
+      +whole:
+        td>: queries/normalize_whole.sql
+        engine: hive
+        source: titanic_imputed
+        create_table: titanic_norm
+      +train:
+        td>: queries/normalize.sql
+        engine: hive
+        source: titanic_imputed_train
+        create_table: titanic_norm_train
+      +test:
+        td>: queries/normalize.sql
+        engine: hive
+        source: titanic_imputed_test
+        create_table: titanic_norm_test
+
++vectorization:
+  _parallel: true
+  +whole:
+    td>: queries/vectorize.sql
+    source: titanic_norm
+    create_table: whole
+  +train:
+    td>: queries/vectorize.sql
+    source: titanic_norm_train
+    create_table: train
+  +test:
+    td>: queries/vectorize.sql
+    source: titanic_norm_test
+    create_table: test
+
++main:
+  +train:
+    +train_0:
+      td>: queries/train_classifier.sql
+      source: train
+      create_table: model
+  +predict:
+    +seq_0:
+      +exec_predict:
+        td>: queries/predict_classifier.sql
+        target_table: test
+        create_table: prediction
+        model_table: model
+      +evaluate:
+        td>: queries/evaluate.sql
+        actual: test
+        predicted_table: prediction
+        predicted_column: probability
+        store_last_results: true
+      +show_accuracy:
+        echo>: "auc: ${td.last_results.auc}\tlogloss: ${td.last_results.logloss}"

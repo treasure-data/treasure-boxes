@@ -26,8 +26,8 @@ By default, top 4 correlated columns with `medv` are used. If you want to change
 
 ```sh
 $ ./data.sh # prepare sample dataset
-$ tf wf push regressor # push workflow to TD
-$ tf wf start regressor regression --session now
+$ td wf push regressor # push workflow to TD
+$ td wf start regressor regression --session now
 ```
 
 If you want to run feature selection with py> operator, you can execute as follows:
