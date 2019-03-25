@@ -9,6 +9,7 @@ _export:
     project: project_name
     mode: append
     legacy: false
+    datasource_type: hyper
 
 +td-result-output-tableau:
   td>: queries/sample.sql
@@ -19,3 +20,4 @@ _export:
     project: ${tableau.project}
     mode: ${tableau.mode}
     legacy: ${tableau.legacy}
+    target_type: ${datasource_type}

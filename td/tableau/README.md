@@ -50,6 +50,7 @@ Available parameters for `result_settings` are here.
 - project (string, optional)
 - mode (string(append|replace), required)
 - legacy (string('false'|'true'))
+- target_type (string(hyper|tde), optional)
 
 # Next Step
 
