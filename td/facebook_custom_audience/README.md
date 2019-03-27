@@ -39,14 +39,14 @@ You can trigger the session manually.
 
 Available parameters for `result_settings` are here.
 
-- ad_account_id: your Facebook Ad Account ID, without act_ prefix (string, required)
-- api_version: Facebook Graph API version (string, default: "v2.11")
-- output_name: name of output Custom Audience (string, required)
-- description: description of output Custom Audience (string, optional)
-- pre_hashed : Whether or not the data has already been hashed. If not, the plugin will automatically hash the data (boolean, default: false)
-- customer_file_source : Specify the source of the user information collected into this file (string, default: null, values: USER_PROVIDED_ONLY, PARTNER_PROVIDED_ONLY, BOTH_USER_AND_PARTNER_PROVIDED)
-- retryInitialWaitMsec: time to wait between retries (int, required, default: 60000). 
-- retryLimit: Number of times to retry on failure (int, optional, default: 5)
+- ad_account_id: your Facebook Ad Account ID, without `act_` prefix _(string, required)_
+- api_version: Facebook Graph API version _(string, default: "v2.11")_
+- app_secret: if set, `appseret_proof` parameter will be used to access API _(string, optional)_
+- access_token: Access Token. We recommend to use never-expired token (see [here](https://github.com/treasure-data/embulk-input-facebook_ads_reporting#never-expired-access-token) for more details) _(string, required)_
+- output_name: name of output Custom Audience _(string, required)_
+- description: description of output Custom Audience _(string, optional)_
+- pre_hashed : Whether or not the data has already been hashed. If not, the plugin will automatically hash the data _(boolean, default: false)_
+- customer_file_source : Specify the source of the user information collected into this file _(string, default: null, values: USER_PROVIDED_ONLY, PARTNER_PROVIDED_ONLY, BOTH_USER_AND_PARTNER_PROVIDED)_
 
 
 For more details, please see [Treasure Data documentation (GUI)](https://support.treasuredata.com/hc/en-us/articles/360001262227-Treasure-Workflow-Quick-Start-Tutorial-for-the-GUI)
