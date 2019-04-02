@@ -1,3 +1,4 @@
+-- client: molehill/0.0.1
 select
   avg(age) as age_mean
   , stddev_pop(age) as age_std

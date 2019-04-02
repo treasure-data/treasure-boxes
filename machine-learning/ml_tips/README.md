@@ -49,7 +49,7 @@ $ td wf push ml_tips
 $ td wf start ml_tips titanic --session now
 ```
 
-- [titanic.dig](titanic.dig) - TD workflow script for linear regression
+- [titanic.dig](titanic.dig) - TD workflow script for linear regression and Random Forest
 
 ## Output
 
