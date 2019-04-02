@@ -106,6 +106,7 @@ _export:
         source: titanic_imputed_test
         create_table: titanic_norm_test
 
+# Workaround to avoid this issue: https://issues.apache.org/jira/projects/HIVEMALL/issues/HIVEMALL-243
 +compute_cardinality:
   td>: queries/cardinality.sql
   engine: presto
@@ -126,20 +127,24 @@ _export:
     td>: queries/vectorize.sql
     source: titanic_norm_test
     create_table: test
+
   +whole_dense:
     td>: queries/vectorize_dense.sql
     source: titanic_norm
     create_table: whole_dense
+    # Workaround to avoid this issue: https://issues.apache.org/jira/projects/HIVEMALL/issues/HIVEMALL-243
     feature_cardinality: ${td.last_results.max_categorical_cardinality} * 10
   +train_dense:
     td>: queries/vectorize_dense.sql
     source: titanic_norm_train
     create_table: train_dense
+    # Workaround to avoid this issue: https://issues.apache.org/jira/projects/HIVEMALL/issues/HIVEMALL-243
     feature_cardinality: ${td.last_results.max_categorical_cardinality} * 10
   +test_dense:
     td>: queries/vectorize_dense.sql
     source: titanic_norm_test
     create_table: test_dense
+    # Workaround to avoid this issue: https://issues.apache.org/jira/projects/HIVEMALL/issues/HIVEMALL-243
     feature_cardinality: ${td.last_results.max_categorical_cardinality} * 10
 
 +main:
