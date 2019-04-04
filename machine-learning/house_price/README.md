@@ -37,7 +37,7 @@ $ ./data.sh
 $ td wf push regressor
 $ td wf secrets --project regressor --set apikey --set endpoint
 # Set secrets from STDIN like: apikey=1/xxxxx, endpoint=https://api.treasuredata.com
-$ td wf start regressor regression-py
+$ td wf start regressor regression-py --session now
 ```
 
 * [regression.dig](regression.dig) - TD workflow script for regression
