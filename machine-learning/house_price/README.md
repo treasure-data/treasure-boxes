@@ -20,7 +20,7 @@ This workflow assume a table as follows:
 
 By default, top 4 correlated columns with `medv` are used. If you want to change explanatory variables, you can modify following file:
 
-- [vectorize_log1p_features.sql](./queries/vectorize_features.sql)
+- [vectorize_log1p_features.sql](./queries/vectorize_log1p_features.sql)
 
 ## Workflow
 
