@@ -49,7 +49,11 @@ $ td wf push ml_tips
 $ td wf start ml_tips titanic --session now
 ```
 
-- [titanic.dig](titanic.dig) - TD workflow script for linear regression
+- [titanic.dig](titanic.dig) - TD workflow script for linear classifier with Hinge Loss and Random Forest classifier in parallel.
+
+### Note for Random Forest classifier
+
+As of Hivemall v0.5.2, there is [a performance issue](https://issues.apache.org/jira/projects/HIVEMALL/issues/HIVEMALL-243) around Random Forest classifier with feature hashing for nominal features. To avoid it, a workaround is implemented in the workflow to limit the feature hashing space with using cardinality of the categorical feature.
 
 ## Output
 
