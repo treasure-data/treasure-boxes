@@ -6,11 +6,12 @@ name = "pypi"
 [packages]
 scikit-learn = "*"
 pandas-td = "*"
+requests = ">=2.20.0"
+numpy = ">=1.16.2"
 
 [dev-packages]
 "flake8" = "*"
 mypy = "*"
-black = "*"
 rope = "*"
 memory-profiler = "*"
 
