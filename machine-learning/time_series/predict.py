@@ -17,7 +17,8 @@ class TimeSeriesPredictor(object):
         self.target_table = os.getenv("target_table")
         self.start = os.getenv('start_date')
         self.end = os.getenv('end_date')
-        self.period = int(os.getenv('period')) or 365
+        _period = os.getenv('period') or 365
+        self.period = int(_period)
 
     def run(self):
         con = td.connect(apikey=self.apikey, endpoint=self.endpoint)

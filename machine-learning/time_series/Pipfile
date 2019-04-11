@@ -5,16 +5,17 @@ name = "pypi"
 
 [packages]
 fbprophet = "==0.3.post2"
-ipython = "==7.0.1"
-jupyter = "*"
-ipykernel = "*"
-notebook = "*"
 matplotlib = "*"
 pandas-td = "*"
+requests = ">=2.20.0"
 "boto3" = "*"
+numpy = "==1.15.4"
 
 [dev-packages]
+ipython = "==7.0.1"
+ipykernel = "*"
 jupyter = "*"
+notebook = ">=5.7.8"
 memory-profiler = "*"
 
 [requires]
