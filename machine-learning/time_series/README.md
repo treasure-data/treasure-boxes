@@ -28,5 +28,5 @@ $ td workflow secrets \
 #              aws_access_key_id=AAAAAAAAAA, aws_secret_access_key=XXXXXXXXX
 $ td workflow start prophet predict_sales --session now
 ```
- 
+
 * [predict_sales.dig](predict_sales.dig)
