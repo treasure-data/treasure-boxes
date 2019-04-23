@@ -10,6 +10,7 @@ pandas-td = "*"
 requests = ">=2.20.0"
 "boto3" = "*"
 numpy = "==1.15.4"
+urllib3 = ">=1.24.2"
 
 [dev-packages]
 ipython = "==7.0.1"
