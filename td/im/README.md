@@ -46,9 +46,17 @@ Available parameters for `result_settings` are here.
 - spreadsheet_title: (string, spreadsheet name is required※)
 - sheet_title: (string, worksheet name is required)
 - mode: (string(replace|append), default replace)  
-
-**※You must choose to use either the *****spreadsheet_id***** OR *****spreadsheet_title.***** You cannot use both.**
-
+- "type":"intimate_merger",
+- "apikey":"<im api key>",
+- "retry_initial_wait_sec":"1",
+- "retry_limit":"4",
+- "cid":<cid>,
+- "name":"<name>",
+- "job":"<job>",
+- "param1":"<p1>",
+- "param2":"<p2>",
+- "param3":"<p3>"
+    
 For more details, please see [Treasure Data documentation](https://support.treasuredata.com/xxxxxx)
 
 # Next Step
