@@ -5,10 +5,9 @@ import io
 
 class TimeSeriesPredictor(object):
     def __init__(self):
-        import sys
         sys.path.append('/home/td-user/.local/lib/python3.6/site-packages')
-        os.system('pip install --user pandas matplotlib pandas-td boto3 pystan')
-        os.system('pip install --user fbprophet')
+        os.system(f'{sys.executable} -m pip install --user pandas matplotlib pandas-td boto3 pystan')
+        os.system(f'{sys.executable} -m pip install --user fbprophet')
 
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
