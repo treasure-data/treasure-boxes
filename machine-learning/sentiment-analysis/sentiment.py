@@ -10,7 +10,10 @@ def run():
     # Original code is published at official document of TensorFlow under Apache License Version 2.0
     # https://www.tensorflow.org/hub/tutorials/text_classification_with_tf_hub
 
-    #os.system("pip install pandas-td tensorflow_hub boto3")
+    import sys
+    sys.path.append('/home/td-user/.local/lib/python3.6/site-packages')
+    os.system(f"{sys.executable} -m pip install --user pandas-td boto3")
+    os.system(f"{sys.executable} -m pip install --user tensorflow==1.11.0 tensorflow_hub==0.1.1 ")
 
     import boto3
     import tensorflow as tf

@@ -8,7 +8,7 @@ _export:
   py>: predict.TimeSeriesPredictor.run
   docker:
     # Note: This image is temporary. It might change in the near future.
-    image: 'chezou/td-ml-base:latest'
+    image: 'digdag/digdag-python:3.6.8-stretch'
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
