@@ -1,15 +1,15 @@
-import boto3
 import os
+import sys
 import io
 # Need to plot graph for Prophet
-import matplotlib as mlp
-mlp.use('agg')
-from matplotlib import pyplot as plt
-import pandas_td as td
-from fbprophet import Prophet
 
 class TimeSeriesPredictor(object):
     def __init__(self):
+        import sys
+        sys.path.append('/home/td-user/.local/lib/python3.6/site-packages')
+        os.system('pip install --user pandas matplotlib pandas-td boto3 pystan')
+        os.system('pip install --user fbprophet')
+
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
         self.dbname = 'timeseries'
@@ -21,6 +21,13 @@ class TimeSeriesPredictor(object):
         self.period = int(_period)
 
     def run(self):
+        import boto3
+        import matplotlib as mlp
+        mlp.use('agg')
+        from matplotlib import pyplot as plt
+        import pandas_td as td
+        from fbprophet import Prophet
+
         con = td.connect(apikey=self.apikey, endpoint=self.endpoint)
 
         engine = td.create_engine(

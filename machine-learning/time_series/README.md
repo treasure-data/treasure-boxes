@@ -1,9 +1,10 @@
 # Time series analysis with Prophet
 
 ***This is an experimental workflow. It doesn't work on production environment yet***
+***This example doesn't work for private alpha.***
 
 This example introduces time series for sales data prediction using [Facebook Prophet](https://facebook.github.io/prophet).
-Details are described in [the official document](https://facebook.github.io/prophet/docs/non-daily_data.html#monthly-data). 
+Details are described in [the official document](https://facebook.github.io/prophet/docs/non-daily_data.html#monthly-data).
 
 This workflow will:
 
