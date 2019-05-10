@@ -50,7 +50,7 @@ Available parameters for `result_settings` are here.
 - rows_threshold: (integer, default: 50000, maximum: 2000000)
 **Note:** Google API has another threshold of 10MB for request payload. Plugin will automatically detect which threshold reaches first.
 - value_input_option: (string(RAW|USER_ENTERED), default: RAW)
-- set_nil_for_double_nam: (default: true, ie. turn NaN to empty string)
+- set_nil_for_double_nan: (default: true, ie. turn NaN to empty string)
 
 **※You must choose to use either the *****spreadsheet_id***** OR *****spreadsheet_title.***** You cannot use both.**
 
