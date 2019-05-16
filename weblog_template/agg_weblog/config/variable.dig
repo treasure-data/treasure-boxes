@@ -1,0 +1,109 @@
+td:
+  # 任意の名前に変更(書き出し先のdatabase名を指定)
+  database: agg_weblog
+
+# 使用するデータソーステーブルを記載
+rawdata_tables:
+  tbl_01:
+    db_name: target_database
+    tbl_name: target_table
+    # 何も追加しない場合は custom_values: のみ残す
+    custom_columns:
+      - member_id
+      - xxx_id
+      - yyy_id
+      - zzz_id
+  tbl_02:
+    db_name: target_database
+    tbl_name: target_table
+    # 何も追加しない場合は custom_values: のみ残す
+    custom_columns:
+
+# セッション化したテーブルで使用したいカスタムカラムを記載
+additional_columns:
+  # 何も追加しない場合は from_custom_values: のみ残す
+  from_custom_values:
+    - member_id
+    - xxx_id
+    - yyy_id
+    - zzz_id
+  # 何も追加しない場合は from_url_params: のみ残す
+  from_url_params:
+    - banner_id
+    - page_id
+
+# セッション化したテーブルから直接マッピングテーブルを作成する場合
+simple_mapping_enable: true
+simple_mapping:
+  member_id:
+    using_column: member_id
+    reg_exp_validate: '\d{3,6}'
+    filter:
+    map_table: map_tduid_memberid
+    map_initialize: true
+    map_col_name: member_id
+  xxx_id:
+    using_column: xxx_id
+    reg_exp_validate: '\d{8,20}'
+    filter:
+    map_table: map_tduid_xxxid
+    map_initialize: true
+    map_col_name: xxx_id
+  yyy_id:
+    using_column: yyy_id
+    reg_exp_validate: '\d{8,20}'
+    filter:
+    map_table: map_tduid_yyyid
+    map_initialize: true
+    map_col_name: yyy_id
+  zzz_id:
+    using_column: zzz_id
+    reg_exp_validate: '\d{8,20}'
+    filter:
+    map_table: map_tduid_zzzid
+    map_initialize: true
+    map_col_name: zzz_id
+
+# マッピングテーブルの掛け合わせで新しいマッピングテーブルを作成する場合
+map_cross_over_enable: true
+map_cross_over:
+  member_id_1:
+    using_column: member_id
+    reg_exp_validate: '\d{3,6}'
+    cross_db: xxx_database
+    cross_tbl: xxxid_memberid
+    cross_key: xxx_id
+    source_tbl: map_tduid_xxxid
+    source_key: xxx_id
+    map_table: map_tduid_member_id
+    map_initialize: false
+    map_col_name: member_id
+  member_id_2:
+    using_column: member_id
+    reg_exp_validate: '\d{3,6}'
+    cross_db: yyy_database
+    cross_tbl: yyyid_memberid
+    cross_key: yyy_id
+    source_tbl: map_tduid_yyyid
+    source_key: yyy_id
+    map_table: map_tduid_member_id
+    map_initialize: false
+    map_col_name: member_id
+  member_id_3:
+    using_column: member_id
+    reg_exp_validate: '\d{3,6}'
+    cross_db: zzz_database
+    cross_tbl: zzzid_memberid
+    cross_key: zzz_id
+    source_tbl: map_tduid_zzzid
+    source_key: zzz_id
+    map_table: map_tduid_member_id
+    map_initialize: false
+    map_col_name: member_id
+
+# 特定のマッピングテーブルを使用してunify_numを作成する場合
+create_unify_num_enable: true
+create_unify_num:
+  map_01:
+    table_name: map_tduid_memberid
+    column_name: member_id

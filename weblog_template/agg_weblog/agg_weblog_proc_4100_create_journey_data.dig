@@ -1,0 +1,56 @@
+timezone: Asia/Tokyo
+
+_export:
+  # 初回実行 -> true、前日分のみ(incremental) -> false
+  is_initial: false
+  # 各変数を定義したファイルを参照
+  !include : config/variable.dig
+  # 任意の名前に変更(書き出し先のdatabase名を指定)
+  out_database: journey_data
+  # journey_dataの内容を定義したファイルを参照
+  jd:
+    !include : journey_data/template.dig
+
++create_database_if_not_exists:
+# 書き出し先のdatabaseが存在しない場合は作成
+  td_ddl>:
+  create_databases: ["${out_database}"]
+
++create_journey_data:
+  +proc_4101:
+    td>: queries/proc_4101_create_journey_data_step1.sql
+    create_table: tmp_journey_data_step1
+  +proc_4102:
+    td>: queries/proc_4102_create_journey_data_step2.sql
+    create_table: tmp_journey_data_step2
+  +proc_4103:
+    td>: queries/proc_4103_create_journey_data_step3.sql
+    create_table: tmp_journey_data_step3
+  +proc_4104:
+    td>: queries/proc_4104_create_journey_data_step4.sql
+    create_table: tmp_journey_data_step4
+  +proc_4105:
+    td>: queries/proc_4105_create_journey_data_step5.sql
+    create_table: ${out_database}.journey_data
+
++syndicate_datatank:
+  td>:
+  query: |
+    select * from ${out_database}.journey_data
+  result_connection: datatanks_demo
+  result_settings:
+    database: datatank
+    table: journey_data
+    mode: replace
+    schema: test_tomi
+
+# 中間テーブルを削除
++drop_tmp_tables:
+  _export:
+    tmp_tables:
+      - tmp_journey_data_step1
+      - tmp_journey_data_step2
+      - tmp_journey_data_step3
+      - tmp_journey_data_step4
+  td_ddl>:
+  drop_tables: ${tmp_tables}

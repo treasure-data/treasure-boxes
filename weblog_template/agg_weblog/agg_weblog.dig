@@ -1,0 +1,24 @@
+timezone: Asia/Tokyo
+schedule:
+  cron>: 20 3 * * *
+
++proc_1000_mapping_cookie:
+  require>: agg_weblog_proc_1000_mapping_cookie
+  session_time: ${session_time}
+
++proc_2000_sessionize_pv:
+  require>: agg_weblog_proc_2000_sessionize_pv
+  session_time: ${session_time}
+
++proc_3000_map_tduid_others:
+  require>: agg_weblog_proc_3000_map_tduid_others
+  session_time: ${session_time}
+
++proc_4000:
+  _parallel: true
+  +proc_4100_create_journey_data:
+    require>: agg_weblog_proc_4100_create_journey_data
+    session_time: ${session_time}
+  +proc_4200_create_report_data:
+    require>: agg_weblog_proc_4200_create_report_data
+    session_time: ${session_time}

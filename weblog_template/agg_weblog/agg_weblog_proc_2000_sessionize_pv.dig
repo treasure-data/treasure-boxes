@@ -1,0 +1,81 @@
+timezone: Asia/Tokyo
+
+_export:
+  # 初回実行 -> true、前日分のみ(incremental) -> false
+  is_initial: true
+  # 各変数を定義したファイルを参照
+  !include : config/variable.dig
+
+# テーブルの初期化
++initialize_tables:
+  if>: ${is_initial}
+  # 初回実行
+  _do:
+    _export:
+      target_tables:
+        - mst_tduid_device
+        - trs_td_session
+        - trs_ga_session
+        - tmp_log_pvs
+    td_ddl>:
+    empty_tables: ${target_tables}
+  # 前日分のみ(incremental)
+  _else_do:
+    _export:
+      target_tables:
+        - tmp_log_pvs
+    td_ddl>:
+    empty_tables: ${target_tables}
+
+# config/variable.dig で定義した rawdata_tables から pv ログを抽出
++for_each_rawdata:
+  for_each>:
+    tbl: ${Object.keys(rawdata_tables)}
+  _parallel: true
+  _do:
+    !include : function/custom_values.dig
+    +proc_2100_accumulate_log_pvs:
+      td>: queries/proc_2100_accumulate_log_pvs.sql
+      insert_into: tmp_log_pvs
+
+# 3億レコードを超えない単位(最小単位は1日)に分割しループ処理
++proc_2200_split_log_pvs:
+  td_for_each>: queries/proc_2200_split_log_pvs.sql
+  _do:
+    # 前日から繰越されたテーブルへ処理対象のデータを追加
+    +proc_2300_extract_target_pvs:
+      +proc_2301:
+        td>: queries/proc_2301_extract_target_pvs_step1.sql
+        create_table: tmp_target_pvs
+      +proc_2302:
+        if>: ${!(is_initial && td.each.num == 0)}
+        _do:
+          td>: queries/proc_2302_extract_target_pvs_step2.sql
+          insert_into: tmp_target_pvs
+    # tmp_target_pvs に対してセッション化の処理を行うWFを呼び出し
+    +require_child_workflow:
+      require>: agg_weblog_proc_2000_sessionize_pv_child
+      session_time: ${moment.unix(td.each.end_time).add(3, "h").format()}
+
+# 中間テーブルを削除
++drop_tmp_tables:
+  _export:
+    tmp_tables:
+      - tmp_log_pvs
+      - tmp_target_pvs
+      - tmp_session_keys
+      - tmp_session_ids_step1
+      - tmp_session_ids_step2
+      - tmp_session_ids
+      - tmp_incr_trs_session_step1
+      - tmp_incr_trs_session_step2
+      - tmp_incr_trs_session_step3
+      - tmp_incr_trs_session
+      - tmp_mst_tduid_device_step1
+      - tmp_mst_td_session_id_step1
+      - tmp_mst_td_session_id
+      - tmp_mst_ga_session_id_step1
+      - tmp_mst_ga_session_id
+      - tmp_trs_session_step1
+  td_ddl>:
+  drop_tables: ${tmp_tables}

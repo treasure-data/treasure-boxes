@@ -1,0 +1,34 @@
+target_span: -180d
+latest_access: -30d
+minimum_pv: 10
+
+target_host:
+  - www.treasuredata.co.jp
+  - www.treasuredata.com
+  - get.treasuredata.com
+  - plazma.red
+  - tug.red
+  - it-week2019.eventcloudmix.com
+
+key_action:
+  -
+    td_host: www.treasuredata.co.jp
+    td_path: /thank_you_applying_download/
+  -
+    td_host: www.treasuredata.co.jp
+    td_path: /jp/thank_you_applying_download/
+  -
+    td_host: www.treasuredata.co.jp
+    td_path: /seminar_thank_you/
+  -
+    td_host: www.treasuredata.co.jp
+    td_path: /jp/seminar_thank_you/
+  -
+    td_host: www.treasuredata.co.jp
+    td_path: /plazma_thank_you/
+  -
+    td_host: plazma.red
+    td_path: /thank-you/
+  -
+    td_host: it-week2019.eventcloudmix.com
+    td_path: /entry/complete

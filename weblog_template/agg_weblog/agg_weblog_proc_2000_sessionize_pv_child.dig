@@ -1,0 +1,103 @@
+timezone: Asia/Tokyo
+
+_export:
+  # 各変数を定義したファイルを参照
+  !include : config/variable.dig
+
+# データソーステーブルごとにセッション化(30分以内)
++proc_2400_create_session_keys:
+  td>: queries/proc_2400_create_session_keys.sql
+  create_table: tmp_session_keys
+
+# BIGINT 型のIDを作成
++proc_2500_create_session_ids:
+  +proc_2501:
+    td>: queries/proc_2501_create_session_ids_step1.sql
+    create_table: tmp_session_ids_step1
+  +proc_2502:
+    td>: queries/proc_2502_create_session_ids_step2.sql
+    create_table: tmp_session_ids_step2
+  +proc_2503:
+    td>: queries/proc_2503_create_session_ids_step3.sql
+    create_table: tmp_session_ids
+
+# 繰越するデータとincremental のデータを分ける
++proc_2600_parallel:
+  _parallel: true
+  # 繰越するデータ
+  +proc_2610_create_log_pvs_for_carry_on:
+    td>: queries/proc_2610_create_log_pvs_for_carry_on.sql
+    create_table: log_pvs_for_carry_on
+  # incrementl のデータ
+  +proc_2620_create_incr_trs_session:
+    +proc_2621:
+      td>: queries/proc_2621_create_incr_trs_session_step1.sql
+      create_table: tmp_incr_trs_session_step1
+    +proc_2622:
+      td>: queries/proc_2622_create_incr_trs_session_step2.sql
+      create_table: tmp_incr_trs_session_step2
+    +proc_2623:
+      td>: queries/proc_2623_create_incr_trs_session_step3.sql
+      create_table: tmp_incr_trs_session_step3
+    +proc_2624:
+      td>: queries/proc_2624_create_incr_trs_session_step4.sql
+      create_table: tmp_incr_trs_session
+
+# td_uidに紐づくデバイスマスタの更新とsession_idに紐づくセッションマスタの作成を行う
++proc_2700_update_create_mst:
+  _parallel: true
+  # デバイスマスタの更新
+  +tduid_device:
+    # mst_tduid_device が初期化されている(=レコードが0件) かどうか確認
+    +check_count_mst_tduid_device:
+      td>:
+      query: select count(1) = 0 as is_first_time from mst_tduid_device
+      store_last_results: true
+    # mst_tduid_device が初期化されている(=レコードが0件) かどうかに応じて処理を分岐
+    +update_mst_tduid_device:
+      if>: ${td.last_results.is_first_time}
+      # 初期化されている場合
+      _do:
+        +proc_2711:
+          td>: queries/proc_2711_update_mst_tduid_device_step1.sql
+          create_table: tmp_mst_tduid_device
+      # 初期化されていない場合
+      _else_do:
+        +proc_2711:
+          td>: queries/proc_2711_update_mst_tduid_device_step1.sql
+          create_table: tmp_mst_tduid_device_step1
+        +proc_2712:
+          td>: queries/proc_2712_update_mst_tduid_device_step2.sql
+          create_table: tmp_mst_tduid_device
+    +rename_mst_table:
+      td_ddl>:
+      rename_tables: [{from: "tmp_mst_tduid_device", to: "mst_tduid_device"}]
+  # セッションマスタの作成
+  +session_id:
+    for_each>:
+      # td_session_id は30分以内のPVを1セッションと定義し、
+      # ga_session_id は td_session_id の条件に加えて、ga_param がある場合はセッションを分割と定義している
+      type: [td, ga]
+    _parallel: true
+    _do:
+      +proc_2721:
+        td>: queries/proc_2721_create_mst_session_id_step1.sql
+        create_table: tmp_mst_${type}_session_id_step1
+      +proc_2722:
+        td>: queries/proc_2722_create_mst_session_id_step2.sql
+        create_table: tmp_mst_${type}_session_id
+
+# tmp_incr_trs_session へ デバイスのマスタとtd/ga_session_id のマスタをJOINする
++proc_2800_insert_trs_session:
+  +proc_2801:
+    td>: queries/proc_2801_insert_trs_session_step1.sql
+    create_table: tmp_trs_session_step1
+  +for_each_session_type:
+    for_each>:
+      type: [td, ga]
+    _parallel: true
+    _do:
+      !include : function/from_url_params.dig
+      +proc_2802:
+        td>: queries/proc_2802_insert_trs_session_step2.sql
+        insert_into: trs_${type}_session
