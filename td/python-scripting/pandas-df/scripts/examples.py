@@ -29,12 +29,12 @@ def write_td_table(database_name, table_name):
     
     try:
         tdc.create_database(database_name)
-    except AlreadyExistsError:
+    except tdclient.errors.AlreadyExistsError:
         pass
     
     try:
         tdc.create_log_table(database_name, table_name)
-    except AlreadyExistsError:
+    except tdclient.errors.AlreadyExistsError:
         pass
     
     table_path = f"{database_name}.{table_name}"
