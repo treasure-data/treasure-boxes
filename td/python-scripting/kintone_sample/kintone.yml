@@ -1,0 +1,23 @@
+#app_idと対応するAPI key
+apis:
+- id: 1
+  key: PgcqdwBU8ZJXCopjvO40Qh3731wenJE77GfkCrvs
+- id: 2
+  key: bQbXGquZ8Ty1OiCw3072UIEjO28NVV41Inag1RV0
+- id: 3
+  key: THfHamrhdFxRZ3KCZAQYNpTso8NWK553KJaSIMbj
+
+#PUTするフィールドコード
+columns_put:
+- name: レコード番号 #idに相当するフィールドコードを最初に記入
+- name: 住所
+- name: Company
+- name: 部署名
+- name: 担当者名
+
+#POSTするフィールドコード
+columns_post:
+- name: 住所
+- name: Company
+- name: 部署名
+- name: 担当者名

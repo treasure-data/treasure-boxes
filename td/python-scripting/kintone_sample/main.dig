@@ -1,0 +1,19 @@
+timezone: Asia/Tokyo
+_export:
+ docker:
+  image: "digdag/digdag-python:3.6.8-stretch"
+ !include : 'config/kintone.yml'
+ org: devodbnah
+ 
++get:
+  call>: get_records.dig
+
++post:
+  call>: post_records.dig
+  
++put:
+  call>: put_records.dig
+
++delete:
+  call>: delete_records.dig
+  

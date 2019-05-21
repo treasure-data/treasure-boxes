@@ -1,0 +1,13 @@
++put_records:
+  py>: examples.python_args.put_records
+  database: ”DATABASE NAME”
+  query: 'select * from TABLE NAME limit 5'
+  basic: "Basic a2ludG9uZXVzZXI6a2ludG9uZXBhc3M="
+  content_type: "application/json"
+  api: ${apis}
+  app_id: 1
+  org: ${org}
+  c: ${columns_put}
+  _env:
+    TD_API_KEY: ”WRITE YOUR API KEY”
+    TD_API_SERVER: https://api.treasuredata.com/

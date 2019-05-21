@@ -1,0 +1,12 @@
++delete_records:
+  py>: examples.python_args.delete_records
+  # DELETEしたいレコードID
+  ids: [10,19]
+  basic: "Basic a2ludG9uZXVzZXI6a2ludG9uZXBhc3M="
+  content_type: "application/json"
+  api: ${apis}
+  app_id: 1
+  org: ${org}
+  _env:
+    TD_API_KEY: ”WRITE YOUR API KEY”
+    TD_API_SERVER: https://api.treasuredata.com/
