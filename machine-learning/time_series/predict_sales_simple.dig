@@ -1,0 +1,20 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${dbname}
+    engine: presto
+
++predict:
+  py>: predict.TimeSeriesPredictor.run
+  with_aws: false
+  docker:
+    # Note: This image is temporary. It might change in the near future.
+    image: 'digdag/digdag-python:3.6.8-stretch'
+  _env:
+    TD_API_KEY: ${secret:apikey}
+    TD_API_SERVER: ${secret:endpoint}
+    source_table: ${source_table}
+    target_table: ${target_table}
+    start_date: ${start_date}
+    end_date: ${end_date}
+    period: 3652
