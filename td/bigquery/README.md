@@ -47,6 +47,7 @@ Available parameters for `result_settings` are here.
 - dataset: (string, required)
 - table: (string, required)
 - auto_create_table: (boolean, default false)
+- mode: (string, optional, defaut append)
 - max_bad_records: (int, optional, default 0)
 - ignore_unknown_values: (boolean, default false)
 - allow_quoted_newlines: (boolean, default false)
