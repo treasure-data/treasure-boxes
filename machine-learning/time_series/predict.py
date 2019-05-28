@@ -6,7 +6,7 @@ import io
 class TimeSeriesPredictor(object):
     def __init__(self):
         sys.path.append('/home/td-user/.local/lib/python3.6/site-packages')
-        os.system(f'{sys.executable} -m pip install --user pandas matplotlib pandas-td boto3 pystan')
+        os.system(f'{sys.executable} -m pip install --user pandas-td pystan')
         os.system(f'{sys.executable} -m pip install --user fbprophet')
 
         self.apikey = os.getenv("TD_API_KEY")
@@ -19,35 +19,12 @@ class TimeSeriesPredictor(object):
         _period = os.getenv('period') or 365
         self.period = int(_period)
 
-    def run(self):
+    def _upload_graph(self, model, forecast):
+        os.system(f'{sys.executable} -m pip install --user matplotlib boto3')
         import boto3
         import matplotlib as mlp
         mlp.use('agg')
         from matplotlib import pyplot as plt
-        import pandas_td as td
-        from fbprophet import Prophet
-
-        con = td.connect(apikey=self.apikey, endpoint=self.endpoint)
-
-        engine = td.create_engine(
-            'presto:{}'.format(self.dbname),
-            con=con
-        )
-
-        # Note: Prophet requires `ds` column as date string and `y` column as target value
-        df = td.read_td(
-            """
-            select ds, y
-            from {}
-            where ds between '{}' and '{}'
-            """.format(self.source_table, self.start, self.end),
-            engine
-        )
-
-        model = Prophet(seasonality_mode='multiplicative', mcmc_samples=300)
-        model.fit(df)
-        future = model.make_future_dataframe(periods=self.period)
-        forecast = model.predict(future)
 
         fig1 = model.plot(forecast)
         fig2 = model.plot_components(forecast)
@@ -73,6 +50,35 @@ class TimeSeriesPredictor(object):
         s3.Object(os.environ['S3_BUCKET'], component_fig_file).put(
             ACL='public-read', Body=component_fig_data, ContentType='image/png'
         )
+
+    def run(self, with_aws=True):
+        import pandas_td as td
+        from fbprophet import Prophet
+
+        con = td.connect(apikey=self.apikey, endpoint=self.endpoint)
+
+        engine = td.create_engine(
+            'presto:{}'.format(self.dbname),
+            con=con
+        )
+
+        # Note: Prophet requires `ds` column as date string and `y` column as target value
+        df = td.read_td(
+            """
+            select ds, y
+            from {}
+            where ds between '{}' and '{}'
+            """.format(self.source_table, self.start, self.end),
+            engine
+        )
+
+        model = Prophet(seasonality_mode='multiplicative', mcmc_samples=300)
+        model.fit(df)
+        future = model.make_future_dataframe(periods=self.period)
+        forecast = model.predict(future)
+
+        if with_aws:
+            self._upload_graph(model, forecast)
 
         # To avoid TypeError: can't serialize Timestamp, convert `pandas._libs.tslibs.timestamps.Timestamp` to `str`
         forecast.ds = forecast.ds.apply(str)

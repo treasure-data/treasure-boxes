@@ -5,8 +5,25 @@ import tarfile
 def get_predictions(estimator, input_fn):
     return [x["class_ids"][0] for x in estimator.predict(input_fn=input_fn)]
 
+def _upload_model(embedded_text_feature_column, estimator):
+    import boto3
+    import tensorflow as tf
 
-def run():
+    feature_spec = tf.feature_column.make_parse_example_spec([embedded_text_feature_column])
+    serving_input_receiver_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(feature_spec)
+    estimator.export_saved_model(EXPORT_DIR_BASE, serving_input_receiver_fn)
+
+    with tarfile.open('tfmodel.tar.gz', 'w:gz') as tar:
+        tar.add(EXPORT_DIR_BASE, arcname=os.path.basename(EXPORT_DIR_BASE))
+
+    # Upload the TensorFlow model to S3
+    # boto3 assuming environment variables "AWS_ACCESS_KEY_ID" and "AWS_SECRET_ACCESS_KEY":
+    # http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables
+    s3 = boto3.resource('s3')
+    # ACL should be chosen with your purpose
+    s3.Bucket(os.environ['S3_BUCKET']).upload_file('tfmodel.tar.gz', 'tfmodel.tar.gz')
+
+def run(with_aws=True):
     # Original code is published at official document of TensorFlow under Apache License Version 2.0
     # https://www.tensorflow.org/hub/tutorials/text_classification_with_tf_hub
 
@@ -15,7 +32,6 @@ def run():
     os.system(f"{sys.executable} -m pip install --user pandas-td boto3")
     os.system(f"{sys.executable} -m pip install --user tensorflow==1.11.0 tensorflow_hub==0.1.1 ")
 
-    import boto3
     import tensorflow as tf
     import tensorflow_hub as hub
     import pandas_td as td
@@ -57,20 +73,9 @@ def run():
 
         estimator.train(input_fn=train_input_fn, steps=1000)
 
-        # Export TF model on S3
-        feature_spec = tf.feature_column.make_parse_example_spec([embedded_text_feature_column])
-        serving_input_receiver_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(feature_spec)
-        estimator.export_saved_model(EXPORT_DIR_BASE, serving_input_receiver_fn)
-
-        with tarfile.open('tfmodel.tar.gz', 'w:gz') as tar:
-            tar.add(EXPORT_DIR_BASE, arcname=os.path.basename(EXPORT_DIR_BASE))
-
-        # Upload the TensorFlow model to S3
-        # boto3 assuming environment variables "AWS_ACCESS_KEY_ID" and "AWS_SECRET_ACCESS_KEY":
-        # http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables
-        s3 = boto3.resource('s3')
-        # ACL should be chosen with your purpose
-        s3.Bucket(os.environ['S3_BUCKET']).upload_file('tfmodel.tar.gz', 'tfmodel.tar.gz')
+        # Export TF model to S3
+        if with_aws:
+            _upload_model(embedded_text_feature_column, estimator)
 
         predict_train_input_fn = tf.estimator.inputs.pandas_input_fn(
             train_df, train_df["polarity"], shuffle=False)
