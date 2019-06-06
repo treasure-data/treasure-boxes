@@ -75,7 +75,7 @@ def get_records(api, basic, org, app_id, database, table, record_min, record_max
 ##############################
 
 ##############################
-#KintoneからDELETE recordsしてTDに格納
+#KintoneからDELETE records
 def delete_records(api, basic, org, app_id, ids, content_type):
   # APIリスト読み込み
   api_list = eval(api)
