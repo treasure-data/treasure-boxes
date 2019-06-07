@@ -5,7 +5,7 @@
   #GETしたいレコードのRANGE指定
   record_min: 1
   record_max: 200000
-  basic: "Basic a2ludG9uZXVzZXI6a2ludG9uZXBhc3M="
+  basic: "Basic BASIC_SECRET"
   api: ${apis}
   app_id: 1
   org: ${org}
