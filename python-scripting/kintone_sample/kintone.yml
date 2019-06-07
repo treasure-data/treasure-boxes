@@ -1,11 +1,11 @@
 #app_idと対応するAPI key
 apis:
 - id: 1
-  key: PgcqdwBU8ZJXCopjvO40Qh3731wenJE77GfkCrvs
+  key: API_KEY_of_APP_1
 - id: 2
-  key: bQbXGquZ8Ty1OiCw3072UIEjO28NVV41Inag1RV0
+  key: API_KEY_of_APP_2
 - id: 3
-  key: THfHamrhdFxRZ3KCZAQYNpTso8NWK553KJaSIMbj
+  key: API_KEY_of_APP_3
 
 #PUTするフィールドコード
 columns_put:
