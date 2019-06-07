@@ -5,8 +5,7 @@ import textwrap
 class FeatureSelector(object):
     def __init__(self):
         import sys
-        sys.path.append('/home/td-user/.local/lib/python3.6/site-packages')
-        os.system(f'{sys.executable} -m pip install --user pandas scikit-learn scipy td-client pandas-td')
+        os.system(f'{sys.executable} -m pip install --user pandas-td')
 
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")

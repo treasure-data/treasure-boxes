@@ -6,7 +6,7 @@ from common import get_export_dir
 
 
 def run():
-    os.system(f"{sys.executable} -m pip install --user tdclient boto3")
+    os.system(f"{sys.executable} -m pip install --user boto3")
     os.system(f"{sys.executable} -m pip install --user tensorflow")
 
     import boto3
