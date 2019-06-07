@@ -3,7 +3,7 @@
   database: ”DATABASE NAME”
   #kintoneのデータを入れたtableにクエリを発行
   query: 'select * from TABLE NAME limit 5'
-  basic: "Basic a2ludG9uZXVzZXI6a2ludG9uZXBhc3M="
+  basic: "Basic BASIC_SECRET"
   content_type: "application/json"
   api: ${apis}
   app_id: 1
