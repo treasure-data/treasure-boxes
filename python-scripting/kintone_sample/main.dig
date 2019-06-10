@@ -1,9 +1,9 @@
 timezone: Asia/Tokyo
 _export:
  docker:
-  image: "digdag/digdag-python:3.6.8-stretch"
+  image: "digdag/digdag-python:3.7.3-stretch"
  !include : 'config/kintone.yml'
- org: devodbnah
+ org: hogehoge
  
 +get:
   call>: get_records.dig
