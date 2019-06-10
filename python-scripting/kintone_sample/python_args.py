@@ -1,20 +1,18 @@
 import sys
 import os
-sys.path.append('/home/td-user/.local/lib/python3.6/site-packages')
-os.system('pip install --user requests')
-os.system('pip install --user td-client')
-os.system('pip install --user pandas-td')
-os.system('pip install --user pandas')
-os.system('pip install --user re')
+import os.path
+
+os.system(f"{sys.executable} -m pip install --user requests")
+ 
+import pytd.pandas_td as td
 import requests
 import json
-import tdclient
-import pandas_td as td
 import pandas as pd
 import urllib.parse
 from pandas.io.json import json_normalize
 import re
 import itertools
+
 ##############################
 # カラム名変換(kintone -> TD)
 ## 大文字を__upper_x__に
@@ -45,37 +43,46 @@ def column_decode(s):
 
 ##############################
 #KintoneからGET recordsしてTDに格納
-def get_records(api, basic, org, app_id, database, table, record_min, record_max):
+def get_records(api, basic, org, app_id, database, table, record_from, record_to):
   # APIリスト読み込み
   api_list = eval(api)
+  # アプリ番号でループ
   for a in api_list:
-    #app_idでアプリを指定
+    # app_idでアプリを指定
     if(a['id'] == app_id):
+      # TDへのコネクションを作成
+      con = td.connect()
+      # kintone APIの設定
       url = f"https://{org}.cybozu.com/k/v1/records.json"
       headers = {'X-Cybozu-API-Token': a['key'], 'Authorization': basic}
-      df_concat = pd.DataFrame(index=[])
-      record_ids = range(record_min,record_max)
-      for a in itertools.islice(record_ids, 0, None, 100):
-        if a+100 > record_ids[-1]:
-          payload = {'app': app_id, 'query': f"$id >= {a} and $id <= {record_ids[-1]}"}
-        else:   
-          payload = {'app': app_id, 'query': f"$id >= {a} and $id < {a+100}"}
-        r = requests.get(url, headers=headers, params=payload)
-        if r.status_code != 200:
-          sys.exit(1)
-        else:
-          data = json.loads(r.text)
-          df = pd.DataFrame.from_dict(data)
-          df = json_normalize(df['records'])
-          df = df.rename(columns=column_encode)
-          df_concat = pd.concat([df_concat, df])
-      #KintoneからGETしたアプリID = X のrecordsをTDのTableに格納
-      con = td.connect()
-      td.to_td(df_concat, '.'.join([database,table]), con, if_exists='replace', index=False)
+      all_record_ids = range(int(record_from),int(record_to))
+      # 1000件ずつTDのtableに格納
+      for record_ids in itertools.islice(all_record_ids, 0, None, 1000):
+        # GETしたデータをキャッシュするdf
+        df_concat = pd.DataFrame(index=[])
+        record_bucket = range(record_ids,record_ids+1000)
+        print(record_bucket)
+        for a in itertools.islice(record_bucket, 0, None, 100):
+          if a+100 > record_bucket[-1]:
+            payload = {'app': app_id, 'query': f"$id >= {a} and $id <= {record_bucket[-1]}"}
+          else:
+            payload = {'app': app_id, 'query': f"$id >= {a} and $id < {a+100}"}
+            print(payload)
+          r = requests.get(url, headers=headers, params=payload)
+          if r.status_code != 200:
+            sys.exit(1)
+          else:
+            data = json.loads(r.text)
+            df = pd.DataFrame.from_dict(data)
+            df = json_normalize(df['records'])
+            df = df.rename(columns=column_encode)
+            df_concat = pd.concat([df_concat, df])
+        # KintoneからGETしたアプリID = X のrecordsをTDのTableに格納
+        td.to_td(df_concat, '.'.join([database,table]), con, if_exists='append', index=False)
 ##############################
 
 ##############################
-#KintoneからDELETE records
+#KintoneをDELETE records
 def delete_records(api, basic, org, app_id, ids, content_type):
   # APIリスト読み込み
   api_list = eval(api)
