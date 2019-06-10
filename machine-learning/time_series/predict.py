@@ -5,7 +5,6 @@ import io
 
 class TimeSeriesPredictor(object):
     def __init__(self):
-        sys.path.append('/home/td-user/.local/lib/python3.6/site-packages')
         os.system(f'{sys.executable} -m pip install --user pandas-td pystan')
         os.system(f'{sys.executable} -m pip install --user fbprophet')
 

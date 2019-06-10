@@ -2,8 +2,8 @@
 # This is how parameters can be passed in
 def print_arg(msg):
     print(f"Message is {msg}")
-    
-    
+
+
 def print_env():
     import os
     print(f"Env Var is {os.environ['MY_ENV_VAR']}")

@@ -9,7 +9,7 @@ _export:
   with_aws: false
   docker:
     # Note: This image is temporary. It might change in the near future.
-    image: 'digdag/digdag-python:3.6.8-stretch'
+    image: 'digdag/digdag-python:3.7.3-stretch'
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
