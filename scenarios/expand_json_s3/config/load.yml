@@ -1,0 +1,54 @@
+# For more advanced config options, please check these URLs.
+# @see https://support.treasuredata.com/hc/en-us/articles/360001405608-Amazon-S3-Import
+# @see https://support.treasuredata.com/hc/en-us/articles/360001405947-expand-json-filter-plugin-for-Data-Connector
+# @see https://github.com/embulk/embulk-input-s3
+---
+in:
+  type: s3
+  region: ${secret:s3.region}
+  access_key_id: ${secret:s3.access_key_id}
+  secret_access_key: ${secret:s3.secret_access_key}
+  bucket: bucket-name
+  path_prefix: filename_${moment(session_time).add(-1,'days').format('YYYYMMDD')}
+  parser:
+    type: json
+
+filters:
+- type: expand_json
+  json_column_name: record
+  root: "$."
+  # if true, workflow will fail when this filter gets invalid data format. 
+  stop_on_invalid_record: false
+  expanded_columns:
+    - {name: "id", type: long}
+    - {name: "name", type: string}
+    - {name: "valid_user", type: boolean}
+    - {name: "email.primary", type: string}
+    - {name: "email.secondary", type: string}
+# time column is set to workflow session time
+- type: add_time
+  to_column: 
+    name: time
+    type: timestamp
+  from_value:
+    mode: fixed_time
+    value: ${session_unixtime}
+
+- type: rename
+  rules:
+  - rule: upper_to_lower
+  - rule: character_types
+    pass_types:
+    - a-z
+    - 0-9
+    pass_characters: _
+    replace: _
+  - rule: first_character_types
+    pass_types:
+    - a-z
+    pass_characters: _
+    prefix: _
+  - rule: unique_number_suffix
+    max_length: 128
+out: {}
+exec: {}
