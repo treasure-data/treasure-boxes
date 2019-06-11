@@ -1,0 +1,33 @@
+timezone: UTC
+
+schedule:
+    daily>: 23:00:00
+
+_export:
+    td:
+        database: TD_DB_NAME  # this is the DB name where you put tables activated via TD output
+        table_prefix: segment # It only picks up tables in TD_DB_NAME with this prefix
+
++initialize:
+    +drop_tmp_tables:
+        td_ddl>:
+        drop_tables: ["tmp_unioned_segments"]
+    +create_tmp_tables:
+        td_ddl>:
+        create_tables: ["tmp_unioned_segments"]
+
++combine_segments:
+    td_for_each>: scripts/show_tables.sql
+    _do:
+        +append_segment:
+            td>: scripts/append.sql
+
++push_segments:
+    td>: scripts/combine.sql
+    result_connection: KRUX_CONNECTION_NAME # this is the connection name you set up in Integration Hub
+    result_settings:
+        export_type: first_party_segment
+
+# tmp_unioned_segments is left around intentionally to help with debugging
+# This should not be an issue as TD_DB_NAME is not meant to be queries by humans but
+# just by workflows
