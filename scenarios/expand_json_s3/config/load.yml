@@ -27,9 +27,28 @@ filters:
     - {name: "email.secondary", type: string}
 # time column is set to workflow session time
 - type: add_time
-  to_column: {name: time, type: timestamp}
+  to_column: 
+    name: time
+    type: timestamp
   from_value:
     mode: fixed_time
     value: ${session_unixtime}
+
+- type: rename
+  rules:
+  - rule: upper_to_lower
+  - rule: character_types
+    pass_types:
+    - a-z
+    - 0-9
+    pass_characters: _
+    replace: _
+  - rule: first_character_types
+    pass_types:
+    - a-z
+    pass_characters: _
+    prefix: _
+  - rule: unique_number_suffix
+    max_length: 128
 out: {}
 exec: {}
