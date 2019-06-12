@@ -1,0 +1,18 @@
+_export:
+  td:
+    database: example_database
+
++send_googleads_lists:
+  td>: queries/load_users.sql
+  result_connection: your_connection_name
+  result_settings:
+    client_customer_id: your_adwords_client_customer_id
+    name: name_of_remarketing_lists
+    description: description_of_remarketing_lists
+    app_id: your_mobile_app_id
+    mode: your_prefer_load_mode
+    membership_lifespan: 10000
+    batch_size: 100000
+    maximum_retries: 5
+    initial_retry_interval_millis: 500
+    maximum_retry_interval_millis: 300000 
