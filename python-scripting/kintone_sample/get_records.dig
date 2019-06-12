@@ -2,13 +2,16 @@
   py>: examples.python_args.get_records
   database: ”DATABASE NAME”
   table: ”TABLE NAME”
-  #GETしたいレコードのRANGE指定
-  record_min: 1
-  record_max: 200000
   basic: "Basic BASIC_SECRET"
   api: ${apis}
   app_id: 1
   org: ${org}
+  #identifier field code
+  id_field_code: "レコード番号"
+  #fields to GET
+  fields: ["レコード番号","住所"]
+  #query to GET records
+  query: "レコード番号 > 100 and レコード番号 < 2030"
   _env:
     TD_API_KEY: ”WRITE YOUR API KEY”
     TD_API_SERVER: https://api.treasuredata.com/
