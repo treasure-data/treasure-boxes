@@ -12,6 +12,7 @@ import urllib.parse
 from pandas.io.json import json_normalize
 import re
 import itertools
+import math
 
 ##############################
 # カラム名変換(kintone -> TD)
@@ -43,7 +44,7 @@ def column_decode(s):
 
 ##############################
 #KintoneからGET recordsしてTDに格納
-def get_records(api, basic, org, app_id, database, table, record_from, record_to):
+def get_records(api, basic, org, app_id, database, table, fields, query, id_field_code):
   # APIリスト読み込み
   api_list = eval(api)
   # アプリ番号でループ
@@ -55,31 +56,27 @@ def get_records(api, basic, org, app_id, database, table, record_from, record_to
       # kintone APIの設定
       url = f"https://{org}.cybozu.com/k/v1/records.json"
       headers = {'X-Cybozu-API-Token': a['key'], 'Authorization': basic}
-      all_record_ids = range(int(record_from),int(record_to))
-      # 1000件ずつTDのtableに格納
-      for record_ids in itertools.islice(all_record_ids, 0, None, 1000):
-        # GETしたデータをキャッシュするdf
-        df_concat = pd.DataFrame(index=[])
-        record_bucket = range(record_ids,record_ids+1000)
-        print(record_bucket)
-        for a in itertools.islice(record_bucket, 0, None, 100):
-          if a+100 > record_bucket[-1]:
-            payload = {'app': app_id, 'query': f"$id >= {a} and $id <= {record_bucket[-1]}"}
-          else:
-            payload = {'app': app_id, 'query': f"$id >= {a} and $id < {a+100}"}
-            print(payload)
-          r = requests.get(url, headers=headers, params=payload)
-          if r.status_code != 200:
-            sys.exit(1)
-          else:
-            data = json.loads(r.text)
-            df = pd.DataFrame.from_dict(data)
-            df = json_normalize(df['records'])
-            df = df.rename(columns=column_encode)
-            df_concat = pd.concat([df_concat, df])
+      payload = {'app': 1, 'query': query, 'fields': fields, 'totalCount': 'true'}
+      r = requests.get(url, headers=headers, params=payload)
+      count = int(json.loads(r.text)['totalCount'])
+      print(count)
+      # GETしたデータをキャッシュするdf
+      for i in itertools.islice(range(0, count), 0, None, 100):
+        splited_query = query + " order by " + id_field_code + " asc limit 100 offset "+  f"{i}"
+        print(splited_query)
+        payload = {'app': 1, 'query': splited_query, 'fields': fields}
+        r = requests.get(url, headers=headers, params=payload)
+        if r.status_code != 200:
+          sys.exit(1)
+        else:
+          data = json.loads(r.text)
+          df = pd.DataFrame.from_dict(data)
+          df = json_normalize(df['records'])
+          df = df.rename(columns=column_encode)
         # KintoneからGETしたアプリID = X のrecordsをTDのTableに格納
-        td.to_td(df_concat, '.'.join([database,table]), con, if_exists='append', index=False)
+        td.to_td(df, '.'.join([database,table]), con, if_exists='append', index=False)
 ##############################
+
 
 ##############################
 #KintoneをDELETE records
