@@ -8,6 +8,8 @@ Using [titanic data](https://github.com/amueller/scipy-2017-sklearn/blob/master/
 - Feature normalization
 - Missing value imputation
 
+You can see detailed document in [more.md](docs/more.md).
+
 ## Input
 
 This workflow assumes a table as follows:
