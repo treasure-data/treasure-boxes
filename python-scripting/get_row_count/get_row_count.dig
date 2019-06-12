@@ -1,0 +1,8 @@
+timezone: UTC
+
++step1:
+  docker:
+    image: "digdag/digdag-python:3.7.3-stretch"
+  py>: get_row_count.get_row_count
+  _env:
+    td_apikey: ${secret:td.apikey}
