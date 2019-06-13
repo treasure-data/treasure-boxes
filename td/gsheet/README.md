@@ -41,10 +41,16 @@ You can trigger the session manually.
 
 Available parameters for `result_settings` are here.
 
-- spreadsheet_id: (string, spreadsheet key is required※)
-- spreadsheet_title: (string, spreadsheet name is required※)
-- sheet_title: (string, worksheet name is required)
-- mode: (string(replace|append), default replace)  
+- spreadsheet_id: (string, required if `spreadsheet_title` does not exist)
+- spreadsheet_title: (string, required if `spreadsheet_id` does not exist)
+- sheet_title: (string, default: null, worksheet name is required)
+- mode: (string(APPEND|REPLACE|TRUNCATE|UPDATE), default: APPEND)
+- range: (string, default: A1, ie. top left corner)
+**Note:** for APPEND mode, it will not take effect since new rows will be appended after last row
+- rows_threshold: (integer, default: 50000, maximum: 2000000)
+**Note:** Google API has another threshold of 10MB for request payload. Plugin will automatically detect which threshold reaches first.
+- value_input_option: (string(RAW|USER_ENTERED), default: RAW)
+- set_nil_for_double_nan: (default: true, ie. turn NaN to empty string)
 
 **※You must choose to use either the *****spreadsheet_id***** OR *****spreadsheet_title.***** You cannot use both.**
 
