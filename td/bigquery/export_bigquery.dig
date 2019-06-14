@@ -10,6 +10,7 @@ timezone: UTC
     dataset: BQ_DATABASE
     table: BQ_TABLE
     auto_create_table: true
+    mode: append
     max_bad_records: 0
     ignore_unknown_values: false
     allow_quoted_newlines: false
