@@ -1,0 +1,15 @@
+_export:
+  td:
+    database: example_database
+
++send_tailorerd_aud:
+  td>: queries/load_users.sql
+  result_connection: your_connection_nme
+  result_settings:
+    ad_account_id: your_twitter_ad_account_id
+    audience_name: name_of_audinece
+    audience_type: your_prefered_audience_type
+    pre_hashed: false
+    retry_limit: 6
+    retry_initial_wait_msec: 1000
+    max_retry_wait_msec: 32000
