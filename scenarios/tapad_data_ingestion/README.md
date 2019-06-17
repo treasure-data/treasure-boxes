@@ -34,7 +34,7 @@ $ td table:create tapad adid
 
 
 ## Schedule
-Tapad DGA file is delivered every Wednesday around midnight. This workflow is scheduled every Wednesday 03:00(JST). 
+Tapad DGA file is delivered every Wednesday around midnight. So this workflow is scheduled every Thursday in case of unexpected dalay. 
 
 ## How it works
 Here is brief description what each task in the workflow do.

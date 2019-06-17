@@ -1,8 +1,8 @@
 timezone: Asia/Tokyo
 
-# DGA file is delivered every Wednesday.
+# DGA file is delivered every Wednesday. So set schedule on Thu or Fri in case of unexpected delay.
 schedule:
-  weekly>: Wed,03:00:00
+  weekly>: Thu,02:00:00
 
 # Set your configuration.
 _export:
