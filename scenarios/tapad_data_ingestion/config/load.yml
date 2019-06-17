@@ -1,0 +1,31 @@
+in:
+  type: sftp
+  host: ${tapad.sftp_host}
+  port: ${tapad.sftp_port}
+  user: ${tapad.sftp_user}
+  password: ${tapad.sftp_password}
+  user_directory_is_root: true
+  timeout: 600
+  path_prefix: /results/${tapad.file_prefix}_ids_full_
+  path_match_pattern: bz2$
+  parser:
+    skip_header_lines: 0
+    charset: UTF-8
+    newline: LF
+    type: csv
+    delimiter: ';'
+    quote: '"'
+    columns:
+    - {name: c0, type: string}
+    - {name: c1, type: string}
+  decoders:
+  - {type: bzip2}
+filters:
+- type: add_time
+  to_column:
+    name: time
+    type: timestamp
+  from_value:
+    mode: upload_time
+out:
+  mode: append

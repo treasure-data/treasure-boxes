@@ -1,0 +1,42 @@
+timezone: Asia/Tokyo
+
+# DGA file is delivered every Wednesday.
+schedule:
+  weekly>: Wed,03:00:00
+
+# Set your configuration.
+_export:
+  td:
+    database: tapad
+    dga_tbl: dga
+    id_map_tbl: id_map
+    idfa_tbl: idfa
+    adid_tbl: adid
+  tapad:
+    sftp_host: ftp-ap.data.tapad.com
+    sftp_port: 22
+    sftp_user: jp_td_xxxx
+    sftp_password: ${secret:sftp.password}
+    file_prefix: JP_TD_XXXX
+    cookie_prefix: TDXXX
+
+# Get Tapad DGA file from their SFTP server and import it to dga table.
++get_dga:
+  td_load>: config/load.yml
+  database: ${td.database}
+  table: ${td.dga_tbl}
+
+# Make id mapping data between cookies and device ids(IDFA/ADID) with N-to-N array mapping format.
++id_map:
+  td>: queries/id_map.sql
+  insert_into: ${td.id_map_tbl}  
+
+# Make id mapping data between cookies and IDFAs with 1-to-1 format.
++idfa:
+  td>: queries/idfa.sql
+  insert_into: ${td.idfa_tbl}  
+
+# Make id mapping data between cookies and ADIDs with 1-to-1 format.
++adid:
+  td>: queries/adid.sql
+  insert_into: ${td.adid_tbl}  
