@@ -6,7 +6,7 @@ To know that you are in the right place, type `ls` in the terminal and you shoul
 
 ```
 $ ls
-README.md	other_scripts	scripts		simple.dig
+README.md	other_scripts	py_scripts		simple.dig
 ```
 
 Then, you can push it to Treasure Data via `td wf push` as follows.
@@ -18,7 +18,7 @@ Creating .digdag/tmp/archive-6767391817040041451.tar.gz...
   Archiving other_scripts/__init__.py
   Archiving simple.dig
   Archiving README.md
-  Archiving scripts/examples.py
+  Archiving py_scripts/examples.py
 Workflows:
   simple.dig
 Uploaded:

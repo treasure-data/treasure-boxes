@@ -1,5 +1,5 @@
 +read_into_df:
-    py>: scripts.examples.read_td_table
+    py>: py_scripts.examples.read_td_table
     database_name: sample_datasets
     table_name: nasdaq
     docker:
@@ -9,7 +9,7 @@
         TD_API_SERVER: ${secret:endpoint}
 
 +write_into_td:
-    py>: scripts.examples.write_td_table
+    py>: py_scripts.examples.write_td_table
     database_name: pandas_test
     table_name: my_df
     docker:
