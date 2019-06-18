@@ -1,5 +1,5 @@
 +td_spark_process:
-  py>: scripts.td-spark.process_data
+  py>: py_scripts.td-spark.process_data
   database_name: td_spark_example
   table_name: www_access_processed
   docker:
@@ -9,7 +9,7 @@
     TD_API_SERVER: ${secret:endpoint}
 
 +td_spark_sql:
-  py>: scripts.td-spark.execute_sql
+  py>: py_scripts.td-spark.execute_sql
   database_name: td_spark_example
   table_name: www_access_processed
   docker:
@@ -19,7 +19,7 @@
     TD_API_SERVER: ${secret:endpoint}
 
 +td_spark_upload:
-  py>: scripts.td-spark.upload_dataframe
+  py>: py_scripts.td-spark.upload_dataframe
   database_name: td_spark_example
   table_name: pandas_table
   docker:

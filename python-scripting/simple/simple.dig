@@ -1,11 +1,11 @@
 +simple_with_arg:
-    py>: scripts.examples.print_arg
+    py>: py_scripts.examples.print_arg
     msg: "Hello World"
     docker:
         image: "digdag/digdag-python:3.7.3-stretch"
 
 +simple_with_env:
-    py>: scripts.examples.print_env
+    py>: py_scripts.examples.print_env
     _env:
         MY_ENV_VAR: "hello"
         # One can use secrets as well.
@@ -14,6 +14,6 @@
         image: "digdag/digdag-python:3.7.3-stretch"
 
 +simple_with_import:
-    py>: scripts.examples.import_another_file
+    py>: py_scripts.examples.import_another_file
     docker:
         image: "digdag/digdag-python:3.7.3-stretch"
