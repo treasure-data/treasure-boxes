@@ -18,7 +18,7 @@ Creating .digdag/tmp/archive-6767391817040041451.tar.gz...
   Archiving other_scripts/__init__.py
   Archiving simple.dig
   Archiving README.md
-  Archiving scripts/examples.py
+  Archiving py_scripts/examples.py
 Workflows:
   simple.dig
 Uploaded:
