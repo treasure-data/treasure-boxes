@@ -1,6 +1,15 @@
+timezone: Asia/Tokyo
+
+schedule:
+  daily>: 02:00:00
+
 +step1:
   docker:
     image: "digdag/digdag-python:3.7.3-stretch"
   py>: tasks.rss_import
+  dest_db: rss_db
+  dest_table: rss_tbl
+  rss_url_list: ['https://www.vogue.co.jp/rss/vogue', 'https://feeds.dailyfeed.jp/feed/s/7/887.rss']
   _env:
     td_apikey: ${secret:td.apikey}
+    td_endpoint: "https://api.treasuredata.com/"
