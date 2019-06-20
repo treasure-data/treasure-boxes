@@ -1,0 +1,13 @@
+_export:
+  endpoint: api.treasuredata.com
+  target_database: destination_db
+  target_table: destination_tab
+
++task:
+  http>: http://${endpoint}/v3/table/update/${target_database}/${target_table}
+  method: POST
+  headers:
+    - authorization: "TD1 ${secret:td.apikey}"
+  content:
+    include_v: false
+  content_format: form
