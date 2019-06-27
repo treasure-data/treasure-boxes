@@ -1,17 +1,16 @@
 # Workflow: Scenario (invalid v column)
 
 ## What is the purpose of this scenario?
-We cannot invalid including v column when we execute `SELECT *` in Hive query by any option of workflow operators.  
-However, there is requirement to invalid it in workflow in the case that we recreate the table.  
-This example show how to do it by using `http>:` operator to call Treasure Data API.
+The current workflow operators do not provide a means to to prevent including v clumn when we executing SELECT * in a Hive query. Preventing the inclusion of the v column is a required in certain cases, for example when recreating a table. This example show how to do it by using http>: operator to call Treasure Data API.
+
 
 # How to Run
-Firstly, you can upload the project.
+First, upload the project.
 
     # Upload
     $ td wf push invalid_v_column
 
-Secondaly, please register api key as secrets.
+Second, register the api key as a workflow secret.
 
     # Set secrets
     $ td wf secrets --project invalid_v_column --set td.apikey
@@ -26,4 +25,4 @@ Finaly, you can trigger the session manually.
 
 # Next Step
 
-If you have any questions, please contact to support@treasuredata.com.
+If you have any questions, please contact [support@treasure-data.com](support@treasure-data.com).
