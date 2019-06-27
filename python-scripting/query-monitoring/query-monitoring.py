@@ -5,6 +5,7 @@ TD_API_SERVER = os.environ.get('td_endpoint')
 TD_DATABASE = os.environ.get('td_database')
 TD_TABLE = os.environ.get('td_table')
 
+
 def get_job_list(status, max_num):
     with tdclient.Client(apikey=TD_API_KEY, endpoint=TD_API_SERVER) as client:
         data = []
@@ -40,8 +41,13 @@ def bulk_load(data):
         client.load_table_from_dataframe(dataframe, TD_TABLE, if_exists='append')
 
 
-def monitor():
+def monitoring():
     data = []
     data.extend(get_job_list('queued', 512))
     data.extend(get_job_list('running', 512))
-    bulk_load(data)
+    records = len(data)
+    if records > 0:
+        bulk_load(data)
+        print('processed ' + str(records) + ' records.')
+    else:
+        print('no records.')
