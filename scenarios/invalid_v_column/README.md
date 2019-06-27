@@ -1,8 +1,7 @@
 # Workflow: Scenario (invalid v column)
 
 ## What is the purpose of this scenario?
-The current workflow operators do not provide a means to to prevent including v clumn when we executing SELECT * in a Hive query. Preventing the inclusion of the v column is a required in certain cases, for example when recreating a table. This example show how to do it by using http>: operator to call Treasure Data API.
-
+The current workflow operators do not provide a means to prevent including v column when executing SELECT * in a Hive query. Preventing the inclusion of the v column is required in certain cases, for example, when recreating a table. This example shows how to exclude the v column by using the http>: operator to call Treasure Data API.
 
 # How to Run
 First, upload the project.
