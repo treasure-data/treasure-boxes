@@ -17,8 +17,8 @@ def get_job_list(status, max_num):
                 'type': str(job_detail._type),
                 'query': str(job_detail._query),
                 'status': str(job_detail._status),
-                'created_at': int(job_detail._created_at.timestamp()),
-                'start_at': int(job_detail._start_at.timestamp()),
+                'created_at': -1 if job_detail._created_at is None else int(job_detail._created_at.timestamp()),
+                'start_at': -1 if job_detail._start_at is None else int(job_detail._start_at.timestamp()),
                 'org_name': str(job_detail.org_name),
                 'database': str(job_detail._database),
                 'user_name': str(job_detail._user_name)
@@ -37,7 +37,7 @@ def bulk_load(data):
              item['org_name'], item['database'], item['user_name']], index=dataframe.columns)
         dataframe = dataframe.append(record, ignore_index=True)
 
-    with pytd.Client(apikey=TD_API_KEY, endpoint=TD_API_SERVER, database=TD_DATABASE, engine='presto') as client:
+    with pytd.Client(apikey=TD_API_KEY, endpoint=TD_API_SERVER, database=TD_DATABASE) as client:
         client.load_table_from_dataframe(dataframe, TD_TABLE, if_exists='append')
 
 

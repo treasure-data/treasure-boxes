@@ -7,6 +7,6 @@ schedule:
     py>: query-monitoring.monitoring
     _env:
         td_apikey: ${secret:td.apikey}
-        td_endpoint: https://api.treasuredata.com
-        td_database: your_database
-        td_table: monitoring
+        td_endpoint: ${secret:td.endpoint}
+        td_database: ${secret:td.database}
+        td_table: ${secret:td.table}
