@@ -128,4 +128,4 @@ def search_and_archive():
             print('processed ' + str(records) + ' records.')
 
         tso.set_max_id(next_max_id)
-        sleep(0.6)
+        sleep(2)
