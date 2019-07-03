@@ -4,7 +4,7 @@ _export:
   target_table: destination_tab
 
 +task:
-  http>: http://${endpoint}/v3/table/update/${target_database}/${target_table}
+  http>: https://${endpoint}/v3/table/update/${target_database}/${target_table}
   method: POST
   headers:
     - authorization: "TD1 ${secret:td.apikey}"
