@@ -16,6 +16,7 @@ _export:
   docker:
     # Note: This image is temporary. It might change in the near future.
     image: 'digdag/digdag-python:3.7.3-stretch'
+    units: 4
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}

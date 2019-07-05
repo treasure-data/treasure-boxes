@@ -5,11 +5,15 @@ import tarfile
 from logging import DEBUG, StreamHandler, getLogger
 
 import numpy
+
+os.system(f"{sys.executable} -m pip install -U chainer pytd td-pyspark")
+
+import chainer
 import pytd.pandas_td as td
 from pytd.writer import SparkWriter
 from td_pyspark import TDSparkContextBuilder
 
-os.system(f"{sys.executable} -m pip install -U chainer pytd td-pyspark")
+from chainer_utils import nets, nlp_utils
 
 MODEL_URL = "https://workflow-example-public.s3.amazonaws.com/imdb_model.tar.gz"
 
@@ -22,8 +26,7 @@ logger.propagate = False
 
 
 def setup_model(device, model_setup):
-    import chainer
-    from chainer_utils import nets
+
 
     setup = json.load(open(model_setup))
     logger.info(json.dumps(setup, indent=2) + "\n")
@@ -54,9 +57,6 @@ def setup_model(device, model_setup):
 def run_batch(
     database, input_table, output_table, device, model, vocab, setup, batchsize=64
 ):
-    import chainer
-    from chainer_utils import nlp_utils
-
     def predict_batch(words_batch):
         xs = nlp_utils.transform_to_array(words_batch, vocab, with_label=False)
         xs = nlp_utils.convert_seq(xs, device=device, with_label=False)
@@ -135,8 +135,6 @@ def run_batch(
 
 
 def download_model():
-    import chainer
-
     path = chainer.dataset.cached_download(MODEL_URL)
     tf = tarfile.open(path, "r")
     tf.extractall()
@@ -144,8 +142,6 @@ def download_model():
 
 
 def predict_chainer(database, input_table, output_table, device_num=-1):
-    import chainer
-
     device = chainer.get_device(device_num)
     device.use()
 
