@@ -4,19 +4,8 @@ _export:
     database: ${dbname}
     engine: hive
 
-+prepare:
-  +shuffle:
-    _parallel: true
-
-    +train:
-      td>: queries/shuffle.sql
-      source: movie_review_train
-      create_table: movie_review_train_shuffled
-
-    +test:
-      td>: queries/shuffle.sql
-      source: movie_review_test
-      create_table: movie_review_test_shuffled
++preparation:
+  call>: common/prepare.dig
 
 # Train with pre-trained model on TensorFlow Hub and store prediction results to TD
 +train:
