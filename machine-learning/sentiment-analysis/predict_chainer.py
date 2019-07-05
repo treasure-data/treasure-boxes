@@ -9,7 +9,7 @@ import pytd.pandas_td as td
 from pytd.writer import SparkWriter
 from td_pyspark import TDSparkContextBuilder
 
-os.system(f"{sys.executable} -m pip install chainer")
+os.system(f"{sys.executable} -m pip install -U chainer pytd td-pyspark")
 
 MODEL_URL = "https://workflow-example-public.s3.amazonaws.com/imdb_model.tar.gz"
 
