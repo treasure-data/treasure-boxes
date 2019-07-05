@@ -1,0 +1,12 @@
+[flake8]
+ignore = E203, W503
+max-line-length = 88
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    appveyor,
+    .venv,
+    # To avoid this issue: https://gitlab.com/pycqa/flake8/issues/375
+    pytd/pandas_td/ipython.py
