@@ -74,8 +74,7 @@ def run_batch(
 
     logger.info("Connect to Treasure Data")
 
-    writer = SparkWriter(apikey=td_api_key, endpoint=endpoint, td_spark_path=jar_path)
-    con = td.connect(apikey=td_api_key, endpoint=endpoint, writer=writer)
+    con = td.connect()
     presto = td.create_engine(f"presto:{database}", con=con)
 
     logger.info("Fetch data from Treasure Data")
@@ -94,6 +93,7 @@ def run_batch(
     logger.info("Start prediction")
     batch = []
     predicted = []
+    i = 1
     for sentence in sentences:
         text = nlp_utils.normalize_text(sentence)
         words = nlp_utils.split_text(text, char_based=setup["char_based"])
@@ -102,6 +102,8 @@ def run_batch(
             _predicted, _ = predict_batch(batch)
             predicted.append(_predicted)
             batch = []
+            logger.info(f"Predicted: {i}th batch. batch size {batchsize}")
+            i += 1
 
     if batch:
         _predicted, _ = predict_batch(batch)
@@ -121,10 +123,13 @@ def run_batch(
     # ] / len(test_df)
     # print(f"Test set accuracy: {accuracy}")
 
+    writer = SparkWriter(apikey=td_api_key, endpoint=endpoint, td_spark_path=jar_path)
+    con2 = td.connect(apikey=td_api_key, endpoint=endpoint, writer=writer)
+
     td.to_td(
         test_df[["rowid", "predicted_polarity"]],
         f"{database}.{output_table}",
-        con=con,
+        con=con2,
         if_exists="replace",
         index=False,
     )
@@ -147,7 +152,7 @@ def predict_chainer(database, input_table, output_table, device_num=-1):
     logger.info(f"model setup path: {model_setup}")
     model, vocab, setup = setup_model(device, model_setup)
     run_batch(
-        database, input_table, output_table, device, model, vocab, setup, batchsize=128
+        database, input_table, output_table, device, model, vocab, setup, batchsize=64
     )
 
 
