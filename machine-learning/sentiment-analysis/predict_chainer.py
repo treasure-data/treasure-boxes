@@ -6,7 +6,7 @@ from logging import DEBUG, StreamHandler, getLogger
 
 import numpy
 
-os.system(f"{sys.executable} -m pip install -U chainer pytd td-pyspark")
+os.system(f"{sys.executable} -m pip install --user -U chainer pytd td-pyspark")
 
 import chainer
 import pytd.pandas_td as td
@@ -26,8 +26,6 @@ logger.propagate = False
 
 
 def setup_model(device, model_setup):
-
-
     setup = json.load(open(model_setup))
     logger.info(json.dumps(setup, indent=2) + "\n")
 
