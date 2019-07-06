@@ -7,8 +7,8 @@ _export:
 +preparation:
   call>: common/prepare.dig
 
-# Train with pre-trained model on TensorFlow Hub and store prediction results to TD
-+train:
+# Store prediction results to TD by using pre-trained Chainer model
++predict:
   py>: predict_chainer.predict_chainer
   database: ${dbname}
   input_table: "movie_review_test_shuffled"
