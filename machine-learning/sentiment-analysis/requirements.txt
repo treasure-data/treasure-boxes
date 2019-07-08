@@ -3,3 +3,6 @@ pandas-td
 tensorflow
 tensorflow-hub
 boto3
+chainer
+pytd
+td-pyspark
