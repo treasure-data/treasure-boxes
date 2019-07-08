@@ -1,0 +1,17 @@
+schedule:
+  minutes_interval>: 5
+
++query-monitoring:
+    docker:
+        image: "digdag/digdag-python:3.7.3-stretch"
+    py>: twitter-archiver.search_and_archive
+    _env:
+        td_apikey: ${secret:td.apikey}
+        td_endpoint: ${secret:td.endpoint}
+        td_database: ${secret:td.database}
+        td_table: ${secret:td.table}
+        tw_consumer_key: ${secret:tw.consumer_key}
+        tw_consumer_secret: ${secret:tw.consumer_secret}
+        tw_access_token: ${secret:tw.access_token}
+        tw_access_token_secret: ${secret:tw.access_token_secret}
+        tw_search_keyword: ${secret:tw.search_keyword}
