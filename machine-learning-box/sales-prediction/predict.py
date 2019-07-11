@@ -1,7 +1,6 @@
 import os
-import sys
 import io
-# Need to plot graph for Prophet
+
 
 class TimeSeriesPredictor(object):
     def __init__(self):
@@ -18,6 +17,7 @@ class TimeSeriesPredictor(object):
     def _upload_graph(self, model, forecast):
         import boto3
         import matplotlib as mlp
+        # Need to plot graph for Prophet
         mlp.use('agg')
         from matplotlib import pyplot as plt
 
@@ -48,9 +48,13 @@ class TimeSeriesPredictor(object):
 
     def run(self, with_aws=True):
         import pytd.pandas_td as td
+        from pytd.writer import SparkWriter
+        from td_pyspark import TDSparkContextBuilder
         from fbprophet import Prophet
 
-        con = td.connect(apikey=self.apikey, endpoint=self.endpoint)
+        jar_path = TDSparkContextBuilder.default_jar_path()
+        writer = SparkWriter(apikey=self.apikey, endpoint=self.endpoint, td_spark_path=jar_path)
+        con = td.connect(apikey=self.apikey, endpoint=self.endpoint, writer=writer)
 
         engine = td.create_engine(
             'presto:{}'.format(self.dbname),

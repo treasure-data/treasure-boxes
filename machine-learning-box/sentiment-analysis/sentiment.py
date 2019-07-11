@@ -33,8 +33,14 @@ def run(with_aws=True):
     import tensorflow as tf
     import tensorflow_hub as hub
     import pytd.pandas_td as td
+    from pytd.writer import SparkWriter
+    from td_pyspark import TDSparkContextBuilder
 
-    con = td.connect(apikey=os.environ['TD_API_KEY'], endpoint=os.environ['TD_API_SERVER'])
+    jar_path = TDSparkContextBuilder.default_jar_path()
+    apikey = os.environ['TD_API_KEY']
+    endpoint = os.environ['TD_API_SERVER']
+    writer = SparkWriter(apikey=apikey, endpoint=endpoint, td_spark_path=jar_path)
+    con = td.connect(apikey=apikey, endpoint=endpoint, writer=writer)
     presto = td.create_engine('presto:sentiment', con=con)
 
     train_df = td.read_td("""

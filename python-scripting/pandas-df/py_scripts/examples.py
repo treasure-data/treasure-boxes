@@ -4,7 +4,15 @@ import os
 import pytd.pandas_td as td
 import tdclient
 
-con = td.connect(apikey=os.environ['TD_API_KEY'], endpoint=os.environ['TD_API_SERVER'])
+from pytd.writer import SparkWriter
+from td_pyspark import TDSparkContextBuilder
+
+apikey = os.environ['TD_API_KEY']
+endpoint = os.environ['TD_API_SERVER']
+jar_path = TDSparkContextBuilder.default_jar_path()
+
+writer = SparkWriter(apikey=apikey, endpoint=endpoint, td_spark_path=jar_path)
+con = td.connect(apikey=apikey, endpoint=endpoint, writer=writer)
 
 def read_td_table(database_name, table_name, engine_name = 'presto', limit=1000):
     engine = td.create_engine(f"{engine_name}:{database_name}", con=con)

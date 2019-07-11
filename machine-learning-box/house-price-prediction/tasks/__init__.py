@@ -12,10 +12,14 @@ class FeatureSelector(object):
     def run(self):
         import pandas as pd
         import pytd.pandas_td as td
+        from pytd.writer import SparkWriter
+        from td_pyspark import TDSparkContextBuilder
         from sklearn.ensemble import ExtraTreesRegressor
         from sklearn.feature_selection import SelectFromModel
 
-        connection = td.connect(apikey=self.apikey, endpoint=self.endpoint)
+        jar_path = TDSparkContextBuilder.default_jar_path()
+        writer = SparkWriter(apikey=self.apikey, endpoint=self.endpoint, td_spark_path=jar_path)
+        connection = td.connect(apikey=self.apikey, endpoint=self.endpoint, writer=writer)
 
         dbname = self.dbname
         source_table = self.source_table
