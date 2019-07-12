@@ -21,6 +21,6 @@ In this directory, we have example workflows for Machine Learning.
 
 Following examples use custom Python scripting. As of Dec. 2018, py> operator for Treasure Workflow is private alpha.
 
-- [Sentiment Analysis with TensorFlow](./sentiment-analysis)
+- [Sentiment Analysis with TensorFlow or Chainer](./sentiment-analysis)
 - [Feature selection with scikit-learn](./house_price)
 - [Time series forecast with Facebook Prophet](./time_series) (Not available for Python Custom Script private alpha version)
