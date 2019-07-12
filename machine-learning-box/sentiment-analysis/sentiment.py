@@ -1,5 +1,5 @@
 import os
-from common import EXPORT_DIR_BASE
+from tf_utils.common import EXPORT_DIR_BASE
 import tarfile
 
 def get_predictions(estimator, input_fn):

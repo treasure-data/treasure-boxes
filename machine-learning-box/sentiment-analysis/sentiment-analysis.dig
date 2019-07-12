@@ -19,6 +19,7 @@ _export:
     AWS_SECRET_ACCESS_KEY: ${secret:aws_secret_access_key}
     S3_BUCKET: ${secret:s3_bucket}
 
+# Fetch the pre-trained model from S3, then store prediction results to TD
 #+predict:
 #  py>: predict.run
 #  docker:
