@@ -42,7 +42,6 @@ $ td wf start regressor regression-py --session now
 
 * [regression.dig](regression.dig) - TD workflow script for regression
 * [regression-py.dig](regression-py.dig) - TD workflow script for regression with scikit-learn feature selection
-  * Note: `py>` operator on Treasure Data is not publicly available yet as of Oct 3rd, 2018
   * Note: Before pytd v1.0, pytd depends on td-spark. If your account isn't enabled td-spark, please contact support@treasure-data.com.
 * [search_hyperparams.dig](search_hyperparams.dig) - TD workflow script for searching hyperparameters. You need to run vectorizing before run this workflow.
 
