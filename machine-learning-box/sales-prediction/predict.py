@@ -5,8 +5,6 @@ import io
 
 class TimeSeriesPredictor(object):
     def __init__(self):
-        os.system(f'{sys.executable} -m pip install pandas-td')
-
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
         self.dbname = 'timeseries'
@@ -49,7 +47,7 @@ class TimeSeriesPredictor(object):
         )
 
     def run(self, with_aws=True):
-        import pandas_td as td
+        import pytd.pandas_td as td
         from fbprophet import Prophet
 
         con = td.connect(apikey=self.apikey, endpoint=self.endpoint)

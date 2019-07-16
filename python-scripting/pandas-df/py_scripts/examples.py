@@ -1,9 +1,7 @@
 # Because we do not allow custom image currently, this is how you can add 3rd party
 # libraries instead
-import sys, os
-os.system(f"{sys.executable} -m pip install pandas-td")
-
-import pandas_td as td
+import os
+import pytd.pandas_td as td
 import tdclient
 
 con = td.connect(apikey=os.environ['TD_API_KEY'], endpoint=os.environ['TD_API_SERVER'])

@@ -4,9 +4,6 @@ import textwrap
 
 class FeatureSelector(object):
     def __init__(self):
-        import sys
-        os.system(f'{sys.executable} -m pip install pandas-td')
-
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
         self.source_table = os.getenv("source_table")
@@ -14,7 +11,7 @@ class FeatureSelector(object):
 
     def run(self):
         import pandas as pd
-        import pandas_td as td
+        import pytd.pandas_td as td
         from sklearn.ensemble import ExtraTreesRegressor
         from sklearn.feature_selection import SelectFromModel
 
