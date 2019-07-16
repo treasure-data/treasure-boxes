@@ -6,7 +6,7 @@ import os
 import os.path
 import time
 
-os.system(f"{sys.executable} -m pip install --user feedparser")
+os.system(f"{sys.executable} -m pip install feedparser")
 
 import pytd
 import pandas as pd

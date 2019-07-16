@@ -3,7 +3,7 @@
     database_name: sample_datasets
     table_name: nasdaq
     docker:
-        image: "digdag/digdag-python:3.7.3-stretch"
+        image: "digdag/digdag-python:3.7"
     _env:
         TD_API_KEY: ${secret:apikey}
         TD_API_SERVER: ${secret:endpoint}
@@ -13,7 +13,7 @@
     database_name: pandas_test
     table_name: my_df
     docker:
-        image: "digdag/digdag-python:3.7.3-stretch"
+        image: "digdag/digdag-python:3.7"
     _env:
         TD_API_KEY: ${secret:apikey}
         TD_API_SERVER: ${secret:endpoint}

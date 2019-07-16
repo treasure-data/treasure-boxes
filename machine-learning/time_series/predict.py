@@ -5,8 +5,7 @@ import io
 
 class TimeSeriesPredictor(object):
     def __init__(self):
-        os.system(f'{sys.executable} -m pip install --user pandas-td pystan')
-        os.system(f'{sys.executable} -m pip install --user fbprophet')
+        os.system(f'{sys.executable} -m pip install pandas-td')
 
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
@@ -19,7 +18,6 @@ class TimeSeriesPredictor(object):
         self.period = int(_period)
 
     def _upload_graph(self, model, forecast):
-        os.system(f'{sys.executable} -m pip install --user matplotlib boto3')
         import boto3
         import matplotlib as mlp
         mlp.use('agg')

@@ -5,7 +5,7 @@ schedule:
 
 +step1:
   docker:
-    image: "digdag/digdag-python:3.7.3-stretch"
+    image: "digdag/digdag-python:3.7"
   py>: tasks.rss_import
   dest_db: rss_db
   dest_table: rss_tbl

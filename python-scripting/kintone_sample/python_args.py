@@ -2,8 +2,6 @@ import sys
 import os
 import os.path
 
-os.system(f"{sys.executable} -m pip install --user requests")
- 
 import pytd.pandas_td as td
 import requests
 import json

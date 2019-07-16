@@ -3,7 +3,7 @@
   database_name: td_spark_example
   table_name: www_access_processed
   docker:
-    image: 'digdag/digdag-python:3.7.3-stretch'
+    image: 'digdag/digdag-python:3.7'
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
@@ -13,7 +13,7 @@
   database_name: td_spark_example
   table_name: www_access_processed
   docker:
-    image: 'digdag/digdag-python:3.7.3-stretch'
+    image: 'digdag/digdag-python:3.7'
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
@@ -23,7 +23,7 @@
   database_name: td_spark_example
   table_name: pandas_table
   docker:
-    image: 'digdag/digdag-python:3.7.3-stretch'
+    image: 'digdag/digdag-python:3.7'
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
