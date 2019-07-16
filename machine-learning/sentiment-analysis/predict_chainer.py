@@ -6,7 +6,7 @@ from logging import DEBUG, StreamHandler, getLogger
 
 import numpy
 
-os.system(f"{sys.executable} -m pip install --user -U chainer pytd td-pyspark")
+os.system(f"{sys.executable} -m pip install -U chainer")
 
 import chainer
 import pytd.pandas_td as td

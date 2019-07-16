@@ -14,8 +14,7 @@ _export:
   input_table: "movie_review_test_shuffled"
   output_table: "test_predicted_polarities_chainer"
   docker:
-    # Note: This image is temporary. It might change in the near future.
-    image: 'digdag/digdag-python:3.7.3-stretch'
+    image: 'digdag/digdag-python:3.7'
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}

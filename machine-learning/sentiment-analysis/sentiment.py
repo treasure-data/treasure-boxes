@@ -28,8 +28,8 @@ def run(with_aws=True):
     # https://www.tensorflow.org/hub/tutorials/text_classification_with_tf_hub
 
     import sys
-    os.system(f"{sys.executable} -m pip install --user pandas-td boto3")
-    os.system(f"{sys.executable} -m pip install --user tensorflow==1.13.1 tensorflow_hub==0.1.1 ")
+    os.system(f"{sys.executable} -m pip install pandas-td")
+    os.system(f"{sys.executable} -m pip install tensorflow==1.13.1 tensorflow_hub==0.1.1")
 
     import tensorflow as tf
     import tensorflow_hub as hub

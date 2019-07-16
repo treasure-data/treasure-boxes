@@ -11,8 +11,7 @@ _export:
 +train:
   py>: sentiment.run
   docker:
-    # Note: This image is temporary. It might change in the near future.
-    image: 'digdag/digdag-python:3.7.3-stretch'
+    image: 'digdag/digdag-python:3.7'
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
@@ -23,8 +22,7 @@ _export:
 #+predict:
 #  py>: predict.run
 #  docker:
-#    # Note: This image is temporary. It might change in the near future.
-#    image: 'chezou/td-ml-base:latest'
+#    image: 'digdag/digdag-python:3.7'
 #  _env:
 #    TD_API_KEY: ${secret:apikey}
 #    TD_API_SERVER: ${secret:endpoint}
