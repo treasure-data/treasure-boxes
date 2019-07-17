@@ -2,6 +2,8 @@ import os, sys, re, pandas, tdclient, pytd, json
 from datetime import datetime as dt
 from mapping import mapping as mp
 from time import sleep
+from pytd.writer import SparkWriter
+from td_pyspark import TDSparkContextBuilder
 
 os.system(f"{sys.executable} -m pip install TwitterSearch")
 from TwitterSearch import *
@@ -76,7 +78,10 @@ def bulk_load(data):
     for item in data:
         record = pandas.Series(list(item.values()), index=dataframe.columns)
         dataframe = dataframe.append(record, ignore_index=True)
-    with pytd.Client(apikey=TD_API_KEY, endpoint=TD_API_SERVER, database=TD_DATABASE) as client:
+
+    jar_path = TDSparkContextBuilder.default_jar_path()
+    writer = SparkWriter(apikey=TD_API_KEY, endpoint=TD_API_SERVER, td_spark_path=jar_path)
+    with pytd.Client(apikey=TD_API_KEY, endpoint=TD_API_SERVER, database=TD_DATABASE, writer=writer) as client:
         client.load_table_from_dataframe(dataframe, TD_TABLE, if_exists='append')
 
 
