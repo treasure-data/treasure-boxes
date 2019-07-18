@@ -1,4 +1,6 @@
 import os, time, pandas, tdclient, pytd
+from pytd.writer import SparkWriter
+from td_pyspark import TDSparkContextBuilder
 
 TD_API_KEY = os.environ.get('td_apikey')
 TD_API_SERVER = os.environ.get('td_endpoint')
@@ -37,7 +39,9 @@ def bulk_load(data):
              item['org_name'], item['database'], item['user_name']], index=dataframe.columns)
         dataframe = dataframe.append(record, ignore_index=True)
 
-    with pytd.Client(apikey=TD_API_KEY, endpoint=TD_API_SERVER, database=TD_DATABASE) as client:
+    jar_path = TDSparkContextBuilder.default_jar_path()
+    writer = SparkWriter(apikey=TD_API_KEY, endpoint=TD_API_SERVER, td_spark_path=jar_path)
+    with pytd.Client(apikey=TD_API_KEY, endpoint=TD_API_SERVER, database=TD_DATABASE, writer=writer) as client:
         client.load_table_from_dataframe(dataframe, TD_TABLE, if_exists='append')
 
 
