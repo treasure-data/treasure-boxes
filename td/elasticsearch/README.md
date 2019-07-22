@@ -53,6 +53,25 @@ Available parameters for `result_settings` are here.
 
 For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-elasticsearch).
 
+# Result URL format
+
+Instead of result_settings, result_url is also available. This option requires the following JSON schema.
+
+```
+_export:
+  td:
+    database: sample_datasets
+  es:
+    nodes: "host1:9300,host2:9300,..."
+    index: index
+    index_type: index_type
+    mode: insert
+
++td-result-into-elasticsearch:
+  td>: queries/sample.sql
+  result_url: '{"type":"elasticsearch","nodes":"${es.nodes}","index":"${es.index}","index_type":"${es.index_type}","mode":"${es.mode}"}'
+```
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.
