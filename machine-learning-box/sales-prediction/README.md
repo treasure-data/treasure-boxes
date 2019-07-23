@@ -17,8 +17,6 @@ There are two workflow examples:
 1. which uploads prediction results to TD as well as uploads predicted graphs to Amazon S3 and sends a notification to Slack
 2. which uploads prediction results. This doesn't require S3 and Slack
 
-Note: Before pytd v1.0, pytd depends on td-spark. If your account isn't enabled td-spark, please contact support@treasure-data.com.
-
 ### An example working with Amazon S3 and Slack
 
 ```bash

@@ -2,7 +2,6 @@
 
 It's almost identical to how to run the "simple" example [as detailed here](../simple).
 
-Note: Before pytd v1.0, pytd depends on td-spark. If your account isn't enabled td-spark, please contact support@treasure-data.com.
 
 ## Further Readings
 

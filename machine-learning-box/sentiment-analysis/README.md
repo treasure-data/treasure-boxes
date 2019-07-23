@@ -12,8 +12,6 @@ This workflow will:
 
 Currently, prediction with fetching model from S3 is not evaluated yet.
 
-Note: Before pytd v1.0, pytd depends on td-spark. If your account isn't enabled td-spark, please contact support@treasure-data.com.
-
 ## Workflow
 
 There are three workflows:
