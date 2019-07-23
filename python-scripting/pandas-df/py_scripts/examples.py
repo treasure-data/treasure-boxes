@@ -1,6 +1,7 @@
 # Because we do not allow custom image currently, this is how you can add 3rd party
 # libraries instead
 import os
+import sys
 import tdclient
 
 os.system(f"{sys.executable} -m pip install -U pytd")
