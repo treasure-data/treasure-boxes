@@ -2,7 +2,7 @@
 Top-k Item Recommendation Template
 ===
 
-**Top-k recommendation** is an important task to improve customers' engagement in online services. 
+**Top-k recommendation** is an important task to improve customers' engagement in online services.
 
 This page introduces a workflow template to get top-k item recommendation for each user. You can easily build a recommendation workflow following this guide.
 
@@ -19,7 +19,7 @@ This workflow takes a table of the following form:
 
 _**Caution:** `rating` would be the number of clicks/views/conversions/boughts/scores depending on your problem._
 
-The table should be named `input` that includes userid of type `long`, itemid of type `long`, and rating of type `float/double`. You can use [map_id.dig](https://github.com/treasure-data/workflow-examples/blob/master/machine-learning/recommendation/map_id.dig) for creating those id mapping from the original user/item representation.
+The table should be named `input` that includes userid of type `long`, itemid of type `long`, and rating of type `float/double`. You can use [map_id.dig](./map_id.dig) for creating those id mapping from the original user/item representation.
 
 ## Workflow
 
@@ -35,7 +35,7 @@ $ td wf start recommendation recommend --session now -p apikey=${YOUR_TD_API_KEY
 * [config/params.yml](config/params.yml) - defines configurable parameters for the recommendation workflow such as `k` of top-k. By the default, the workflow recommends top-10 items for each user.
 
 [<img src="docs/img/capture.png" alt="capture" max_height=300 />](http://showterm.io/31b8df49efcfbc2bfc5ef#fast)
-  
+
 ## Output
 
 The output of workflow is a table that contains a list of recommended items for each user as shown below:
@@ -49,7 +49,7 @@ The output of workflow is a table that contains a list of recommended items for 
 
 ## How This Workflow Works
 
-For further reading for algorithm and/or workflow details, please refer [this page](docs/more.md). 
+For further reading for algorithm and/or workflow details, please refer [this page](docs/more.md).
 
 ## Conclusion
 

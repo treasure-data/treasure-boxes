@@ -5,7 +5,7 @@ In this directory, we have example workflows for Machine Learning.
 ## Hivemall examples
 
 - Recommendation
-  - [Item-based Collaborative filtering](./collaborative_filtering)
+  - [Item-based Collaborative filtering](./recommendation/collaborative_filtering)
   - [Top-k Item Recommendation](./recommendation)
 - Classification
   - [Click-Through-Rate Prediction](./ctr-prediction)

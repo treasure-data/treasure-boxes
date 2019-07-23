@@ -483,7 +483,7 @@ Here is the list of other feature engineering functions in Hivemall document.
     - If you want to convert numerical values into categorical values, you can use fixed-width binning. Hivemall provides `build_bins` and `feature_binning` functions for it.
 - [Feature Selection](https://hivemall.incubator.apache.org/userguide/ft_engineering/selection.html)
     - In some cases, selecting important features enables you to get accurate models. You can use `select_k_best` function.
-- [tf-idf](https://hivemall.incubator.apache.org/userguide/ft_engineering/tfidf.html) [[workflow example](https://github.com/treasure-data/workflow-examples/tree/master/machine-learning/tf-idf)]
+- [tf-idf](https://hivemall.incubator.apache.org/userguide/ft_engineering/tfidf.html) [[workflow example](https://github.com/treasure-data/treasure-boxes/tree/master/machine-learning-box/tf-idf)]
     - [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) is a well-known technique to assign the importance of terms in documents. You can extract important words with Hivemall.
 
 ## Parameter tuning
