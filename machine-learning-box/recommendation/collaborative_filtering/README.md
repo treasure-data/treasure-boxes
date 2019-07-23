@@ -1,4 +1,4 @@
-**Caution:** _This workflow is supported from Hivemall v0.5.0 to be release on April 12, 2018._
+# Item-based Collaborative Filtering
 
 This document describes how to run [Item-based Collaborative Filtering](http://hivemall.incubator.apache.org/userguide/recommend/item_based_cf.html) by a workflow.
 
