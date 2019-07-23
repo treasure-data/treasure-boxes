@@ -29,18 +29,13 @@ def run(with_aws=True):
 
     import sys
     os.system(f"{sys.executable} -m pip install tensorflow==1.13.1 tensorflow_hub==0.1.1")
+    os.system(f"{sys.executable} -m pip install -U pytd")
 
     import tensorflow as tf
     import tensorflow_hub as hub
     import pytd.pandas_td as td
-    from pytd.writer import SparkWriter
-    from td_pyspark import TDSparkContextBuilder
 
-    jar_path = TDSparkContextBuilder.default_jar_path()
-    apikey = os.environ['TD_API_KEY']
-    endpoint = os.environ['TD_API_SERVER']
-    writer = SparkWriter(apikey=apikey, endpoint=endpoint, td_spark_path=jar_path)
-    con = td.connect(apikey=apikey, endpoint=endpoint, writer=writer)
+    con = td.connect(apikey=os.environ['TD_API_KEY'], endpoint=os.environ['TD_API_SERVER'])
     presto = td.create_engine('presto:sentiment', con=con)
 
     train_df = td.read_td("""

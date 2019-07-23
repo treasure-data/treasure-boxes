@@ -4,6 +4,9 @@ import io
 
 class TimeSeriesPredictor(object):
     def __init__(self):
+        import sys
+        os.system(f"{sys.executable} -m pip install -U pytd")
+
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
         self.dbname = 'timeseries'
@@ -48,18 +51,11 @@ class TimeSeriesPredictor(object):
 
     def run(self, with_aws=True):
         import pytd.pandas_td as td
-        from pytd.writer import SparkWriter
-        from td_pyspark import TDSparkContextBuilder
         from fbprophet import Prophet
 
-        jar_path = TDSparkContextBuilder.default_jar_path()
-        writer = SparkWriter(apikey=self.apikey, endpoint=self.endpoint, td_spark_path=jar_path)
-        con = td.connect(apikey=self.apikey, endpoint=self.endpoint, writer=writer)
+        con = td.connect(apikey=self.apikey, endpoint=self.endpoint)
 
-        engine = td.create_engine(
-            'presto:{}'.format(self.dbname),
-            con=con
-        )
+        engine = td.create_engine('presto:{}'.format(self.dbname), con=con)
 
         # Note: Prophet requires `ds` column as date string and `y` column as target value
         df = td.read_td(

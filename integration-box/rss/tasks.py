@@ -7,12 +7,11 @@ import os.path
 import time
 
 os.system(f"{sys.executable} -m pip install feedparser")
+os.system(f"{sys.executable} -m pip install -U pytd")
 
 import pytd
 import pandas as pd
 import feedparser
-from pytd.writer import SparkWriter
-from td_pyspark import TDSparkContextBuilder
 
 TD_APIKEY=os.environ.get('td_apikey')
 TD_ENDPOINT=os.environ.get('td_endpoint')
@@ -26,7 +25,5 @@ def rss_import(dest_db: str, dest_table: str, rss_url_list):
             tmp_se = pd.Series( [ entry.title, entry.description, entry.link ], index=df.columns )
             df = df.append( tmp_se, ignore_index=True )
     #print(df)
-    jar_path = TDSparkContextBuilder.default_jar_path()
-    writer = SparkWriter(apikey=TD_APIKEY, endpoint=TD_ENDPOINT, td_spark_path=jar_path)
-    client = pytd.Client(apikey=TD_APIKEY, endpoint=TD_ENDPOINT, database=dest_db, writer=writer, engine='presto')
+    client = pytd.Client(apikey=TD_APIKEY, endpoint=TD_ENDPOINT, database=dest_db, engine='presto')
     client.load_table_from_dataframe(df, dest_table, if_exists='append')

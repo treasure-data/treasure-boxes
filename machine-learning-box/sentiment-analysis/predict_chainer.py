@@ -7,11 +7,10 @@ from logging import DEBUG, StreamHandler, getLogger
 import numpy
 
 os.system(f"{sys.executable} -m pip install -U chainer")
+os.system(f"{sys.executable} -m pip install -U pytd")
 
 import chainer
 import pytd.pandas_td as td
-from pytd.writer import SparkWriter
-from td_pyspark import TDSparkContextBuilder
 
 from chainer_utils import nets, nlp_utils
 
@@ -70,7 +69,6 @@ def run_batch(
 
     td_api_key = os.environ["TD_API_KEY"]
     endpoint = os.environ["TD_API_SERVER"]
-    jar_path = TDSparkContextBuilder.default_jar_path()
 
     logger.info("Connect to Treasure Data")
 
@@ -123,8 +121,7 @@ def run_batch(
     # ] / len(test_df)
     # print(f"Test set accuracy: {accuracy}")
 
-    writer = SparkWriter(apikey=td_api_key, endpoint=endpoint, td_spark_path=jar_path)
-    con2 = td.connect(apikey=td_api_key, endpoint=endpoint, writer=writer)
+    con2 = td.connect(apikey=td_api_key, endpoint=endpoint)
 
     td.to_td(
         test_df[["rowid", "predicted_polarity"]],

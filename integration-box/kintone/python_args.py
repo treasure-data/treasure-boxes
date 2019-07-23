@@ -1,5 +1,7 @@
 import sys
 
+os.system(f"{sys.executable} -m pip install -U pytd")
+
 import pytd.pandas_td as td
 import requests
 import json
@@ -9,8 +11,6 @@ from pandas.io.json import json_normalize
 import re
 import itertools
 
-from pytd.writer import SparkWriter
-from td_pyspark import TDSparkContextBuilder
 
 ##############################
 # カラム名変換(kintone -> TD)
@@ -64,8 +64,7 @@ def get_records(api, basic, org, app_id, database, table, fields, query, id_fiel
     # APIリスト読み込み
     api_list = eval(api)
     # TDへのコネクションを作成
-    writer = SparkWriter(td_spark_path=TDSparkContextBuilder.default_jar_path())
-    con = td.connect(writer=writer)
+    con = td.connect()
     # アプリ番号でループ
     for a in api_list:
         # app_idでアプリを指定

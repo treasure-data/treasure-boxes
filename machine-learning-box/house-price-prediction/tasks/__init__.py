@@ -4,6 +4,9 @@ import textwrap
 
 class FeatureSelector(object):
     def __init__(self):
+        import sys
+        os.system(f"{sys.executable} -m pip install -U pytd")
+
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
         self.source_table = os.getenv("source_table")
@@ -12,22 +15,15 @@ class FeatureSelector(object):
     def run(self):
         import pandas as pd
         import pytd.pandas_td as td
-        from pytd.writer import SparkWriter
-        from td_pyspark import TDSparkContextBuilder
         from sklearn.ensemble import ExtraTreesRegressor
         from sklearn.feature_selection import SelectFromModel
 
-        jar_path = TDSparkContextBuilder.default_jar_path()
-        writer = SparkWriter(apikey=self.apikey, endpoint=self.endpoint, td_spark_path=jar_path)
-        connection = td.connect(apikey=self.apikey, endpoint=self.endpoint, writer=writer)
+        connection = td.connect(apikey=self.apikey, endpoint=self.endpoint)
 
         dbname = self.dbname
         source_table = self.source_table
 
-        engine = td.create_engine(
-            'presto:{}'.format(dbname),
-            con=connection
-        )
+        engine = td.create_engine('presto:{}'.format(dbname), con=connection)
 
         # Fetch 25% random sampled data
         df = td.read_td(

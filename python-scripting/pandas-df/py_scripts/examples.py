@@ -1,18 +1,16 @@
 # Because we do not allow custom image currently, this is how you can add 3rd party
 # libraries instead
 import os
-import pytd.pandas_td as td
 import tdclient
 
-from pytd.writer import SparkWriter
-from td_pyspark import TDSparkContextBuilder
+os.system(f"{sys.executable} -m pip install -U pytd")
+
+import pytd.pandas_td as td
 
 apikey = os.environ['TD_API_KEY']
 endpoint = os.environ['TD_API_SERVER']
-jar_path = TDSparkContextBuilder.default_jar_path()
 
-writer = SparkWriter(apikey=apikey, endpoint=endpoint, td_spark_path=jar_path)
-con = td.connect(apikey=apikey, endpoint=endpoint, writer=writer)
+con = td.connect(apikey=apikey, endpoint=endpoint)
 
 def read_td_table(database_name, table_name, engine_name = 'presto', limit=1000):
     engine = td.create_engine(f"{engine_name}:{database_name}", con=con)
