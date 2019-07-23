@@ -1,0 +1,31 @@
+timezone: Asia/Tokyo
+
+_export:
+  # 初回実行 -> true、前日分のみ(incremental) -> false
+  is_initial: false
+  # 各変数を定義したファイルを参照
+  !include : config/variable.dig
+  # 任意の名前に変更(書き出し先のdatabase名を指定)
+  out_database: bi_reporting
+  # report_dataの内容を定義したファイルを参照
+  rd:
+    !include : report_data/template.dig
+
++create_database_if_not_exists:
+# 書き出し先のdatabaseが存在しない場合は作成
+  td_ddl>:
+  create_databases: ["${out_database}"]
+
++create_report_data:
+  for_each>:
+    tbl: ${Object.keys(rd)}
+  _parallel: true
+  _do:
+    +if_initial_or_replace:
+      if>: ${is_initial || rd[tbl].is_replace}
+      _do:
+        td_ddl>:
+        empty_tables: ["${out_database}.tdrepo_${tbl}"]
+    +execute_query:
+      td>: queries/proc_4201_create_report_data.sql
+      insert_into: ${out_database}.tdrepo_${tbl}

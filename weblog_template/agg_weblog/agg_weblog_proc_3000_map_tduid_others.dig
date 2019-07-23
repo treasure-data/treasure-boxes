@@ -1,0 +1,105 @@
+timezone: Asia/Tokyo
+
+_export:
+  # 初回実行 -> true、前日分のみ(incremental) -> false
+  is_initial: true
+  # 各変数を定義したファイルを参照
+  !include : config/variable.dig
+
++proc_3100_simple_mapping:
+  if>: ${simple_mapping_enable}
+  _do:
+    for_each>:
+      target: ${Object.keys(simple_mapping)}
+    _do:
+      +proc_3100:
+        if>: ${simple_mapping[target].map_initialize && is_initial}
+        _do:
+          +proc_3101:
+            td>: queries/proc_3101_simple_mapping_step1.sql
+            create_table: tmp_${simple_mapping[target].map_table}
+        _else_do:
+          +proc_3101:
+            td>: queries/proc_3101_simple_mapping_step1.sql
+            create_table: tmp_${simple_mapping[target].map_table}_step1
+          +proc_3102:
+            td>: queries/proc_3102_simple_mapping_step2.sql
+            create_table: tmp_${simple_mapping[target].map_table}
+      +rename_map_table:
+        _export:
+          map_table:
+            - from: tmp_${simple_mapping[target].map_table}
+              to: ${simple_mapping[target].map_table}
+        td_ddl>:
+        rename_tables: ${map_table}
+      +drop_tmp_table:
+        td_ddl>:
+        drop_tables: ["tmp_${simple_mapping[target].map_table}_step1"]
+
++proc_3200_map_cross_over:
+  if>: ${map_cross_over_enable}
+  _do:
+    for_each>:
+      target: ${Object.keys(map_cross_over)}
+    _do:
+      +proc_3200:
+        if>: ${map_cross_over[target].map_initialize && is_initial}
+        _do:
+          +proc_3201:
+            td>: queries/proc_3201_map_cross_over_step1.sql
+            create_table: tmp_${map_cross_over[target].map_table}
+        _else_do:
+          +proc_3201:
+            td>: queries/proc_3201_map_cross_over_step1.sql
+            create_table: tmp_${map_cross_over[target].map_table}_step1
+          +proc_3202:
+            td>: queries/proc_3202_map_cross_over_step2.sql
+            create_table: tmp_${map_cross_over[target].map_table}
+      +rename_map_table:
+        _export:
+          map_table:
+            - from: tmp_${map_cross_over[target].map_table}
+              to: ${map_cross_over[target].map_table}
+        td_ddl>:
+        rename_tables: ${map_table}
+      +drop_tmp_table:
+        td_ddl>:
+        drop_tables: ["tmp_${map_cross_over[target].map_table}_step1"]
+
++proc_3300_create_unify_num:
+  if>: ${create_unify_num_enable}
+  _do:
+    +initialize_tables:
+      td_ddl>:
+      empty_tables: ["tmp_unify_num_step1"]
+    +proc_3301:
+      for_each>:
+        target: ${Object.keys(create_unify_num)}
+      _do:
+        td>: queries/proc_3301_create_unify_num_step1.sql
+        insert_into: tmp_unify_num_step1
+    +proc_3302:
+      td>: queries/proc_3302_create_unify_num_step2.sql
+      create_table: tmp_unify_num_step2
+    +proc_3303:
+      td>: queries/proc_3303_create_unify_num_step3.sql
+      create_table: tmp_unify_num_step3
+    +proc_3304:
+      td>: queries/proc_3304_create_unify_num_step4.sql
+      create_table: tmp_unify_num_step4
+    +proc_3305:
+      td>: queries/proc_3305_create_unify_num_step5.sql
+      create_table: tmp_unify_num_step5
+    +proc_3306:
+      td>: queries/proc_3306_create_unify_num_step6.sql
+      create_table: map_tduid_unifynum
+    +drop_tmp_tables:
+      _export:
+        tmp_tables:
+          - tmp_unify_num_step1
+          - tmp_unify_num_step2
+          - tmp_unify_num_step3
+          - tmp_unify_num_step4
+          - tmp_unify_num_step5
+      td_ddl>:
+      drop_tables: ${tmp_tables}

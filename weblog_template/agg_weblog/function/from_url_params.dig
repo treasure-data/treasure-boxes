@@ -1,0 +1,17 @@
++function_from_url_params:
+  if>: ${Object.prototype.toString.call(additional_columns.from_url_params) === '[object Array]'}
+  _do:
+    td>:
+    query: |
+      SELECT
+        ARRAY_JOIN(ARRAY_AGG(', COALESCE(URL_EXTRACT_PARAMETER(td_url, '''||val||'''), '''') AS '||LOWER(val)), '') AS from_url_params
+      FROM (
+        SELECT
+          SPLIT('${additional_columns.from_url_params.join()}', ',') AS arr
+      ) CROSS JOIN UNNEST(arr) AS t(val)
+    store_last_results: true
+  _else_do:
+    td>:
+    query: |
+      SELECT '' AS custom_values
+    store_last_results: true

@@ -1,0 +1,191 @@
+timezone: Asia/Tokyo
+
+_export:
+  # 初回実行 -> true、前日分のみ(incremental) -> false
+  is_initial: true
+  # 各変数を定義したファイルを参照
+  !include : config/variable.dig
+
+# 書き出し先のdatabaseが存在しない場合は作成
++create_database_if_not_exists:
+  td_ddl>:
+  create_databases: ["${td.database}"]
+
+# テーブルの初期化
++initialize_tables:
+  if>: ${is_initial}
+  # 初回実行
+  _do:
+    _export:
+      target_tables:
+        - map_tduid_tdclientid_daily
+        - map_tduid_tdclientid
+        - map_tduid_tdglobalid
+        - tmp_log_cookies
+        - tmp_tduids
+    td_ddl>:
+    empty_tables: ${target_tables}
+  # 前日分のみ(incremental)
+  _else_do:
+    _export:
+      target_tables:
+        - tmp_log_cookies
+        - tmp_tduids
+    td_ddl>:
+    empty_tables: ${target_tables}
+
+# config/variable.dig で定義した rawdata_tables から Cookie を抽出
++proc_1100_accumulate_log_cookies:
+  for_each>:
+    tbl: ${Object.keys(rawdata_tables)}
+  _parallel: true
+  _do:
+    td>: queries/proc_1100_accumulate_log_cookies.sql
+    insert_into: tmp_log_cookies
+
+# 3億レコードを超えない単位(最小単位は1日)に分割しループ処理を行う
++proc_1200_split_log_cookies:
+  td_for_each>: queries/proc_1200_split_log_cookies.sql
+  _do:
+    # td_client_id と td_global_id について、それぞれ1:1となる
+    # BIGINT型の cid, gid をそれぞれ作成(処理の高速化/簡素化)
+    +proc_1300_create_bigint_ids:
+      +proc_1301:
+        td>: queries/proc_1301_create_bigint_ids_step1.sql
+        create_table: tmp_bigint_ids_step1
+      +proc_1302:
+        td>: queries/proc_1302_create_bigint_ids_step2.sql
+        create_table: tmp_bigint_ids_step2
+      +proc_1303:
+        td>: queries/proc_1303_create_bigint_ids_step3.sql
+        create_table: tmp_bigint_ids
+    # timeを除いたcidとgidのユニークリストを作成し、
+    # cid:gid=1:n(1), cid:gid=n:1, cid:gid=n:nのどれに該当するか集計
+    +proc_1400_distinct_map_cid_gid:
+      +proc_1401:
+        td>: queries/proc_1401_distinct_map_cid_gid_step1.sql
+        create_table: tmp_map_cid_gid_step1
+      +proc_1402:
+        td>: queries/proc_1402_distinct_map_cid_gid_step2.sql
+        create_table: tmp_map_cid_gid
+    # cid:gid=1:n(1), cid:gid=n:1, cid:gid=n:nの3パターンに分けてtd_uidを作成
+    +proc_1500_create_tduid:
+      _parallel: true
+      # cid:gid=1:n(1)の処理
+      +cid1_gidn:
+        td>: queries/proc_1510_create_tduid_cid1_gidn.sql
+        insert_into: tmp_tduids
+      # cid:gid=n:1の処理
+      +cidn_gid1:
+        td>: queries/proc_1520_create_tduid_cidn_gid1.sql
+        insert_into: tmp_tduids
+      # cid:gid=n:nの処理
+      +cidn_gidn:
+        +proc_1531:
+          td>: queries/proc_1531_create_tduid_cidn_gidn_step1.sql
+          create_table: tmp_cidn_gidn_step1
+        +proc_1532:
+          td>: queries/proc_1532_create_tduid_cidn_gidn_step2.sql
+          create_table: tmp_cidn_gidn_step2
+        +proc_1533:
+          td>: queries/proc_1533_create_tduid_cidn_gidn_step3.sql
+          create_table: tmp_cidn_gidn_step3
+        +proc_1534:
+          td>: queries/proc_1534_create_tduid_cidn_gidn_step4.sql
+          insert_into: tmp_tduids
+    # tmp_bigint_idsへtmp_tduidsをJOINする
+    +proc_1600_join_tduid_cookies:
+      td>: queries/proc_1600_join_tduid_cookies.sql
+      create_table: tmp_tduid_cookies
+    # 初回実行時のループ処理1回目とそれ以外で処理を分岐させる
+    # 既にtd_uidが作成されているtd_client_id/td_global_idについて
+    # map_tduid_tdclientid/map_tduid_tdglobalidを使って紐付けをする
+    +proc_1701_check_exist_tduid:
+      if>: ${is_initial && td.each.num == 0}
+      # 初回実行時のループ1回目
+      _do:
+        +skip_first_loop_if_initial:
+          td_ddl>:
+          rename_tables: [{from: "tmp_tduid_cookies", to: "tmp_exist_tduid"}]
+      # 初回実行時のループ2回目以降または前日分のみ(incremental)
+      _else_do:
+        +proc_1701:
+          td>: queries/proc_1701_check_exist_tduid_step1.sql
+          create_table: tmp_exist_tduid_step1
+        +proc_1702:
+          td>: queries/proc_1702_check_exist_tduid_step2.sql
+          create_table: tmp_exist_tduid
+    # mapテーブルに差分データを追加する
+    +proc_1800_update_map_tduid:
+      if>: ${is_initial && td.each.num == 0}
+      # 初回実行時のループ1回目
+      _do:
+        _parallel: true
+        +tdclientid:
+          td>: queries/proc_1811_update_map_tduid_tdclientid_step1.sql
+          create_table: tmp_map_tduid_tdclientid
+        +tdglobalid:
+          td>: queries/proc_1821_update_map_tduid_tdglobalid_step1.sql
+          create_table: tmp_map_tduid_tdglobalid
+        +tdclientid_daily:
+          td>: queries/proc_1831_update_map_tduid_tdclientid_daily_step1.sql
+          create_table: tmp_map_tduid_tdclientid_daily
+      # 初回実行時のループ2回目以降または前日分のみ(incremental)
+      _else_do:
+        _parallel: true
+        +tdclientid:
+          +proc_1811:
+            td>: queries/proc_1811_update_map_tduid_tdclientid_step1.sql
+            create_table: tmp_map_tduid_tdclientid_step1
+          +proc_1812:
+            td>: queries/proc_1812_update_map_tduid_tdclientid_step2.sql
+            create_table: tmp_map_tduid_tdclientid
+        +tdglobalid:
+          +proc_1821:
+            td>: queries/proc_1821_update_map_tduid_tdglobalid_step1.sql
+            create_table: tmp_map_tduid_tdglobalid_step1
+          +proc_1822:
+            td>: queries/proc_1822_update_map_tduid_tdglobalid_step2.sql
+            create_table: tmp_map_tduid_tdglobalid
+        +tdclientid_daily:
+          +proc_1831:
+            td>: queries/proc_1831_update_map_tduid_tdclientid_daily_step1.sql
+            create_table: tmp_map_tduid_tdclientid_daily_step1
+          +proc_1832:
+            td>: queries/proc_1832_update_map_tduid_tdclientid_daily_step2.sql
+            create_table: tmp_map_tduid_tdclientid_daily
+    # 差分のmapを追加したtmpテーブルをrenameする
+    +rename_each_map_tables:
+      _export:
+        map_tables:
+          - from: tmp_map_tduid_tdclientid
+            to: map_tduid_tdclientid
+          - from: tmp_map_tduid_tdglobalid
+            to: map_tduid_tdglobalid
+          - from: tmp_map_tduid_tdclientid_daily
+            to: map_tduid_tdclientid_daily
+      td_ddl>:
+      rename_tables: ${map_tables}
+
+# 中間テーブルを削除
++drop_tmp_tables:
+  _export:
+    tmp_tables:
+      - tmp_log_cookies
+      - tmp_bigint_ids_step1
+      - tmp_bigint_ids_step2
+      - tmp_bigint_ids
+      - tmp_map_cid_gid_step1
+      - tmp_map_cid_gid
+      - tmp_tduids
+      - tmp_cidn_gidn_step1
+      - tmp_cidn_gidn_step2
+      - tmp_cidn_gidn_step3
+      - tmp_tduid_cookies
+      - tmp_exist_tduid_step1
+      - tmp_exist_tduid
+      - tmp_map_tduid_tdclientid_step1
+      - tmp_map_tduid_tdglobalid_step1
+      - tmp_map_tduid_tdclientid_daily_step1
+  td_ddl>:
+  drop_tables: ${tmp_tables}

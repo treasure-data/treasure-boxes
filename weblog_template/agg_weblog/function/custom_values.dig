@@ -1,0 +1,17 @@
++function_custom_values:
+  if>: ${Object.prototype.toString.call(rawdata_tables[tbl].custom_values) === '[object Array]'}
+  _do:
+    td>:
+    query: |
+      SELECT
+        ARRAY_JOIN(ARRAY_AGG(', CAST(COALESCE('||val||', '''') AS VARCHAR) AS '||LOWER(val)), '') AS custom_values
+      FROM (
+        SELECT
+          SPLIT('${rawdata_tables[tbl].custom_values.join()}', ',') AS arr
+      ) CROSS JOIN UNNEST(arr) AS t(val)
+    store_last_results: true
+  _else_do:
+    td>:
+    query: |
+      SELECT '' AS custom_values
+    store_last_results: true

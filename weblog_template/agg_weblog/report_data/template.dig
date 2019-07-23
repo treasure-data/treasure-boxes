@@ -1,0 +1,127 @@
+hourly_session_pv:
+  is_replace: false
+  time: TD_DATE_TRUNC('hour', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('hour', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_hour
+    - SUBSTR('月火水木金土日', DOW(FROM_UNIXTIME(TD_TIME_PARSE(TD_TIME_FORMAT(start_time, 'yyyy-MM-dd', 'JST')))), 1) AS day_of_week
+    - CAST(TD_TIME_FORMAT(TD_DATE_TRUNC('hour', start_time, 'JST'), 'yyyyMMddHH', 'JST') AS BIGINT) AS session_start_hour_num
+  measure:
+    - COUNT(DISTINCT td_session_id) AS session
+    - count(1) AS pv
+  filter:
+
+hourly_uu:
+  is_replace: false
+  time: TD_DATE_TRUNC('hour', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('hour', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_hour
+  measure:
+    - COUNT(DISTINCT td_uid) AS uu
+  filter:
+
+daily_uu:
+  is_replace: false
+  time: TD_DATE_TRUNC('day', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('day', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_day
+  measure:
+    - COUNT(DISTINCT td_uid) AS uu
+  filter:
+
+weekly_uu:
+  is_replace: true
+  time: TD_DATE_TRUNC('week', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('week', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_week
+  measure:
+    - COUNT(DISTINCT td_uid) AS uu
+  filter:
+
+monthly_uu:
+  is_replace: true
+  time: TD_DATE_TRUNC('month', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('month', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_month
+  measure:
+    - COUNT(DISTINCT td_uid) AS uu
+  filter:
+
+daily_session_pv_by_country:
+  is_replace: false
+  time: TD_DATE_TRUNC('day', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('day', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_day
+    - country_name
+  measure:
+    - COUNT(DISTINCT td_session_id) AS session
+    - COUNT(1) AS pv
+  filter:
+
+daily_session_pv_by_prefecture_city:
+  is_replace: false
+  time: TD_DATE_TRUNC('day', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('day', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_day
+    - prefecture_name
+    - city_name
+  measure:
+    - COUNT(DISTINCT td_session_id) AS session
+    - COUNT(1) AS pv
+  filter:
+    - country_name = 'Japan'
+
+daily_session_pv_by_referral:
+  is_replace: false
+  time: TD_DATE_TRUNC('day', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('day', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_day
+    - utm_medium||' / '||utm_source AS medium_source
+    - utm_campaign||' / '||utm_content AS campaign_content
+    - organic_search_kw
+  measure:
+    - COUNT(DISTINCT td_session_id) AS session
+    - COUNT(1) AS pv
+  filter:
+
+daily_session_by_landingpage:
+  is_replace: false
+  time: TD_DATE_TRUNC('day', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('day', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_day
+    - td_path AS landing_page_path
+    - td_title AS landing_page_title
+  measure:
+    - COUNT(DISTINCT td_session_id) AS session
+  filter:
+    - row_num = 1
+
+daily_session_by_migratory:
+  is_replace: false
+  time: TD_DATE_TRUNC('day', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('day', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_day
+    - IF(row_num = 1, 'all', 'migratory') AS session_type
+  measure:
+    - COUNT(DISTINCT td_session_id) AS session
+  filter:
+
+daily_pv_by_domain:
+  is_replace: false
+  time: TD_DATE_TRUNC('day', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('day', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_day
+    - td_host AS domain
+  measure:
+    - COUNT(1) AS pv
+  filter:
+
+daily_pv_by_page:
+  is_replace: false
+  time: TD_DATE_TRUNC('day', start_time, 'JST')
+  dimension:
+    - TD_TIME_FORMAT(TD_DATE_TRUNC('day', start_time, 'JST'), 'yyyy-MM-dd HH:mm:ss', 'JST') AS session_start_day
+    - td_path AS page_path
+    - td_title AS page_title
+  measure:
+    - COUNT(1) AS pv
+  filter:
