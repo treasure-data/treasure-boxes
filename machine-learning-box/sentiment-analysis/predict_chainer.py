@@ -7,7 +7,7 @@ from logging import DEBUG, StreamHandler, getLogger
 import numpy
 
 os.system(f"{sys.executable} -m pip install -U chainer")
-os.system(f"{sys.executable} -m pip install -U pytd")
+os.system(f"{sys.executable} -m pip install -U pytd==0.6.0")
 
 import chainer
 import pytd.pandas_td as td
