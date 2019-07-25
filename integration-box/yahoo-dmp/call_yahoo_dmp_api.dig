@@ -1,0 +1,14 @@
++step1:
+  docker:
+    image: "digdag/digdag-python:3.7.3-stretch"
+ 
+  py>: scripts.ytm.call_api
+  sql: queries/get_userlist.sql
+  url: http://s.tgm.yahoo-net.jp/api?site=YOUR_SITE_IDZ&referrer=api_treasuredata&YOUR_COOKIE_PARAM=insert_bt:userid_here
+  replaced_param: insert_bt:userid_here
+  _env:
+     td_apikey: ${secret:td.apikey}
+     td_endpoint: "https://api.treasuredata.co.jp/"
+     td_database: YOUR_DATABASE
+     td_engine: presto # presto or hive
+     SPARK_LOCAL_IP: "127.0.0.1" # Do Not Change
