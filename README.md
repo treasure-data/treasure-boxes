@@ -1,4 +1,4 @@
-# Treasure Workflow Examples
+# Treasure Boxes
 
 This is a public repository of example workflows for the Treasure Workflow engine.
 
