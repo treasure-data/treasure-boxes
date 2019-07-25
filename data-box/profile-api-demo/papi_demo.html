@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript">
+  !function(t,e){if(void 0===e[t]){e[t]=function(){e[t].clients.push(this),this._init=[Array.prototype.slice.call(arguments)]},e[t].clients=[];for(var r=function(t){return function(){return this["_"+t]=this["_"+t]||[],this["_"+t].push(Array.prototype.slice.call(arguments)),this}},s=["blockEvents","unblockEvents","setSignedMode","setAnonymousMode","resetUUID","addRecord","fetchGlobalID","set","trackEvent","trackPageview","trackClicks","ready"],n=0;n<s.length;n++){var c=s[n];e[t].prototype[c]=r(c)}var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=("https:"===document.location.protocol?"https:":"http:")+"//cdn.treasuredata.com/sdk/2.1/td.min.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)}}("Treasure",this);
+  </script>
+  <title></title>
+</head>
+
+<body>
+  Demo用client_id:ce5f8f1e-b00d-4367-9c79-2c53e2bba982</br>
+  <input id="fetch_segment" type="text" name="input_td_client_id" />
+  <button id="fetch_segment_button">fetch</button>
+  <div id="resultArea"></div>
+
+  <script>
+    var fetch_segment_func = function(td_client_id) {
+      var td = new Treasure({
+        host: 'in.treasuredata.com',
+        writeKey: '',
+        database: 'sample_datasets'
+      });
+
+      var successCallback = function(callbackResults) {
+
+        var resultMsg  = '# Result:</br>';
+        resultMsg     += '---------</br>';
+
+        callbackResults.forEach(function(callbackResult) {
+          resultMsg     += '## Key</br>';
+          Object.keys(callbackResult.key).forEach(function(key) {
+            resultMsg += '- key = ' + key + '</br>';
+          });
+
+          resultMsg     += '</br> ## Segments</br>';
+          if(callbackResult.values.length <= 0) {
+            resultMsg += '- No segments</br>';
+          } else {
+            callbackResult.values.forEach(function(value) {
+              resultMsg += ('- segment = ' + value + '</br>');
+            });
+          }
+
+          resultMsg     += '</br> ## Attributes</br>';
+          if(callbackResult.attributes.length <= 0) {
+            resultMsg += '- No attributes</br>';
+          } else {
+            Object.keys(callbackResult.attributes).forEach(function(key) {
+              resultMsg += ('- attribute = ' + key + ': ' + callbackResult.attributes[key] + '</br>');
+            });
+          }
+        });
+        var resultArea = document.getElementById('resultArea');
+        resultArea.innerHTML = resultMsg;
+      }
+
+      var errorCallback = function(error) {
+        console.log(error);
+        resultArea.innerHTML = error;
+      }
+
+      var token = '1e6becb7-7e75-4778-9f76-9db6af9fc638';
+      td.fetchUserSegments({
+        audienceToken: [token],
+        keys: {td_client_id: td_client_id}
+      }, successCallback, errorCallback);
+    }
+
+    document.getElementById('fetch_segment_button').onclick = function() {
+      fetch_segment_func(document.getElementById('fetch_segment').value);
+    };
+  </script>
+</body>
+</html>
