@@ -1,10 +1,10 @@
 schedule:
   minutes_interval>: 5
 
-+query-monitoring:
++job-monitoring:
     docker:
         image: "digdag/digdag-python:3.7"
-    py>: query-monitoring.monitoring
+    py>: job-monitoring.monitoring
     _env:
         td_apikey: ${secret:td.apikey}
         td_endpoint: ${secret:td.endpoint}
