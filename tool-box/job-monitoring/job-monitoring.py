@@ -1,7 +1,7 @@
 import os, time, pandas, tdclient
 import sys
 
-os.system(f"{sys.executable} -m pip install -U pytd==0.6.0")
+os.system(f"{sys.executable} -m pip install -U pytd==0.6.1")
 
 import pytd
 
