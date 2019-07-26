@@ -35,3 +35,21 @@ td wf secrets --project twitter_search_archiver --set tw.search_keyword
 |`tw.access_token_secret`|Twitter's Access token from Access token secret & access token secret section.|`ABCDEFG1234567890XYZ1234567890`|
 |`tw.search_keyword`|A search term you want to archive tweets.|`treasuredata.com`|
 
+# Data you'll get
+
+- The data structure is basically the same with Twitter's API response
+- Some objects are converted into JSON string and stored in the dedicated column so you can query it by using JSON function.
+- There are columns starting with `primary*` which has a URL as a value. There columns has the first URL in shared URLs or a URL matched with search term. A purpose of these columns is to help analysts to aggregate data by shared URL for evaluating the content.
+
+![Table Image](./docs/images/table_image.png)
+
+# Mechanism
+
+1. The script retrieves the newest tweet ID from the table first. (if there is no data, the script will accumulate tweets from oldest one which you can access with your Twitter API license)
+2. The script calls Twitter's Search API by specifying search term you defined, and will receive up to 100 tweets per a search.
+3. The, tweets are processed and bulk inserted into the table.
+4. If there are tweets more than 100, the script repeatedly continue to search tweets and save the result.
+
+![Mechanism](./docs/images/mechanism.png)
+
+Note that the script throttle the search frequency once in 2 sec due to Twitter's rate limit.
