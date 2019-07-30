@@ -1,8 +1,9 @@
 import csv
 import os
+import sys
 import tarfile
 import time
-from common import get_export_dir
+from tf_utils.common import get_export_dir
 
 
 def run():
@@ -68,20 +69,21 @@ def upload_prediction_result(
         table,
         fieldnames=['rowid', 'predicted_value', 'score']):
 
-    import sys
+    import tempfile
     import tdclient
 
-    sys.stderr.write("Uploading prediction results to {}.{}\n".format(database, table))
+    sys.stderr.write(f"Uploading prediction results to {database}.{table}\n")
     # Upload prediction result to TD
-    temp_filename = 'resources/prediction_results.csv'
-    with open(temp_filename, 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=['time'] + fieldnames)
-        writer.writeheader()
-        t = int(time.time())
-        for rowid, value, score in zip(row_ids, predicted_values, scores):
-            writer.writerow({'time': t, fieldnames[0]: rowid, fieldnames[1]: value, fieldnames[2]: score})
+    f = tempfile.NamedTemporaryFile('w', suffix='.csv', newline='')
+    temp_filename = f.name
 
-    sys.stderr.write("Create/recreate table {}.{}\n".format(database, table))
+    writer = csv.DictWriter(f, fieldnames=['time'] + fieldnames)
+    writer.writeheader()
+    t = int(time.time())
+    for rowid, value, score in zip(row_ids, predicted_values, scores):
+        writer.writerow({'time': t, fieldnames[0]: rowid, fieldnames[1]: value, fieldnames[2]: score})
+
+    sys.stderr.write(f"Create or recreate table {database}.{table}\n")
     try:
         client.table(database, table)
     except tdclient.errors.NotFoundError:
@@ -91,11 +93,11 @@ def upload_prediction_result(
     client.create_log_table(database, table)
     client.import_file(database, table, 'csv', temp_filename)
 
-    os.remove(temp_filename)
+    f.close()
 
     # Wait for ingestion until the table will be available
     while True:
-        job = client.query(database, "select count(predicted_polarity) from {}\n".format(table), type='presto')
+        job = client.query(database, f"select count(predicted_polarity) from {table}", type='presto')
         job.wait()
         if not job.error():
             break

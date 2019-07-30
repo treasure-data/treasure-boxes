@@ -648,8 +648,6 @@ Here is the whole workflow for a grid search. This workflow and the queries can 
 
 ### Random search
 
-**This approach requires Python Custom Scripting, which is currently under private alpha feature on Treasure Data. If you are interested, please contact support@treasuredata.com**
-
 [Random search](https://en.wikipedia.org/wiki/Random_search) is also known as [an option for hyperparameter search](http://www.jmlr.org/papers/v13/bergstra12a.html). You can run a random search with `py>` operator as follows:
 
     # random_search.dig

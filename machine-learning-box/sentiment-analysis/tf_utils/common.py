@@ -8,6 +8,6 @@ def get_export_dir():
     if not models:
         raise ValueError('no models found')
 
-    export_dir = '{}/{}'.format(EXPORT_DIR_BASE, max(models))
+    export_dir = os.path.join(EXPORT_DIR_BASE, str(max(models)))
     print('Latest export dir {}'.format(export_dir))
     return export_dir

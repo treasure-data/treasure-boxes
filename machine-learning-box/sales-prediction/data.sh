@@ -18,3 +18,6 @@ td import:auto \
     --time-value `date +%s` \
     --delimiter "," \
     --auto-create timeseries.retail_sales ./resources/example_retail_sales.csv
+
+rm -rf out
+rm resources/*

@@ -5,7 +5,7 @@ import textwrap
 class FeatureSelector(object):
     def __init__(self):
         import sys
-        os.system(f'{sys.executable} -m pip install pandas-td')
+        os.system(f"{sys.executable} -m pip install -U pytd==0.6.1")
 
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
@@ -14,7 +14,7 @@ class FeatureSelector(object):
 
     def run(self):
         import pandas as pd
-        import pandas_td as td
+        import pytd.pandas_td as td
         from sklearn.ensemble import ExtraTreesRegressor
         from sklearn.feature_selection import SelectFromModel
 
@@ -23,10 +23,7 @@ class FeatureSelector(object):
         dbname = self.dbname
         source_table = self.source_table
 
-        engine = td.create_engine(
-            'presto:{}'.format(dbname),
-            con=connection
-        )
+        engine = td.create_engine('presto:{}'.format(dbname), con=connection)
 
         # Fetch 25% random sampled data
         df = td.read_td(

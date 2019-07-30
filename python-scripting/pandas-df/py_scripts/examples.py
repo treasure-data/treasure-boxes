@@ -1,12 +1,17 @@
 # Because we do not allow custom image currently, this is how you can add 3rd party
 # libraries instead
-import sys, os
-os.system(f"{sys.executable} -m pip install pandas-td")
-
-import pandas_td as td
+import os
+import sys
 import tdclient
 
-con = td.connect(apikey=os.environ['TD_API_KEY'], endpoint=os.environ['TD_API_SERVER'])
+os.system(f"{sys.executable} -m pip install -U pytd==0.6.1")
+
+import pytd.pandas_td as td
+
+apikey = os.environ['TD_API_KEY']
+endpoint = os.environ['TD_API_SERVER']
+
+con = td.connect(apikey=apikey, endpoint=endpoint)
 
 def read_td_table(database_name, table_name, engine_name = 'presto', limit=1000):
     engine = td.create_engine(f"{engine_name}:{database_name}", con=con)

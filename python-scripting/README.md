@@ -1,7 +1,5 @@
 # Getting Started with Python Custom Scripting
 
-**Python Scripting on Treasure Data is a Private Alpha feature. If you are interested, please contact support@treasuredata.com**
-
 ## What is Python Custom Scripting?
 
 Python scripts can be run from [TD workflow][workflow] or [Digdag][digdag], using the Python operator `py>`. The workflow itself can be created via Treasure Data Console and/or the CLI. In the workflow, specify a Docker image to use for running the Python script. When the workflow task starts, a new Docker container is created based on the specified docker image. Then, the Python script is executed in the container in an isolated environment.

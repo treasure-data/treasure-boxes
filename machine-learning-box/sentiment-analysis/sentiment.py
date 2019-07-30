@@ -1,5 +1,5 @@
 import os
-from common import EXPORT_DIR_BASE
+from tf_utils.common import EXPORT_DIR_BASE
 import tarfile
 
 def get_predictions(estimator, input_fn):
@@ -28,12 +28,12 @@ def run(with_aws=True):
     # https://www.tensorflow.org/hub/tutorials/text_classification_with_tf_hub
 
     import sys
-    os.system(f"{sys.executable} -m pip install pandas-td")
     os.system(f"{sys.executable} -m pip install tensorflow==1.13.1 tensorflow_hub==0.1.1")
+    os.system(f"{sys.executable} -m pip install -U pytd==0.6.1")
 
     import tensorflow as tf
     import tensorflow_hub as hub
-    import pandas_td as td
+    import pytd.pandas_td as td
 
     con = td.connect(apikey=os.environ['TD_API_KEY'], endpoint=os.environ['TD_API_SERVER'])
     presto = td.create_engine('presto:sentiment', con=con)

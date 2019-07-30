@@ -18,5 +18,3 @@ _export:
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
-    # This is a temporal workaround for Spark. This should be removed in future.
-    SPARK_LOCAL_IP: "127.0.0.1"

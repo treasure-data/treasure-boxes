@@ -1,11 +1,11 @@
 import os
-import sys
 import io
-# Need to plot graph for Prophet
+
 
 class TimeSeriesPredictor(object):
     def __init__(self):
-        os.system(f'{sys.executable} -m pip install pandas-td')
+        import sys
+        os.system(f"{sys.executable} -m pip install -U pytd==0.6.1")
 
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
@@ -20,6 +20,7 @@ class TimeSeriesPredictor(object):
     def _upload_graph(self, model, forecast):
         import boto3
         import matplotlib as mlp
+        # Need to plot graph for Prophet
         mlp.use('agg')
         from matplotlib import pyplot as plt
 
@@ -49,15 +50,12 @@ class TimeSeriesPredictor(object):
         )
 
     def run(self, with_aws=True):
-        import pandas_td as td
+        import pytd.pandas_td as td
         from fbprophet import Prophet
 
         con = td.connect(apikey=self.apikey, endpoint=self.endpoint)
 
-        engine = td.create_engine(
-            'presto:{}'.format(self.dbname),
-            con=con
-        )
+        engine = td.create_engine('presto:{}'.format(self.dbname), con=con)
 
         # Note: Prophet requires `ds` column as date string and `y` column as target value
         df = td.read_td(

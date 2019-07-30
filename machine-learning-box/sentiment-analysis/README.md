@@ -1,7 +1,5 @@
 # Sentiment classification with TensorFlow
 
-***This workflow requires Python Custom Scripting. Python Custom Scripting is under Private Beta. If you want to use it, please contact support@treasure-data.com***
-
 This example introduces sentiment analysis for movie reviews using [TensorFlow](https://www.tensorflow.org/) and [TensorFlow Hub](https://www.tensorflow.org/hub), or [Chainer](https://chainer.org/).
 Original example is written in [the official document](https://www.tensorflow.org/hub/tutorials/text_classification_with_tf_hub).
 
