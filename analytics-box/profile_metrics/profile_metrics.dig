@@ -1,0 +1,18 @@
+_export:
+  td:
+    database: CHANGEME
+
++call_td_total_activity_perc:
+  call>: td_total_activity_percentile/td_total_activity_percentile.dig        
+
++call_td_ad_exposure_wf:
+  call>: td_ad_exposure_percentile/td_ad_exposure_percentile.dig
+
++call_td_avg_visit_monthly_wf:
+  call>: td_avg_visit_monthly_trend/td_avg_visit_monthly_trend.dig
+
++call_td_intent_wf:
+  call>: td_intent_percentile/td_intent_percentile.dig
+   
+
+
