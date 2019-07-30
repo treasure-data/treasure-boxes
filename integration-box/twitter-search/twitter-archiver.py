@@ -3,7 +3,7 @@ from datetime import datetime as dt
 from mapping import mapping as mp
 from time import sleep
 
-os.system(f"{sys.executable} -m pip install -U pytd")
+os.system(f"{sys.executable} -m pip install -U pytd==0.6.1")
 os.system(f"{sys.executable} -m pip install TwitterSearch")
 
 import pytd
