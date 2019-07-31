@@ -1,0 +1,15 @@
+timezone: UTC
+
+_export:
+    endpoint: api.treasuredata.com
+    database: sample_datasets
+
++select_data:
+  td>: queries/sample.sql
+
++exportToS3:
+  http>: https://${endpoint}/v3/job/result_export/${td.last_job.id}
+  method: POST
+  content_type: application/json
+  content:
+    result: 's3://${secret:aws.s3.access_key_id}:${secret:aws.s3.secret_access_key}@/${secret:aws.s3.bucketname}/{secret:aws.s3.filepath}'

@@ -1,26 +1,28 @@
 # Workflow: export_result
-This example shows how use result_export API in Treasure Data workflow. This API is useful in below case.
-- When you want to export query result to mulitipile services like S3, RedShift, and Tablueau **without executing the query again**.
+This example shows how use result_export API in Treasure Data workflow. 
+You can export result to Your S3 without running the same query.
 
 ## Scenario
-The purpose of this secenario is to export query result to **mulitipile** destinations. So for, you can specify only one export setting on Web UI. In this scenario, you would use http:> operator instead of 
+
+1. Run Query
+2. Export Result to S3
 
 ## How to Run for Server/Client Mode
 First, please upload the workflow.
 ```
 # Upload
-$ td wf push export_result
+$ td wf push export_result_s3
 ```
 
 Second, please set your td account credentials by ```td wf secrets``` command.
 ```
 # Set Secrets
-$ td wf secret --project export_result_exmaple --set td.apikey
+$ td wf secret --project export_result_s3 --set td.apikey
 $ td wf secret --project export_result_example --set http.authorization
 ```
 
 Note: http.authorization is used as header in your API request. 
-Value which would be set in http.authorization must seem like this: ```TD1 Your APIKey```
+You must http.authorization like this : ```TD1 <Your APIKey>```
 
 For detail, please refer to the below page.
 https://support.treasuredata.com/hc/en-us/articles/
@@ -30,12 +32,12 @@ Third, please set your other services' credentials by ```td wf secrets``` comman
 ```
 # Set Secrets again
 $ td wf secret --project export_result_example --set aws.s3.access_key_id
+$ td wf secret --project export_result_example --set aws.s3.secret_access_key
+$ td wf secret --project export_result_example --set aws.s3.bucketname
+$ td wf secret --project export_result_example --set aws.s3.filepath
 ```
 
-If you don't want to execute command repeatedly, you can set secret from a file.
-```
-$ td wf secret --project export_result_example --set @credential.yml
-```
+
 
 For detail, please refer to below page.
 https://support.treasuredata.com/hc/en-us/articles/360001266788-Workflows-Secrets-Management#L5
@@ -44,7 +46,7 @@ Finally, you can trigger the session manually.
 
 ```
 # Run
-$ td wf start export_result_example --session now
+$ td wf start export_result_s3 export_result_s3 --session now
 ```
 
 ## Next Step
