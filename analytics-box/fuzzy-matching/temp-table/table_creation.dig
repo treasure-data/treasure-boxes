@@ -1,0 +1,3 @@
++step1:
+  td_ddl>:
+  empty_tables: ["temp_table"]

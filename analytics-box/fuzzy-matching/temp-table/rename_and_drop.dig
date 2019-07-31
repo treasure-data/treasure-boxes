@@ -1,0 +1,7 @@
++step1:
+  td_ddl>:
+  drop_tables: ["fuzzy_data"]
+
++step2:
+  td_ddl>:
+  rename_tables: [{from: "temp_table", to: "fuzzy_data"}]

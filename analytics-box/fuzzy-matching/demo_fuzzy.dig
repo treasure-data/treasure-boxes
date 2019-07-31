@@ -1,0 +1,24 @@
+_export:
+  td:
+    database: demo_fuzzy
+  
++data_cleaning:
+  call>: fuzzy_data_cleaning.dig
+  
++soundex:
+  call>: soundex.dig
+  
++master_key:
+  call>: master_key.dig
+  
++levenshtein_distance:
+  call>: levenshtein.dig
+  
+  
++match_store:
+  call>: match_store.dig
+  
+  
+
+  
+
