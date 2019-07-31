@@ -27,7 +27,8 @@ Here are snapshots how this workflow results in TD.
 
 ### Before Data Cleaning
 
-![Image description](file:////Users/prachichavan/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image002.png)
+![Image description]
+ (https://ibb.co/rp1njbn))
 
 ### After Data Cleaning
 
