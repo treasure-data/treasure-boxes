@@ -36,7 +36,7 @@ Here are snapshots how this workflow results in TD.
 
 ### Before Data Cleaning
 
-<![if !vml]>![](file:////Users/prachichavan/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image001.png)<![endif]>
+![Image description](file:////Users/prachichavan/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image002.png)
 
 ### After Data Cleaning
 
