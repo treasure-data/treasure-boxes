@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+	table, th, td {
+		border: 1px solid black;
+		border-collapse: collapse;
+		text-align: center;
+		padding-left: 10px;
+		padding-right: 10px;
+		padding-top: 1px;
+		padding-bottom: 1px;
+	}
+</style>
+</head>
+<body>
+<h2>Anomalous table creates/drops detected in your Treasure Data Account</h2>
+<p>To view change details go to your <a href="https://docs.google.com/spreadsheets/d/${google_sheet_id}">Google Sheet</a> or query the table: ${td.database}.table_drops_and_creates_last_${lookback_range_days}_days</p>
+<p></p>
+<p>Thank you for using Treasure Data. Have a beautiful day, and please let us know if you have any questions.</p>
+<p></p>
+<h2>Table Creates</h2>
+	<table id="creates_table">
+		<tr>
+			<th>resource_name</th>
+			<th>change_count</th>
+		</tr>
+		${td.last_results.table_creates}
+	</table>
+<h2>Table Deletes</h2>	
+	<table id="creates_table">
+		<tr>
+			<th>resource_name</th>
+			<th>change_count</th>
+		</tr>
+		${td.last_results.table_deletes}
+	</table>
+</body>
+</html>
