@@ -6,6 +6,7 @@ This project provides the workflows necessary to use Fuzzy Matching algorithms l
 ## Getting Started  
 
 1.Download this folder locally.
+
 2.Use [TD Toolbelt](https://support.treasuredata.com/hc/en-us/articles/360001262207-Treasure-Workflow-Quick-Start-using-TD-Toolbelt-in-a-CLI) to upload this folder as a Treasure Workflow project into your Treasure data account  
   
 ### How it works
@@ -13,12 +14,19 @@ This project provides the workflows necessary to use Fuzzy Matching algorithms l
 Here is a brief description what each task in the workflow do
 
 1.First Name and Last Name table and column information is provided
+
 2.Data Cleaning task removes the punctuations, numbers and extra characters from the column
+
 3.Soundex Algorithm is implemented which generates a four-character code based upon the pronunciation of the English words
+
 4.Master key is generated for each group to make implementation of Fuzzy Matching algorithms easier
+
 5.Fuzzy Matching algorithms like Levenshtein ratio are used to find probability of profiles being similar
+
 6.Cut – off can be decided based on the Levenshtein ratio calculated to get the similar profiles.
+
 7.Create a Match store which holds the information of group_key and index of corresponding similar profiles as a metadata for easy retrieval of profiles
+
 8.Similar profiles gathered based on the cut off value can be visualized using any reporting tool.
 
 ### Outputs  
@@ -27,28 +35,27 @@ Here are snapshots how this workflow results in TD.
 
 ### Before Data Cleaning
 
-![Image description]
- (https://ibb.co/rp1njbn))
+![alt tag](https://i.postimg.cc/sxBPxcpy/Screen-Shot-2019-07-31-at-3-25-31-PM.png)
 
 ### After Data Cleaning
 
-<![if !vml]>![](file:////Users/prachichavan/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image002.png)<![endif]>
+![alt tag](https://i.postimg.cc/D0nZYQgF/Data-Cleaning.png)
 
 ### Soundex Algorithm
 
-<![if !vml]>![](file:////Users/prachichavan/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image003.png)<![endif]>
+![alt tag](https://i.postimg.cc/SRSSGSSx/Soundex.png)
 
 ### Master Key Creation
 
-<![if !vml]>![](file:////Users/prachichavan/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image004.png)<![endif]>
+![alt tag](https://i.postimg.cc/G2rdcLsx/masterkey.png)
 
 ### Levenshtein Algorithm
 
-<![if !vml]>![](file:////Users/prachichavan/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image005.png)<![endif]>
+![alt tag](https://i.postimg.cc/JhCWqrKC/levenshtein.png)
 
 ### Match store
 
-<![if !vml]>![](file:////Users/prachichavan/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image006.png)<![endif]>
+![alt tag](https://i.postimg.cc/RhhrFNCK/matchstore.png)
 
 ### Sample Dashboard using Treasure Data Reporting
 
