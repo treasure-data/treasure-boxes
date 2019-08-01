@@ -10,7 +10,7 @@ td wf secret --project datarobot_integration --set td.username
 td wf secret --project datarobot_integration --set td.password
 ```
 
-You must set proper values for argments below.
+You must set proper values for arguments below.
 - database (Destination database for Treasure Data)
 - table (Destination table for Treasure Data)
 - project_id (from DataRobot)
