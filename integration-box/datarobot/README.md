@@ -1,4 +1,4 @@
-# DataRobot Integration
+# Integration for DataRobot
 This example creates a table on Treasure Data from DataRobot's prediction result.
 
 ## Push the code and set variables
