@@ -52,7 +52,7 @@ Here are snapshots how this workflow results in TD.
 
 ### Sample Dashboard using Treasure Data Reporting
 
-![alt tag](https://i.postimg.cc/m2px02rH/Screen-Shot-2019-07-31-at-3-40-04-PM.png)
+![alt tag](https://i.postimg.cc/mDjpC8zH/Screen-Shot-2019-07-29-at-4-54-33-PM.png)
 
 ### Questions
 
