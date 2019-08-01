@@ -1,6 +1,8 @@
 _export:
   td:
     database: demo_fuzzy
+    table: fuzzy_data
+    column: last_first_name
   
 +data_cleaning:
   call>: fuzzy_data_cleaning.dig
