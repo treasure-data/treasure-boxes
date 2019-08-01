@@ -7,7 +7,7 @@ This project provides the workflows necessary to use Fuzzy Matching algorithms l
 
 1. Download this folder locally.
 2. Use [TD Toolbelt](https://support.treasuredata.com/hc/en-us/articles/360001262207) to upload this folder as a Treasure Workflow project into your Treasure data account  
-3. Provide the database name and table name(ex. user_master with first and last name information) in the demo_fuzzy.dig file
+3. Provide the database name ,table name(ex. user_master with first and last name information) and column name with information of first and last name in the demo_fuzzy.dig file as variables
 4. Run the demo_fuzzy.dig file
   
 ### How it works
