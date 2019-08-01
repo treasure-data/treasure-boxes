@@ -35,7 +35,7 @@ Here are snapshots how this workflow results in TD.
 
 ### Before Data Cleaning
 
-![alt tag](https://i.postimg.cc/sxBPxcpy/Screen-Shot-2019-07-31-at-3-25-31-PM.png)
+![alt tag](https://i.postimg.cc/FKKscsKF/before.png)
 
 ### After Data Cleaning
 
