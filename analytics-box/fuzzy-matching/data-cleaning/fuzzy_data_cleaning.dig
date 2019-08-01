@@ -1,0 +1,8 @@
++temp_table_creation:
+  call>: table_creation.dig
+  
++data_cleaning:
+  td>: fuzzy_data_cleaning.sql
+  engine: hive
++data_reload:
+  call>: rename_and_drop.dig
