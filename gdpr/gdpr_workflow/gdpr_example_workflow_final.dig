@@ -1,0 +1,95 @@
+_export:
+  td:
+    database: gdpr_example_db
+    param_table: params
+
+# +Setup_sample_data:
+#   +Populate_user_master_table:
+#   #  td_run>: 585808
+#     td>: gdpr_example_setup_user_master_table.sql
+#   +Populate_customers_table:
+#   #  td_run>: 586808
+#     td>: gdpr_example_setup_customers_tracked_table.sql
+#   +Populate_pageviews_tables:
+#   # td_run>: 586883
+#     td>: gdpr_example_setup_pageviews_tables.sql
+  
+#   +extract_${td.param_table}_from_json:
+#     #td_run>: 585809
+#     td>: gdpr_example_extract_commands_from_${td.param_table}.sql
+    
+
+ 
+ 
+##########
+# DELETE #
+##########
+
++delete_from_foreign_table:
+  td_for_each>: gdpr_example_load_pii_map_foreign.sql
+  _do:
+    td>: gdpr_example_delete_foreign.sql
+  
++delete_from_master_table:
+  td_for_each>: gdpr_example_load_pii_map_master.sql
+  _do:
+    td>: gdpr_example_delete_master.sql
+
+##########
+# INFORM #
+##########
+
++create_inform_and_tmp_inform_table:
+  td>: gdpr_example_create_inform_tables.sql
+
++inform_master_table:
+  td_for_each>: gdpr_example_load_pii_map_master.sql
+  _do: 
+    engine: hive
+    td>: gdpr_example_insert_inform_records_master.sql
+
++inform_foreign_table:
+  td_for_each>: gdpr_example_load_pii_map_foreign.sql
+  _do:
+    +create_list_of_flagged_foreign_keys:
+      engine: presto
+      td>: gdpr_example_create_tmp_inform_foreign_keys.sql
+    +insert_foreign_rows_into_tmp_inform_table:
+      engine: hive
+      td>: gdpr_example_insert_foreign_rows_to_tmp_inform.sql
+    +insert_clean_rows_to_inform_table:
+      td>: gdpr_example_insert_to_inform.sql
+
++add_table_descriptions_to_inform_table:
+  td>: gdpr_example_add_table_descriptions.sql
+
++inform_clean_up:
+  td>: gdpr_example_inform_clean_up.sql
+
+  
+###########
+#  UPDATE
+###########
+
+
++update_master_table:
+   td_for_each>: gdpr_example_load_pii_map_master.sql
+   _do:
+     +fetch_column_name:
+       td>: gdpr_example_fetch_column.sql
+       store_last_results: true
+     +create_master_table:
+        td>: gdpr_example_insert_updated_record.sql
+     +delete_master_records:
+        td>: gdpr_example_delete_old_records.sql
++update_foreign_table:
+   td_for_each>: gdpr_example_load_pii_map_foreign.sql
+   _do:
+     +fetch_foreign_column_name:
+       td>: gdpr_example_fetch_column_f.sql
+       store_last_results: true
+     +create_foreign_table:
+        td>: gdpr_example_insert_updated_record_f.sql
+     +delete_foreign_records:
+        td>: gdpr_example_delete_old_records_f.sql
+  
