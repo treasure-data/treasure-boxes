@@ -1,0 +1,25 @@
+timezone: Asia/Tokyo
+
+
+_export:
+  baseurl: https://api-workflow.treasuredata.com/
+  database: sample_datasets
+  endpoint: api.treasuredata.com
+
++run_long_task:
+  py>: script.loop.loop
+  docker:
+    image: "digdag/digdag-python:3.7"
+
+sla:
+  duration: 00:00:10
+
+  +kill_attempt:
+    http>: "${baseurl}api/attempts/${attempt_id}/kill"
+    method: POST
+    content:
+      id: ${attempt_id}
+    content_format: json
+    content_type: application/json
+
+  
