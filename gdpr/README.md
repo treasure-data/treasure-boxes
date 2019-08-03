@@ -1,10 +1,10 @@
-**[OVERVIEW OF GDPR WORKFLOW]**
+**OVERVIEW OF GDPR WORKFLOW**
 
 General Data protection Regulation is a regulation in EU on data
 protection and personal privacy of all the citizens of EU. Arm Treasure
 data has built up custom workflows to meet Data compliance for GDPR.
 
-Arm Treasure Data GDPR custom workflow (gdpr\_example\_workflow\_final)
+Arm Treasure Data GDPR custom workflow (gdpr\_workflow)
 support three general requests for GDPR update, delete and inform.
 Custom workflow uses following 3 tables to serve the GDPR requests.User
 need to create following tables and populate these table with their
@@ -17,10 +17,10 @@ about the master tables. It has following schema.
 
 • **Table**: Master Table name
 
-> • **FieldName**: FieldName is the field of a master table on which a
-> customer has requested GDPR
->
-> **Example:**
+• **FieldName**: FieldName is the field of a master table on which a
+ customer has requested GDPR
+
+ **Example:**
 
 ![](./media/image1.png)
 
@@ -41,6 +41,8 @@ customer has requested GDPR.
 
 **• Foreign\_table**: Foreign Table Name
 
+ **Example:**
+
 ![](./media/image2.png)
 
 3.**Params:** Params table is the most important table. It gathers all
@@ -59,7 +61,7 @@ might need to be further built up by user as per the use case.
 -   **New\_Value**: If GDPR request is "Update", then the new\_value
     field should have the value which need to be updated.
 
-    Example:
+   **Example:**
 
     ![](./media/image3.png)
 
@@ -88,8 +90,8 @@ our case)
 
        _export:
           td:
-           database: gdpr\_example\_db
-           param\_table: params
+           database: gdpr_example_db
+           param_table: params
          
          
 
