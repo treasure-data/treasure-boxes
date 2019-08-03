@@ -63,7 +63,7 @@ might need to be further built up by user as per the use case.
 
    **Example:**
 
-    ![](./media/image3.png)
+   ![](./media/image3.png)
 
 
 **WorkFlow Operations:**
