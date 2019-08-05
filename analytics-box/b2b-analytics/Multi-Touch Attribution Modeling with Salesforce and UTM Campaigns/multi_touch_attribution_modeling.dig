@@ -1,0 +1,18 @@
+_export:
+  td:
+    database: CHANGE_ME_source_db
+
++consolidate_campaign_touchpoints:
+  engine: presto
+  td>: consolidate_campaign_touchpoints.sql
+
++partition_and_index_campaign_touchpoints:
+  engine: presto
+  td>: partition_and_index_campaign_touchpoints.sql
+
++attribution_modeling:
+  engine: presto
+  td>: attribution_modeling.sql
+
++clean_up:
+  td>: drop_tables.sql
