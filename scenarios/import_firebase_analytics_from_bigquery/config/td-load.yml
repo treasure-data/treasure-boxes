@@ -1,0 +1,20 @@
+---
+in:
+  type: bigquery
+  project_id: vivid-argon-247508
+  auth_method: json_key
+  json_keyfile: {content: "${secret:gcp.jsonkey}"}
+  import_type: table
+  dataset: analytics_205749061
+  table: events_${moment(session_date).add(-1,'days').format("YYYYMMDD")}
+  incremental: false
+  temp_dataset: temp
+  temp_table: temp_table
+out:
+  type: td
+  mode: append
+exec: {}
+filters:
+- from_value: {mode: upload_time}
+  to_column: {name: time}
+  type: add_time

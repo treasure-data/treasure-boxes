@@ -5,13 +5,13 @@ _export:
     database: tachibana_s3_testdb
     table: bigquery_import_test
 
-+bigquery_import_test:
-  for_each>:
-    order: [first, second, third]
-    animal: [dog, cat]
-  _do:
-    echo>: ${order} ${animal}
-  _parallel: true
+schedule:
+  daily>: 07:00:00
+
++bigquery_import_td:
+  td_load>: config/td-load.yml
+  database: ${td.database}
+  table: ${td.table}
 
 +teardown:
   echo>: finish ${session_time}
