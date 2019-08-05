@@ -1,0 +1,9 @@
+_export:
+  td:
+    database: TODO
+    table: TODO
+    column: TODO
+
++run_query:
+  td>: validate_email.sql
+  create_table: ${td.table}_validated
