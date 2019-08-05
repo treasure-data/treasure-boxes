@@ -6,7 +6,7 @@
 To kill the attempt automatically if the attempt violates sla.
 
 # Prerequisity
-- python custom scripting is enables in your account
+- python custom scripting is enabled on your account
 
 # How to Run
 First, upload the project.
