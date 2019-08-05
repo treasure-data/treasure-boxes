@@ -1,0 +1,23 @@
+timezone: Asia/Tokyo
+
+_export:
+  baseurl: https://api-workflow.treasuredata.com/
+
+# This is a sample long task. You should replace these lines with your own tasks.
++run_long_task:
+  py>: py_script.loop.loop
+  docker:
+    image: "digdag/digdag-python:3.7"
+
+# This sla is a sample. You should change sla as you want.
+# If you want to specify a time, you should use "time" instead of duration.
+sla:
+  duration: 00:00:10
+
+  +kill_attempt:
+    http>: "${baseurl}api/attempts/${attempt_id}/kill"
+    method: POST
+    content:
+      id: ${attempt_id}
+    content_format: json
+    content_type: application/json
