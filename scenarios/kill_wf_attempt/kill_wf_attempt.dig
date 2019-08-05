@@ -3,8 +3,6 @@ timezone: Asia/Tokyo
 
 _export:
   baseurl: https://api-workflow.treasuredata.com/
-  database: sample_datasets
-  endpoint: api.treasuredata.com
 
 +run_long_task:
   py>: script.loop.loop

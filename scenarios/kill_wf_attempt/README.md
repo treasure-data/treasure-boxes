@@ -17,7 +17,7 @@ First, upload the project.
 Second, register the api key as a workflow secret.
 
     # Set secrets
-    $ td wf secrets --project kill_wf_attempt --set td.apikey
+    $ td wf secrets --project kill_wf_attempt --set http.authorization
 
 Now, you can refer to api key as ${secret:td.apikey}.
 
