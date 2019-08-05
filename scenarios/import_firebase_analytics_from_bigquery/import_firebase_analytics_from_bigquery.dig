@@ -1,0 +1,18 @@
+timezone: Asia/Tokyo
+
+_export:
+  td:
+    database: tachibana_s3_testdb
+    table: bigquery_import_test
+
++bigquery_import_test:
+  for_each>:
+    order: [first, second, third]
+    animal: [dog, cat]
+  _do:
+    echo>: ${order} ${animal}
+  _parallel: true
+
++teardown:
+  echo>: finish ${session_time}
+
