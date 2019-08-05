@@ -1,0 +1,7 @@
++step1:
+  td_ddl>:
+  empty_tables: ["match_store"]
+
++match_store:
+  td>: match_store.sql
+  engine: hive

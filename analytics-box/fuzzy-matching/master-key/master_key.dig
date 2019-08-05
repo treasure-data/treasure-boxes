@@ -1,0 +1,8 @@
++temp_table_creation:
+  call>: table_creation.dig
+  
++master_key:
+  td>: master_key.sql
+  engine: hive
++data_reload:
+  call>: rename_and_drop.dig

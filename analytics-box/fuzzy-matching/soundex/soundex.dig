@@ -1,0 +1,8 @@
++temp_table_creation:
+  call>: table_creation.dig
+  
++soundex:
+  td>: soundex.sql
+  engine: hive
++data_reload:
+  call>: rename_and_drop.dig

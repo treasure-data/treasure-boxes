@@ -1,0 +1,38 @@
+
+_export:
+    td:
+        database: onetrust  #database where onetrust data is ingested 
+
++drop_table:
+    td_ddl>:
+    drop_tables: 
+        - onetrust_collection_data  #table to ingest collection data 
+        - onetrust_profiles_data  #table to ingest onetrust profiles with purposes and consent information 
+        
+
++call_onetrust_api:
+#call  onetrust api
+    _parallel: true 
+
+    +call_data_profile_endpoint: 
+        docker:
+            image: "digdag/digdag-python:3.7"
+        py>: onetrustintegration.getOneTrustProfileData
+        _env:
+            DATABASE: ${td.database}
+            TD_API_KEY: ${secret:td.apikey}
+            OT_API_KEY: ${secret:onetrust.api}
+            OT_PROFILE_ENDPOINT: ${secret:onetrust.profile_endpoint}
+            OT_COLLECTION_ENDPOINT: ${secret:onetrust.collection_endpoint}
+            TD_API_SERVER: https://api.treasuredata.com/
+
+    +call_collection_endpoint:
+        docker:
+            image: "digdag/digdag-python:3.7"
+        py>: onetrustintegration.getOneTrustCollectionData
+        _env:
+            DATABASE: ${td.database}
+            TD_API_KEY: ${secret:td.apikey}
+            OT_API_KEY: ${secret:onetrust.api}
+            OT_PROFILE_ENDPOINT: ${secret:onetrust.profile_endpoint}
+            TD_API_SERVER: https://api.treasuredata.com/

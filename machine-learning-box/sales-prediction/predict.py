@@ -5,7 +5,7 @@ import io
 class TimeSeriesPredictor(object):
     def __init__(self):
         import sys
-        os.system(f"{sys.executable} -m pip install -U pytd==0.6.1")
+        os.system(f"{sys.executable} -m pip install -U pytd==0.6.2")
 
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
