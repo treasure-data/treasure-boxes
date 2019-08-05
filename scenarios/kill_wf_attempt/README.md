@@ -12,11 +12,8 @@ To kill the attempt automatically if the attempt violates sla.
 "baseurl" in kill_wf_attempt.dig is up to your account's site.  
 You have to change baseurl if your account's site is EU or Tokyo.
 
-|Sites|Endpoints|
-|---|---|
-|EU|https://api-workflow.eu01.treasuredata.com/|
-|Tokyo|https://api-workflow.treasuredata.co.jp/|
-|US|https://api-workflow.treasuredata.com/|
+Please refer to the doc for more details.  
+[https://support.treasuredata.com/hc/en-us/articles/360001474288](https://support.treasuredata.com/hc/en-us/articles/360001474288)
 
 # How to Run
 First, upload the project.
