@@ -29,7 +29,7 @@ def run(with_aws=True):
 
     import sys
     os.system(f"{sys.executable} -m pip install tensorflow==1.13.1 tensorflow_hub==0.1.1")
-    os.system(f"{sys.executable} -m pip install -U pytd==0.6.1")
+    os.system(f"{sys.executable} -m pip install -U pytd==0.6.2")
 
     import tensorflow as tf
     import tensorflow_hub as hub
