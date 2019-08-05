@@ -15,8 +15,8 @@ You have to change baseurl if your account's site is EU or Tokyo.
 |Sites|Endpoints|
 |---|---|
 |EU|https://api-workflow.eu01.treasuredata.com/|
-|Tokyo|https://api-workflow.treasuredata.co.jp|
-|US|https://api-workflow.treasuredata.com|
+|Tokyo|https://api-workflow.treasuredata.co.jp/|
+|US|https://api-workflow.treasuredata.com/|
 
 # How to Run
 First, upload the project.
