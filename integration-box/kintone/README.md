@@ -31,4 +31,4 @@ td wf secrets --project kintone --set td.apikey td.endpoint
 
 
 # Run
-- You can use required API on your demand.
+- Now you can use integrations between kintone and TD.
