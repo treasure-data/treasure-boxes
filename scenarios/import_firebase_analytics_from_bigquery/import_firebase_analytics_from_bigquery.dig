@@ -2,8 +2,8 @@ timezone: Asia/Tokyo
 
 _export:
   td:
-    database: <Your Database Name>
-    table: <Your Tabale Name>
+    database: <Your Database>
+    table: <Your Table>
 
 schedule:
   daily>: 07:00:00

@@ -9,13 +9,15 @@ So, this sample shows how to import Firebase analytics data incrementally.
 ## Scenario
 
 Import Firebase analytics data from BigQuery to TreasureData.
+During Import data, td-load unnests json data to row data to make it easy to read in TraesureData.
 
-In this scenario, some workflow operators are used. Please refer to the documentation for each operator.
+For details, please refer to below links.  
+[Working with Arrays in Standard SQL](https://cloud.google.com/bigquery/docs/reference/standard-sql/arrays#Querying%20Nested%20Arrays)
 
 # How to Run
 
 First, you need to replace "database", "table" in the dig file with Your TD database and table name.
-Also, you must replace "project_id", "dataset" with your GCP's project ID and dateset.
+Also, you must replace "project_id", "dataset" with your GCP's project ID and dateset in td-load.yml file.
 
     # Upload
     $ td wf push import_firebase_analytics_from_bigquery
