@@ -36,8 +36,8 @@ So, in the end our Next Best Action Recommendation  System will tell you **what*
 -  **time_source_column** enter name of column in pageviews_time_of_day table that contains the activity_period names (default is set to "activity_period")
 -  **utm_source_column** enter name of column that contains url string for each pageview event (default is "td_url")
 -  **utm_param**  enter label for extracting utm_source from pageview url string (default is "utm_source")
--  **cart_url** enter the exact url for the cleint's landing page where they have added an item to cart (default is 'https://www.varidesk.com/cart')
--  **purchase_url**  enter the exact url for the cleint's confirmation page for when a user has confirmed a purchase - this could be customized to any desired event such as form_submission, account_creation etc. (default is 'https://www.varidesk.com/order-confirmation')
+-  **cart_url** enter the exact url for the cleint's landing page where user has added an item to cart (default is 'https://www.ecsite-example.com/cart')
+-  **purchase_url**  enter the exact url for the cleint's confirmation page for where a user has confirmed a purchase - this could be customized to any desired event such as form_submission, account_creation etc. (default is 'https://www.ecsite-example.com/order-confirmation')
 -  **session_length_hours** define your session length for cart_abandonment segment (default is 24 hours)
 -  **nba_retarget_table** enter name for the nba_retarget_table, which assigns boolean 0 or 1 to users who have abandoned cart in current browsing session (default is "cart_abandon")
 -  **nba_awareness_table** enter name for the nba_awareness_table, which assigns boolean 0 or 1 to users who have only visited client's site once or less times and didn't come through and ad click (default is "new_visitor_no_ads")
@@ -66,7 +66,7 @@ So, in the end our Next Best Action Recommendation  System will tell you **what*
 
 **4.  Re-Build your Master Segment** -  this will add the ML model propensity scores as attributes to each user, so you can use them to create your final Next_Best_Action segments.
 
-**5.  Create Probabailsitc Segments** - create a segment by selecting the "Possibly" and "Likely" group from each ML model and include "Positive Sample" and name segment **"Likely_to_engage_Facebook"** or **"Likely_to_engage_Morning"**
+**5.  Create Probabilistic Segments** - create a segment by selecting the "Possibly" and "Likely" group from each ML model and include "Positive Sample" and name segment **"Likely_to_engage_Facebook"** or **"Likely_to_engage_Morning"**
 
 **5.  Create Next Best Action Segment Folders** - apply custom filters and activate to designated channels for a full Next Best Action Campaign orchestration within the CDP UI
 
@@ -76,4 +76,4 @@ So, in the end our Next Best Action Recommendation  System will tell you **what*
 2.  [Segment filter] - include profiles from the **"Likely_to_engage_Facebook"** segments
 3.  [Segment filter] - include profiles from the **"High_Morning_Activity"** segments
 
--  You can call the aboive segment **"NBA_Retarget_Facebook_Morning"** and in your Activations tab - activate it via Facebook and set a schedule for it to syndicate to Facebook Audiences Manager every morning at 5:59am, so that you can start targeting those users from 6am - 12pm according to a frequency and recency of your choice. You can repeat the same process for building segments for all other channels that came from the utm_source section of the utm_tags and for all the other time_of_day_periods and activating accordingly to the designated channel and scheduling segment to be targeted with ads during the desired time period.
+-  You can call the above segment **"NBA_Retarget_Facebook_Morning"** and in your Activations tab - activate it via Facebook and set a schedule for it to syndicate to Facebook Audiences Manager every morning at 5:59am, so that you can start targeting those users from 6am - 12pm according to a frequency and recency of your choice. You can repeat the same process for building segments for all other channels that came from the utm_source section of the utm_tags and for all the other time_of_day_periods and activating accordingly to the designated channel and scheduling segment to be targeted with ads during the desired time period.

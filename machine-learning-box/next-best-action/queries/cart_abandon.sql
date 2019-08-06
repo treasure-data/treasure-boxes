@@ -18,7 +18,7 @@ SELECT
               td_client_id,
               TD_SESSIONIZE_WINDOW(
                 time,
-                3600 * 24
+                3600 * ${td.session_length_hours}
               ) OVER(
                 PARTITION BY td_client_id,
                 td_ip
@@ -28,7 +28,7 @@ SELECT
               time,
               (
                 CASE
-                  WHEN td_url = 'https://www.varidesk.com/cart' THEN 1
+                  WHEN td_url = ${td.cart_url} THEN 1
                   ELSE 0
                 END
               ) AS flag
@@ -36,8 +36,8 @@ SELECT
               pageviews A
             WHERE
               td_url IN(
-                'https://www.varidesk.com/cart',
-                'https://www.varidesk.com/order-confirmation'
+                ${td.cart_url},
+                ${td.purchase_url}
               )
           )
       )

@@ -2,7 +2,7 @@
 _error:
   mail>: body.txt
   subject: this workflow failed
-  to: [ENTER EMAIL HERE]
+  to: [ENTER YOUR EMAIL HERE]
 
 
 # specify the TD database and all your variables
@@ -20,8 +20,8 @@ _export:
     time_source_column: activity_period
     utm_source_column: td_url
     utm_param:  utm_source
-    cart_url: 'https://www.varidesk.com/cart'
-    purchase_url: 'https://www.varidesk.com/order-confirmation'
+    cart_url: 'https://www.ecsite-example.com/cart'
+    purchase_url: 'https://www.ecsite-example.com/order-confirmation'
     session_length_hours: 24
     nba_retarget_table: cart_abandon
     nba_awareness_table: new_visitor_no_ads
