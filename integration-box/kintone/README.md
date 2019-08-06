@@ -21,7 +21,6 @@ td wf secrets --project kintone --set td.apikey td.endpoint
 
 
 # Edit *.dig and kintone.yml
-
 1. main.dig: Input our org ID
 2. kintone.yml: Write your apps' IDs and corresponding API keys and column names for POST/PUT.
 3. get_records.dig: Input app ID and identifier field code and fields to GET and query to GET records from kintone.
