@@ -10,7 +10,7 @@ This code enable us to GET/DELETE kintone records from TD and PUT/POST TD record
 
 # Edit *.dig and kintone.yml
 1. main.dig: Input our org ID
-2. kintone.yml: Write your apps' IDs and corresponding API keys and column names for POST/PUT.
+2. kintone.yml: Write your apps' IDs and corresponding API keys/columns for POST/PUT.
 3. get_records.dig: Input app ID/TD API key/identifier field code/fields to GET/query to GET records from kintone.
 4. delete_records.dig: Input app ID/TD API key/ids of records to delete from kintone.
 5. post_records.dig: Write app ID/TD API key/query to select records from TD to POST to kintone.
