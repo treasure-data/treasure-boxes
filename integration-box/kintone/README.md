@@ -20,4 +20,6 @@ This code enable us to GET/DELETE kintone records from TD and PUT/POST TD record
 # Run
 - Now you can use integrations between kintone and TD.
 
-# Output
+# Output to kintone
+When you POST/PUT records from TD to kintone, you can get this output.
+![kintone](https://github.com/treasure-data/treasure-boxes/blob/master/integration-box/kintone/Screen%20Shot%202019-08-06%20at%2013.41.06.png "demo data")
