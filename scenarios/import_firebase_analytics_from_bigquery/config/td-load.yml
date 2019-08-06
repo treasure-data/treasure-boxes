@@ -1,11 +1,11 @@
 ---
 in:
   type: bigquery
-  project_id: vivid-argon-247508
+  project_id: <Your Project ID>
   auth_method: json_key
   json_keyfile: {content: "${secret:gcp.jsonkey}"}
   import_type: table
-  dataset: analytics_205749061
+  dataset: <Your Dataset>
   table: events_${moment(session_date).add(-1,'days').format("YYYYMMDD")}
   incremental: false
   temp_dataset: temp

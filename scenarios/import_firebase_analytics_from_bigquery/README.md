@@ -14,12 +14,20 @@ In this scenario, some workflow operators are used. Please refer to the document
 
 # How to Run
 
-First, please upload the workflow.
+First, you need to replace "database", "table" in the dig file with Your TD database and table name.
+Also, you must replace "project_id", "dataset" with your GCP's project ID and dateset.
 
     # Upload
     $ td wf push import_firebase_analytics_from_bigquery
 
-Second, please set datasource credentials by td wf secrets command.
+
+
+Second, please upload the workflow.
+
+    # Upload
+    $ td wf push import_firebase_analytics_from_bigquery
+
+Third, please set datasource credentials by td wf secrets command.
 
     # Set Secrets
     $ td wf secrets --project import_firebase_analytics_from_bigquery --set td.apikey

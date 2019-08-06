@@ -2,8 +2,8 @@ timezone: Asia/Tokyo
 
 _export:
   td:
-    database: tachibana_s3_testdb
-    table: bigquery_import_test
+    database: <Your Database Name>
+    table: <Your Tabale Name>
 
 schedule:
   daily>: 07:00:00
