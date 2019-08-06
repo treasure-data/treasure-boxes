@@ -9,11 +9,11 @@ Treasure Boxes offers a pre-built pieces of code for developing, optimizing, and
 * Machine Learning Box - Custom Machine Learning Catalogs you can figure out values from your data
 * Tool Box - Tools better to utilize Treasure CDP
 
-# How to Request a new Box (TBD)
+# How to Request a new Box
 
 Submitting a Box request does not mean that Treasure Data will create the requested Box, but let's us know that our customers want it. All new Box requests will be logged and prioritized by the Treasure Boxes team. 
 
-Link is TBD
+Link is https://boxes.treasuredata.com/hc/en-us/
 
 # Contributing Guide
 
