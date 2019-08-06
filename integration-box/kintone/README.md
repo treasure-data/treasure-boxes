@@ -19,3 +19,5 @@ This code enable us to GET/DELETE kintone records from TD and PUT/POST TD record
 
 # Run
 - Now you can use integrations between kintone and TD.
+
+# Output
