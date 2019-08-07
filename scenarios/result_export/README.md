@@ -2,6 +2,8 @@
 This example shows how use result_export API in Treasure Data workflow. 
 You can export result to Your S3 & Tableau without running the same query.
 
+###  Note: **This is experimental usage.**
+
 ## Scenario
 
 1. Run Query
@@ -48,6 +50,10 @@ Finally, you can trigger the session manually.
 # Run
 $ td wf start export_result_parallel export_result_parallel --session now
 ```
+
+## If you want to export results to more services
+
+Please refer to each ```export_result_<Service Name>``` directories.
 
 ## Next Step
 If you have any questions, please contact to support@treasuredata.com.
