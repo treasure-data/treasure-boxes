@@ -1,8 +1,10 @@
 _export:
-  # Below, set the variables to include:
-  # 1) A database name within TD. This value is overwritten for each step, but is required for all td operators. 
-  # 2) A tablemap_table that maps data staging databases/tables to final data databases/tables (columns: 'staging_table', 'staging_database' and 'final_table', 'final_database' respectively).
-  # Also include any email addresses that should recieve notification of attempted new columns; seperate each value with a comma.
+# Below, set the variables to include:
+# 1) A database name within TD. This value is overwritten for each step, but is required for all td operators. 
+# 2) A tablemap_table that maps data staging databases/tables to final data databases/tables (columns: 'staging_table',
+#    'staging_database' and 'final_table', 'final_database' respectively).
+# Also include any email addresses that should recieve notification of attempted new columns; seperate each value 
+# with a comma.
   td:
     database: your_database
     tablemap_table: your_database.staging_to_final_tablemap
@@ -13,21 +15,21 @@ _export:
       #   |example_final1 |example_final_db  |example_stage1  |example_otherDB   |
     email_warnings: example1@email.com, example2@email.com
 
-# Creates variables for each of the records included in the tablemap_table defined above. These variables are ${td.each.final_table}, ${td.each.final_database}, ${td.each.staging_table}, and ${td.each.staging_database}. The workflow will run once for each record in the tablemap_table.
+# Creates variables for each of the records included in the tablemap_table defined above. These variables are:
+# ${td.each.final_table}, ${td.each.final_database}, ${td.each.staging_table}, and ${td.each.staging_database}. 
+# The workflow will run once for each record in the tablemap_table.
 +for_each_table:
   td_for_each>: sql/each_table_name.sql
   _do:
-    # A new table will be created with a record for each new column that the staging table has that is not in the final table. If it already exists it will be replaced with the new list of columns being attempted.
+# A new table will be created with a record for each new column that the staging table has that is not in the final 
+# table. If it already exists it will be replaced with the new list of columns being attempted.
     +check_for_new_columns:
       +initialize:
         td_ddl>:
         empty_tables: ["${td.each.final_database}.temp_${td.each.final_table}_column_check"]
       +log_new_columns:
         td>: 
-        query: |
-          SELECT column_name, is_nullable, data_type, extra_info FROM information_schema.columns
-          WHERE table_name LIKE '${td.each.staging_table}' AND table_schema LIKE '${td.each.staging_database}'
-          EXCEPT SELECT column_name, is_nullable, data_type, extra_info FROM information_schema.columns WHERE table_name LIKE '${td.each.final_table}' AND table_schema LIKE '${td.each.final_database}';
+        query: sql/new_columns_log.sql
         insert_into: ${td.each.final_database}.temp_${td.each.final_table}_column_check
       # Outputs count of new columns as variable ${td.last_results.new_column_count}
       +query_count_new_columns:
@@ -39,7 +41,8 @@ _export:
     # Sets value to 'true' if there are new columns
     +email_if_new_columns_or_update_tables_if_no_new_columns:
       if>: ${td.last_results.new_column_count > 0}
-      # If new columns, ends an email to whoever is listed in td.email_warnings above letting them know that an attempt was made to add new columns.
+      # If new columns, ends an email to whoever is listed in td.email_warnings above letting them know that an attempt 
+      # was made to add new columns.
       _do:  
         +send_warning_email:
           mail>:
