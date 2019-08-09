@@ -8,7 +8,7 @@ rawdata_tables:
     db_name: target_database
     tbl_name: target_table
     # 何も追加しない場合は custom_values: のみ残す
-    custom_columns:
+    custom_values:
       - member_id
       - xxx_id
       - yyy_id
@@ -17,7 +17,7 @@ rawdata_tables:
     db_name: target_database
     tbl_name: target_table
     # 何も追加しない場合は custom_values: のみ残す
-    custom_columns:
+    custom_values:
 
 # セッション化したテーブルで使用したいカスタムカラムを記載
 additional_columns:
