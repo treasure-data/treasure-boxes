@@ -1,4 +1,5 @@
 # Integration with kintone
+<a href='https://treasure-boxes-deploy.s3.amazonaws.com/index.html?tdboxurl=https%3A%2F%2Fgithub.com%2Ftreasure-data%2Ftreasure-boxes%2Ftree%2Fmaster%2Fintegration-box%2Fkintone' target='_blank'><img src='https://treasure-boxes-deploy.s3.amazonaws.com/images/button_deploy-treasure-box.png'></a>
 [kintone](https://www.kintone.com/) is a cloud service from Cybozu that allows us to easily create systems for our own business even if we do not have any knowledge of system development. We can use kintone to intuitively create business apps, and share them within team.
 This code enable us to GET/DELETE kintone records from TD and PUT/POST TD records to kintone.
 
