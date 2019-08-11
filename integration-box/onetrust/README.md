@@ -54,15 +54,6 @@ td wf secret --project onetrust_integration --set onetrustapikeys.yml #create a 
 Note: Refer [OneTrust Developer Portal ](https://developer.onetrust.com "OneTrust Developer Portal ") to identify the different endpoints. 
 
 ## Process 
-
-```seq
-Treasure Data->One Trust:  Make an get request to the required OneTrust API Endpoints 
-Note right of Treasure Data: Using Python Custom Scripting from the Workflow  
-One Trust-->Treasure Data: Pagination response payload from a RESTful API
-Note right of Treasure Data:  Store the Data in database and further used for data enrichment 
-
-```
-
 1. The script does API Authentication by passing the OneTrust key as a header when calling the endpoint and other paramters required for the endpoints as params.
 2. After successful authentication API endpoints sends the payload as JSON
 3. Parse the response and find the total number of pages 
@@ -71,13 +62,16 @@ Note right of Treasure Data:  Store the Data in database and further used for da
 
 Note: size is one of the param which defines total number of records per api call. 20 is default and 50 is maximum. In order to reduce number of API calls, use 50 for size param 
 
+```sequence 
+Treasure Data->One Trust:  Make an get request to the required OneTrust API Endpoints 
+Note right of Treasure Data: Using Python Custom Scripting from the Workflow  
+One Trust-->Treasure Data: Pagination response payload from a RESTful API
+Note right of Treasure Data:  Store the Data in database and further used for data enrichment ```
 
 ## How Does Data Look Like 
 
-[![Data Subject Purpose](https://drive.google.com/drive/folders/1wVLCJBpDLJjzY5dmaaqZ6sajttvdb4HZ "Data Subject Purpose")](https://drive.google.com/drive/folders/1wVLCJBpDLJjzY5dmaaqZ6sajttvdb4HZ "Data Subject Purpose")
+![Data Subject](https://drive.google.com/uc?export=view&id=14z1pVFtN-9JC95AW0uy8_b3i0-0jK_xF)
 
 
-
-[![Collection Point Details](https://drive.google.com/drive/folders/1wVLCJBpDLJjzY5dmaaqZ6sajttvdb4HZ "Collection Point Details")](https://drive.google.com/drive/folders/1wVLCJBpDLJjzY5dmaaqZ6sajttvdb4HZ "Collection Point Details")
-
+![Collection Point Details](https://drive.google.com/uc?export=view&id=157ONLAFTawZc8Fg3y97jVIzB3P-LAQ02)
 
