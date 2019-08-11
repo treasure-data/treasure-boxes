@@ -65,7 +65,7 @@ Note: Refer [OneTrust Developer Portal ](https://developer.onetrust.com "OneTrus
 
 Note: size is one of the param which defines total number of records per api call. 20 is default and 50 is maximum. In order to reduce number of API calls, use 50 for size param 
 
-## How Does Data Look Like 
+## How Does Data Look Like ?
 
 ![Data Subject](https://drive.google.com/uc?export=view&id=14z1pVFtN-9JC95AW0uy8_b3i0-0jK_xF)
 
