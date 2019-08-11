@@ -1,0 +1,70 @@
+# error notification email
+_error:
+  mail>: body.txt
+  subject: this workflow failed
+  to: [ENTER YOUR EMAIL HERE]
+
+
+# specify the TD database and all your variables
+_export:
+  td:
+    database: nba_test_final
+    user_master_table: user_master
+    user_master_join_key: td_client_id
+    timestamp_column: time_of_day
+    original_pageviews: pageviews
+    activity_table: pageviews_time_of_day
+    activity_table_join_key: td_client_id
+    enriched_user_master_table: user_master_enriched
+    enriched_user_master_table_temp: user_master_enriched_temp
+    time_source_column: activity_period
+    utm_source_column: td_url
+    utm_param:  utm_source
+    cart_url: 'https://www.ecsite-example.com/cart'
+    purchase_url: 'https://www.ecsite-example.com/order-confirmation'
+    session_length_hours: 24
+    nba_retarget_table: cart_abandon
+    nba_awareness_table: new_visitor_no_ads
+
+#create pageviews_time_of_day table
++task1_pageviews_time_of_day:
+  td>: create_pageviews_time_of_day.sql
+  create_table: ${td.activity_table}
+
+#create cart_abandon table
++task2_cart_abandon_table:
+  td>: cart_abandon_table.sql
+  create_table: ${td.nba_retarget_table}
+
+#create nba_awareness table
++task3_nba_awareness_table:
+  td>: nba_awareness_table.sql
+  create_table: ${td.nba_awareness_table}
+
+#enrich user_master with nba_columns and create user_master_enriched table
++task4_enrich_user_master_with_nba_columns:
+  td>: create_user_master_enriched.sql
+  create_table: ${td.enriched_user_master_table}
+
+#calcualte activity_period_percentiles and add metrics to master_user_enriched table
++calculate_activity_period_percentiles:
+  td_for_each>: load_distinct_days.sql
+  _do:
+    +task1_creating_temp_tables:
+      td>: create_temp_table.sql
+      create_table: ${td.enriched_user_master_table_temp}
+    +task2_add_activity_percentile:
+      td>: calculate_activity_percentile.sql
+      create_table: ${td.enriched_user_master_table}
+
+
+#calcualte utm_param_ad_response_percentile and add metrics to master_user_enriched table
++calculate_ad_response_percentiles:
+  td_for_each>: load_distinct_utm_params.sql
+  _do:
+    +task1_creating_temp_tables:
+      td>: create_temp_table.sql
+      create_table: ${td.enriched_user_master_table_temp}
+    +task2_add_ad_response_percentile:
+      td>: calculate_ad_response_percentile.sql
+      create_table: ${td.enriched_user_master_table}
