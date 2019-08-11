@@ -1,16 +1,32 @@
 _export:
   td:
     database: CHANGEME
+    user_master_table: CHANGEME
+    user_master_join_key: CHANGEME
+    activity_table: CHANGEME
+    activity_table_join_key: CHANGEME
+    enriched_user_master_table: CHANGEME
+    enriched_user_master_table_temp: ${enriched_user_master_table}_tmp
+    utm_source_column: CHANGEME
+    td_intent_key: CHANGEME
+    session_windows_time: CHANGEME
+    session_key: CHANGEME 
+    session_key_ip: CHANGEME
+    nw: CHANGEME
+
+  
+
+
+     
 
 +call_td_total_activity_perc:
   call>: td_total_activity_percentile/td_total_activity_percentile.dig        
-
++call_td_engagement_perc:
+  call>: td_engagement_percentile/td_engagement_percentile.dig
 +call_td_ad_exposure_wf:
   call>: td_ad_exposure_percentile/td_ad_exposure_percentile.dig
-
 +call_td_avg_visit_monthly_wf:
   call>: td_avg_visit_monthly_trend/td_avg_visit_monthly_trend.dig
-
 +call_td_intent_wf:
   call>: td_intent_percentile/td_intent_percentile.dig
    

@@ -1,14 +1,3 @@
-_export:
-  td:
-    database: CHANGEME
-    user_master_table: CHANGEME
-    user_master_join_key: CHANGEME
-    activity_table: CHANGEME
-    activity_table_join_key: CHANGEME
-    enriched_user_master_table: CHANGEME
-    enriched_user_master_table_temp: CHANGEME
-    td_intent_key: CHANGEME
-    
 
 +task1:
   td>: queries/compute_td_intent_perc.sql

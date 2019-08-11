@@ -1,8 +1,11 @@
 
+    
+
 +task1:
-  td>: queries/compute_total_activity_perc.sql
+  td>: queries/compute_td_engagement_perc.sql
   create_table: ${td.enriched_user_master_table}
 +task2_creating_temp_tables:
   td>: queries/create_temp_table.sql
   create_table: ${td.enriched_user_master_table_temp}
+
   
