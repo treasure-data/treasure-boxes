@@ -26,6 +26,10 @@ OR LENGTH(REGEXP_REPLACE(${td.column}, ',|;|#|\*|\\|\"| ')) != LENGTH(${td.colum
 
 -- the email should be formatted as x@x.xx 
 OR REGEXP_LIKE(${td.column}, '..*@..*\...*') = false
+
+-- the email should follow RFC 5322
+OR REGEXP_LIKE(${td.column}, '^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$') = true
+
 THEN 0
 ELSE 1 END AS valid_email
 FROM ${td.database}.${td.table}
