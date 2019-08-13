@@ -9,13 +9,14 @@
 </head>
 
 <body>
-  This is demo. Try to input client_id: ce5f8f1e-b00d-4367-9c79-2c53e2bba982</br>
-  <input id="fetch_segment" type="text" name="input_td_client_id" />
+  This is demo to check Profile API.</br>
+  <input id="client_id_input" type="text" name="input_td_client_id" /> DemoClientId: ce5f8f1e-b00d-4367-9c79-2c53e2bba982
+  <input id="token_input" type="text" name="input_token" /> DemoToken: 1e6becb7-7e75-4778-9f76-9db6af9fc638
   <button id="fetch_segment_button">fetch</button>
   <div id="resultArea"></div>
 
   <script>
-    var fetch_segment_func = function(td_client_id) {
+    var fetch_segment_func = function(clientId, token) {
       var td = new Treasure({
         host: 'in.treasuredata.com',
         writeKey: '',
@@ -63,12 +64,14 @@
       var token = '1e6becb7-7e75-4778-9f76-9db6af9fc638';
       td.fetchUserSegments({
         audienceToken: [token],
-        keys: {td_client_id: td_client_id}
+        keys: {td_client_id: clientId}
       }, successCallback, errorCallback);
     }
 
     document.getElementById('fetch_segment_button').onclick = function() {
-      fetch_segment_func(document.getElementById('fetch_segment').value);
+      var clientId = document.getElementById('client_id_input').value;
+      var token    = document.getElementById('token_input').value;
+      fetch_segment_func(clientId, token);
     };
   </script>
 </body>
