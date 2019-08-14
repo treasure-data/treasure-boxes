@@ -8,7 +8,7 @@ This digdag workflow creates a table on Treasure Data generated from DataRobot's
 | Variable | Description | Example |
 | -------- | ----------- | --------|
 | td.apikey | Master API Key for Treasure Data. [link] | `1234/abcdefghijklmnopqrstuvwxyz1234567890`|
-| td.username | Email address to log in Treaure Data's console | `hogehoge@treasure-data.com` |
+| td.username | Email address to log in Treaure Data's console | `example@treasure-data.com` |
 | td.password | Password to log in Treasure Data's console | `xxxxxx` |
 | dr.apikey | DataRobot's API Key. \*  | `ABcdEFGhIJk12MNoPqrS3uvW_xyz123`|
 | dr.project_id | Project ID for DataRobot. \* | `5d3e76e931c473290afae6fd` | 
