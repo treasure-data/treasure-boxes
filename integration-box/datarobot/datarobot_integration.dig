@@ -2,7 +2,7 @@
   docker:
     image: "digdag/digdag-python:3.7.3-stretch"
   _env:
-      DR_API_TOKEN: ${secret:datarobot.apikey}
+      DR_API_TOKEN: ${secret:dr.apikey}
       TD_API_KEY: ${secret:td.apikey}
       TD_USERNAME: ${secret:td.username}
       TD_PASSWORD: ${secret:td.password}
