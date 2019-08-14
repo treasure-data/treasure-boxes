@@ -42,6 +42,11 @@ td wf secret --project datarobot_integration --set td.username
 td wf secret --project datarobot_integration --set td.password
 ```
 
+## Result
+Prediction result are written into specified table like this.  
+<img src="./images/treasuredata.png" width="400px">  
+As for classification, the table has the label with the highest probability and probabilities for each label aside from `row_id`
+
 ## Further Reading
 - DataRobot Python Client  
 https://datarobot-public-api-client.readthedocs-hosted.com/en/v2.17.0/setup/getting_started.html
