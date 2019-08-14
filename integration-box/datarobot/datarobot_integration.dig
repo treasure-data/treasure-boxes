@@ -9,8 +9,8 @@
       TD_API_SERVER: https://api.treasuredata.com/
       SPARK_LOCAL_IP: 127.0.0.1  
   py>: scripts.datarobot.upload
-  database: datarobot
-  table: pred_iris
+  database: ${td.database}
+  table: ${td.table}
   project_id: ${dr.project_id}
   model_id: ${dr.model_id}
   datasource_id: ${dr.datasource_id}
