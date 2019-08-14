@@ -4,7 +4,7 @@ This example creates a table on Treasure Data from DataRobot's prediction result
 ## Push the code and set variables
 ```
 td wf push --project datarobot_integration
-td wf secret --project datarobot_integration --set datarobot.apikey
+td wf secret --project datarobot_integration --set dr.apikey
 td wf secret --project datarobot_integration --set td.apikey
 td wf secret --project datarobot_integration --set td.username
 td wf secret --project datarobot_integration --set td.password
