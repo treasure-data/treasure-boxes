@@ -11,6 +11,6 @@
   py>: scripts.datarobot.upload
   database: datarobot
   table: pred_iris
-  project_id: 5d3e76e931c473290afae6fd
-  model_id: 5d3e7b875844414bffba1579
-  datasource_id: 5d3e76d06cd83a00139c6a72
+  project_id: ${dr.project_id}
+  model_id: ${dr.model_id}
+  datasource_id: ${dr.datasource_id}
