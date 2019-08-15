@@ -1,0 +1,24 @@
+timezone: Asia/Tokyo
+
+schedule:
+  daily>: 00:00:00
+
+_export:
+  !include : config.yml
+  td:
+    database: ${database}
+
++load_sense_video:
+  docker:
+    image: 'digdag/digdag-python:3.7'
+  py>: scorer.load_sense_video
+  database: ${database}
+  table: ${table}
+  bucket: ${bucket}
+  device_id: ${device_id}
+  date: ${session_date}
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${secret:td.endpoint}
+    S3_ACCESS_KEY_ID: ${secret:s3.access_key_id}
+    S3_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}
