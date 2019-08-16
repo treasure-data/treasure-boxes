@@ -1,0 +1,6 @@
+database: takuti
+table: sense_video
+
+bucket: takuti-scorer-test
+
+device_id: LT_92ca49b9-8671-4913-ba77-a3f4453ade4d
