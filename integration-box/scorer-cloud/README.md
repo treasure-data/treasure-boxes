@@ -45,6 +45,8 @@ Make sure if the status is "Running" in the SCORER Edge view:
 
 ![scorer-edge-running](images/scorer-edge-running.png)
 
+> SCORER Edge provides an option to immediately analyze a video stream on the Raspberry Pi-based edge device. See [Pedestrian Count with SCORER Edge](../scorer-edge/) for more information.
+
 ### Define a rule (algorithm) running for incoming video streams
 
 Select the Running camera viewer, and create a new rule with SenseVideo algorithm:
