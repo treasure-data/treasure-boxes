@@ -1,4 +1,4 @@
-# Sentiment classification with TensorFlow
+# Sentiment classification with TensorFlow/Chainer
 
 This example introduces sentiment analysis for movie reviews using [TensorFlow](https://www.tensorflow.org/) and [TensorFlow Hub](https://www.tensorflow.org/hub), or [Chainer](https://chainer.org/).
 Original example is written in [the official document](https://www.tensorflow.org/hub/tutorials/text_classification_with_tf_hub).
@@ -7,10 +7,8 @@ This workflow will:
 
 1. Fetch review data from Treasure Data
 2. Build a model with TensorFlow
-3. Store the model on S3
+3. (optional) Store the model on S3
 4. Predict polarities for unknown review data and write back to Treasure Data
-
-Currently, prediction with fetching model from S3 is not evaluated yet.
 
 ## Workflow
 
@@ -41,6 +39,8 @@ $ td workflow start sentiment sentiment-analysis --session now
 
 ### An example workflow with TensorFlow without using Amazon S3
 
+If you don't have AWS account, this workflow would be easy to try.
+
 ```bash
 $ ./data.sh # prepare example data
 $ td workflow push sentiment
@@ -55,6 +55,10 @@ $ td workflow start sentiment sentiment-analysis-simple --session now
 * [sentiment-analysis-simple.dig](sentiment-analysis-simple.dig)
 
 ### An example workflow with Chainer for prediction
+
+This example enables you to predict polarity by using pre-trained model with CNN + MLP. It takes longer time than training with transfer learning with TensorFlow Hub's pre-trained model on CPU so that this workflow executes prediction only.
+
+The pre-trained model is put public Amazon S3 so that you don't need to have AWS account.
 
 ```bash
 $ ./data.sh # prepare example data
