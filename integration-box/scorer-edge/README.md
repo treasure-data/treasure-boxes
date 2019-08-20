@@ -21,7 +21,7 @@ In the SDK console, use sample application provided by this Box as follows:
 2. Set your database and table name, and Treasure Data API key in [`pedestrian_count.py`](pedestrian-count/pedestrian_count.py).
 3. In the shell console, install [`pytd`](https://github.com/treasure-data/pytd/), Treasure Data official Python client, and [`imutils`](https://github.com/jrosebr1/imutils), a collection of basic image processing techniques:
     ```sh
-    pip install pytd imutils
+    pip install --user pytd imutils
     ```
 
 ![scorer-edge-cloud9](images/scorer-edge-cloud9.png)
