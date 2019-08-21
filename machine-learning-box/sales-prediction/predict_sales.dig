@@ -14,6 +14,7 @@ _export:
     AWS_ACCESS_KEY_ID: ${secret:aws_access_key_id}
     AWS_SECRET_ACCESS_KEY: ${secret:aws_secret_access_key}
     S3_BUCKET: ${secret:s3_bucket}
+    database: ${dbname}
     source_table: ${source_table}
     target_table: ${target_table}
     start_date: ${start_date}

@@ -12,6 +12,7 @@ _export:
   _env:
     TD_API_KEY: ${secret:apikey}
     TD_API_SERVER: ${secret:endpoint}
+    database: ${dbname}
     source_table: ${source_table}
     target_table: ${target_table}
     start_date: ${start_date}

@@ -9,7 +9,7 @@ class TimeSeriesPredictor(object):
 
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
-        self.dbname = 'timeseries'
+        self.dbname = os.getenv("database", "timeseries")
         self.source_table = os.getenv("source_table")
         self.target_table = os.getenv("target_table")
         self.start = os.getenv('start_date')
