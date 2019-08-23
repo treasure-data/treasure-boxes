@@ -1,27 +1,100 @@
-import os, sys
-os.system(f"{sys.executable} -m pip install --user datarobot")
+import sys
+import json
+from os import system
+from os import environ
 
-import datarobot as dr
+system(f"{sys.executable} -m pip install -U --user pytd")
 
-def upload(database, table, project_id, model_id, datasource_id):
+import requests
+
+class DataRobotPredictionError(Exception):
+    """Raised if there are issues getting predictions from DataRobot"""
+
+def make_datarobot_deployment_predictions(data, deployment_id):
+    """
+    Make predictions on data provided using DataRobot deployment_id provided.
+    See docs for details:
+         https://app.datarobot.com/docs-jp/users-guide/deploy/api/new-prediction-api.html
+
+    Parameters
+    ----------
+    data : str
+        [{"Feature1":numeric_value,"Feature2":"string"}]
+    deployment_id : str
+        The ID of the deployment to make predictions with.
+
+    Returns
+    -------
+    Response schema:
+        https://app.datarobot.com/docs-jp/users-guide/deploy/api/new-prediction-api.html#response-schema
+
+    Raises
+    ------
+    DataRobotPredictionError if there are issues getting predictions from DataRobot
+    """
+    DR_USERNAME   = environ['DR_USERNAME']
+    DR_PRED_HOST  = environ['DR_PRED_HOST']
+    DR_CLOUD_KEY  = environ.get('DR_CLOUD_KEY', None)
+    DR_API_KEY  = environ['DR_API_KEY']
+
+    # Set HTTP headers. The charset should match the contents of the file.
+    headers = {'Content-Type': 'application/json; charset=UTF-8'}
+    if not DR_CLOUD_KEY is None:
+        headers['datarobot-key'] = DR_CLOUD_KEY
+
+    url = 'https://{prediction_host}/predApi/v1.0/deployments/{deployment_id}/'\
+          'predictions'.format(prediction_host=DR_PRED_HOST, deployment_id=deployment_id)
+    # Make API request for predictions
+    predictions_response = requests.post(
+        url, auth=(DR_USERNAME, DR_API_KEY), data=data, headers=headers)
+    _raise_dataroboterror_for_status(predictions_response)
+    # Return a Python dict following the schema in the documentation
+    return predictions_response.json()
+
+def _raise_dataroboterror_for_status(response):
+    """Raise DataRobotPredictionError if the request fails along with the response returned"""
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError:
+        err_msg = '{code} Error: {msg}'.format(
+            code=response.status_code, msg=response.text)
+        raise DataRobotPredictionError(err_msg)
+
+def td_query(sql, connection):
+    cur = connection.cursor()
+    cur.execute(sql)
+
+    rows = cur.fetchall()
+    columns = [desc[0] for desc in cur.description]
+
+    data = [dict(zip(columns, row)) for row in rows]
+    return data
+
+def main(sql, database, table, target, deployment_id):
   # SetUp
-  DR_API_TOKEN  = os.environ['DR_API_TOKEN']
-  TD_USERNAME   = os.environ['TD_USERNAME']
-  TD_PASSWORD   = os.environ['TD_PASSWORD']
-  TD_API_KEY    = os.environ['TD_API_KEY']
-  TD_API_SERVER = os.environ['TD_API_SERVER']
-  MAX_WAIT = 60 * 60  # Maximum number of seconds to wait for prediction job to finish
-  
-  dr.Client(endpoint='https://app.datarobot.com/api/v2', token=DR_API_TOKEN)
-  project = dr.Project.get(project_id)
-  model = dr.Model.get(project_id, model_id)
-  dataset = project.upload_dataset_from_data_source(datasource_id, TD_USERNAME, TD_PASSWORD)
-  
-  # Predict
-  pred_job = model.request_predictions(dataset.id)
-  pred_df = pred_job.get_result_when_complete(max_wait=MAX_WAIT)
-  
-  # Upload
+  from pytd import Client
   from pytd import pandas_td as td
-  con = td.connect(apikey=TD_API_KEY, endpoint=TD_API_SERVER)
-  td.to_td(pred_df, '{}.{}'.format(database, table), con=con, if_exists='replace', index=False)
+  from pytd.dbapi import connect
+  import pandas as pd
+
+  tdcli = Client(database=database)
+  tdcon = connect(tdcli)
+
+  record = td_query(sql, tdcon)
+  try:
+    # Predict
+    predictions = make_datarobot_deployment_predictions(
+      json.dumps(record),
+      deployment_id)
+  except DataRobotPredictionError as exc:
+    print(exc)
+
+  for pred in predictions['data']:
+    record[pred['rowId']][target] = pred['prediction']
+
+  # Upload
+  df = pd.DataFrame(record)
+  tdcli.load_table_from_dataframe(df, '{}.{}'.format(database, table), writer='insert_into', if_exists='overwrite')
+  tdcon.close()
+  print('{} records processed'.format(len(df.index)))
+

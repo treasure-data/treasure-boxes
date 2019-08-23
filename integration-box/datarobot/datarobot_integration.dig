@@ -2,15 +2,14 @@
   docker:
     image: "digdag/digdag-python:3.7.3-stretch"
   _env:
-      DR_API_TOKEN: ${secret:dr.apikey}
+      DR_USERNAME: ${secret:dr.username}
+      DR_PRED_HOST: ${secret:dr.prediction_host}
+      DR_CLOUD_KEY: ${secret:dr.cloudkey}
+      DR_API_KEY: ${secret:dr.apikey}
       TD_API_KEY: ${secret:td.apikey}
-      TD_USERNAME: ${secret:td.username}
-      TD_PASSWORD: ${secret:td.password}
-      TD_API_SERVER: https://api.treasuredata.com/
-      SPARK_LOCAL_IP: 127.0.0.1  
-  py>: scripts.datarobot.upload
+  py>: scripts.datarobot.main
+  sql: ${td.sql}
   database: ${td.database}
   table: ${td.table}
-  project_id: ${dr.project_id}
-  model_id: ${dr.model_id}
-  datasource_id: ${dr.datasource_id}
+  target: ${dr.target}
+  deployment_id: ${dr.deployment_id}
