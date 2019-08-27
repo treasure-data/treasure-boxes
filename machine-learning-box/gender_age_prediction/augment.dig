@@ -1,0 +1,48 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${target_db}
+    engine: hive
+    priority: ${job_priority}
+
+# timezone: Asia/Tokyo
+
+# schedule:
+#   daily>: 6:00:00
+#   weekly>: Sun,09:00:00
+
++preprocess:
+  _parallel: true
+
+  +gender_age:
+    td>: queries/gender_age.sql
+    create_table: gender_age
+    engine: presto
+
+  +vectorize:
+  
+    +tokenize:
+      td>: queries/tokenize.sql
+      create_table: exploded
+
+    +feature_vector:
+      _parallel: true
+
+#     +count_vectorize:
+#        td>: queries/count_vec.sql
+#        create_table: cnt_features
+
+      +tfidf_vectorize:
+        td>: queries/tfidf_vec.sql
+        create_table: features
+
++prepare_input:
+  td>: queries/joined.sql
+  create_table: input
+  engine: hive
+
++predict:
+  _parallel: true
+
+  +rf_predict:
+    call>: rf_predict.dig
