@@ -11,35 +11,28 @@ Second, `pytd` creates a table on Treasure Data with the dataframe.
 | Variable | Description | Example |
 | -------- | ----------- | --------|
 | td.apikey | Master API Key for Treasure Data. [link] | `1234/abcdefghijklmnopqrstuvwxyz1234567890`|
-| td.username | Email address to log in Treaure Data's console | `example@treasure-data.com` |
-| td.password | Password to log in Treasure Data's console | `xxxxxx` |
 | td.database | Treasure Data's database name to export data. | `example_db` |
 | td.table | Treasure Data's table name to export data. | `example_table` |
+| td.sql | SQL to pass to Treasure Data's to retrieve a prediction data. | `select * from pred_data` |
 | dr.apikey | DataRobot's API Key. \*  | `ABcdEFGhIJk12MNoPqrS3uvW_xyz123`|
-| dr.project_id | Project ID for DataRobot. \* | `5d3e76e931c473290afae6fd` | 
-| dr.model_id | Model ID for DataRobot. \* | `5d3e7b875844414bffba1579` | 
-| dr.datasource_id | Data source ID for DataRobot \** | `5d3e76d06cd83a00139c6a72` |
+| dr.username | Email address to log in Datarobot console | `example@yourcompany.com` |
+| dr.cloudkey | datarobot-key for DataRobot Cloud Prediction Server. \* | `e1234bc6-1aaa-98de-7f65-1234b5678ccc` | 
+| dr.prediction_host | Hostname/IP of DataRobot Prediction Server. \* | `prediction.datarobot.com` | 
+| dr.target | Target name of prediction. \* | `is_bad_loan` | 
+| dr.deployment_id | Deployment ID for DataRobot. \* | `5d3e76e931c473290afae6fd` | 
 
 \* You can get these parameters from the DataRobot's screen below.  
 > Select Model > Predict > Deploy Model API
 <img src="./images/datarobot.png" width="400px">
-
-\** You can get `DataSource ID` using Python script. Sets of data source's name and its id appear, so please choose appropriate id.
-```python:get_datasource.py
-!pip install datarobot
-import datarobot as dr
-API_TOKEN = 'YOUR API TOKEN'
-dr.Client(endpoint='https://app.datarobot.com/api/v2', token=API_TOKEN)
-print([tuple([ds.canonical_name, ds.id])  for ds in dr.DataSource.list()])
-```
 
 ## Push the code and set variables
 ```
 td wf push --project datarobot_integration
 td wf secret --project datarobot_integration --set dr.apikey
 td wf secret --project datarobot_integration --set td.apikey
-td wf secret --project datarobot_integration --set td.username
-td wf secret --project datarobot_integration --set td.password
+td wf secret --project datarobot_integration --set dr.username
+td wf secret --project datarobot_integration --set dr.prediction_host
+td wf secret --project datarobot_integration --set dr.cloudkey
 ```
 
 ## Result
