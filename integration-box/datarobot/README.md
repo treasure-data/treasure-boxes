@@ -27,8 +27,8 @@ https://app.datarobot.com/deployments/{deployment_id}/integrations
 ## Push the code and set variables
 ```
 td wf push --project datarobot_integration
-td wf secret --project datarobot_integration --set dr.apikey
 td wf secret --project datarobot_integration --set td.apikey
+td wf secret --project datarobot_integration --set dr.apikey
 td wf secret --project datarobot_integration --set dr.username
 td wf secret --project datarobot_integration --set dr.prediction_host
 td wf secret --project datarobot_integration --set dr.cloudkey
@@ -41,7 +41,7 @@ The table contains prediction result and features.
 
 ## Limitation
 DataRobot's Prediction API restricts the data size <= 50MB.  
-When predicting bigger data, you need to partition.
+When predicting bigger data, you need to partition and predict for each parts.
 
 ## Further Reading
 - DataRobot API (You need to login DataRobot)  
