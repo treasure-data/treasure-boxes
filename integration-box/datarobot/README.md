@@ -40,7 +40,7 @@ Prediction result are written into specified table like this.
 The table contains prediction result and features.
 
 ## Limitation
-DataRobot's Prediction API restricts the data size <= 50MB.
+DataRobot's Prediction API restricts the data size <= 50MB.  
 When predicting bigger data, you need to partition.
 
 ## Further Reading
