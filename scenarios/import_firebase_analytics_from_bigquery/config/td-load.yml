@@ -1,0 +1,30 @@
+---
+in:
+  type: bigquery
+  project_id: vivid-argon-247508
+  auth_method: json_key
+  json_keyfile: {content: "${secret:gcp.jsonkey}"}
+  import_type: query
+  # You need to replace Project Id,Dataset of below query with your Project ID and Dataset.
+  query: |-
+    SELECT
+      events.event_date,
+      events.event_timestamp,
+      events.event_name,
+      events_params.key AS event_param_key,
+    COALESCE(events_params.value.string_value, CAST(events_params.value.int_value AS string)) AS event_param_value FROM `<Project ID>.<Datasets>.events_${moment(session_date).add(-1,'days').format("YYYYMMDD")}` as events 
+    CROSS JOIN
+    UNNEST(events.event_params) AS events_params
+  dataset: analytics_205749061
+  table: events_${moment(session_date).add(-1,'days').format("YYYYMMDD")}
+  incremental: false
+  temp_dataset: temp
+  temp_table: temp_table
+out:
+  type: td
+  mode: replace
+exec: {}
+filters:
+- from_value: {mode: upload_time}
+  to_column: {name: time}
+  type: add_time
