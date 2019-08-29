@@ -1,7 +1,6 @@
 _export:
   !include : config/params.yml
   td:
-    apikey: ${apikey}
     database: ${target}
     engine: hive
 

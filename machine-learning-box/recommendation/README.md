@@ -28,7 +28,7 @@ We prepared a basic workflow for top-k item recommendation.
 ```sh
 $ ./data.sh
 $ td wf push recommendation # push workflow to TD
-$ td wf start recommendation recommend --session now -p apikey=${YOUR_TD_API_KEY}
+$ td wf start recommendation recommend --session now
 ```
 
 * [recommend.dig](recommend.dig) - TD workflow script for top-k item recommendation using [Matrix Factorization](https://docs.treasuredata.com/articles/hivemall-movielens20m-mf)
