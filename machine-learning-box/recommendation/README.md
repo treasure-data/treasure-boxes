@@ -36,6 +36,23 @@ $ td wf start recommendation recommend --session now
 
 [<img src="docs/img/capture.png" alt="capture" max_height=300 />](http://showterm.io/31b8df49efcfbc2bfc5ef#fast)
 
+### Workflow with PySpark
+
+You also can try [Spark.ml collaborative filtering](https://spark.apache.org/docs/2.4.0/ml-collaborative-filtering.html) recommendation for top-k item recommendation. Ensure both [Python Custom Scripting](https://support.treasuredata.com/hc/en-us/articles/360026713713-Introduction-to-Custom-Scripts) and [td-spark](https://support.treasuredata.com/hc/en-us/articles/360000716627-Apache-Spark-Driver-td-spark-Release-Notes) enabled.
+
+```sh
+$ ./data.sh
+$ td wf push recommendation
+$ td wf secrets --project recommendation --set apikey --set endpoint
+# Set secrets from STDIN like: apikey=1/xxxxx, endpoint=https://api.treasuredata.com
+$ td wf start recommendation recommend_spark --session now
+```
+
+* [recommend_spark.dig](recommend_spark.dig) - TD workflow script for top-k item recommendation using [Matrix Factorization](https://docs.treasuredata.com/articles/hivemall-movielens20m-mf)
+* [recommend.py](py_scripts/recommend.py) - Python script for PySpark ALS recommendation.
+* [config/params.yml](config/params.yml) - Configurable parameters for the recommendation workflow. This workflow uses `k` of top-k and `target` as database name. By the default, the workflow recommends top-10 items for each user.
+
+
 ## Output
 
 The output of workflow is a table that contains a list of recommended items for each user as shown below:
