@@ -20,7 +20,7 @@ t2 as (
 	  tree_predict(p.model_id, p.model, t.features, '-classification') as predicted
 	FROM
 	  rf_model_cv p
-	  LEFT OUTER JOIN rf_input t
+	  LEFT OUTER JOIN test_data t
   ) t1
   GROUP BY
     userid
