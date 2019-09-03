@@ -12,7 +12,7 @@ WITH test_data as (
 t2 as (
   SELECT
     userid,
-	rf_ensemble(predicted.value, predicted.posteriori, model_weight) as predicted
+    rf_ensemble(predicted.value, predicted.posteriori, model_weight) as predicted
   FROM (
 	SELECT
 	  t.userid,
