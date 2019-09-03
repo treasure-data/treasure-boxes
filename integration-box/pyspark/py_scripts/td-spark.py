@@ -35,7 +35,7 @@ def _prepare_td_spark() -> TDSparkContext:
 
 
 def process_data(
-    database_name: str, table_name: str, td: Optional[TDSparkContext] = None
+    database_name: str, table_name: str, td_spark: Optional[TDSparkContext] = None
 ) -> None:
     """
     Load a Treasure Data table and upload it to Treasure Data after PySpark processing.
@@ -61,7 +61,7 @@ def process_data(
 
 
 def execute_sql(
-    database_name: str, table_name: str, td: Optional[TDSparkContext] = None
+    database_name: str, table_name: str, td_spark: Optional[TDSparkContext] = None
 ) -> None:
     """
     Execute SparkSQL
@@ -90,7 +90,7 @@ def execute_sql(
 
 
 def upload_dataframe(
-    database_name: str, table_name: str, td: Optional[TDSparkContext] = None
+    database_name: str, table_name: str, td_spark: Optional[TDSparkContext] = None
 ) -> None:
     """
     Create Pandas DataFrame and upload it to Treasure Data
