@@ -51,6 +51,13 @@ _export:
       td>: queries/rf/predict_cv.sql
       create_table: rf_predicted_cv
 
+#   +topk_predict:
+#     td>: queries/rf/topk_predict.sql
+#     create_table: rf_topk_predict
+#
+#   +evaluation_measures:
+#     td>: queries/rf/eval.sql
+
     +eval:
       _parallel: true
 
@@ -68,6 +75,18 @@ _export:
       +actual_predict_diff:
         td>: queries/rf/actual_predict_diff.sql
         engine: presto
+
+#     +heuristic_calibration:
+#
+#       +calibration_prediction:
+#         td>: queries/rf/calibrate_prediction.sql
+#         engine: presto
+#         create_table: rf_predicted_cv_calibrated
+#
+#       +eval_calibration:
+#         td>: queries/rf/confusion_matrix_calibrated.sql
+#         engine: presto
+#         create_table: rf_confusion_matrix_calibrated
 
   +train_predict:
   
