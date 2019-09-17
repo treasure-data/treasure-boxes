@@ -1,0 +1,31 @@
+# For more advanced config options, please check these URLs.
+# @see https://support.treasuredata.com/hc/en-us/articles/360001405648
+# @see https://github.com/embulk/embulk-input-azure_blob_storage
+---
+in:
+  type: azure_blob_storage
+  account_name: ${secret:azure_blob_storage.account_name}
+  account_key: ${secret:azure_blob_storage.account_key}
+  container: container-name
+  path_prefix: filename_${moment(session_time).add(-1,'days').format('YYYYMMDD')}
+  parser:
+    charset: UTF-8
+    newline: CRLF
+    type: csv
+    delimiter: ','
+    quote: '"'
+    escape: ''
+    skip_header_lines: 1
+    columns:
+    - name: id
+      type: long
+    - name: company
+      type: string
+    - name: customer
+      type: string
+    - name: created_at
+      type: timestamp
+      format: '%Y-%m-%d %H:%M:%S'
+out: {}
+exec: {}
+filters: []
