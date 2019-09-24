@@ -16,6 +16,6 @@ select
   count(1) as cnt
 from
   test_data l
-  JOIN gender_age_predicted_cv r ON (l.userid = r.userid)
+  JOIN rf_predicted_cv r ON (l.userid = r.userid)
 group by
   1, 2
