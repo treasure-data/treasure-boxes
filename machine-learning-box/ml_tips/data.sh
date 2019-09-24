@@ -7,7 +7,7 @@ if [ -z $(which td) ]; then
   exit 1
 fi
 
-TD_OPT="-c ${HOME}/.td/td.hivemall.conf"
+TD_OPT=""
 
 td ${TD_OPT} db:create ml_tips
 td ${TD_OPT} table:create ml_tips titanic
