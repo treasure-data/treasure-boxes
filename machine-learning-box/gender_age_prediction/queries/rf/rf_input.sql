@@ -1,7 +1,6 @@
 SELECT
   l.userid,
   l.rnd,
-  l.age_range,
   l.gender_age,
   feature_hashing(l.features) as features, 
   r.label_id as label
