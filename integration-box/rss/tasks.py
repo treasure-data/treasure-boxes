@@ -24,5 +24,5 @@ def rss_import(dest_db: str, dest_table: str, rss_url_list):
             tmp_se = pd.Series( [ entry.title, entry.description, entry.link ], index=df.columns )
             df = df.append( tmp_se, ignore_index=True )
     #print(df)
-    client = pytd.Client(apikey=TD_APIKEY, endpoint=TD_ENDPOINT, database=dest_db, engine='presto')
+    client = pytd.Client(apikey=TD_APIKEY, endpoint=TD_ENDPOINT, database=dest_db, default_engine='presto')
     client.load_table_from_dataframe(df, dest_table, if_exists='append')
