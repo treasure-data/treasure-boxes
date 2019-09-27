@@ -36,7 +36,7 @@ def call_api(sql, url, replaced_param):
     apikey=os.environ.get('td_apikey'),
     endpoint=os.environ.get('td_endpoint'), 
     database=os.environ.get('td_database'), 
-    engine=os.environ.get('td_engine')
+    default_engine=os.environ.get('td_engine')
     )
   conn = connect(client)
   

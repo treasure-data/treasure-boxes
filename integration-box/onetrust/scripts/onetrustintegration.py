@@ -30,7 +30,7 @@ def uploadOTDataToTD(td_endpoint, td_api_key, dataframe, td_db, td_table):
             apikey=td_api_key,
             endpoint=td_endpoint,
             database=td_db,
-            engine='hive')
+            default_engine='hive')
         client.load_table_from_dataframe(
             dataframe, td_table, if_exists='overwrite') 
     except :
