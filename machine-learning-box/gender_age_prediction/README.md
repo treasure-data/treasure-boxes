@@ -57,4 +57,4 @@ Missing `gender_age` cells are filled by predicted result.
 
 1. Modify [config/params.yml](https://github.com/treasure-data/treasure-boxes/blob/master/machine-learning-box/gender_age_prediction/config/params.yml) to meet your setting.
 2. Modify [gender_age task](https://github.com/treasure-data/treasure-boxes/blob/master/machine-learning-box/gender_age_prediction/augment.dig#L19) in augment.dig creating `gender_age` table.
-3. Modify vectorize task in augment.dig creating `features` table.
+3. Modify [vectorize task](https://github.com/treasure-data/treasure-boxes/blob/master/machine-learning-box/gender_age_prediction/augment.dig#L22) in augment.dig creating `features` table.
