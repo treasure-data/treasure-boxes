@@ -10,7 +10,7 @@ _export:
     api_version: v3.1
     output_name: name_of_custom_audience
     description: description_of_custom_audience
-    preHashed : false
+    pre_hashed: false
     customer_file_source: USER_PROVIDED_ONLY
     retryInitialWaitMsec: 60000
     retryLimit: 5
