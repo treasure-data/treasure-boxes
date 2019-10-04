@@ -44,11 +44,11 @@ def process_data(
     :param table_name: Target table name on Treasure Data
     :param spark: [Optional] SparkSession
     """
-    if td is None:
-        td = _prepare_td_spark()
+    if td_spark is None:
+        td_spark = _prepare_td_spark()
 
     # Read sample_datasets from TD table
-    access_df = td.table("sample_datasets.www_access").df()
+    access_df = td_spark.table("sample_datasets.www_access").df()
 
     # Process with PySpark
     processed_df = access_df.filter("method = 'GET'").withColumn(
@@ -56,8 +56,8 @@ def process_data(
     )
 
     # Upload processed Spark DataFrame to TD
-    td.create_database_if_not_exists(database_name)
-    td.create_or_replace(processed_df, f"{database_name}.{table_name}")
+    td_spark.create_database_if_not_exists(database_name)
+    td_spark.create_or_replace(processed_df, f"{database_name}.{table_name}")
 
 
 def execute_sql(
@@ -71,15 +71,15 @@ def execute_sql(
     :param spark: [Optional] SparkSession
     """
 
-    if td is None:
-        td = _prepare_td_spark()
+    if td_spark is None:
+        td_spark = _prepare_td_spark()
 
     # Prepare temporary view before running SparkSQL
-    access_df = td.table(f"{database_name}.{table_name}").df()
+    access_df = td_spark.table(f"{database_name}.{table_name}").df()
     access_df.createOrReplaceTempView(table_name)
 
     # Execute SparkSQL
-    spark = td.spark
+    spark = td_spark.spark
     summary_df = spark.sql(
         f"""\
     select agent, count(*) cnt
@@ -103,15 +103,15 @@ def upload_dataframe(
     import numpy as np
     import pandas as pd
 
-    if td is None:
-        td = _prepare_td_spark()
+    if td_spark is None:
+        td_spark = _prepare_td_spark()
 
-    spark = td.spark
+    spark = td_spark.spark
 
     df = pd.DataFrame({"c": np.random.binomial(10, 0.5, 10)})
     sdf = spark.createDataFrame(df)
-    td.create_database_if_not_exists(database_name)
-    td.create_or_replace(sdf, f"{database_name}.{table_name}")
+    td_spark.create_database_if_not_exists(database_name)
+    td_spark.create_or_replace(sdf, f"{database_name}.{table_name}")
 
 
 if __name__ == "__main__":
