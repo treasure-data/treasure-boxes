@@ -1,0 +1,43 @@
+#timezone: "Asia/Tokyo"
+
+#schedule:
+# daily>: 01:00:00
+
+_export:
+  td:
+    database: example_db
+  conf:
+    td_endpoint: "https://api.treasuredata.co.jp/"
+    cdp_endpoint: "https://api-cdp.treasuredata.co.jp/"
+    mstbl: master_segment_lists
+    segtbl: segment_lists
+    
++import_ms_lists_to_td:
+  docker:
+    image: "digdag/digdag-python:3.7"
+    
+  py>: getcdpsegments.getSegmentLists
+  _env:
+    apikey: ${secret:td.apikey}
+    td_endpoint: ${conf.td_endpoinnt}
+    td_database: ${td.database}
+    td_table: ${conf.mstbl}
+    cdp_url: "${conf.cdp_endpoint}audiences"
+
++import_segments_lists_to_td:
+  td_for_each>:
+    data: |
+      SELECT DISTINCT CAST(id AS VARCHAR) AS id FROM ${conf.mstbl}
+  _parallel: false
+  _do:
+    +step1:
+      docker:
+        image: "digdag/digdag-python:3.7"
+    
+      py>: getcdpsegments.getSegmentLists
+      _env:
+        apikey: ${secret:td.apikey}
+        td_endpoint: ${conf.td_endpoinnt}
+        td_database: ${td.database}
+        td_table: ${conf.segtbl}
+        cdp_url: "${conf.cdp_endpoint}audiences/${td.each.id}/segments"
