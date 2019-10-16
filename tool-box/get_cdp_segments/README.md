@@ -26,6 +26,6 @@ See our [document](https://support.treasuredata.com/hc/en-us/articles/3600014742
 ```
 
 ## Output
-You can see imported data in example_db.master_segment_lists.
+You can see imported data in example_db.master_segment_lists/segment_lists.
 ![master_segment_lists](master_segment_lists.png)
 ![segments](segments.png)
