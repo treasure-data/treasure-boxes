@@ -8,7 +8,7 @@ import time
 
 import pandas as pd
 
-os.system(f"{sys.executable} -m pip install -U pytd==0.6.2")
+os.system(f"{sys.executable} -m pip install -U pytd==0.8.0")
 
 import pytd
 
