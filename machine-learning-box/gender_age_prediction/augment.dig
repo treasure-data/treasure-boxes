@@ -20,10 +20,18 @@ _export:
     engine: presto
 
   +vectorize:
-  
-    +tokenize:
-      td>: queries/tokenize.sql
-      create_table: exploded
+
+    +tokenize_en:
+      if>: ${english}
+      _do:
+        td>: queries/tokenize_en.sql
+        create_table: exploded
+
+    +tokenize_ja:
+      if>: ${japanese}
+      _do:
+        td>: queries/tokenize_ja.sql
+        create_table: exploded
 
     +feature_vector:
       _parallel: true

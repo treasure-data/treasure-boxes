@@ -9,6 +9,12 @@ num_features: 30
 
 train_rate: 0.7
 
+# language of documents
+# if english => english: true, japanese: false
+# if japanese => english: false, japanese: true
+english: false
+japanese: true
+
 # valid age range
 min_age: 15
 max_age: 95
