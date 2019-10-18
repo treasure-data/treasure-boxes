@@ -3,11 +3,19 @@ This workflow gets RSS feed data from web sites you specified and import data to
 
 ## How to use
 ### Push workflow and set secret
-Download this workflow and push it to your TD environment, then set your td master api key as secret on the project.
+
+Download this workflow and push it to your TD environment, then set your td master api key and API server as secret on the project.
+
 ```
 $ td wf push rss_import
-$ td wf secrets --project rss_import --set td.apikey
+$ td wf secrets --project rss_import --set td.apikey --set td.apiserver
 ```
+
+|Variable|Description|Example|
+|:---|:---|:---|
+|`td.apikey`|An API key to be used in the script. Access Type must be `Master Key`.|`1234/abcdefghijklmnopqrstuvwxyz1234567890`|
+|`td.apiserver`|TD's API endpoint starting with `https://`. See our [document](https://support.treasuredata.com/hc/en-us/articles/360001474288-Sites-and-Endpoints#Endpoints) for details.|`https://api.treasuredata.com`|
+
 ### Set RSS url list
 Set rss_url_list you want to get imported in [rss_import.dig](rss_import.dig) file.
 Here is example.
@@ -16,16 +24,14 @@ Here is example.
 ```
 
 ### Prepare database and table
-You need to have following database and table to which data are imported. 
+
+If you want to change target database and table name, you need to modify following settings in [config/params.yml](config/params.yml) file accordingly.
+
 ```
-$ td db:create rss_db
-$ td table:create rss_db rss_tbl
+td:
+  database: rss_db
+  table: rss_tbl
 ```
-If you want to change name, you need to modify following settings in [rss_import.dig](rss_import.dig) file accordingly.
-```
-  dest_db: rss_db
-  dest_table: rss_tbl
-  ```
 
 ### Schedule
 You can schedule the workflow with any interval by changing following schedule setting in [rss_import.dig](rss_import.dig) file (set it daily in default).
@@ -34,12 +40,6 @@ timezone: Asia/Tokyo
 
 schedule:
   daily>: 02:00:00
-```
-
-### TD endpoint
-You need to modify td_endpoint setting in [rss_import.dig](rss_import.dig) file for your TD region accordingly. See our [document](https://support.treasuredata.com/hc/en-us/articles/360001474288-Sites-and-Endpoints#Endpoints) for details.
-```
-    td_endpoint: "https://api.treasuredata.com/"
 ```
 
 ## Output

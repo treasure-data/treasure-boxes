@@ -1,20 +1,20 @@
 
 _export:
     td:
-        database: onetrust  #database where onetrust data is ingested 
+        database: onetrust  #database where onetrust data is ingested
 
 +drop_table:
     td_ddl>:
-    drop_tables: 
-        - onetrust_collection_data  #table to ingest collection data 
-        - onetrust_profiles_data  #table to ingest onetrust profiles with purposes and consent information 
-        
+    drop_tables:
+        - onetrust_collection_data  #table to ingest collection data
+        - onetrust_profiles_data  #table to ingest onetrust profiles with purposes and consent information
+
 
 +call_onetrust_api:
 #call  onetrust api
-    _parallel: true 
+    _parallel: true
 
-    +call_data_profile_endpoint: 
+    +call_data_profile_endpoint:
         docker:
             image: "digdag/digdag-python:3.7"
         py>: onetrustintegration.getOneTrustProfileData

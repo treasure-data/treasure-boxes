@@ -1,4 +1,4 @@
-# Get row count of tables 
+# Get row count of tables
 This workflow gets all row counts of all tables of all databases and store the information into a table on TD. You can have history of row counts of tables to see your data growth trend by scheduling this workflow every day. Also you can use those data to check and detect unexpected data spike.
 
 ## How to use
@@ -10,11 +10,8 @@ $ td wf secrets --project get_row_count --set td.apikey
 ```
 
 ### Prepare database and table
-You need to have following database and table to which data are imported. 
-```
-$ td db:create td_stats
-$ td table:create td_stats row_count
-```
+This workflow creates database and table to store the result.
+
 If you want to change name, you need to modify following settings in [get_row_count.dig](get_row_count.dig) file accordingly.
 ```
   dest_db: td_stats

@@ -1,9 +1,9 @@
-import os, sys, re, pandas, tdclient, json
+import os, sys, re, pandas, json
 from datetime import datetime as dt
 from mapping import mapping as mp
 from time import sleep
 
-os.system(f"{sys.executable} -m pip install -U pytd==0.8.0")
+os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
 os.system(f"{sys.executable} -m pip install TwitterSearch")
 
 import pytd

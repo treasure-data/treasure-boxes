@@ -28,7 +28,7 @@ def tsv_files(members):
 
 
 def load_sense_video(database, table, bucket, device_id, date):
-    os.system("{} -m pip install -U pytd==0.6.2".format(sys.executable))
+    os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
 
     import pytd
 

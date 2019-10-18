@@ -1,4 +1,6 @@
-dbname: timeseries
+td:
+  database: timeseries
+  engine: presto
 source_table: retail_sales
 target_table: predicted_sales
 start_date: "1993-01-01"

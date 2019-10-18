@@ -1,3 +1,8 @@
+_export:
+    # This directive include ${td.database} from the following file.
+    # Modify if you need to change ${td.database}.
+    !include : config/params.yml
+
 +read_into_df:
     py>: py_scripts.examples.read_td_table
     database_name: sample_datasets
@@ -5,15 +10,15 @@
     docker:
         image: "digdag/digdag-python:3.7"
     _env:
-        TD_API_KEY: ${secret:apikey}
-        TD_API_SERVER: ${secret:endpoint}
+        TD_API_KEY: ${secret:td.apikey}
+        TD_API_SERVER: ${secret:td.apiserver}
 
 +write_into_td:
     py>: py_scripts.examples.write_td_table
-    database_name: pandas_test
+    database_name: ${td.database}
     table_name: my_df
     docker:
         image: "digdag/digdag-python:3.7"
     _env:
-        TD_API_KEY: ${secret:apikey}
-        TD_API_SERVER: ${secret:endpoint}
+        TD_API_KEY: ${secret:td.apikey}
+        TD_API_SERVER: ${secret:td.apiserver}

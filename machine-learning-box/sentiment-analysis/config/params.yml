@@ -1,1 +1,4 @@
-dbname: sentiment
+td:
+  database: sentiment
+train_table: movie_review_train
+test_table: movie_review_test

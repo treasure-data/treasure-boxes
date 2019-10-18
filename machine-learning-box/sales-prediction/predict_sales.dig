@@ -1,25 +1,22 @@
 _export:
   !include : config/params.yml
-  td:
-    database: ${dbname}
-    engine: presto
 
 +predict:
-  py>: predict.TimeSeriesPredictor.run
+  py>: py_scripts.predict.TimeSeriesPredictor.run
+  database: ${td.database}
+  source_table: ${source_table}
+  target_table: ${target_table}
+  start_date: ${start_date}
+  end_date: ${end_date}
+  period: 3652
   docker:
     image: 'digdag/digdag-python:3.7'
   _env:
-    TD_API_KEY: ${secret:apikey}
-    TD_API_SERVER: ${secret:endpoint}
-    AWS_ACCESS_KEY_ID: ${secret:aws_access_key_id}
-    AWS_SECRET_ACCESS_KEY: ${secret:aws_secret_access_key}
-    S3_BUCKET: ${secret:s3_bucket}
-    database: ${dbname}
-    source_table: ${source_table}
-    target_table: ${target_table}
-    start_date: ${start_date}
-    end_date: ${end_date}
-    period: 3652
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${secret:td.apiserver}
+    AWS_ACCESS_KEY_ID: ${secret:s3.access_key_id}
+    AWS_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}
+    S3_BUCKET: ${secret:s3.bucket}
 
 +send_graph:
   http>: ${secret:slack_webhook_url}

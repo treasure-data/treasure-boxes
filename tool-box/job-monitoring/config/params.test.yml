@@ -1,0 +1,3 @@
+td:
+  database: "monitoring_${session_uuid.replace(/-/g,'_')}"
+  table: td_job_queue

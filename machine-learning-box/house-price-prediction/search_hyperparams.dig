@@ -2,7 +2,6 @@
 _export:
   !include : config/params.yml
   td:
-    database: ${dbname}
     engine: hive
 
   suffix: ""

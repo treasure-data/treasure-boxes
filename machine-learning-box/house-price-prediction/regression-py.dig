@@ -1,7 +1,6 @@
 _export:
   !include : config/params.yml
   td:
-    database: ${dbname}
     engine: hive
 
   suffix: ""
@@ -25,12 +24,14 @@ _export:
       create_table: ${source}_test
 
   +feature_selection:
-    py>: tasks.FeatureSelector.run
+    py>: py_scripts.FeatureSelector.run
+    dbname: ${td.database}
+    source_table: ${source}
     docker:
       image: 'digdag/digdag-python:3.7'
     _env:
-      TD_API_KEY: ${secret:apikey}
-      TD_API_SERVER: ${secret:endpoint}
+      TD_API_KEY: ${secret:td.apikey}
+      TD_API_SERVER: ${secret:td.apiserver}
       source_table: ${source}
 
   +vectorize:

@@ -1,0 +1,31 @@
+# Data:
+source: movielens.ratings # input table
+td:
+  database: "movielens_${session_uuid.replace(/-/g,'_')}" # output database
+  table: ratings
+
+# Parameters for Matrix Factoriszation:
+
+# (1) Number of latent factors
+# - too large => high prediction accuracy, but more time-consuming
+# - too small => efficient, but low prediction accuracy
+factor: 20
+
+# (2) Regularization parameter
+# - too large or small
+#   => negative effect to prediction, fail into meaningless prediction
+lambda: 0.01
+
+# (3) Learning rate
+# - too large => negative effect to prediction
+# - too small => take much more time
+eta: 0.01
+
+# (4) Number of iterations
+# - affect to running time in case of
+#   bad regularization parameter and/or learning rate
+# - set reasonably large value in general
+iter: 50
+
+# Recommendation size:
+k: 10

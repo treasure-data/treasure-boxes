@@ -35,8 +35,8 @@ If you want to run feature selection with py> operator, you can execute as follo
 ```sh
 $ ./data.sh
 $ td wf push regressor
-$ td wf secrets --project regressor --set apikey --set endpoint
-# Set secrets from STDIN like: apikey=1/xxxxx, endpoint=https://api.treasuredata.com
+$ td wf secrets --project regressor --set td.apikey --set td.apiserver
+# Set secrets from STDIN like: td.apikey=1/xxxxx, td.apiserver=https://api.treasuredata.com
 $ td wf start regressor regression-py --session now
 ```
 

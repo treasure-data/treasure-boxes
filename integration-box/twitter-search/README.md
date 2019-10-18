@@ -18,7 +18,7 @@ td schema:add example_db tweets created_at:int id:int text:string primary_url:st
 ## Push the code and set variables
 ```sh
 td wf push twitter_search_archiver
-td wf secrets --project twitter_search_archiver --set td.apikey td.endpoint td.database td.table
+td wf secrets --project twitter_search_archiver --set td.apikey td.apiserver td.database td.table
 td wf secrets --project twitter_search_archiver --set tw.consumer_key tw.consumer_secret tw.access_token tw.access_token_secret
 td wf secrets --project twitter_search_archiver --set tw.search_keyword
 ```
@@ -26,7 +26,7 @@ td wf secrets --project twitter_search_archiver --set tw.search_keyword
 |Variable|Description|Example|
 |:---|:---|:---|
 |`td.apikey`|An API key to be used in the script. Access Type must be `Master Key`.|`1234/abcdefghijklmnopqrstuvwxyz1234567890`|
-|`td.endpoint`|TD's API endpoint starting with `https://`.|`https://api.treasuredata.com`|
+|`td.apiserver`|TD's API endpoint starting with `https://`.|`https://api.treasuredata.com`|
 |`td.database`|A database name which contains the destination table.|`example_db`|
 |`td.table`|A table name you want to store the result into.|`tweets`|
 |`tw.consumer_key`|Twitter's API key from Consumer API keys section.|`012345ABCDEF`|

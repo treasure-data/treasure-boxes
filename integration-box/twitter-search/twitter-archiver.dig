@@ -7,7 +7,7 @@ schedule:
     py>: twitter-archiver.search_and_archive
     _env:
         td_apikey: ${secret:td.apikey}
-        td_endpoint: ${secret:td.endpoint}
+        td_endpoint: ${secret:td.apiserver}
         td_database: ${secret:td.database}
         td_table: ${secret:td.table}
         tw_consumer_key: ${secret:tw.consumer_key}

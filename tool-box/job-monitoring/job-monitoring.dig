@@ -1,3 +1,6 @@
+_export:
+  !include : config/params.yml
+
 schedule:
   minutes_interval>: 5
 
@@ -5,8 +8,8 @@ schedule:
     docker:
         image: "digdag/digdag-python:3.7"
     py>: job-monitoring.monitoring
+    database: ${td.database}
+    table: ${td.table}
     _env:
         td_apikey: ${secret:td.apikey}
-        td_endpoint: ${secret:td.endpoint}
-        td_database: ${secret:td.database}
-        td_table: ${secret:td.table}
+        td_endpoint: ${secret:td.apiserver}

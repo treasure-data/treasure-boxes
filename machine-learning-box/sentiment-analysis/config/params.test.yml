@@ -1,0 +1,4 @@
+td:
+  database: "sentiment_${session_uuid.replace(/-/g,'_')}"
+train_table: movie_review_train
+test_table: movie_review_test

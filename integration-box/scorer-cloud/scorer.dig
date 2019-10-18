@@ -19,6 +19,6 @@ _export:
   date: ${session_date}
   _env:
     TD_API_KEY: ${secret:td.apikey}
-    TD_API_SERVER: ${secret:td.endpoint}
+    TD_API_SERVER: ${secret:td.apiserver}
     S3_ACCESS_KEY_ID: ${secret:s3.access_key_id}
     S3_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}

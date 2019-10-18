@@ -1,0 +1,18 @@
+# Database
+td:
+  database: "boston_${session_uuid.replace(/-/g,'_')}"
+
+# Input table
+source: house_prices
+
+# Splitting ratio for train and test data
+# e.g.) 0.8: 80% for train and 20% for test
+train_ratio: 0.8
+
+## Hyper parameters
+eta0: 5
+
+iter: 100
+
+# Reguralization parameter. For `train_regressor()` function, `rda` with `adagrad` is used by default.
+reg: no

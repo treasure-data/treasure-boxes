@@ -1,0 +1,13 @@
+_export:
+  !include : config/params.yml
+
+_error:
+  td_ddl>:
+  drop_databases: ["${td.database}"]
+
++run:
+  call>: pyspark.dig
+
++cleanup:
+  td_ddl>:
+  drop_databases: ["${td.database}"]

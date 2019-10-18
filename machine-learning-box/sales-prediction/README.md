@@ -24,13 +24,13 @@ $ ./data.sh # prepare example data
 $ td workflow push prophet
 $ td workflow secrets \
  --project prophet \
-  --set apikey \
-  --set endpoint \
-  --set s3_bucket \
-  --set aws_access_key_id \
-  --set aws_secret_access_key
-# Set secrets from STDIN like: apikey=1/xxxxx, endpoint=https://api.treasuredata.com, s3_bucket=$S3_BUCKET,
-#              aws_access_key_id=AAAAAAAAAA, aws_secret_access_key=XXXXXXXXX
+  --set td.apikey \
+  --set td.apiserver \
+  --set s3.bucket \
+  --set s3.access_key_id \
+  --set s3.secret_access_key
+# Set secrets from STDIN like: td.apikey=1/xxxxx, td.apiserver=https://api.treasuredata.com, s3.bucket=$S3_BUCKET,
+#              s3.access_key_id=AAAAAAAAAA, s3.secret_access_key=XXXXXXXXX
 $ td workflow start prophet predict_sales --session now
 ```
 
@@ -43,9 +43,9 @@ $ ./data.sh # prepare example data
 $ td workflow push prophet
 $ td workflow secrets \
  --project prophet \
-  --set apikey \
-  --set endpoint \
-# Set secrets from STDIN like: apikey=1/xxxxx, endpoint=https://api.treasuredata.com
+  --set td.apikey \
+  --set td.apiserver \
+# Set secrets from STDIN like: td.apikey=1/xxxxx, td.apiserver=https://api.treasuredata.com
 $ td workflow start prophet predict_sales_simple --session now
 ```
 

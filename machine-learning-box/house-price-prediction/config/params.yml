@@ -1,5 +1,6 @@
 # Database
-dbname: boston
+td:
+  database: boston
 
 # Input table
 source: house_prices
