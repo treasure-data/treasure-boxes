@@ -6,8 +6,10 @@ import sys
 
 import pandas as pd
 import pytd
+import tdclient
 
 os.system(f"{sys.executable} -m pip install feedparser")
+
 import feedparser
 
 
