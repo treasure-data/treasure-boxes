@@ -2,7 +2,7 @@
     py>: py_scripts.examples.print_arg
     msg: "Hello World"
     docker:
-        image: "digdag/digdag-python:3.7"
+        image: "armtd/td-script:2019.09"
 
 +simple_with_env:
     py>: py_scripts.examples.print_env
@@ -11,19 +11,19 @@
         # One can use secrets as well.
         # See https://support.treasuredata.com/hc/en-us/articles/360001266788-Workflows-Secrets-Management
     docker:
-        image: "digdag/digdag-python:3.7"
+        image: "armtd/td-script:2019.09"
 
 +simple_with_import:
     py>: py_scripts.examples.import_another_file
     docker:
-        image: "digdag/digdag-python:3.7"
+        image: "armtd/td-script:2019.09"
 
 +simple_with_workflow_env:
     +store_msg:
         py>: py_scripts.examples.store_workflow_env
         msg: "Hello World"
         docker:
-            image: "digdag/digdag-python:3.7"
+            image: "armtd/td-script:2019.09"
 
     +restore_msg:
         echo>: ${my_msg}

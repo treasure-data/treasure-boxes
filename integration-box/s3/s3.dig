@@ -7,7 +7,7 @@ _export:
   bucket: ${bucket}
   region_name: ${region}
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: "armtd/td-script:2019.09"
   _env:
     # For secrets documentation,
     # See https://support.treasuredata.com/hc/en-us/articles/360001266788-Workflows-Secrets-Management
@@ -19,7 +19,7 @@ _export:
   bucket: ${bucket}
   region_name: ${region}
   docker:
-      image: "digdag/digdag-python:3.7"
+      image: "armtd/td-script:2019.09"
   _env:
     S3_ACCESS_KEY_ID: ${secret:s3.access_key_id}
     S3_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}

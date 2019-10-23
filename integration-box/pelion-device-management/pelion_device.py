@@ -1,7 +1,6 @@
 import os
 import sys
 os.system(f"{sys.executable} -m pip install mbed-cloud-sdk")
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0 td-client")
 
 
 def _cast(value):

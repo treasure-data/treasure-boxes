@@ -7,7 +7,6 @@ from logging import DEBUG, StreamHandler, getLogger
 import numpy
 import pandas as pd
 
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
 os.system(f"{sys.executable} -m pip install -U chainer")
 
 

@@ -1,5 +1,4 @@
 import os
-import sys
 import tarfile
 import tempfile
 
@@ -28,8 +27,6 @@ def tsv_files(members):
 
 
 def load_sense_video(database, table, bucket, device_id, date):
-    os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
-
     import pytd
 
     client = pytd.Client(database=database)

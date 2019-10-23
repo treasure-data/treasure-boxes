@@ -4,9 +4,6 @@ import textwrap
 
 class FeatureSelector(object):
     def __init__(self):
-        import sys
-        os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
-
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
 

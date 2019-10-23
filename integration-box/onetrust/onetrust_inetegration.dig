@@ -16,7 +16,7 @@ _export:
 
     +call_data_profile_endpoint:
         docker:
-            image: "digdag/digdag-python:3.7"
+            image: "armtd/td-script:2019.09"
         py>: onetrustintegration.getOneTrustProfileData
         _env:
             DATABASE: ${td.database}
@@ -28,7 +28,7 @@ _export:
 
     +call_collection_endpoint:
         docker:
-            image: "digdag/digdag-python:3.7"
+            image: "armtd/td-script:2019.09"
         py>: onetrustintegration.getOneTrustCollectionData
         _env:
             DATABASE: ${td.database}

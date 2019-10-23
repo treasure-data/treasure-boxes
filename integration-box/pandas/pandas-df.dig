@@ -8,7 +8,7 @@ _export:
     database_name: sample_datasets
     table_name: nasdaq
     docker:
-        image: "digdag/digdag-python:3.7"
+        image: "armtd/td-script:2019.09"
     _env:
         TD_API_KEY: ${secret:td.apikey}
         TD_API_SERVER: ${secret:td.apiserver}
@@ -18,7 +18,7 @@ _export:
     database_name: ${td.database}
     table_name: my_df
     docker:
-        image: "digdag/digdag-python:3.7"
+        image: "armtd/td-script:2019.09"
     _env:
         TD_API_KEY: ${secret:td.apikey}
         TD_API_SERVER: ${secret:td.apiserver}

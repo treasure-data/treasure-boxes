@@ -2,9 +2,6 @@ import os
 import sys
 
 
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
-
-
 def _upload_model(model, model_file="keras_model.h5"):
     import boto3
 

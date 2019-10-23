@@ -1,10 +1,6 @@
 import os
-import sys
 
 import pandas as pd
-
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
-
 import pytd
 
 

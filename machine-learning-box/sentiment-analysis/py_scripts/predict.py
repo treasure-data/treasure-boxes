@@ -1,7 +1,6 @@
 import os
 import sys
 
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
 os.system(f"{sys.executable} -m pip install -U tensorflow==2.0.0 tensorflow_hub==0.7.0")
 
 
@@ -33,7 +32,8 @@ def run(input_table="movie_review_test_shuffled", database="sentiment"):
     model_file = "keras_model.h5"
 
     # Download the TensorFlow model from S3
-    # boto3 assuming environment variables "AWS_ACCESS_KEY_ID" and "AWS_SECRET_ACCESS_KEY":
+    # boto3 assuming environment variables "AWS_ACCESS_KEY_ID" and
+    # "AWS_SECRET_ACCESS_KEY":
     # http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables
     s3 = boto3.resource("s3")
     s3.Bucket(os.environ["S3_BUCKET"]).download_file(model_file, model_file)

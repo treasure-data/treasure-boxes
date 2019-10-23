@@ -2,49 +2,47 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
-
-# for pytd
-os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
 
 import pytd
 from pytd.dbapi import connect
 import requests
 
+
 def fetch_row(sql, connection):
-  cur = connection.cursor()
-  cur.execute(sql)
-  index = 0
-  while True:
-    row = cur.fetchone()
-    if row is None:
-      break
-    yield index, row[0]
-    index += 1
+    cur = connection.cursor()
+    cur.execute(sql)
+    index = 0
+    while True:
+        row = cur.fetchone()
+        if row is None:
+            break
+        yield index, row[0]
+        index += 1
+
 
 def call_api(sql, url, replaced_param):
 
-  print("Reading sqlfile: {}".format(sql))
-  f = open(sql, 'r')
-  sqlcontent = f.read()
-  f.close
+    print("Reading sqlfile: {}".format(sql))
+    f = open(sql, "r")
+    sqlcontent = f.read()
+    f.close
 
-  print("SQL content is:")
-  print(sqlcontent)
+    print("SQL content is:")
+    print(sqlcontent)
 
-  client = pytd.Client(
-    apikey=os.environ.get('td_apikey'),
-    endpoint=os.environ.get('td_endpoint'),
-    database=os.environ.get('td_database'),
-    default_engine=os.environ.get('td_engine')
+    client = pytd.Client(
+        apikey=os.environ.get("td_apikey"),
+        endpoint=os.environ.get("td_endpoint"),
+        database=os.environ.get("td_database"),
+        default_engine=os.environ.get("td_engine"),
     )
-  conn = connect(client)
+    conn = connect(client)
 
-  print("API call start:")
-  for index, row in fetch_row(sqlcontent, conn):
-    u = url.replace(replaced_param, row)
-    print(index, u)
-    r = requests.get(u)
-    print(r)
+    print("API call start:")
+    for index, row in fetch_row(sqlcontent, conn):
+        u = url.replace(replaced_param, row)
+        print(index, u)
+        r = requests.get(u)
+        print(r)
 
-  print("API call finished")
+    print("API call finished")
