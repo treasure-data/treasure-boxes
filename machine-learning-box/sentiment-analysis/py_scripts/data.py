@@ -1,11 +1,8 @@
 import csv
 import os
-import sys
 import re
 import shutil
 from urllib.request import urlopen
-
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
 
 
 def convert_directory_to_csv(directory, polarity, out_file_path):

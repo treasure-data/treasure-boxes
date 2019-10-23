@@ -5,7 +5,7 @@ schedule:
 
 +step1:
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: "armtd/td-script:2019.09"
   py>: get_row_count.get_row_count
   dest_db: td_stats
   dest_table: row_count

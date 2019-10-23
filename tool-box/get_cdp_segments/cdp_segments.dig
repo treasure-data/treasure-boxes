@@ -11,11 +11,11 @@ _export:
     cdp_endpoint: "https://api-cdp.treasuredata.co.jp/"
     mstbl: master_segment_lists
     segtbl: segment_lists
-    
+
 +import_ms_lists_to_td:
   docker:
-    image: "digdag/digdag-python:3.7"
-    
+    image: "armtd/td-script:2019.09"
+
   py>: getcdpsegments.getSegmentLists
   _env:
     apikey: ${secret:td.apikey}
@@ -32,8 +32,8 @@ _export:
   _do:
     +step1:
       docker:
-        image: "digdag/digdag-python:3.7"
-    
+        image: "armtd/td-script:2019.09"
+
       py>: getcdpsegments.getSegmentLists
       _env:
         apikey: ${secret:td.apikey}

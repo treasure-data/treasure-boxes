@@ -7,7 +7,7 @@ _export:
   train_table: ${train_table}
   test_table: ${test_table}
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: 'armtd/td-ml:2019.09'
   _env:
     TD_API_KEY: ${secret:td.apikey}
     TD_API_SERVER: ${secret:td.apiserver}

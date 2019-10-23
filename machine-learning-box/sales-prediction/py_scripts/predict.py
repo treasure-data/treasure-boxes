@@ -4,9 +4,6 @@ import os
 
 class TimeSeriesPredictor(object):
     def __init__(self):
-        import sys
-        os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
-
         self.apikey = os.getenv("TD_API_KEY")
         self.endpoint = os.getenv("TD_API_SERVER")
 

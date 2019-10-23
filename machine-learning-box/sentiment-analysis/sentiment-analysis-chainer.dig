@@ -11,7 +11,7 @@ _export:
   input_table: "${test_table}_shuffled"
   output_table: "test_predicted_polarities_chainer"
   docker:
-    image: 'digdag/digdag-python:3.7'
+    image: 'armtd/td-ml:2019.09'
   _env:
     TD_API_KEY: ${secret:td.apikey}
     TD_API_SERVER: ${secret:td.apiserver}

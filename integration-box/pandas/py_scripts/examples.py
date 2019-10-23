@@ -1,10 +1,7 @@
 # Because we do not allow custom image currently, this is how you can add 3rd party
 # libraries instead
 import os
-import sys
 import tdclient
-
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
 
 apikey = os.environ['TD_API_KEY']
 apiserver = os.environ['TD_API_SERVER']
@@ -18,6 +15,7 @@ def read_td_table(database_name, table_name, engine_name='presto', limit=1000):
     res = client.query(f"select * from {table_name} limit {limit}", engine=engine_name)
     df = pd.DataFrame(**res)
     print(df)
+
 
 def write_td_table(database_name, table_name):
     import pytd

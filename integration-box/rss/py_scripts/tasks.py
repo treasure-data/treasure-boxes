@@ -5,9 +5,9 @@ import os
 import sys
 
 import pandas as pd
+import pytd
 
 os.system(f"{sys.executable} -m pip install feedparser")
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
 
 TD_APIKEY = os.environ.get("td_apikey")
 TD_ENDPOINT = os.environ.get("td_endpoint")

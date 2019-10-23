@@ -1,7 +1,7 @@
 timezone: Asia/Tokyo
 _export:
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: "armtd/td-script:2019.09"
   !include : 'config/kintone.yml'
   org: hogehoge
 

@@ -1,6 +1,6 @@
 +create_table_on_td:
   docker:
-    image: "digdag/digdag-python:3.7.3-stretch"
+    image: "armtd/td-script:2019.09"
   _env:
       DR_USERNAME: ${secret:dr.username}
       DR_PRED_HOST: ${secret:dr.prediction_host}

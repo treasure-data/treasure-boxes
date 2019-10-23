@@ -11,7 +11,7 @@ You can change DB and Table as you want. Modify `td.database` and `td.table` und
 |`td.database`|A database name which contains the destination table.|`monitoring`|
 |`td.table`|A table name you want to store the result into.|`td_job_queue`|
 
-Both databasen and table will be created if not exist.
+Both database and table will be created if not exist.
 
 ## Push the code and set environment variables
 All of four variables are required.

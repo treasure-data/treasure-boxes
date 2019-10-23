@@ -10,7 +10,7 @@ _export:
 
 +load_sense_video:
   docker:
-    image: 'digdag/digdag-python:3.7'
+    image: 'armtd/td-ml:2019.09'
   py>: scorer.load_sense_video
   database: ${database}
   table: ${table}

@@ -6,7 +6,7 @@ _export:
   database: ${td.database}
   table: ${source}
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: 'armtd/td-ml:2019.09'
   _env:
     TD_API_KEY: ${secret:td.apikey}
     TD_API_SERVER: ${secret:td.apiserver}

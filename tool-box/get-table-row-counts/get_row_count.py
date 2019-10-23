@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
 import os
-import os.path
-
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
 
 import pytd
 import pandas as pd
