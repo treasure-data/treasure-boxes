@@ -1,0 +1,7 @@
+td:
+  database: "timeseries_${session_uuid.replace(/-/g,'_')}"
+  engine: presto
+source_table: retail_sales
+target_table: predicted_sales
+start_date: "1993-01-01"
+end_date: "2016-05-31"

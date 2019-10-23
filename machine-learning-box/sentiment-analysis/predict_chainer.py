@@ -6,13 +6,15 @@ from logging import DEBUG, StreamHandler, getLogger
 
 import numpy
 
-os.system(f"{sys.executable} -m pip install -U chainer")
-os.system(f"{sys.executable} -m pip install -U pytd==0.6.2")
+os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
 
-import chainer
 import pytd.pandas_td as td
 
+os.system(f"{sys.executable} -m pip install -U chainer")
+
+import chainer
 from chainer_utils import nets, nlp_utils
+
 
 MODEL_URL = "https://workflow-example-public.s3.amazonaws.com/imdb_model.tar.gz"
 

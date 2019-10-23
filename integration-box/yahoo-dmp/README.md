@@ -10,7 +10,7 @@ Copy script of 'call_yahoo_dmp_api.dig' into `Workflow Definition` tab.
 Then replace some placeholder to your own.
 - ${secret:td.apikey}
 - YOUR_SITE_IDZ
-- YOUR_COOKIE_PARAM)
+- YOUR_COOKIE_PARAM
 - YOUR_DATABASE
 
 ### define SQL to collect user data

@@ -1,3 +1,6 @@
+_export:
+  !include : config/params.yml
+
 timezone: Asia/Tokyo
 
 schedule:
@@ -7,9 +10,9 @@ schedule:
   docker:
     image: "digdag/digdag-python:3.7"
   py>: tasks.rss_import
-  dest_db: rss_db
-  dest_table: rss_tbl
+  dest_db: ${td.database}
+  dest_table: ${td.table}
   rss_url_list: ['https://www.vogue.co.jp/rss/vogue', 'https://feeds.dailyfeed.jp/feed/s/7/887.rss']
   _env:
     td_apikey: ${secret:td.apikey}
-    td_endpoint: "https://api.treasuredata.com/"
+    td_endpoint: ${secret:td.apiserver}

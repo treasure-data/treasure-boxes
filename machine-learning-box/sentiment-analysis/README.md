@@ -21,17 +21,17 @@ There are three workflows:
 ### An example workflow with TensorFlow using Amazon S3
 
 ```bash
-$ ./data.sh # prepare example data
 $ td workflow push sentiment
 $ td workflow secrets \
   --project sentiment \
-  --set apikey \
-  --set endpoint \
-  --set s3_bucket \
-  --set aws_access_key_id \
-  --set aws_secret_access_key
-# Set secrets from STDIN like: apikey=1/xxxxx, endpoint=https://api.treasuredata.com, s3_bucket=$S3_BUCKET,
-#              aws_access_key_id=AAAAAAAAAA, aws_secret_access_key=XXXXXXXXX
+  --set td.apikey \
+  --set td.apiserver \
+  --set s3.bucket \
+  --set s3.access_key_id \
+  --set s3.secret_access_key
+# Set secrets from STDIN like: td.apikey=1/xxxxx, td.apiserver=https://api.treasuredata.com, s3.bucket=$S3_BUCKET,
+#              s3.access_key_id=AAAAAAAAAA, s3.secret_access_key=XXXXXXXXX
+$ td workflow start sentiment ingest --session now
 $ td workflow start sentiment sentiment-analysis --session now
 ```
 
@@ -42,13 +42,13 @@ $ td workflow start sentiment sentiment-analysis --session now
 If you don't have AWS account, this workflow would be easy to try.
 
 ```bash
-$ ./data.sh # prepare example data
 $ td workflow push sentiment
 $ td workflow secrets \
   --project sentiment \
-  --set apikey \
-  --set endpoint
-# Set secrets from STDIN like: apikey=1/xxxxx, endpoint=https://api.treasuredata.com
+  --set td.apikey \
+  --set td.apiserver
+# Set secrets from STDIN like: td.apikey=1/xxxxx, td.apiserver=https://api.treasuredata.com
+$ td workflow start sentiment ingest --session now
 $ td workflow start sentiment sentiment-analysis-simple --session now
 ```
 
@@ -61,13 +61,13 @@ This example enables you to predict polarity by using pre-trained model with CNN
 The pre-trained model is put public Amazon S3 so that you don't need to have AWS account.
 
 ```bash
-$ ./data.sh # prepare example data
 $ td workflow push sentiment
 $ td workflow secrets \
   --project sentiment \
-  --set apikey \
-  --set endpoint
-# Set secrets from STDIN like: apikey=1/xxxxx, endpoint=https://api.treasuredata.com
+  --set td.apikey \
+  --set td.apiserver
+# Set secrets from STDIN like: td.apikey=1/xxxxx, td.apiserver=https://api.treasuredata.com
+$ td workflow start sentiment ingest --session now
 $ td workflow start sentiment sentiment-analysis-chainer --session now
 ```
 

@@ -67,7 +67,7 @@ Update [`config.yml`](./config.yml), and push the workflow with certain secrets:
 td wf push scorer
 td wf secrets --project scorer \
               --set td.apikey=${TD_API_KEY} \
-              --set td.endpoint=${TD_API_SERVER} \
+              --set td.apiserver=${TD_API_SERVER} \
               --set s3.access_key_id=${S3_ACCESS_KEY_ID} \
               --set s3.secret_access_key=${S3_SECRET_ACCESS_KEY}
 ```

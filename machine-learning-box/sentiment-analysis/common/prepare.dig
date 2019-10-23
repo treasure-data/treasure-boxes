@@ -4,10 +4,10 @@
 
     +train:
       td>: ../queries/shuffle.sql
-      source: movie_review_train
-      create_table: movie_review_train_shuffled
+      source: ${train_table}
+      create_table: ${train_table}_shuffled
 
     +test:
       td>: ../queries/shuffle.sql
-      source: movie_review_test
-      create_table: movie_review_test_shuffled
+      source: ${test_table}
+      create_table: ${test_table}_shuffled

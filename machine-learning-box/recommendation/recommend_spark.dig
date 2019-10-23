@@ -1,17 +1,14 @@
 _export:
   !include : config/params.yml
-  td:
-    database: ${target}
-    engine: hive
 
 +train_and_predict:
   py>: py_scripts.recommend.spark_als
-  database: ${target}
-  source_table: "ratings"
+  database: ${td.database}
+  source_table: ${td.table}
   target_table: "recommendation_als"
   item_size: ${k}
   docker:
     image: "digdag/digdag-python:3.7"
   _env:
-    TD_API_KEY: ${secret:apikey}
-    TD_API_SERVER: ${secret:endpoint}
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${secret:td.apiserver}

@@ -40,7 +40,7 @@ Uploaded:
 Use `td workflow workflows` to show all workflows.
 ```
 
-Before running this workflow, we need to set secrets with `td wf secrets` command. Enter AWS access key id and secret access key for the bucket. Input credentials after showing `s3.access_key_id:` and `s3.secret_access_key`.
+Before running this workflow, we need to set secrets with `td wf secrets` command. Enter AWS access key id and secret access key for the bucket. Input credentials after showing `aws.s3.access_key_id:` and `aws.s3.secret_access_key`.
 
 ```sh
 $ td wf secrets --project s3 --set s3.access_key_id  --set s3.secret_access_key

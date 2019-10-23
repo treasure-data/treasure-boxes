@@ -1,14 +1,12 @@
-import pytd
 import requests
 import pandas as pd
 import sys
 import os
 import json
 
-sys.path.append('/home/td-user/.local/lib/python3.7/site-packages')
-os.system(f"{sys.executable} -m pip install --user requests")
 # utilize the pytd to load the data into TD
-os.system(f"{sys.executable} -m pip install --user pytd[spark]")
+os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
+import pytd
 
 
 
@@ -21,7 +19,7 @@ ot_api_key = os.environ['OT_API_KEY']
 
 
 """
-uploads the dataframe to TD  
+uploads the dataframe to TD
 """
 
 def uploadOTDataToTD(td_endpoint, td_api_key, dataframe, td_db, td_table):
@@ -32,7 +30,7 @@ def uploadOTDataToTD(td_endpoint, td_api_key, dataframe, td_db, td_table):
             database=td_db,
             default_engine='hive')
         client.load_table_from_dataframe(
-            dataframe, td_table, if_exists='overwrite') 
+            dataframe, td_table, if_exists='overwrite')
     except :
         raise Exception('Error Connecting to TD database')
 
@@ -52,7 +50,7 @@ def callOneTrustProfiles(ot_api_key, ot_profile_url, pagenumber):
         params=payload)
     try:
         api_response = getresponse.json()
-        api_content = api_response['content'] #get the content of the json response 
+        api_content = api_response['content'] #get the content of the json response
         lst_id = []
         lst_identifier = []
         lst_name = []
@@ -61,11 +59,11 @@ def callOneTrustProfiles(ot_api_key, ot_profile_url, pagenumber):
         lst_last_transaction_collection_id= []
         for each_response in api_content:
             for each_purpose in each_response["Purposes"]:
-                lst_id.append(each_response["Id"]) #unique ID to identify a subject 
+                lst_id.append(each_response["Id"]) #unique ID to identify a subject
                 lst_identifier.append(each_response["Identifier"]) #subject email  example: johndoe@td.com
-                lst_name.append(each_purpose["Name"])  #name of the purpose example: Terms and Conditions  
+                lst_name.append(each_purpose["Name"])  #name of the purpose example: Terms and Conditions
                 lst_status.append(each_purpose["Status"]) #whats the consent status : example  Terms and Conditions
-                lst_status_pid.append(each_purpose["Id"]) #this is the ID which uniquely identifies the purpose, stored as pid in treasuere data 
+                lst_status_pid.append(each_purpose["Id"]) #this is the ID which uniquely identifies the purpose, stored as pid in treasuere data
                 lst_last_transaction_collection_id.append(each_purpose['LastTransactionCollectionPointId']) . #this identifies the last collecpoint where consent was given (Example : web form , newsletter subsciption page etc)
         df = pd.DataFrame(list(zip(lst_id,
                                    lst_identifier,
@@ -110,13 +108,13 @@ def callOneTrustCollectionPoint(ot_api_key, ot_collection_url, pagenumber):
         lst_version = []
         for each_response in api_content:
             for each_purpose in each_response["Purposes"]:
-                lst_id.append(each_response["Id"]) #this id identifies the collection point 
-                lst_name.append(each_response["Name"]) #this id identifies the name of the collection point 
+                lst_id.append(each_response["Id"]) #this id identifies the collection point
+                lst_name.append(each_response["Name"]) #this id identifies the name of the collection point
                 lst_collection_point_type.append(each_response['CollectionPointType'])  #indentifies the collection point type etc
                 lst_label.append(each_purpose["Label"]) #purpose example: Terms and Conditions
-                lst_pid.append(each_purpose["Id"]) #uniquely identifies the purpose   
+                lst_pid.append(each_purpose["Id"]) #uniquely identifies the purpose
                 lst_status.append(each_purpose["Status"]) #status of the purpose
-                lst_version.append(each_purpose["Version"]) #version used 
+                lst_version.append(each_purpose["Version"]) #version used
                 lst_newversion_flag.append(each_purpose["NewVersionAvailable"]) #flag to check if a new version is avaliable
 
         df = pd.DataFrame(list(zip(lst_id,
@@ -168,10 +166,10 @@ def getOneTrustCollectionData():
             td_api_key,
             df_to_upload_td,
             td_database,
-            'onetrust_collection_data') 
+            'onetrust_collection_data')
 
     except :
-        raise Exception(getresponse.status_code) 
+        raise Exception(getresponse.status_code)
 
 
 """

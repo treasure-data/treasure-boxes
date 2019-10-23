@@ -1,0 +1,2 @@
+td:
+  database: "pandas_test_${session_uuid.replace(/-/g,'_')}"

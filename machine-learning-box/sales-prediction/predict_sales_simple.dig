@@ -1,20 +1,17 @@
 _export:
   !include : config/params.yml
-  td:
-    database: ${dbname}
-    engine: presto
 
 +predict:
-  py>: predict.TimeSeriesPredictor.run
+  py>: py_scripts.predict.TimeSeriesPredictor.run
+  database: ${td.database}
+  source_table: ${source_table}
+  target_table: ${target_table}
+  start_date: ${start_date}
+  end_date: ${end_date}
+  period: 3652
   with_aws: false
   docker:
     image: 'digdag/digdag-python:3.7'
   _env:
-    TD_API_KEY: ${secret:apikey}
-    TD_API_SERVER: ${secret:endpoint}
-    database: ${dbname}
-    source_table: ${source_table}
-    target_table: ${target_table}
-    start_date: ${start_date}
-    end_date: ${end_date}
-    period: 3652
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${secret:td.apiserver}

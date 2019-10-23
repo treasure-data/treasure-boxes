@@ -1,0 +1,12 @@
+_export:
+  !include : config/params.yml
+
++ingest:
+  py>: py_scripts.data.upload_dataset
+  database: ${td.database}
+  table: ${source_table}
+  docker:
+    image: "digdag/digdag-python:3.7"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${secret:td.apiserver}

@@ -1,0 +1,2 @@
+td:
+  database: "td_spark_example_${session_uuid.replace(/-/g,'_')}"

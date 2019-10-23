@@ -4,7 +4,7 @@ import os
 import sys
 import tdclient
 
-os.system(f"{sys.executable} -m pip install -U pytd==0.6.2")
+os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
 
 import pytd.pandas_td as td
 
