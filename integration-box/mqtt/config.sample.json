@@ -1,0 +1,8 @@
+{
+  "broker": "mqtt.treasuredata.com",
+  "apikey": "1/123456789abcdefghijklmnopqrstuvwxyz",
+  "database": "database_name",
+  "table": "table_name",
+  "certfile": "/path/to/client.cert",
+  "keyfile": "/path/to/private.key"
+}

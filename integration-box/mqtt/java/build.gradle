@@ -1,0 +1,14 @@
+apply plugin: 'application'
+
+repositories {
+  jcenter();
+  maven { url "https://repo.eclipse.org/content/repositories/paho-snapshots/" }
+}
+
+dependencies {
+  implementation "org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2"
+  implementation "org.json:json:20190722"
+  implementation "javax.xml.bind:jaxb-api:2.3.1"
+}
+
+mainClassName = "com.treasuredata.boxes.mqtt.MqttSample"
