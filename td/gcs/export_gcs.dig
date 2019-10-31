@@ -7,8 +7,7 @@ timezone: UTC
   result_connection: YOUR_GCS_CONNECTION_NAME
   result_settings:
     bucket: BUCKET_NAME
-    path_prefix: /filename.csv
-    sequence_format: .%1d
+    path_prefix: /filename.csv.gz
     format: csv
     header_line: true
     delimiter: ","
