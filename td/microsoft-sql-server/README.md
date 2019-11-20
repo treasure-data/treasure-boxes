@@ -50,6 +50,10 @@ Available parameters for `result_settings` are here.
 - batch_size: (integer, default: 16777216)
 - mode: (string(insert|insert_direct|truncate_insert|replace), default insert)
 
+Please note the following conditions in regards to the `result_settings`:
+- If you are using Azure, omit the instance name and provide the port # only.
+- If you are not using Azure and want to use your own instance: please make sure that you can connect to the database using only the instance name, without the port.
+
 For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-microsoft-sql-server)
 
 # Next Step

@@ -8,6 +8,7 @@ Data Connector for Microsoft SQL Server supports incremental mode using incremen
 
 First, please prepare the load.yml refer to [Treasure Data's Data Connector for Microsoft SQL Server](https://docs.treasuredata.com/articles/data-connector-microsoft-sql-server).
 
+
 - Sample of [load.yml](load.yml)
 
 Second, please register it without schedule. ([Create the schedule](https://docs.treasuredata.com/articles/data-connector-microsoft-sql-server#create-the-schedule))
