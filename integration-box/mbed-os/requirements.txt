@@ -1,0 +1,4 @@
+mbed-cli==1.10.1
+mbed-greentea==1.7.2
+pyelftools==0.25
+fuzzywuzzy==0.17.0
