@@ -1,0 +1,74 @@
+diff --git a/server/src/main/java/swim/tutorial/UnitAgent.java b/server/src/main/java/swim/tutorial/UnitAgent.java
+index 2d18fe6..ab16ce2 100644
+--- a/server/src/main/java/swim/tutorial/UnitAgent.java
++++ b/server/src/main/java/swim/tutorial/UnitAgent.java
+@@ -1,6 +1,12 @@
+ package swim.tutorial;
+ 
++import java.io.DataOutputStream;
++import java.io.IOException;
++import java.net.HttpURLConnection;
++import java.net.URL;
+ import java.util.Iterator;
++import java.util.StringJoiner;
++
+ import swim.api.SwimLane;
+ import swim.api.agent.AbstractAgent;
+ import swim.api.lane.CommandLane;
+@@ -8,10 +14,15 @@ import swim.api.lane.ListLane;
+ import swim.api.lane.MapLane;
+ import swim.api.lane.ValueLane;
+ import swim.recon.Recon;
++import swim.structure.Item;
+ import swim.structure.Record;
+ import swim.structure.Value;
+ 
+ public class UnitAgent extends AbstractAgent {
++  // TODO: Configure these variables to specify a destination
++  private static final String TD_WRITE_KEY = "1/234567890abcdefghijklmnopqrstuvwxyz";
++  private static final String TD_DATABASE = "DATABASE_NAME";
++  private static final String TD_TABLE = "TABLE_NAME";
+ 
+   @SwimLane("histogram")
+   protected final MapLane<Long, Value> histogram = this.<Long, Value>mapLane()
+@@ -64,8 +75,40 @@ public class UnitAgent extends AbstractAgent {
+       .onCommand(v -> {
+         logMessage("publish: commanded with " + Recon.toString(v));
+         latest.set(v);
++
++        // Build JSON string from published value
++        StringJoiner joiner = new StringJoiner(",");
++        joiner.add("\"time\":" + System.currentTimeMillis());
++        for (Iterator<Item> it = v.iterator(); it.hasNext(); ) {
++          Item item = it.next();
++          joiner.add("\"" + item.key().stringValue() + "\":" + item.stringValue());
++        }
++        sendToTreasureData("{" + joiner.toString() + "}");
+       });
+ 
++  private void sendToTreasureData(final String jsonPostBody) {
++    try {
++      URL url = new URL("https://in.treasuredata.com/postback/v3/event/" + TD_DATABASE + "/" + TD_TABLE);
++      logMessage("Sending POST request to: " + url);
++      logMessage("Data: " + jsonPostBody);
++
++      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
++      conn.setRequestProperty("Content-type", "application/json");
++      conn.setRequestProperty("Accept", "text/plain");
++      conn.setRequestProperty("X-TD-Write-Key", TD_WRITE_KEY);
++      conn.setDoOutput(true);
++
++      DataOutputStream writer = new DataOutputStream(conn.getOutputStream());
++      writer.writeBytes(jsonPostBody);
++      writer.flush();
++      writer.close();
++
++      logMessage("Response code: " + conn.getResponseCode());
++    } catch (IOException e) {
++      e.printStackTrace();
++    }
++  }
++
+   private void logMessage(Object o) {
+     System.out.println("[" + nodeUri() + "] " + o);
+   }

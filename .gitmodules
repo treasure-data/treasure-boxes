@@ -1,0 +1,3 @@
+[submodule "integration-box/swimos/tutorial"]
+	path = integration-box/swimos/tutorial
+	url = git@github.com:swimos/tutorial.git
