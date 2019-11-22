@@ -17,3 +17,13 @@
     py>: py_scripts.examples.import_another_file
     docker:
         image: "digdag/digdag-python:3.7"
+
++simple_with_workflow_env:
+    +store_msg:
+        py>: py_scripts.examples.store_workflow_env
+        msg: "Hello World"
+        docker:
+            image: "digdag/digdag-python:3.7"
+
+    +restore_msg:
+        echo>: ${my_msg}
