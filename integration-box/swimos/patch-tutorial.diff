@@ -1,5 +1,5 @@
 diff --git a/server/src/main/java/swim/tutorial/UnitAgent.java b/server/src/main/java/swim/tutorial/UnitAgent.java
-index 2d18fe6..9f21891 100644
+index 2d18fe6..ab16ce2 100644
 --- a/server/src/main/java/swim/tutorial/UnitAgent.java
 +++ b/server/src/main/java/swim/tutorial/UnitAgent.java
 @@ -1,6 +1,12 @@
@@ -31,7 +31,7 @@ index 2d18fe6..9f21891 100644
  
    @SwimLane("histogram")
    protected final MapLane<Long, Value> histogram = this.<Long, Value>mapLane()
-@@ -64,8 +75,39 @@ public class UnitAgent extends AbstractAgent {
+@@ -64,8 +75,40 @@ public class UnitAgent extends AbstractAgent {
        .onCommand(v -> {
          logMessage("publish: commanded with " + Recon.toString(v));
          latest.set(v);
@@ -48,13 +48,14 @@ index 2d18fe6..9f21891 100644
  
 +  private void sendToTreasureData(final String jsonPostBody) {
 +    try {
-+      URL url = new URL("https://in.treasuredata.com/postback/v3/event/" + TD_DATABASE + "/" + TD_TABLE + "?td_write_key=" + TD_WRITE_KEY);
++      URL url = new URL("https://in.treasuredata.com/postback/v3/event/" + TD_DATABASE + "/" + TD_TABLE);
 +      logMessage("Sending POST request to: " + url);
 +      logMessage("Data: " + jsonPostBody);
 +
 +      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 +      conn.setRequestProperty("Content-type", "application/json");
 +      conn.setRequestProperty("Accept", "text/plain");
++      conn.setRequestProperty("X-TD-Write-Key", TD_WRITE_KEY);
 +      conn.setDoOutput(true);
 +
 +      DataOutputStream writer = new DataOutputStream(conn.getOutputStream());

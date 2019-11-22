@@ -34,14 +34,14 @@ Running Tutorial plane...
 [/unit/master] latest: set to {foo:60,bar:106,baz:198} from
 [/unit/master] history: appended {0, {1574293480492,{foo:60,bar:106,baz:198}}}
 [/unit/master] histogram: replaced 1574293480000's value to {count:2} from
-[/unit/master] Sending POST request to: https://in.treasuredata.com/postback/v3/event/DATABASE_NAME/TABLE_NAME?td_write_key=1/234567890abcdefghijklmnopqrstuvwxyz
+[/unit/master] Sending POST request to: https://in.treasuredata.com/postback/v3/event/DATABASE_NAME/TABLE_NAME
 [/unit/master] Data: {"time":1574293480534,"foo":60,"bar":106,"baz":198}
 [/unit/master] Response code: 200
 [/unit/master] publish: commanded with {foo:58,bar:134,baz:188}
 [/unit/master] latest: set to {foo:58,bar:134,baz:188} from {foo:60,bar:106,baz:198}
 [/unit/master] history: appended {1, {1574293481172,{foo:58,bar:134,baz:188}}}
 [/unit/master] histogram: replaced 1574293480000's value to {count:21} from {count:2}
-[/unit/master] Sending POST request to: https://in.treasuredata.com/postback/v3/event/DATABASE_NAME/TABLE_NAME?td_write_key=1/234567890abcdefghijklmnopqrstuvwxyz
+[/unit/master] Sending POST request to: https://in.treasuredata.com/postback/v3/event/DATABASE_NAME/TABLE_NAME
 [/unit/master] Data: {"time":1574293481172,"foo":58,"bar":134,"baz":188}
 [/unit/master] Response code: 200
 ...
