@@ -12,3 +12,8 @@ def print_env():
 def import_another_file():
     import other_scripts as o
     o.print_path()
+
+
+def store_workflow_env(msg):
+    import digdag
+    digdag.env.store({"my_msg": msg})
