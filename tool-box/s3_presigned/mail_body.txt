@@ -1,0 +1,5 @@
+You can download the report from below URL:
+
+${presigned_url}
+
+This link will expire in ${moment.unix(expiration_unixtime).format("YYYY-MM-DD HH:mm:ssZ")}
