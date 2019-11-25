@@ -1,0 +1,6 @@
+# Pelion Device Management
+device_id: 0123456789abcdefghijklmn
+
+# Treasure Data
+database: database_name
+table: table_name
