@@ -39,7 +39,7 @@ td wf secrets \
 	--set pdm.host=${MBED_CLOUD_SDK_HOST} 
 ```
 
-By default, [`pelion_device.dig`](./pelion_device.dig) is executed on an hourly basis, and the latest resource values will be continuously captured and inserted into the target table. 
+By default, [`pelion_device.dig`](./pelion_device.dig) is executed on an hourly basis, and the latest resource values will be continuously captured and inserted into the target table. For more information about pricing and enablement of the underlying advanced functionality, Treasure Workflow Python Custom Scripting, contact your TD Customer Success representative.
 
 To manually kick the workflow and make sure its behavior, run:
 
