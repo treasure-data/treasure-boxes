@@ -43,12 +43,17 @@ You can trigger the session manually.
 
 Available parameters for `result_settings` are here.
 
-- instance: (string, required)
+- instance: (string, required**)
+- port: (number, required**)
 - database: (string, required)
 - table: (string, required)
 - timezone: (string, default: UTC)
 - batch_size: (integer, default: 16777216)
 - mode: (string(insert|insert_direct|truncate_insert|replace), default insert)
+
+** Please note the following conditions in regard to the `result_settings`:
+- If you are using Azure, omit the instance name and provide the port # only.
+- If you are not using Azure and want to use your own instance: please make sure that you can connect to the database using only the instance name, without the port. If the instance name does not work, you have to set the correct port instead of instance.
 
 For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-microsoft-sql-server)
 

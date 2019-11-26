@@ -6,7 +6,12 @@ This example workflow ingests data in daily basis, using [Treasure Data's Data C
 
 Data Connector for Microsoft SQL Server supports incremental mode using incremental_columns. If you want to use it, you have to register Connector Job without schedule.
 
+
 First, please prepare the load.yml refer to [Treasure Data's Data Connector for Microsoft SQL Server](https://docs.treasuredata.com/articles/data-connector-microsoft-sql-server).
+
+Please note the following conditions in regard to connection setting:
+- If you are using Azure, omit the instance name and provide the port # only.
+- If you are not using Azure and want to use your own instance: please make sure that you can connect to the database using only the instance name, without the port. If the instance name does not work, you have to set the correct port instead of instance.
 
 - Sample of [load.yml](load.yml)
 

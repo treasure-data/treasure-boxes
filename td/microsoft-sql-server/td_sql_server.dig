@@ -8,7 +8,7 @@ _export:
   td>: queries/sample.sql
   result_connection: your_connections_name
   result_settings:
-    instance: instance_name
+    port: port_number
     database: database_name
     table: table_name
     batch_size: 16777216
