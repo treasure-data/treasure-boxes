@@ -59,7 +59,7 @@ def pull_resource_values(device_id, database, table):
         sys.exit("no resource values from device: {}".format(device_id))
 
     client = pytd.Client(apikey=os.environ.get('TD_API_KEY'),
-                         endpoint=os.environ.get('TD_ENDPOINT'),
+                         endpoint=os.environ.get('TD_API_SERVER'),
                          database=database)
     df = pd.DataFrame(**{'columns': column_names, 'data': [row]})
 

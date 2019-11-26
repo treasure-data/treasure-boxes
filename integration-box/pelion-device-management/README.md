@@ -34,7 +34,7 @@ Here, get your API key and endpoint from [PDM](https://preview.pelion.com/docs/d
 td wf secrets \
 	--project pelion_device \
 	--set td.apikey=${TD_API_KEY} \
-	--set td.endpoint=${TD_ENDPOINT} \
+	--set td.apiserver=${TD_API_SERVER} \
 	--set pdm.apikey=${MBED_CLOUD_SDK_API_KEY} \
 	--set pdm.host=${MBED_CLOUD_SDK_HOST} 
 ```
