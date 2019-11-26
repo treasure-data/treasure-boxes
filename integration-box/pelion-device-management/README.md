@@ -33,11 +33,15 @@ Here, get your API key and endpoint from [PDM](https://preview.pelion.com/docs/d
 ```sh
 td wf secrets \
 	--project pelion_device \
-	--set td.apikey=${TD_API_KEY} \
-	--set td.apiserver=${TD_API_SERVER} \
-	--set pdm.apikey=${MBED_CLOUD_SDK_API_KEY} \
-	--set pdm.host=${MBED_CLOUD_SDK_HOST} 
+	--set td.apikey td.apiserver pdm.apikey pdm.host 
 ```
+
+|Variable|Description|Example|
+|:---|:---|:---|
+|`td.apikey`|TD API key to be used in the script. Access Type must be `Master Key`.|`1234/abcdefghijklmnopqrstuvwxyz1234567890`|
+|`td.apiserver`|TD API endpoint starting with `https://`.|`https://api.treasuredata.com`|
+|`pdm.apikey`|PDM API key to be used in the script.|`ak_1234567890ABCDEFGHIJKLMNopqrstuvwxyz`|
+|`pdm.host`|PDM API host.|`https://api.us-east-1.mbedcloud.com`|
 
 By default, [`pelion_device.dig`](./pelion_device.dig) is executed on an hourly basis, and the latest resource values will be continuously captured and inserted into the target table. For more information about pricing and enablement of the underlying advanced functionality, Treasure Workflow Python Custom Scripting, contact your TD Customer Success representative.
 
