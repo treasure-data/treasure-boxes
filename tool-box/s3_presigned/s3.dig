@@ -1,0 +1,31 @@
+_export:
+  bucket: yourbucketname # Replace to your bucket name
+  region: us-east-1
+  s3_path: output/output.csv
+  expires_in: 3600
+  td:
+    database: sample_database
+
++generate_presigned_url:
+  py>: py_scripts.s3_example.generate_presigned_url
+  bucket: ${bucket}
+  region_name: ${region}
+  s3_filepath: ${s3_path}
+  expires_in: ${expires_in}
+  docker:
+    image: "digdag/digdag-python:3.7"
+  _env:
+    # For secrets documentation,
+    # See https://support.treasuredata.com/hc/en-us/articles/360001266788-Workflows-Secrets-Management
+    S3_ACCESS_KEY_ID: ${secret:s3.access_key_id}
+    S3_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}
+
++write_result_to_s3:
+  td>: queries/report.sql
+  result_url: s3://${secret:s3.access_key_id}:${encoded_secret_key}@/${bucket}/${s3_path}
+
++mail:
+  mail>: mail_body.txt
+  subject: "You can download from here"
+  html: false
+  to: [email@example.com]
