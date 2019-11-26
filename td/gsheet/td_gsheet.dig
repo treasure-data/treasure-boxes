@@ -5,7 +5,7 @@ timezone: UTC
   database: sample_datasets
   result_connection: your_connections_name
   result_settings:
-    spreadsheet_title : destination_spreadsheet_name
+    spreadsheet_title: destination_spreadsheet_name
     sheet_title: destination_worksheet_name
     mode: APPEND
     rows_threshold: 1000000
