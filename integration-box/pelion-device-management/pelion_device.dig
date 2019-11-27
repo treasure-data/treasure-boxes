@@ -1,0 +1,23 @@
+timezone: UTC
+
+# See
+# https://support.treasuredata.com/hc/en-us/articles/360001262307-Scheduling-Workflows-in-the-CLI
+# for scheduling workflow
+schedule:
+  hourly>: 00:00
+
+_export:
+  !include : config.yml
+
++pull_resource_values:
+  py>: pelion_device.pull_resource_values
+  device_id: ${device_id}
+  database: ${database}
+  table: ${table}
+  _env:
+    PDM_API_KEY: ${secret:pdm.apikey}
+    PDM_HOST: ${secret:pdm.host}
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${secret:td.apiserver}
+  docker:
+      image: "digdag/digdag-python:3.7"
