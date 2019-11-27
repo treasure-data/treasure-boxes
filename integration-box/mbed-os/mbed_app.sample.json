@@ -1,0 +1,33 @@
+{
+  "macros": ["MBED_ALL_STATS_ENABLED"],
+  "config": {
+    "td_apikey": {
+      "help":  "Treasure Data API Key (Write-Only)",
+      "value": "\"1/234567890abcdefghijklmnopqrstuvwxyz\""
+    },
+    "td_database": {
+      "help":  "Treasure Data Database",
+      "value": "\"DATABASE_NAME\""
+    },
+    "td_table": {
+      "help":  "Treasure Data Table",
+      "value": "\"TABLE_NAME\""
+    },
+    "main-stack-size": {
+      "value": 12000
+    }
+  },
+  "target_overrides": {
+    "*": {
+      "platform.stdio-convert-newlines": true,
+      "mbed-trace.enable": null,
+      "nsapi.default-wifi-security": "WPA_WPA2",
+      "nsapi.default-wifi-ssid": "\"SSID\"",
+      "nsapi.default-wifi-password": "\"PASSWORD\""
+    },
+    "DISCO_F413ZH": {
+      "target.extra_labels_add": ["WIFI_ISM43362"],
+      "target.network-default-interface-type": "WIFI"
+    }
+  }
+}
