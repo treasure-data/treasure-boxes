@@ -9,6 +9,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service android:name=".MyNaoService"></service>
+
+        <!-- to receive wake-up notifications when arriving on-site -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <service
+            android:name="com.polestar.naosdk.controllers.AndroidGeofencingService"
+            android:exported="true"
+            android:label="@string/app_name" />
+        <service
+            android:name="com.polestar.models.GeofenceTransition"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:process=":geofencing" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <!-- https://stackoverflow.com/questions/50782806/android-google-maps-java-lang-noclassdeffounderror-failed-resolution-of-lorg-a -->
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,5 +41,33 @@
             </intent-filter>
         </activity>
     </application>
+
+    <!-- NORMAL PERMISSIONS: explicit user confirmation not needed -->
+
+    <!-- Internet connectivity (for data synchro) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Used for BLE-based location -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- Used for WiFi-based location -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <!-- to allow WIFI/BLE scan when app is in background mode -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- SENSITIVE PERMISSIONS: user will be prompted for acceptation by Android OS -->
+
+    <!-- access to OS Loc / GPS and BLE sensor (since Android 6)-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Add permission WRITE_EXTERNAL_STORAGE (limited to sdk<=18) -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
 </manifest>
