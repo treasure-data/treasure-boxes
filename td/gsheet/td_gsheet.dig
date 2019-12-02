@@ -5,9 +5,10 @@ timezone: UTC
   database: sample_datasets
   result_connection: your_connections_name
   result_settings:
+    spreadsheet_folder: your_folder_id
     spreadsheet_title: destination_spreadsheet_name
     sheet_title: destination_worksheet_name
-    mode: APPEND
+    mode: replace
     rows_threshold: 1000000
     set_nil_for_double_nan: true
     range: A1
