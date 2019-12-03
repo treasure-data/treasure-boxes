@@ -17,15 +17,15 @@ import com.treasuredata.android.TreasureData;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     final private static String TD_WRITE_KEY = "1/234567890abcdefghijklmnopqrstuvwxyz";
     final private static String TD_ENCRYPTION_KEY = "1234567890";
-    final private static String NAO_SERVICE_API_KEY = "emulator";
+    final private static String NAO_API_KEY = "emulator";
 
     final private static LatLng MAP_CENTER_POSITION = new LatLng(37.4187416, -122.0999732);
     final private static boolean MAP_CAMERA_FIXED = true;
     final private static float MAP_ZOOM = 18.0f;
 
     private TreasureData td;
-    private NaoLocationClient locationClient;
-    private NaoGeofencingClient geofencingClient;
+    private NaoLocation location;
+    private NaoGeofencing geofencing;
 
     private GoogleMap map;
     private Marker marker;
@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         initNao();
 
-        locationClient.startService();
-        geofencingClient.startService();
+        location.startService();
+        geofencing.startService();
     }
 
     @Override
@@ -83,14 +83,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void initNao() {
-        NaoLocationClient locationClient = new NaoLocationClient();
-        locationClient.setContext(this);
-        locationClient.setNaoServiceApiKey(NAO_SERVICE_API_KEY);
-        this.locationClient = locationClient;
+        NaoLocation location = new NaoLocation();
+        location.setContext(this);
+        location.setApiKey(NAO_API_KEY);
+        this.location = location;
 
-        NaoGeofencingClient geofencingClient = new NaoGeofencingClient();
-        geofencingClient.setContext(this);
-        geofencingClient.setNaoServiceApiKey(NAO_SERVICE_API_KEY);
-        this.geofencingClient = geofencingClient;
+        NaoGeofencing geofencing = new NaoGeofencing();
+        geofencing.setContext(this);
+        geofencing.setApiKey(NAO_API_KEY);
+        this.geofencing = geofencing;
     }
 }

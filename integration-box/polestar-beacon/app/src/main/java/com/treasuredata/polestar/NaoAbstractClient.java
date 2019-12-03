@@ -13,10 +13,10 @@ import com.polestar.naosdk.api.external.NAOSensorsListener;
 import com.polestar.naosdk.api.external.NAOServiceHandle;
 import com.polestar.naosdk.api.external.NAOSyncListener;
 
-public abstract class AbstractClient<ServiceHandle extends NAOServiceHandle> implements NAOSensorsListener, NAOSyncListener {
+public abstract class NaoAbstractClient<ServiceHandle extends NAOServiceHandle> implements NAOSensorsListener, NAOSyncListener {
 
     private Context context;
-    private String naoServiceApiKey;
+    private String apiKey;
     private ServiceHandle handle;
 
     public Context getContext() {
@@ -27,12 +27,12 @@ public abstract class AbstractClient<ServiceHandle extends NAOServiceHandle> imp
         this.context = context;
     }
 
-    public String getNaoServiceApiKey() {
-        return naoServiceApiKey;
+    public String getApiKey() {
+        return apiKey;
     }
 
-    public void setNaoServiceApiKey(String naoServiceApiKey) {
-        this.naoServiceApiKey = naoServiceApiKey;
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     protected abstract ServiceHandle createHandle();

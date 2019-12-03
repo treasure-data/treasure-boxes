@@ -5,11 +5,11 @@ import com.polestar.naosdk.api.external.NAOGeofenceListener;
 import com.polestar.naosdk.api.external.NAOGeofencingHandle;
 import com.polestar.naosdk.api.external.NaoAlert;
 
-public class NaoGeofencingClient extends AbstractClient<NAOGeofencingHandle> implements NAOGeofenceListener {
+public class NaoGeofencing extends NaoAbstractClient<NAOGeofencingHandle> implements NAOGeofenceListener {
 
     @Override
     protected NAOGeofencingHandle createHandle() {
-        return new NAOGeofencingHandle(getContext(), MyNaoService.class, getNaoServiceApiKey(), this, this);
+        return new NAOGeofencingHandle(getContext(), MyNaoService.class, getApiKey(), this, this);
     }
 
     /**

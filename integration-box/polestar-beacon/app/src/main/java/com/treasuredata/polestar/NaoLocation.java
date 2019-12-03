@@ -7,11 +7,11 @@ import com.polestar.naosdk.api.external.NAOLocationHandle;
 import com.polestar.naosdk.api.external.NAOLocationListener;
 import com.polestar.naosdk.api.external.TNAOFIXSTATUS;
 
-public class NaoLocationClient extends AbstractClient<NAOLocationHandle> implements NAOLocationListener {
+public class NaoLocation extends NaoAbstractClient<NAOLocationHandle> implements NAOLocationListener {
 
     @Override
     protected NAOLocationHandle createHandle() {
-        return new NAOLocationHandle(getContext(), MyNaoService.class, getNaoServiceApiKey(), this, this);
+        return new NAOLocationHandle(getContext(), MyNaoService.class, getApiKey(), this, this);
     }
 
     /**
