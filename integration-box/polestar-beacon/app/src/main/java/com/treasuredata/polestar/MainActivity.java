@@ -40,8 +40,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        this.locationClient = new NaoLocationClient(this, NAO_SERVICE_API_KEY);
-        this.geofencingClient = new NaoGeofencingClient(this, NAO_SERVICE_API_KEY);
+        initNao();
+
+        locationClient.startService();
+        geofencingClient.startService();
     }
 
     @Override
@@ -78,5 +80,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         td.enableAutoAppendLocaleInformation();
 
         this.td = td;
+    }
+
+    private void initNao() {
+        NaoLocationClient locationClient = new NaoLocationClient();
+        locationClient.setContext(this);
+        locationClient.setNaoServiceApiKey(NAO_SERVICE_API_KEY);
+        this.locationClient = locationClient;
+
+        NaoGeofencingClient geofencingClient = new NaoGeofencingClient();
+        geofencingClient.setContext(this);
+        geofencingClient.setNaoServiceApiKey(NAO_SERVICE_API_KEY);
+        this.geofencingClient = geofencingClient;
     }
 }
