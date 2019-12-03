@@ -7,7 +7,7 @@ _export:
 +run_long_task:
   py>: py_script.loop.loop
   docker:
-    image: "armtd/td-script:2019.09"
+    image: "armtd/td-script:2019.12"
 
 # This sla is a sample. You should change sla as you want.
 # If you want to specify a time, you should use "time" instead of duration.

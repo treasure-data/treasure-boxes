@@ -5,7 +5,7 @@ schedule:
 
 +step1:
   docker:
-    image: "armtd/td-script:2019.09"
+    image: "armtd/td-script:2019.12"
   py>: get_row_count.get_row_count
   dest_db: td_stats
   dest_table: row_count

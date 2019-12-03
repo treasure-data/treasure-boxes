@@ -11,7 +11,7 @@ _export:
   period: 365
   with_aws: false
   docker:
-    image: 'armtd/td-ml:2019.09'
+    image: 'armtd/td-ml:2019.12'
   _env:
     TD_API_KEY: ${secret:td.apikey}
     TD_API_SERVER: ${secret:td.apiserver}

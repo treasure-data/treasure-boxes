@@ -1,7 +1,7 @@
 timezone: Asia/Tokyo
 _export:
   docker:
-    image: "armtd/td-script:2019.09"
+    image: "armtd/td-script:2019.12"
   !include : 'config/kintone.yml'
   org: hogehoge
 
