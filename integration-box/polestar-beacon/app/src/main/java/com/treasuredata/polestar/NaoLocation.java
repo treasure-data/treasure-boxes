@@ -20,7 +20,7 @@ public class NaoLocation extends NaoAbstractClient<NAOLocationHandle> implements
 
     @Override
     public void onLocationChanged(Location location) {
-        ((MainActivity) getContext()).onChange(location);
+        ((MainActivity) getContext()).onLocationChanged(location);
     }
 
     @Override
