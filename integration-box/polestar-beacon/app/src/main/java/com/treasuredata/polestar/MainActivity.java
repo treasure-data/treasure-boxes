@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     final private static float MAP_ZOOM = 18.0f;
 
     private TreasureData td;
-    private NaoLocation location;
-    private NaoGeofencing geofencing;
+    private NaoLocation naoLocation;
+    private NaoGeofencing naoGeofencing;
 
     private GoogleMap map;
     private Marker marker;
@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         initNao();
 
-        location.startService();
-        geofencing.startService();
+        naoLocation.startService();
+        naoGeofencing.startService();
     }
 
     @Override
@@ -110,14 +110,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void initNao() {
-        NaoLocation location = new NaoLocation();
-        location.setContext(this);
-        location.setApiKey(NAO_API_KEY);
-        this.location = location;
+        NaoLocation naoLocation = new NaoLocation();
+        naoLocation.setContext(this);
+        naoLocation.setApiKey(NAO_API_KEY);
+        this.naoLocation = naoLocation;
 
-        NaoGeofencing geofencing = new NaoGeofencing();
-        geofencing.setContext(this);
-        geofencing.setApiKey(NAO_API_KEY);
-        this.geofencing = geofencing;
+        NaoGeofencing naoGeofencing = new NaoGeofencing();
+        naoGeofencing.setContext(this);
+        naoGeofencing.setApiKey(NAO_API_KEY);
+        this.naoGeofencing = naoGeofencing;
     }
 }
