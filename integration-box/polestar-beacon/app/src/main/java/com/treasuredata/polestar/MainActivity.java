@@ -14,9 +14,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.treasuredata.android.TreasureData;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     final private static String TD_WRITE_KEY = "1/234567890abcdefghijklmnopqrstuvwxyz";
     final private static String TD_ENCRYPTION_KEY = "1234567890";
+    final private static String TD_DATABASE = "database_name";
+    final private static String TD_TABLE = "table_name";
+
     final private static String NAO_API_KEY = "emulator";
 
     final private static LatLng MAP_CENTER_POSITION = new LatLng(37.4187416, -122.0999732);
@@ -57,11 +63,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void onChange(Location location) {
-        LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+
+        LatLng position = new LatLng(lat, lng);
         marker.setPosition(position);
         if (!MAP_CAMERA_FIXED) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
         }
+
+        Map<String, Object> event = new HashMap<>();
+        event.put("latitude", lat);
+        event.put("longitude", lng);
+        td.addEvent(TD_TABLE, event);
     }
 
     private void initTreasureData() {
@@ -73,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         TreasureData td = TreasureData.sharedInstance();
 
-        td.setDefaultDatabase("polestar");
+        td.setDefaultDatabase(TD_DATABASE);
         td.enableAutoAppendUniqId();
         td.enableAutoAppendModelInformation();
         td.enableAutoAppendAppInformation();
