@@ -4,13 +4,13 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.polestar.naosdk.api.external.NAOERRORCODE;
+import com.polestar.naosdk.api.external.NAOGeofenceListener;
 import com.polestar.naosdk.api.external.NAOGeofencingHandle;
-import com.polestar.naosdk.api.external.NAOGeofencingListener;
 import com.polestar.naosdk.api.external.NAOSensorsListener;
 import com.polestar.naosdk.api.external.NAOSyncListener;
 import com.polestar.naosdk.api.external.NaoAlert;
 
-public class NaoGeofencingClient implements NAOGeofencingListener, NAOSensorsListener, NAOSyncListener {
+public class NaoGeofencingClient implements NAOGeofenceListener, NAOSensorsListener, NAOSyncListener {
 
     private Context context;
     private NAOGeofencingHandle handle;
@@ -33,6 +33,20 @@ public class NaoGeofencingClient implements NAOGeofencingListener, NAOSensorsLis
     @Override
     public void onFireNaoAlert(NaoAlert alert) {
         notifyUser("Last alert received: " + alert.getName());
+    }
+
+    /**
+     * NAOGeofenceListener
+     */
+
+    @Override
+    public void onEnterGeofence(int regionId, String regionName) {
+        notifyUser("Enter region " + regionId + "(" + regionName + ")");
+    }
+
+    @Override
+    public void onExitGeofence(int regionId, String regionName) {
+        notifyUser("Exit region " + regionId + "(" + regionName + ")");
     }
 
     /**
