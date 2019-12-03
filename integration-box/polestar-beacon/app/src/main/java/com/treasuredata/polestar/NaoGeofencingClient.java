@@ -1,7 +1,12 @@
 package com.treasuredata.polestar;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import com.polestar.naosdk.api.external.NAOERRORCODE;
 import com.polestar.naosdk.api.external.NAOGeofenceListener;
@@ -26,13 +31,39 @@ public class NaoGeofencingClient implements NAOGeofenceListener, NAOSensorsListe
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
+    public void showNotification(String title, String msg){
+        String CHANNEL_ID = "geofencing_channel_01";
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "geofencing", NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("notification based on geofencing");
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.googleg_standard_color_18)
+                    .setContentTitle(title)
+                    .setContentText(msg)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(null)
+                    .setAutoCancel(true);
+
+        notificationManager.notify(1, builder.build());
+    }
+
     /**
      * NAOGeofencingListener
      */
 
     @Override
     public void onFireNaoAlert(NaoAlert alert) {
-        notifyUser("Last alert received: " + alert.getName());
+        showNotification("NAO", "Last alert received: " + alert.getName());
     }
 
     /**
