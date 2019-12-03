@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         Map<String, Object> event = new HashMap<>();
-        event.put("latitude", lat);
-        event.put("longitude", lng);
+        event.put("td_latitude", lat);
+        event.put("td_longitude", lng);
         td.addEvent(TD_TABLE, event);
     }
 
