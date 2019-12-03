@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     final private static float MAP_ZOOM = 18.0f;
 
     private TreasureData td;
-    private NaoLocationClient nao;
+    private NaoLocationClient locationClient;
+    private NaoGeofencingClient geofencingClient;
 
     private GoogleMap map;
     private Marker marker;
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        this.nao = new NaoLocationClient(this, NAO_SERVICE_API_KEY);
+        this.locationClient = new NaoLocationClient(this, NAO_SERVICE_API_KEY);
+        this.geofencingClient = new NaoGeofencingClient(this, NAO_SERVICE_API_KEY);
     }
 
     @Override
