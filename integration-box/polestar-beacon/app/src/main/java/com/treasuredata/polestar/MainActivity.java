@@ -53,6 +53,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        TreasureData.startSession(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        TreasureData.endSession(this);
+        td.uploadEvents();
+    }
+
+    @Override
     public void onMapReady(GoogleMap map) {
         Marker marker = map.addMarker(new MarkerOptions()
                 .position(MAP_CENTER_POSITION)
