@@ -1,4 +1,4 @@
-package com.treasuredata.polestar;
+package com.treasuredata.polestar.naosdk;
 
 import android.location.Location;
 
@@ -6,12 +6,13 @@ import com.polestar.naosdk.api.external.NAOERRORCODE;
 import com.polestar.naosdk.api.external.NAOLocationHandle;
 import com.polestar.naosdk.api.external.NAOLocationListener;
 import com.polestar.naosdk.api.external.TNAOFIXSTATUS;
+import com.treasuredata.polestar.MainActivity;
 
-public class NaoLocation extends NaoAbstractClient<NAOLocationHandle> implements NAOLocationListener {
+public class NaoLocation extends AbstractClient<NAOLocationHandle> implements NAOLocationListener {
 
     @Override
-    protected NAOLocationHandle createHandle() {
-        return new NAOLocationHandle(getContext(), MyNaoService.class, getApiKey(), this, this);
+    protected void createHandle() {
+        setHandle(new NAOLocationHandle(getContext(), MyNaoService.class, getApiKey(), this, this));
     }
 
     /**
@@ -20,22 +21,23 @@ public class NaoLocation extends NaoAbstractClient<NAOLocationHandle> implements
 
     @Override
     public void onLocationChanged(Location location) {
+        // notify current location to the main activity
         ((MainActivity) getContext()).onLocationChanged(location);
     }
 
     @Override
     public void onLocationStatusChanged(TNAOFIXSTATUS tnaofixstatus) {
-        notifyUser(tnaofixstatus.toString());
+        showToast(tnaofixstatus.toString());
     }
 
     @Override
     public void onEnterSite(String s) {
-        notifyUser(s);
+        showToast(s);
     }
 
     @Override
     public void onExitSite(String s) {
-        notifyUser(s);
+        showToast(s);
     }
 
     /**
@@ -44,7 +46,7 @@ public class NaoLocation extends NaoAbstractClient<NAOLocationHandle> implements
 
     @Override
     public void onError(NAOERRORCODE naoerrorcode, String msg) {
-        notifyUser(msg);
+        showToast(msg);
     }
 
 }

@@ -13,6 +13,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.treasuredata.android.TreasureData;
+import com.treasuredata.polestar.naosdk.NaoGeofencing;
+import com.treasuredata.polestar.naosdk.NaoLocation;
 
 import java.util.HashMap;
 import java.util.Map;

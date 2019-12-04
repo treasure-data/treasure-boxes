@@ -1,4 +1,4 @@
-package com.treasuredata.polestar;
+package com.treasuredata.polestar.naosdk;
 
 import com.polestar.naosdk.managers.NaoServiceManager;
 

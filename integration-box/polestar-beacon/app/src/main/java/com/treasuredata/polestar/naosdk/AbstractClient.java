@@ -1,4 +1,4 @@
-package com.treasuredata.polestar;
+package com.treasuredata.polestar.naosdk;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,8 +12,9 @@ import com.polestar.naosdk.api.external.NAOERRORCODE;
 import com.polestar.naosdk.api.external.NAOSensorsListener;
 import com.polestar.naosdk.api.external.NAOServiceHandle;
 import com.polestar.naosdk.api.external.NAOSyncListener;
+import com.treasuredata.polestar.R;
 
-public abstract class NaoAbstractClient<ServiceHandle extends NAOServiceHandle> implements NAOSensorsListener, NAOSyncListener {
+public abstract class AbstractClient<ServiceHandle extends NAOServiceHandle> implements NAOSensorsListener, NAOSyncListener {
 
     private Context context;
     private String apiKey;
@@ -35,21 +36,25 @@ public abstract class NaoAbstractClient<ServiceHandle extends NAOServiceHandle> 
         this.apiKey = apiKey;
     }
 
-    protected abstract ServiceHandle createHandle();
+    public void setHandle(ServiceHandle handle) {
+        this.handle = handle;
+    }
+
+    protected abstract void createHandle();
 
     public void startService() {
         if (handle == null) {
-            this.handle = createHandle();
+            createHandle();
         }
         handle.synchronizeData(this);
         handle.start();
     }
 
-    protected void notifyUser(String msg) {
+    protected void showToast(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
-    protected void showNotification(String title, String msg){
+    protected void showNotification(String title, String msg) {
         String CHANNEL_ID = "geofencing_channel_01";
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -81,22 +86,22 @@ public abstract class NaoAbstractClient<ServiceHandle extends NAOServiceHandle> 
 
     @Override
     public void requiresCompassCalibration() {
-        notifyUser("Calibrate Compass");
+        showToast("Calibrate Compass");
     }
 
     @Override
     public void requiresWifiOn() {
-        notifyUser("Turn on WiFi");
+        showToast("Turn on WiFi");
     }
 
     @Override
     public void requiresBLEOn() {
-        notifyUser("Turn on Bluetooth");
+        showToast("Turn on Bluetooth");
     }
 
     @Override
     public void requiresLocationOn() {
-        notifyUser("Turn on location");
+        showToast("Turn on location");
     }
 
     /**
@@ -105,12 +110,12 @@ public abstract class NaoAbstractClient<ServiceHandle extends NAOServiceHandle> 
 
     @Override
     public void onSynchronizationSuccess() {
-        notifyUser("Sync succeeded");
+        showToast("Sync succeeded");
     }
 
     @Override
     public void onSynchronizationFailure(NAOERRORCODE naoerrorcode, String msg) {
-        notifyUser("Sync failed (" + naoerrorcode + "): " + msg);
+        showToast("Sync failed (" + naoerrorcode + "): " + msg);
     }
 
 }

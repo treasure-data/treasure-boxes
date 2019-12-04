@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:name=".MyNaoService"></service>
+        <service android:name=".naosdk.MyNaoService"></service>
 
         <!-- to receive wake-up notifications when arriving on-site -->
         <meta-data

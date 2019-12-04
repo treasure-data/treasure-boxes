@@ -1,15 +1,15 @@
-package com.treasuredata.polestar;
+package com.treasuredata.polestar.naosdk;
 
 import com.polestar.naosdk.api.external.NAOERRORCODE;
 import com.polestar.naosdk.api.external.NAOGeofenceListener;
 import com.polestar.naosdk.api.external.NAOGeofencingHandle;
 import com.polestar.naosdk.api.external.NaoAlert;
 
-public class NaoGeofencing extends NaoAbstractClient<NAOGeofencingHandle> implements NAOGeofenceListener {
+public class NaoGeofencing extends AbstractClient<NAOGeofencingHandle> implements NAOGeofenceListener {
 
     @Override
-    protected NAOGeofencingHandle createHandle() {
-        return new NAOGeofencingHandle(getContext(), MyNaoService.class, getApiKey(), this, this);
+    protected void createHandle() {
+        setHandle(new NAOGeofencingHandle(getContext(), MyNaoService.class, getApiKey(), this, this));
     }
 
     /**
@@ -27,12 +27,12 @@ public class NaoGeofencing extends NaoAbstractClient<NAOGeofencingHandle> implem
 
     @Override
     public void onEnterGeofence(int regionId, String regionName) {
-        notifyUser("Enter region " + regionId + "(" + regionName + ")");
+        showToast("Enter region " + regionId + "(" + regionName + ")");
     }
 
     @Override
     public void onExitGeofence(int regionId, String regionName) {
-        notifyUser("Exit region " + regionId + "(" + regionName + ")");
+        showToast("Exit region " + regionId + "(" + regionName + ")");
     }
 
     /**
@@ -41,7 +41,7 @@ public class NaoGeofencing extends NaoAbstractClient<NAOGeofencingHandle> implem
 
     @Override
     public void onError(NAOERRORCODE naoerrorcode, String msg) {
-        notifyUser(msg);
+        showToast(msg);
     }
 
 }
