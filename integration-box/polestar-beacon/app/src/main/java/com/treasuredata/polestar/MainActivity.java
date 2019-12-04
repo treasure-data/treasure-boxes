@@ -49,15 +49,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
         initNao();
-
-        naoLocation.startService();
-        naoGeofencing.startService();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         TreasureData.startSession(this);
+        naoLocation.startService();
+        naoGeofencing.startService();
     }
 
     @Override
@@ -65,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onStop();
         TreasureData.endSession(this);
         td.uploadEvents();
+        naoLocation.stopService();
+        // NOT stop geofencing since it needs to send notification on background
+        // naoGeofencing.stopService();
     }
 
     @Override

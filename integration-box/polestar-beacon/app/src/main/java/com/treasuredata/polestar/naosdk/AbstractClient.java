@@ -50,6 +50,12 @@ public abstract class AbstractClient<ServiceHandle extends NAOServiceHandle> imp
         handle.start();
     }
 
+    public void stopService() {
+        if (handle != null) {
+            handle.stop();
+        }
+    }
+
     protected void showToast(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
