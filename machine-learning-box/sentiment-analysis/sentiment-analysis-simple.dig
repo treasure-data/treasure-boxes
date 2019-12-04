@@ -1,7 +1,5 @@
 _export:
   !include : config/params.yml
-  td:
-    engine: hive
 
 +preparation:
   call>: common/prepare.dig

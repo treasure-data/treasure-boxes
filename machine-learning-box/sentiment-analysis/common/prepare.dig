@@ -1,3 +1,7 @@
+_export:
+  td:
+    engine: hive
+
 +prepare:
   +shuffle:
     _parallel: true
