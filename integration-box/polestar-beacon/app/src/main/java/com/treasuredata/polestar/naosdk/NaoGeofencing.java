@@ -18,7 +18,7 @@ public class NaoGeofencing extends AbstractClient<NAOGeofencingHandle> implement
 
     @Override
     public void onFireNaoAlert(NaoAlert alert) {
-        showNotification("NAO", "Last alert received: " + alert.getName());
+        showNotification(alert.getName(), alert.getContent());
     }
 
     /**
