@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         initTreasureData();
 
+        initNao();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        initNao();
     }
 
     @Override
