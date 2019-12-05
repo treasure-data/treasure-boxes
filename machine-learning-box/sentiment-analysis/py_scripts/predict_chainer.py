@@ -5,13 +5,13 @@ import tarfile
 from logging import DEBUG, StreamHandler, getLogger
 
 import numpy
+import pandas as pd
 
-os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
-
-import pytd.pandas_td as td
-
+os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
 os.system(f"{sys.executable} -m pip install -U chainer")
 
+
+import pytd
 import chainer
 from chainer_utils import nets, nlp_utils
 
@@ -74,18 +74,18 @@ def run_batch(
 
     logger.info("Connect to Treasure Data")
 
-    con = td.connect()
-    presto = td.create_engine(f"presto:{database}", con=con)
+    client = pytd.Client(apikey=td_api_key, endpoint=endpoint, database=database)
 
     logger.info("Fetch data from Treasure Data")
-    test_df = td.read_td(
-        f"""
+    test_df = pd.DataFrame(
+        **client.query(
+            f"""
         select
             rowid, sentence, sentiment, polarity
         from
             {input_table}
-    """,
-        presto,
+    """
+        )
     )
 
     sentences = test_df["sentence"].tolist()
@@ -123,14 +123,11 @@ def run_batch(
     # ] / len(test_df)
     # print(f"Test set accuracy: {accuracy}")
 
-    con2 = td.connect(apikey=td_api_key, endpoint=endpoint)
+    # Reconnect client since the connection might be lost
+    client2 = pytd.Client(database=database, apikey=td_api_key, endpiont=endpoint)
 
-    td.to_td(
-        test_df[["rowid", "predicted_polarity"]],
-        f"{database}.{output_table}",
-        con=con2,
-        if_exists="replace",
-        index=False,
+    client2.load_table_from_dataframe(
+        test_df[["rowid", "predicted_polarity"]], output_table, if_exists="overwrite"
     )
 
     logger.info("Upload completed")
