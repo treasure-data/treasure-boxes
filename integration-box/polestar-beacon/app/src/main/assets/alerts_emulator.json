@@ -1,0 +1,439 @@
+{
+  "name": "ARM Inc.- Mountain View Office Key",
+  "service_key": "",
+  "debug_key": "",
+  "debug": false,
+  "date": "20191203000039",
+  "alerts": [
+    {
+      "id": 37690,
+      "name": "Test alert",
+      "content": "Entered a test region...",
+      "is_on": true,
+      "start_time": null,
+      "end_time": null,
+      "alert_rules": [
+        {
+          "id": 37689,
+          "type": "EnterGeofenceRule",
+          "params": null,
+          "region_id": 44347
+        }
+      ]
+    },
+    {
+      "id": 37401,
+      "name": "Welcome Retail Cosmetics",
+      "content": "Welcome to Retail Cosmetics!\r\nToday: 20% discount on selected items.",
+      "is_on": true,
+      "start_time": null,
+      "end_time": null,
+      "alert_rules": [
+        {
+          "id": 37400,
+          "type": "EnterGeofenceRule",
+          "params": null,
+          "region_id": 43498
+        }
+      ]
+    },
+    {
+      "id": 37405,
+      "name": "Welcome Cafeteria",
+      "content": "Welcome to the Cafe.\r\nToday: just for you, 25% discount on all organic items.",
+      "is_on": true,
+      "start_time": null,
+      "end_time": null,
+      "alert_rules": [
+        {
+          "id": 37404,
+          "type": "EnterGeofenceRule",
+          "params": null,
+          "region_id": 43500
+        }
+      ]
+    },
+    {
+      "id": 37404,
+      "name": "Welcome Indoor Sports",
+      "content": "Welcome to Indoor Sports!\r\nToday: have fun with the Pool Table.",
+      "is_on": true,
+      "start_time": null,
+      "end_time": null,
+      "alert_rules": [
+        {
+          "id": 37403,
+          "type": "EnterGeofenceRule",
+          "params": null,
+          "region_id": 43499
+        }
+      ]
+    },
+    {
+      "id": 37403,
+      "name": "Welcome conference room",
+      "content": "Welcome to a conference room!",
+      "is_on": true,
+      "start_time": null,
+      "end_time": null,
+      "alert_rules": [
+        {
+          "id": 37402,
+          "type": "EnterGeofenceRule",
+          "params": null,
+          "region_id": 43504
+        }
+      ]
+    },
+    {
+      "id": 37402,
+      "name": "Copy center",
+      "content": "Welcome to the copy center. A Customer Representative will come to you shortly.",
+      "is_on": true,
+      "start_time": null,
+      "end_time": null,
+      "alert_rules": [
+        {
+          "id": 37401,
+          "type": "EnterGeofenceRule",
+          "params": null,
+          "region_id": 43503
+        }
+      ]
+    },
+    {
+      "id": 37400,
+      "name": "Welcome Lobby",
+      "content": "Welcome to the store!",
+      "is_on": true,
+      "start_time": null,
+      "end_time": null,
+      "alert_rules": [
+        {
+          "id": 37399,
+          "type": "EnterGeofenceRule",
+          "params": null,
+          "region_id": 43516
+        }
+      ]
+    }
+  ],
+  "regions": [
+    {
+      "id": 44347,
+      "name": "test",
+      "building_id": 8787,
+      "site_id": 5500,
+      "polygon": [
+        [
+          -122.09973190148496,
+          37.41905623690114
+        ],
+        [
+          -122.09975445807719,
+          37.41906149856942
+        ],
+        [
+          -122.0997570607615,
+          37.4190524785668
+        ],
+        [
+          -122.09973347887207,
+          37.41904922134342
+        ],
+        [
+          -122.09974057709672,
+          37.41902529327424
+        ],
+        [
+          -122.09973253243531,
+          37.41902391521755
+        ],
+        [
+          -122.09971612764537,
+          37.41907953857168
+        ],
+        [
+          -122.09972511873391,
+          37.41908116718265
+        ],
+        [
+          -122.09973190148496,
+          37.41905623690114
+        ]
+      ],
+      "alt": 0.0,
+      "color": "#ee9900",
+      "category": "default",
+      "beacons": [
+      ]
+    },
+    {
+      "id": 44346,
+      "name": "Meeting room",
+      "building_id": 8787,
+      "site_id": 5500,
+      "polygon": [
+        [
+          -122.09984956293323,
+          37.41903319125175
+        ],
+        [
+          -122.09986587908763,
+          37.41897134384943
+        ],
+        [
+          -122.09981693063341,
+          37.41896074143279
+        ],
+        [
+          -122.09979987282988,
+          37.41902317786618
+        ],
+        [
+          -122.09984956293323,
+          37.41903319125175
+        ]
+      ],
+      "alt": 0.0,
+      "color": "#ee9900",
+      "category": "default",
+      "beacons": [
+      ]
+    },
+    {
+      "id": 43516,
+      "name": "Lobby",
+      "building_id": 8787,
+      "site_id": 5500,
+      "polygon": [
+        [
+          -122.09997940147042,
+          37.41911939629484
+        ],
+        [
+          -122.10012882850047,
+          37.418584823343615
+        ],
+        [
+          -122.09992371018689,
+          37.418547190603896
+        ],
+        [
+          -122.09977275815125,
+          37.419084765408044
+        ],
+        [
+          -122.09997940147042,
+          37.41911939629484
+        ]
+      ],
+      "alt": 0.0,
+      "color": "#ee9900",
+      "category": "default",
+      "beacons": [
+      ]
+    },
+    {
+      "id": 43504,
+      "name": "Conference room I",
+      "building_id": 8787,
+      "site_id": 5500,
+      "polygon": [
+        [
+          -122.10004576975062,
+          37.41885809109857
+        ],
+        [
+          -122.10005662917867,
+          37.41882021735524
+        ],
+        [
+          -122.10000988644778,
+          37.41881121765105
+        ],
+        [
+          -122.09999902702873,
+          37.418850216360916
+        ],
+        [
+          -122.10004576975062,
+          37.41885809109857
+        ]
+      ],
+      "alt": 0.0,
+      "color": "#ee9900",
+      "category": "default",
+      "beacons": [
+      ]
+    },
+    {
+      "id": 43503,
+      "name": "Copy Center",
+      "building_id": 8787,
+      "site_id": 5500,
+      "polygon": [
+        [
+          -122.09986635322741,
+          37.418783093569026
+        ],
+        [
+          -122.09985879885404,
+          37.41881121765105
+        ],
+        [
+          -122.09992395537738,
+          37.41882396723178
+        ],
+        [
+          -122.09993150975976,
+          37.41879584315383
+        ],
+        [
+          -122.09986635322741,
+          37.418783093569026
+        ]
+      ],
+      "alt": 0.0,
+      "color": "#ee9900",
+      "category": "default",
+      "beacons": [
+      ]
+    },
+    {
+      "id": 43500,
+      "name": "Cafeteria",
+      "building_id": 8787,
+      "site_id": 5500,
+      "polygon": [
+        [
+          -122.10008839769125,
+          37.41870647592447
+        ],
+        [
+          -122.10002699749992,
+          37.418695743956896
+        ],
+        [
+          -122.10005188770022,
+          37.418604069244886
+        ],
+        [
+          -122.10011267993814,
+          37.41861588967217
+        ],
+        [
+          -122.10008839769125,
+          37.41870647592447
+        ]
+      ],
+      "alt": 0.0,
+      "color": "#ee9900",
+      "category": "default",
+      "beacons": [
+      ]
+    },
+    {
+      "id": 43499,
+      "name": "Pool Table",
+      "building_id": 8787,
+      "site_id": 5500,
+      "polygon": [
+        [
+          -122.09996651648078,
+          37.41872469108795
+        ],
+        [
+          -122.09997622894564,
+          37.41868976240404
+        ],
+        [
+          -122.09991181193462,
+          37.41867797681444
+        ],
+        [
+          -122.09990223527774,
+          37.41871344144283
+        ],
+        [
+          -122.09996651648078,
+          37.41872469108795
+        ]
+      ],
+      "alt": 0.0,
+      "color": "#ee9900",
+      "category": "default",
+      "beacons": [
+      ]
+    },
+    {
+      "id": 43498,
+      "name": "Conference room II",
+      "building_id": 8787,
+      "site_id": 5500,
+      "polygon": [
+        [
+          -122.09984523468965,
+          37.41903019284135
+        ],
+        [
+          -122.09985126099366,
+          37.41901128422866
+        ],
+        [
+          -122.09980783397626,
+          37.419003089300425
+        ],
+        [
+          -122.09980194135554,
+          37.41902242598717
+        ],
+        [
+          -122.09984523468965,
+          37.41903019284135
+        ]
+      ],
+      "alt": 0.0,
+      "color": "#ee9900",
+      "category": "default",
+      "beacons": [
+      ]
+    }
+  ],
+  "beacons": [
+  ],
+  "micro_params": {
+    "micro_android_params": [
+    ],
+    "micro_ios_params": [
+    ]
+  },
+  "pdbs": [
+  ],
+  "sites": [
+    {
+      "id": 5500,
+      "lon": -122.0998665326,
+      "lat": 37.4187845478,
+      "radius": 500
+    }
+  ],
+  "upload_params": {
+    "key": "",
+    "acl": "",
+    "url": ""
+  },
+  "analytics": {
+    "enabled": true,
+    "analytics_upload_period": 150,
+    "analytics_user_id_period": 24,
+    "enabled_auto": true
+  },
+  "instance_id_params": {
+    "renewal_period": "24h",
+    "id_type": "ANONYMOUS"
+  },
+  "beacon_monitoring": {
+    "enable": true
+  }
+}
