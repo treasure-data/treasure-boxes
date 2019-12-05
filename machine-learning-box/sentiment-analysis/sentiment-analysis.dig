@@ -27,7 +27,7 @@ _export:
 #  docker:
 #    image: 'digdag/digdag-python:3.7'
 #  _env:
-#    TD_API_KEY: ${secret:td,apikey}
+#    TD_API_KEY: ${secret:td.apikey}
 #    TD_API_SERVER: ${secret:td.apiserver}
 #    AWS_ACCESS_KEY_ID: ${secret:s3.access_key_id}
 #    AWS_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}

@@ -32,7 +32,7 @@ def run(input_table="movie_review_test_shuffled", database="sentiment"):
     print("load model")
     model_file = "keras_model.h5"
 
-    # Download the TensorFlow model to S3
+    # Download the TensorFlow model from S3
     # boto3 assuming environment variables "AWS_ACCESS_KEY_ID" and "AWS_SECRET_ACCESS_KEY":
     # http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables
     s3 = boto3.resource("s3")
@@ -50,7 +50,7 @@ def run(input_table="movie_review_test_shuffled", database="sentiment"):
     table = "test_predicted_polarities"
     df["predicted_polarity"] = np.where(result > 0.5, 1, 0)
     client.load_table_from_dataframe(
-        df["rowid", "predicted_polarity"], f"{database}.{table}", if_exists="overwrite"
+        df[["rowid", "predicted_polarity"]], table, if_exists="overwrite"
     )
     print("Upload finished")
 

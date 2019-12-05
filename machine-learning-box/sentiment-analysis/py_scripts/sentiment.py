@@ -31,37 +31,41 @@ def run(
         f"{sys.executable} -m pip install -U tensorflow==2.0.0 tensorflow_hub==0.7.0"
     )
 
+    import pytd
     import tensorflow as tf
     import tensorflow_hub as hub
-    import pytd.pandas_td as td
     import numpy as np
+    import pandas as pd
 
     print("fetch data")
-    con = td.connect(
-        apikey=os.environ["TD_API_KEY"], endpoint=os.environ["TD_API_SERVER"]
+    client = pytd.Client(
+        database=database,
+        apikey=os.environ["TD_API_KEY"],
+        endpoint=os.environ["TD_API_SERVER"],
     )
-    presto = td.create_engine(f"presto:{database}", con=con)
 
     print("fetch training data")
-    train_df = td.read_td(
-        f"""
+    train_df = pd.DataFrame(
+        **client.query(
+            f"""
         select
             rowid, sentence, sentiment, polarity
         from
             {train_table}_shuffled
-    """,
-        presto,
+    """
+        )
     )
 
     print("fetch test data")
-    test_df = td.read_td(
-        f"""
+    test_df = pd.DataFrame(
+        **client.query(
+            f"""
         select
             rowid, sentence, sentiment, polarity
         from
             {test_table}_shuffled
-    """,
-        presto,
+    """
+        )
     )
 
     # Shuffle has been done by HiveQL in the shuffle task
@@ -103,12 +107,10 @@ def run(
     pred = model.predict(test_df["sentence"].values)
     test_df["predicted_polarity"] = np.where(pred > 0.5, 1, 0)
 
-    td.to_td(
+    client.load_table_from_dataframe(
         test_df[["rowid", "predicted_polarity"]],
-        f"{database}.test_predicted_polarities",
-        con=con,
-        if_exists="replace",
-        index=False,
+        "test_predicted_polarities",
+        if_exists="overwrite",
     )
 
 
