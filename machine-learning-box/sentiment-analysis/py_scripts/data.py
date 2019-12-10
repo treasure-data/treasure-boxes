@@ -15,7 +15,7 @@ def convert_directory_to_csv(directory, polarity, out_file_path):
         for file_path in os.listdir(directory):
             with open(os.path.join(directory, file_path), "r") as f:
                 sentence = f.read()
-                sentiment = re.match("\d+_(\d+)\.txt", file_path).group(1)
+                sentiment = re.match(r"\d+_(\d+)\.txt", file_path).group(1)
                 writer.writerow([sentence, sentiment, str(polarity)])
 
 
@@ -44,7 +44,7 @@ def load_directory_data(directory):
     for file_path in os.listdir(directory):
         with open(os.path.join(directory, file_path), "r") as f:
             data["sentence"].append(f.read())
-            data["sentiment"].append(re.match("\d+_(\d+)\.txt", file_path).group(1))
+            data["sentiment"].append(re.match(r"\d+_(\d+)\.txt", file_path).group(1))
 
     return pd.DataFrame.from_dict(data)
 
@@ -60,52 +60,14 @@ def load_dataset(directory):
     return pd.concat([pos_df, neg_df]).sample(frac=1).reset_index(drop=True)
 
 
-def database_exists(database, client):
-    from tdclient.errors import NotFoundError
-
-    try:
-        client.api_client.database(database)
-        return True
-    except NotFoundError:
-        pass
-
-    return False
-
-
-def create_database_if_not_exists(database, client):
-    if database_exists(database, client):
-        print(f"DB {database} already exists")
-        return False
-    else:
-        client.api_client.create_database(database)
-        print(f"Created DB: {database}")
-        return True
-
-
-def table_exists(database, table, client):
-    from tdclient.errors import NotFoundError
-
-    try:
-        client.api_client.table(database, table)
-        return True
-    except NotFoundError:
-        pass
-
-    return False
-
-
 def upload_dataset(database, train_table, test_table):
     import pytd
 
     apikey = os.environ["TD_API_KEY"]
     apiserver = os.environ["TD_API_SERVER"]
-    client = pytd.Client(apikey=apikey, endpoint=apiserver)
+    client = pytd.Client(database=database, apikey=apikey, endpoint=apiserver)
 
-    if (
-        database_exists(database, client)
-        and table_exists(database, train_table, client)
-        and table_exists(database, test_table, client)
-    ):
+    if client.exists(database, train_table) and client.exists(database, test_table):
         print("Target database and tables exists. Skip")
         return True
 
@@ -124,13 +86,9 @@ def upload_dataset(database, train_table, test_table):
     test_df = load_dataset(os.path.join("resources", "aclImdb", "test"))
 
     print("Loaded. Upload to Treasure Data")
-    create_database_if_not_exists(database, client)
-    client.load_table_from_dataframe(
-        train_df, f"{database}.{train_table}", if_exists="overwrite"
-    )
-    client.load_table_from_dataframe(
-        test_df, f"{database}.{test_table}", if_exists="overwrite"
-    )
+    client.create_database_if_not_exists(database)
+    client.load_table_from_dataframe(train_df, train_table, if_exists="overwrite")
+    client.load_table_from_dataframe(test_df, test_table, if_exists="overwrite")
 
     shutil.rmtree(os.path.join("resources"))
     os.remove(file_name)
