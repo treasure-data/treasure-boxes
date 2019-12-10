@@ -4,7 +4,7 @@ import time
 
 import pandas
 
-os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
+os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
 
 import pytd
 import tdclient
@@ -75,10 +75,7 @@ def bulk_load(data, database, table):
     with pytd.Client(
         apikey=TD_API_KEY, endpoint=TD_API_SERVER, database=database
     ) as client:
-        try:
-            client.api_client.create_database(database)
-        except tdclient.errors.AlreadyExistsError:
-            pass
+        client.create_database_if_not_exists(database)
         client.load_table_from_dataframe(dataframe, table, if_exists="append")
 
 
