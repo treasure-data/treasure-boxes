@@ -1,0 +1,36 @@
+timezone: Asia/Tokyo
+
+_export:
+  td:
+    database: sample_datasets
+    engine: presto
+  chatwork:
+    endpoint: https://api.chatwork.com/v2
+    room_id: 'ROOM ID'
+
++task1:
+  td>:
+  query: |
+    SELECT
+      TD_TIME_FORMAT(time, 'yyyy-MM-dd', 'JST') as day,
+      COUNT(1) AS PV
+    FROM
+      www_access
+    WHERE
+      TD_TIME_RANGE(time, TD_TIME_ADD(TD_DATE_TRUNC('day',${session_unixtime}, 'JST'), '-1d', 'JST'), NULL, 'JST')
+    GROUP BY
+      1
+    ORDER BY
+      1 DESC
+  store_last_results: true
+
++task2:
+  http>: ${chatwork.endpoint}/rooms/${chatwork.room_id}/messages
+  method: POST
+  headers:
+    - X-ChatWorkToken: ${secret:chatwork.token}
+  content:
+    body: |
+      The query result at ${session_date} is https://console.treasuredata.com/app/jobs/${td.last_job_id}.
+      The first 1 row of the result is ${td.last_results}.
+  content_format: form
