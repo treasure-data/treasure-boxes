@@ -1,0 +1,124 @@
+
+body {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  background: #222;
+}
+
+.digdag-dag-tree {
+  width: 100%;
+  height: 1000px;
+  //height: 100%;
+  overflow: auto;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  font-weight: 300;
+  font-size: 14px;
+  border: 1px solid #099;
+}
+
+.digdag-dag-hidden {
+  display: none;
+}
+
+.digdag-dag {
+  overflow: auto;
+  display: inline-block;
+  height: 100%;
+  //width: 250px;
+  width: 100%;
+  padding: 10px;
+  border-right: 1px solid #099;
+  background: #333;
+}
+
+.digdag-dag .node {
+  padding: 0;
+}
+
+.digdag-dag .node rect {
+  fill: #666;
+  stroke: #bbb;
+  stroke-width: 1.5px;
+}
+
+.digdag-dag .edgePath path {
+  fill: #999;
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+.digdag-dag .node g .task {
+  height: 45px;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  width: 200px;
+}
+
+.digdag-dag .name {
+  display: inline-block;
+  margin-top: 8px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.digdag-dag .status {
+  height: 100%;
+  width: 15px;
+  display: block;
+  float: right;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: #aaa;
+}
+
+.digdag-dag .success .status {
+  background-color: #5e5;
+}
+
+.digdag-dag .error .status {
+  background-color: #ffed68;
+}
+
+.digdag-dag .canceled .status {
+  background-color: #f77;
+}
+
+.digdag-dag .has-children:hover {
+  background-color: #fff;
+}
+
+.digdag-dag .duration {
+  display: block;
+  margin-left: 8px;
+  margin-top: 2px;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: bold;
+  height: 10px;
+  color: #999;
+  letter-spacing: 2px;
+}
+.digdag-dag .duration-0:after { content: ""; }
+.digdag-dag .duration-1:after { content: "|"; }
+.digdag-dag .duration-2:after { content: "||"; }
+.digdag-dag .duration-3:after { content: "|||"; }
+.digdag-dag .duration-4:after { content: "||||"; }
+.digdag-dag .duration-5:after { content: "|||||"; }
+.digdag-dag .duration-6:after { content: "||||||"; }
+.digdag-dag .duration-7:after { content: "|||||||"; }
+.digdag-dag .duration-8:after { content: "||||||||"; }
+.digdag-dag .duration-9:after { content: "|||||||||"; }
+.digdag-dag .duration-10:after { content: "||||||||||"; }
+
+.digdag-dag .duration-text {
+  font-weight: normal;
+  color: #eee;
+}
+
+
