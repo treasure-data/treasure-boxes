@@ -38,8 +38,8 @@ Open http://localhost:8000/index.html using your browser.
 
 ## Demo
 
-1 - Access to [demo app](https://demo-treasureworkflow-visualizer.s3.amazonaws.com/index.html)
-2 - Input your endpoint / master apikey / attempt id
-3 - Click Visualize
+1. Access to [demo app](https://demo-treasureworkflow-visualizer.s3.amazonaws.com/index.html)
+2. Input your endpoint / master apikey / attempt id
+3. Click Visualize
 
 NOTE: APIKEY is used in url parameter in the demo app. Generate a temp master apikey. After you test it, recommend to erase the apikey.
