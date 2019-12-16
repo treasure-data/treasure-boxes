@@ -16,6 +16,11 @@ First, you need to upload the workflow.
     # Upload
     $ td wf push td_chatwork_example
 
+And please set your Chatwork's API token as a secret variable.
+
+    # Set a secret variable
+    $ td wf secrets --project td_chatwork_example --set chatwork.token
+
 Now, you can trigger the session manually.
     
     # Run
