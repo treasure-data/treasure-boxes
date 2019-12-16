@@ -25,7 +25,7 @@ Now, you can trigger the session manually.
 
 This example workflow would send the following message.
 
-![chatwork](https://i.gyazo.com/73c26d66ab9f16089dde84913f11b08c.png)
+![chatwork](chatwork_message.png)
     
 # Next Step
 
