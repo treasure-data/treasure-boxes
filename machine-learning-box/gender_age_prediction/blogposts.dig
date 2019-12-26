@@ -21,11 +21,11 @@ _export:
       create_table: exploded
 
     +feature_vector:
-      td>: queries/blogposts/tfidf_vec.sql
+      td>: queries/count_vec.sql
       create_table: features
 
 +prepare_input:
-  td>: queries/blogposts/joined.sql
+  td>: queries/joined.sql
   create_table: input
   engine: hive
 
