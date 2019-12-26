@@ -22,9 +22,9 @@ max_age: 95
 
 # RandomForest
 rf_seed: 71
-rf_trees: 15
-rf_num_train_parallel: 4
-rf_max_depth: 30
+rf_trees: 10
+rf_num_train_parallel: 5
+rf_max_depth: 10
 min_split: 3
 min_samples_leaf: 1
 
