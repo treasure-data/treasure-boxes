@@ -1,3 +1,4 @@
+-- @TD distribute_strategy: aggressive
 -- DIGDAG_INSERT_LINE
 SELECT
   userid,

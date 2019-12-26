@@ -1,6 +1,7 @@
 target_db: td_test
 
-job_priority: -1
+job_priority: 0
+# job_priority: -1
 
 topk_predict: 5
 
