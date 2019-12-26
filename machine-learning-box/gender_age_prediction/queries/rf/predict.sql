@@ -32,7 +32,7 @@ SELECT
 	l.predicted.probabilities[6]  * ${m20_factor}, -- M20
 	l.predicted.probabilities[7]  * ${m25_factor}, -- M25~
 	l.predicted.probabilities[8]  * ${m35_factor}, -- M35~
-	l.predicted.probabilities[9]  * ${m50_factor}, -- M50~
+	l.predicted.probabilities[9]  * ${m50_factor}  -- M50~
   ) as probabilities
 FROM
   t2 l
