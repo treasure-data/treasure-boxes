@@ -23,6 +23,7 @@ _export:
     +feature_vector:
       td>: queries/count_vec.sql
       create_table: features
+      engine_version: experimental
 
 +prepare_input:
   td>: queries/joined.sql
