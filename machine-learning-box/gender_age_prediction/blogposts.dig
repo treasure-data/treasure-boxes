@@ -1,0 +1,36 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${target_db}
+    engine: hive
+    engine_version: experimental
+    priority: ${job_priority}
+
++preprocess:
+  _parallel: true
+
+  +gender_age:
+    td>: queries/blogposts/gender_age.sql
+    create_table: gender_age
+    engine: presto
+
+  +vectorize:
+
+    +tokenize_en:
+      td>: queries/blogposts/tokenize_en.sql
+      create_table: exploded
+
+    +feature_vector:
+      td>: queries/blogposts/tfidf_vec.sql
+      create_table: features
+
++prepare_input:
+  td>: queries/blogposts/joined.sql
+  create_table: input
+  engine: hive
+
++predict:
+  _parallel: true
+
+  +rf_predict:
+    call>: rf_predict.dig

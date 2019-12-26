@@ -1,3 +1,4 @@
+-- @TD distribute_strategy: aggressive
 WITH term_frequency as (
 	select
 	  t1.userid,
@@ -52,8 +53,6 @@ select
   userid, 
   to_ordered_list(feature(word,bm25),bm25,'-k ${num_features}') as features,
   to_ordered_list(feature(word,tfidf),tfidf,'-k ${num_features}') as tfidf_features
---  to_ordered_list(word,bm25,'-k ${num_features}') as bm25_bow_features,
---  to_ordered_list(word,tfidf,'-k ${num_features}') as tfidf_bow_features
 from 
   scores
 group by
