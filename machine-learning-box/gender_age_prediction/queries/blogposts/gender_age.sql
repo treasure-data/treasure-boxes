@@ -2,11 +2,11 @@ select
   userid,
   (if(gender='male','M','F') ||
         CASE
-           WHEN age >= 35 THEN '35'
-           WHEN age >= 25 THEN '25'
-           ELSE cast(cast(round(age / 5) as int) * 5 as varchar)
+           WHEN age >= 33 THEN '33~48'
+           WHEN age >= 23 THEN '23~27'
+           ELSE '13-17'
         END
-  ) as gender_age -- 35~, 25~, 20~, 15~, 10~
+  ) as gender_age
 from
   blogposts
 ;
