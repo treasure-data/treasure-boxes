@@ -3,32 +3,12 @@ _export:
   td:
     database: ${target_db}
     engine: hive
-#   engine_version: experimental
     priority: ${job_priority}
 
-+preprocess:
-  _parallel: true
-
-  +gender_age:
-    td>: queries/blogposts/gender_age.sql
-    create_table: gender_age
-    engine: presto
-
-  +vectorize:
-
-    +tokenize_en:
-      td>: queries/blogposts/tokenize_en.sql
-      create_table: exploded
-
-    +feature_vector:
-      td>: queries/count_vec.sql
-      create_table: features
-      engine_version: experimental
-
-+prepare_input:
-  td>: queries/joined.sql
++vectorize:
+  td>: queries/blogposts/tokenize_and_ftvec.sql
   create_table: input
-  engine: hive
+  engine_version: experimental
 
 +predict:
   _parallel: true
