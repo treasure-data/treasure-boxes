@@ -3,7 +3,7 @@ _export:
   td:
     database: ${target_db}
     engine: hive
-    engine_version: experimental
+#   engine_version: experimental
     priority: ${job_priority}
 
 +preprocess:
