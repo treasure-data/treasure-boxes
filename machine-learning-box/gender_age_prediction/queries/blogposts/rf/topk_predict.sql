@@ -13,16 +13,12 @@ calibrated_prediction as (
   SELECT
 	  userid,
 	  array( -- calibration
-		probabilities[0]  * ${f15_factor}, -- F15
-		probabilities[1]  * ${f20_factor}, -- F20
-		probabilities[2]  * ${f25_factor}, -- F25
-		probabilities[3]  * ${f35_factor}, -- F35
-		probabilities[4]  * ${f50_factor}, -- F50
-		probabilities[5]  * ${m15_factor}, -- M15
-		probabilities[6]  * ${m20_factor}, -- M20
-		probabilities[7]  * ${m25_factor}, -- M25
-		probabilities[8]  * ${m35_factor}, -- M35
-		probabilities[9]  * ${m50_factor}  -- M50
+		probabilities[0]  * ${f10x_factor}, -- F10x
+		probabilities[1]  * ${f20x_factor}, -- F20x
+		probabilities[2]  * ${f30x_factor}, -- F30x
+		probabilities[3]  * ${m10x_factor}, -- M10x
+		probabilities[4]  * ${m20x_factor}, -- M20x
+		probabilities[5]  * ${m30x_factor}  -- M30x
 	  ) as probabilities
   FROM
 	  rf_predicted_cv

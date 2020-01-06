@@ -23,16 +23,12 @@ SELECT
   l.predicted.probability,
   l.predicted.probabilities as raw_probability,
   array( -- calibration
-	l.predicted.probabilities[0]  * ${f15_factor}, -- F15
-	l.predicted.probabilities[1]  * ${f20_factor}, -- F20
-	l.predicted.probabilities[2]  * ${f25_factor}, -- F25~
-	l.predicted.probabilities[3]  * ${f35_factor}, -- F35~
-	l.predicted.probabilities[4]  * ${f50_factor}, -- F50~
-	l.predicted.probabilities[5]  * ${m15_factor}, -- M15
-	l.predicted.probabilities[6]  * ${m20_factor}, -- M20
-	l.predicted.probabilities[7]  * ${m25_factor}, -- M25~
-	l.predicted.probabilities[8]  * ${m35_factor}, -- M35~
-	l.predicted.probabilities[9]  * ${m50_factor}  -- M50~
+	l.predicted.probabilities[0]  * ${f10x_factor}, -- F10x
+	l.predicted.probabilities[1]  * ${f20x_factor}, -- F20x
+	l.predicted.probabilities[2]  * ${f30x_factor}, -- F30x
+	l.predicted.probabilities[3]  * ${m10x_factor}, -- M10x
+	l.predicted.probabilities[4]  * ${m20x_factor}, -- M20x
+	l.predicted.probabilities[5]  * ${m30x_factor}  -- M30x
   ) as probabilities
 FROM
   t2 l
