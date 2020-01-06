@@ -27,7 +27,7 @@ wordcnt as (
   select
     l.userid,
     l.word,
-    ln(1+count(1)) as cnt -- logscale count
+    count(1) as cnt -- logscale count
   from
     exploded l
     LEFT SEMI JOIN document_frequency r ON (l.word = r.word)
@@ -35,20 +35,12 @@ wordcnt as (
     l.userid,
     l.word
 ),
-rescaled as (
-  select
-    userid, 
-    word, 
-    rescale(cnt, min(cnt) over (partition by word), max(cnt) over (partition by word)) as value
-  from
-    wordcnt
-),
 ftvec as (
   select
     userid,
-    to_ordered_list(feature(word,value), value, '-k ${num_features}') as features
+    to_ordered_list(feature(word,cnt), value, '-k 100') as features
   from
-    rescaled
+    wordcnt
   group by
     userid
 ),

@@ -30,7 +30,7 @@ min_samples_leaf: 1
 
 # over/down sampling
 min_class_weight: 0.8
-max_class_weight: 4.0
+max_class_weight: 1.2
 
 # heuristic calibration
 f15_factor: 1.0
