@@ -44,12 +44,12 @@ m25_factor: 1.0
 m35_factor: 1.0
 m50_factor: 1.0
 
-f10x_factor: 1.0
-f20x_factor: 1.0
-f30x_factor: 1.0
-m10x_factor: 1.0
-m20x_factor: 1.0
-m30x_factor: 1.0
+f1x_factor: 1.0
+f2x_factor: 1.0
+f3x_factor: 1.0
+m1x_factor: 1.0
+m2x_factor: 1.0
+m3x_factor: 1.0
 
 #f15_factor: 1.1
 #f20_factor: 1.4

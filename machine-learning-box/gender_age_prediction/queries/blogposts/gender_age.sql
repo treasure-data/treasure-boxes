@@ -2,9 +2,9 @@ select
   userid,
   (if(gender='male','M','F') ||
         CASE
-           WHEN age >= 33 THEN '33~48'
-           WHEN age >= 23 THEN '23~27'
-           ELSE '13-17'
+           WHEN age >= 33 THEN '3x'
+           WHEN age >= 23 THEN '2x'
+           ELSE '1x'
         END
   ) as gender_age
 from

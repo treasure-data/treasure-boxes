@@ -2,19 +2,19 @@
 WITH tmp as (
   SELECT
     actual,
-	max(CASE WHEN predicted = 'F10x' THEN cnt ELSE 0 END) AS F10x,
-	max(CASE WHEN predicted = 'F20x' THEN cnt ELSE 0 END) AS F20x,
-	max(CASE WHEN predicted = 'F30x' THEN cnt ELSE 0 END) AS F30x,
-	max(CASE WHEN predicted = 'M10x' THEN cnt ELSE 0 END) AS M10x,
-	max(CASE WHEN predicted = 'M20x' THEN cnt ELSE 0 END) AS M20x,
-	max(CASE WHEN predicted = 'M30x' THEN cnt ELSE 0 END) AS M30x
+	max(CASE WHEN predicted = 'F1x' THEN cnt ELSE 0 END) AS F1x,
+	max(CASE WHEN predicted = 'F2x' THEN cnt ELSE 0 END) AS F2x,
+	max(CASE WHEN predicted = 'F3x' THEN cnt ELSE 0 END) AS F3x,
+	max(CASE WHEN predicted = 'M1x' THEN cnt ELSE 0 END) AS M1x,
+	max(CASE WHEN predicted = 'M2x' THEN cnt ELSE 0 END) AS M2x,
+	max(CASE WHEN predicted = 'M3x' THEN cnt ELSE 0 END) AS M3x
   FROM rf_confusion_matrix
   GROUP BY actual
 )
 select 
   actual,
-  F10x,F20x,F30x,
-  M10x,M20x,M30x
+  F1x,F2x,F3x,
+  M1x,M2x,M3x
 from
   tmp
 order by
