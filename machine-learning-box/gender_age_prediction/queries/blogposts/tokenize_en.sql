@@ -1,3 +1,4 @@
+-- @TD distribute_strategy: aggressive
 SELECT
   userid,
   translate(r.word,':','\;') as word
