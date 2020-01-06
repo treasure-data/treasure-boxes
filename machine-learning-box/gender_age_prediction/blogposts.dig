@@ -6,7 +6,11 @@ _export:
     priority: ${job_priority}
 
 +vectorize:
-  td>: queries/blogposts/tokenize_and_ftvec.sql
+  td>: queries/blogposts/tokenize_en.sql
+  create_table: exploded
+
++vectorize:
+  td>: queries/blogposts/ftvec.sql
   create_table: input
   engine_version: experimental
 
