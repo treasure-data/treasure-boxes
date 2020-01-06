@@ -39,8 +39,8 @@ scores as (
   select
     tf.userid,
     tf.word,
-    bm25(tf.freq, dl.dl, dl.avgdl, dl.total_docs, df.docs) as bm25,
-    tfidf(tf.freq, df.docs, dl.total_docs) as tfidf
+    bm25(tf.freq, dl.dl, dl.avgdl, dl.total_docs, df.docs) as bm25
+    -- tfidf(tf.freq, df.docs, dl.total_docs) as tfidf
   from
     term_frequency tf
     JOIN document_frequency df ON (tf.word = df.word)
@@ -51,16 +51,16 @@ scores as (
 ftvec as (
   select
     userid,
-    to_ordered_list(feature(word,cnt), value, '-k 100') as features
+    to_ordered_list(feature(word,bm25), bm25, '-k 100') as features
   from
-    wordcnt
+    scores
   group by
     userid
 ),
 ages as (
   select
     userid,
-    (if(gender='male','M','F') ||
+    concat(if(gender='male','M','F'),
     CASE
        WHEN age >= 33 THEN '3x'
        WHEN age >= 23 THEN '2x'
