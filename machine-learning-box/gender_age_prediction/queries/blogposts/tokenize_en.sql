@@ -1,4 +1,5 @@
 -- @TD distribute_strategy: aggressive
+-- DIGDAG_INSERT_LINE
 SELECT
   userid,
   translate(r.word,':','\;') as word
