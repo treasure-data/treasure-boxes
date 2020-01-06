@@ -14,4 +14,4 @@ _export:
   _parallel: true
 
   +rf_predict:
-    call>: rf_predict.dig
+    call>: blogposts_rf_predict.dig
