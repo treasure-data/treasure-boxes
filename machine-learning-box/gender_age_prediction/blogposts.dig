@@ -5,7 +5,7 @@ _export:
     engine: hive
     priority: ${job_priority}
 
-+vectorize:
++tokenize:
   td>: queries/blogposts/tokenize_en.sql
   create_table: exploded
 
