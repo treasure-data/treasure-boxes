@@ -1,0 +1,27 @@
+_export:
+  td:
+    database: <database_name> 
+    temp_table: <temporary_table_name>
+    prod_table: <target_table_name>
+
++drop_create_temp_table:
+  td_ddl>:
+  empty_tables: ["${td.temp_table}"]
+  database: ${td.database}
+
++load_to_temp_table:
+  td_load>: config/load.yml
+  database: ${td.database}
+  table: ${td.temp_table}
+
++check_num_result:
+  echo>: load ${td.last_job.num_records} records!
+
++switch_tables:
+  if>: ${td.last_job.num_records==0}
+  _do:
+    echo>: Since the records is 0, skip to switch tables.
+  _else_do:
+    td_ddl>:
+    database: ${td.database}
+    rename_tables: [{from: "${td.temp_table}", to: "${td.prod_table}"}]

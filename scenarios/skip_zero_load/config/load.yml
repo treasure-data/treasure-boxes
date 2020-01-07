@@ -1,0 +1,30 @@
+in:
+  type: s3
+  access_key_id: ${secret:s3.access_key_id}
+  secret_access_key: ${secret:s3.secret_access_key}
+  bucket: <bucket_name>
+  path_prefix: <path_prefix>
+  parser:
+    charset: UTF-8
+    newline: CRLF
+    type: csv
+    delimiter: ','
+    quote: '"'
+    escape: ''
+    skip_header_lines: 1
+    columns:
+    - name: col1
+      type: long
+    - name: col2
+      type: string
+    - name: col3
+      type: string
+out: {}
+exec: {}
+filters:
+- type: add_time
+  to_column:
+    name: time
+    type: timestamp
+  from_value:
+    mode: upload_time
