@@ -4,6 +4,12 @@
 If the file to be loaded is not found when we use replace mode of Data Connector, an empty table is created as a result of replacing 0 records.
 We can resolve the task by using workflow like this example.
 
+# Overview of this Example
+1. drop/create temporary table(this is a empty table)
+2. load from S3 into temporary table
+3. check the number of loaded records
+    1. when the number of loaded records is 0, output message into log
+    2. when the number of loaded records is greater than 0, rename temporary table with producation table
 
 # How to Run
 First, upload the project.
