@@ -1,8 +1,11 @@
 import cuenote
-import pytd
 import pandas
 import io
 import os
+import sys
+
+os.system(f"{sys.executable} -m pip install -U pytd==1.0.0 td-client")
+import pytd
 
 TD_API_KEY = os.environ.get('td_apikey')
 TD_API_SERVER = os.environ.get('td_endpoint')
@@ -38,5 +41,5 @@ def main():
                     df['bounce_received_at'] = pandas.to_datetime(df['bounce_received_at'])
                     df['unreachable_at'] = pandas.to_datetime(df['unreachable_at'])
 
-                client.load_table_from_dataframe(df, item.tag + '_stg', if_exists="append")
+                client.load_table_from_dataframe(df, item.tag + '_stg', writer='bulk_import', if_exists='append')
             client.query("DELETE FROM queue WHERE expid = '{0}'".format(expid[0]))

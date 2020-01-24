@@ -1,8 +1,11 @@
 import cuenote
-import pytd
 import pandas
 import time
 import os
+import sys
+
+os.system(f"{sys.executable} -m pip install -U pytd==1.0.0 td-client")
+import pytd
 
 TD_API_KEY = os.environ.get('td_apikey')
 TD_API_SERVER = os.environ.get('td_endpoint')
@@ -69,8 +72,8 @@ def main():
     df_expids = pandas.DataFrame(expids.values(), index=expids.keys()).T
 
     # Refresh Job Info table.
-    client.load_table_from_dataframe(df_jobinfo, 'jobinfo', if_exists="overwrite")
+    client.load_table_from_dataframe(df_jobinfo, 'jobinfo', writer='bulk_import', if_exists='overwrite')
 
     # Insert expids into the queue table.
     if len(expids['expid']) > 0:
-        client.load_table_from_dataframe(df_expids, 'queue', if_exists="overwrite")
+        client.load_table_from_dataframe(df_expids, 'queue', writer='bulk_import', if_exists='overwrite')
