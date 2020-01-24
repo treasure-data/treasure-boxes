@@ -61,7 +61,7 @@ Check if you see errors:
 
 In a workflow named "cuenote_import_master", you will find a variable `cnfc_sync_range` and it has `365` as a value.
 This variable is to specify a date-rage to synchronize historical data. Cuenote reflects the latest server response and the latest user interaction to logs. So the workflow retrieves logs for the last X days to get the latest data 
-For the first execution, the value is `365` to get long-term historical data. After that, you should change it to `14`, `30` or any reasonable value which is you want to catch-up for.
+For the first execution, the value is `365` to get long-term historical data. After that, you should change it to `14`.
 
 ## Basic logic
 

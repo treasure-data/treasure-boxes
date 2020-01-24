@@ -7,7 +7,6 @@ import os
 TD_API_KEY = os.environ.get('td_apikey')
 TD_API_SERVER = os.environ.get('td_endpoint')
 TD_DATABASE = os.environ.get('td_database')
-CNFC_SYNC_RANGE = os.environ.get('cnfc_sync_range')
 
 limit = 1000
 
@@ -63,7 +62,7 @@ def main():
     # Request CN to generate logs for each delivery.
     expids = {'expid': []}
     for i in range(len(jobinfo['delivid'])):
-        if jobinfo['delivtime'][i] >= (int(time.time()) - (60 * 60 * 24 * int(CNFC_SYNC_RANGE))):
+        if jobinfo['delivtime'][i] >= (int(time.time()) - (60 * 60 * 24 * 14)):
             for expid in cuenote.call_api('startExport', {'delivid': jobinfo['delivid'][i], 'strcode': 'utf8'}).iter(
                     'expid'):
                 expids['expid'] += [expid.text]

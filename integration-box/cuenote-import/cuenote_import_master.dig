@@ -13,6 +13,5 @@ schedule:
         td_database: ${secret:td.database}
         cnfc_endpoint: ${secret:cn.endpoint}
         cnfc_user: ${secret:cn.user}
-        cnfc_password:  ${secret:cn.password}
-        cnfc_sync_range:  365
+        cnfc_password: ${secret:cn.password}
 

@@ -22,7 +22,7 @@ _export:
         td_database: ${secret:td.database}
         cnfc_endpoint: ${secret:cn.endpoint}
         cnfc_user: ${secret:cn.user}
-        cnfc_password:  ${secret:cn.password}
+        cnfc_password: ${secret:cn.password}
 
 +repeat:
     for_each>:
