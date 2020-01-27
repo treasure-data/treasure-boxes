@@ -68,7 +68,7 @@ def main():
         if jobinfo['delivtime'][i] >= (int(time.time()) - (60 * 60 * 24 * 14)):
             for expid in cuenote.call_api('startExport', {'delivid': jobinfo['delivid'][i], 'strcode': 'utf8'}).iter(
                     'expid'):
-                expids['expid'] += int([expid.text])
+                expids['expid'] += [int(expid.text)]
     df_expids = pandas.DataFrame(expids.values(), index=expids.keys()).T
 
     # Refresh Job Info table.
