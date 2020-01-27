@@ -35,7 +35,7 @@ def call_api(command, params):
             parameter.set(key, params[key])
 
     req_body = "CCC=%E6%84%9B&xml=" + urllib.parse.quote(xEt.tostring(xml))
-    basic_user_and_pasword = base64.b64encode('{}:{}'.format(CNFC_USER, CNFC_PASSWORD).encode('utf-8'))
+    basic_user_and_pasword = base64.b64encode(f'{CNFC_USER}:{CNFC_PASSWORD}'.encode('utf-8'))
     request = urllib.request.Request(CNFC_ENDPOINT, req_body.encode(), {
         "User-Agent": "Treasure Data Custom Script",
         "Content_Type": "form-data",
