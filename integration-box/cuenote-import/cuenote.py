@@ -49,7 +49,7 @@ def call_api(command, params):
 
 
 def download_log(url):
-    basic_user_and_pasword = base64.b64encode('{}:{}'.format(CNFC_USER, CNFC_PASSWORD).encode('utf-8'))
+    basic_user_and_pasword = base64.b64encode(f'{CNFC_USER}:{CNFC_PASSWORD}'.encode('utf-8'))
     request = urllib.request.Request(url, headers={
         "User-Agent": "Treasure Data Custom Script",
         "Authorization": "Basic " + basic_user_and_pasword.decode('utf-8')
