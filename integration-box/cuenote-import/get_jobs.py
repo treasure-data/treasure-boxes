@@ -75,5 +75,5 @@ def main():
     client.load_table_from_dataframe(df_jobinfo, 'jobinfo', writer='bulk_import', if_exists='overwrite')
 
     # Insert expids into the queue table.
-    if len(expids['expid']) > 0:
+    if expids['expid']:
         client.load_table_from_dataframe(df_expids, 'queue', writer='bulk_import', if_exists='overwrite')
