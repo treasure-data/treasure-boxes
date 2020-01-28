@@ -14,4 +14,3 @@ schedule:
         cnfc_endpoint: ${secret:cn.endpoint}
         cnfc_user: ${secret:cn.user}
         cnfc_password: ${secret:cn.password}
-

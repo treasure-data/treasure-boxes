@@ -36,8 +36,3 @@ _export:
             _do:
                 +accumulate_to_dest:
                     td>: queries/accumulate_to_dest.sql
-
-
-
-
-
