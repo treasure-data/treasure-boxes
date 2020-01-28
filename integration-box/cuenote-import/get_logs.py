@@ -41,5 +41,6 @@ def main():
                     df['bounce_received_at'] = pandas.to_datetime(df['bounce_received_at'])
                     df['unreachable_at'] = pandas.to_datetime(df['unreachable_at'])
 
-                client.load_table_from_dataframe(df, item.tag + '_stg', writer='bulk_import', if_exists='append')
+                if len(df) > 0:
+                    client.load_table_from_dataframe(df, item.tag + '_stg', writer='bulk_import', if_exists='append')
             client.query("DELETE FROM queue WHERE expid = {0}".format(expid[0]))
