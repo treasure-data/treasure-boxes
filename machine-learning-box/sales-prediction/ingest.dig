@@ -6,7 +6,7 @@ _export:
   database: ${td.database}
   table: ${source_table}
   docker:
-    image: "armtd/td-ml:2019.09"
+    image: "armtd/td-ml:2019.12"
   _env:
     TD_API_KEY: ${secret:td.apikey}
     TD_API_SERVER: ${secret:td.apiserver}

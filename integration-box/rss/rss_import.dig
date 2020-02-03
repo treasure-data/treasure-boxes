@@ -9,7 +9,7 @@ schedule:
 +step1:
   py>: py_scripts.tasks.rss_import
   docker:
-    image: "armtd/td-script:2019.09"
+    image: "armtd/td-script:2019.12"
   dest_db: ${td.database}
   dest_table: ${td.table}
   rss_url_list:

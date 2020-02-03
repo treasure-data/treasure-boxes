@@ -14,7 +14,7 @@ _export:
 
 +import_ms_lists_to_td:
   docker:
-    image: "armtd/td-script:2019.09"
+    image: "armtd/td-script:2019.12"
 
   py>: getcdpsegments.getSegmentLists
   _env:
@@ -32,7 +32,7 @@ _export:
   _do:
     +step1:
       docker:
-        image: "armtd/td-script:2019.09"
+        image: "armtd/td-script:2019.12"
 
       py>: getcdpsegments.getSegmentLists
       _env:

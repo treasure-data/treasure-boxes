@@ -10,7 +10,7 @@ _export:
 
 +load_sense_video:
   docker:
-    image: 'armtd/td-ml:2019.09'
+    image: 'armtd/td-ml:2019.12'
   py>: scorer.load_sense_video
   database: ${database}
   table: ${table}

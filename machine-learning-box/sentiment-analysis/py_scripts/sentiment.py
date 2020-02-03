@@ -1,5 +1,4 @@
 import os
-import sys
 
 
 def _upload_model(model, model_file="keras_model.h5"):
@@ -23,10 +22,6 @@ def run(
 ):
     # Original code is published at official document of TensorFlow under Apache License Version 2.0
     # https://www.tensorflow.org/hub/tutorials/text_classification_with_tf_hub
-
-    os.system(
-        f"{sys.executable} -m pip install -U tensorflow==2.0.0 tensorflow_hub==0.7.0"
-    )
 
     import pytd
     import tensorflow as tf

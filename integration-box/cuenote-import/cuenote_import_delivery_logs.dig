@@ -14,7 +14,7 @@ _export:
 
 +get_logs:
     docker:
-        image: "digdag/digdag-python:3.7"
+        image: "armtd/td-script:2019.12"
     py>: get_logs.main
     _env:
         td_apikey: ${secret:td.apikey}

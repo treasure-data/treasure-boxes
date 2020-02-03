@@ -20,4 +20,4 @@ _export:
     TD_API_KEY: ${secret:td.apikey}
     TD_API_SERVER: ${secret:td.apiserver}
   docker:
-      image: "armtd/td-script:2019.09"
+      image: "armtd/td-script:2019.12"

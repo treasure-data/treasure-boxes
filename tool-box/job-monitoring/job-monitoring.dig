@@ -6,7 +6,7 @@ schedule:
 
 +job-monitoring:
     docker:
-        image: "armtd/td-script:2019.09"
+        image: "armtd/td-script:2019.12"
     py>: job-monitoring.monitoring
     database: ${td.database}
     table: ${td.table}

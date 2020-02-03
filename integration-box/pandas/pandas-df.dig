@@ -8,7 +8,7 @@ _export:
     database_name: sample_datasets
     table_name: nasdaq
     docker:
-        image: "armtd/td-script:2019.09"
+        image: "armtd/td-script:2019.12"
     _env:
         TD_API_KEY: ${secret:td.apikey}
         TD_API_SERVER: ${secret:td.apiserver}
@@ -18,7 +18,7 @@ _export:
     database_name: ${td.database}
     table_name: my_df
     docker:
-        image: "armtd/td-script:2019.09"
+        image: "armtd/td-script:2019.12"
     _env:
         TD_API_KEY: ${secret:td.apikey}
         TD_API_SERVER: ${secret:td.apiserver}

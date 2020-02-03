@@ -1,6 +1,6 @@
 +step1:
   docker:
-    image: "armtd/td-script:2019.09"
+    image: "armtd/td-script:2019.12"
 
   py>: scripts.ytm.call_api
   sql: queries/get_userlist.sql

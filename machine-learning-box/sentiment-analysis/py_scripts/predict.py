@@ -1,7 +1,4 @@
 import os
-import sys
-
-os.system(f"{sys.executable} -m pip install -U tensorflow==2.0.1 tensorflow_hub==0.7.0")
 
 
 def run(input_table="movie_review_test_shuffled", database="sentiment"):
