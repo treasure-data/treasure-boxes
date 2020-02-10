@@ -1,0 +1,15 @@
+timezone: "Asia/Tokyo"
+
+schedule:
+ daily>: 07:45:00
+
++task1:
+  py>: import.main
+  _env:
+    url           : CSV DOWNLOAD URL
+    apikey        : YOUR API KEY
+    database      : DATABASE NAME
+    table         : TABLE NAME
+    column_setting: COLUMN SETTING FILE NAME (like csv_column_setting.py)
+  docker:
+    image: "digdag/digdag-python:3.7.3-stretch"
