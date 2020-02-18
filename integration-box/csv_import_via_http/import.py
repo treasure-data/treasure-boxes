@@ -17,4 +17,4 @@ def main(url, database, table, column_setting_file):
   droped_df       = df_en.drop(columns = list(ignore_columns))
 
   client = pytd.Client(apikey = os.getenv('apikey'), database = database)
-  client.load_table_from_dataframe(df_en, table), writer = 'bulk_import', if_exists = 'append')
+  client.load_table_from_dataframe(droped_df, table), writer = 'bulk_import', if_exists = 'append')
