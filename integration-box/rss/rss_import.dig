@@ -9,10 +9,12 @@ schedule:
 +step1:
   docker:
     image: "digdag/digdag-python:3.7"
-  py>: tasks.rss_import
+  py>: py_scripts.tasks.rss_import
   dest_db: ${td.database}
   dest_table: ${td.table}
-  rss_url_list: ['https://www.vogue.co.jp/rss/vogue', 'https://feeds.dailyfeed.jp/feed/s/7/887.rss']
+  rss_url_list:
+    - 'https://www.vogue.co.jp/rss/vogue'
+    - 'https://feeds.dailyfeed.jp/feed/s/7/887.rss'
   _env:
     td_apikey: ${secret:td.apikey}
     td_endpoint: ${secret:td.apiserver}
