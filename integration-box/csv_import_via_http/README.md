@@ -2,7 +2,7 @@
 This workflow project including CustomScript (Python) enables you to import csv file provided by http into TreasureData.
 
 # Installation (Setup)
-## Edit import.py
+## Edit csv_import_td.py
 - url           : set url to get csv file
 - apikey        : set your apikey
 - database      : set your database name to import into

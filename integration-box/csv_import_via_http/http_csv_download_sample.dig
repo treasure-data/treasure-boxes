@@ -4,7 +4,7 @@ schedule:
  daily>: 07:45:00
 
 +task1:
-  py>: import.main
+  py>: csv_import_td.main
   url           : CSV DOWNLOAD URL
   database      : DATABASE NAME
   table         : TABLE NAME
