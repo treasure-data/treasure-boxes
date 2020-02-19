@@ -10,8 +10,8 @@ def main(url, database, table, csv_setting_file):
   df = pd.read_csv(url)
 
   column_setting = json.load(open(csv_setting_file, "r"))
-  header_mapping = map(lambda x: (x["from_name"], x["to_name"]), column_setting)
-  df_en          = df.rename(columns = dict(header_mapping))
+  header_mapping = {e["from_name"]: e["to_name"] for e in column_setting}
+  df_en          = df.rename(columns = header_mapping)
 
   ignore_columns  = [e["to_name"] for e in column_setting if e["ignore"]]
   droped_df       = df_en.drop(columns = ignore_columns)
