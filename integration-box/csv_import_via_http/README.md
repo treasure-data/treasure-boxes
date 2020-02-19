@@ -2,17 +2,19 @@
 This workflow project including CustomScript (Python) enables you to import csv file provided by http into TreasureData.
 
 # Installation (Setup)
-## Edit csv_import_td.py
+## set parameters in http_csv_download_sample.dig
 - url           : set url to get csv file
-- apikey        : set your apikey
 - database      : set your database name to import into
 - table         : set your table name to import into
-- column_setting: set CSV setting file name.
+- column_setting_file: set CSV setting file name.
 
-## Edit csv_column_setting.py
+## Set apikey as secret ()
+https://support.treasuredata.com/hc/en-us/articles/360001266788-Workflows-Secrets-Management
+
+## Edit csv_setting.json
 You can change behavior followings.
 - replace column name. set from_name and to_name what you want.
-- specify ignoring column to import. If you want to ignore, you should change to True from False.
+- specify ignoring column to import. If you want to ignore, you should change to true from false.
 
 ## update workflow project to TreasureData
 Submit workflow to TreasureData.  
