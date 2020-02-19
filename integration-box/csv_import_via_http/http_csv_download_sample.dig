@@ -8,9 +8,9 @@ schedule:
   url           : CSV DOWNLOAD URL
   database      : DATABASE NAME
   table         : TABLE NAME
-  column_setting_file: COLUMN SETTING FILE NAME (like csv_column_setting.py)
+  csv_setting_file: COLUMN SETTING FILE NAME (like csv_setting.json)
   _env:
-    apikey: YOUR API KEY
+    apikey: ${secret:td.apikey}
 
   docker:
     image: "digdag/digdag-python:3.7"

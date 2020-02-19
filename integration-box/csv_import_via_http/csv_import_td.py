@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 import json
 
-os.system(f"{sys.executable} -m pip install --user pytd==1.0.0")
+os.system(f"{sys.executable} -m pip install -U pytd==1.0.0 td-client")
 import pytd
 
 def main(url, database, table, csv_setting_file):
