@@ -169,7 +169,7 @@ file_cleanup(directory)
 
 
 # PLACE HOLDER FOR ADDING CODE TO HANDLE THE ENCRYTION STUFF
-def main():
+def main(seed_file):
     try:
         with pysftp.Connection(host=sftpHostname, username=sftpUsername, password=sftpPassword) as sftp:
             print("Connection succesfully established ... ")
@@ -248,6 +248,7 @@ def main():
                     print('This ', folder, 'is empty')
     except Exception as e:
         print('Something Went Wrong... Please check.', str(e))
+        raise
 
     print('#' * 80, '\n')
     # File cleanup
@@ -262,4 +263,4 @@ def main():
 if __name__ == '__main__':
     # call main method
     print('In Main')
-    main()
+    main(seed_file)
