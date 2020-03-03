@@ -1,0 +1,2 @@
+ruamel-yaml==0.15.46
+pysftp==0.2.9

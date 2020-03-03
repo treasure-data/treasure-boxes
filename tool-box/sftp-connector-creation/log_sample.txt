@@ -1,0 +1,61 @@
+/Users/indreshkumar/PycharmProjects/TestProject/venv/bin/python /Users/indreshkumar/PycharmProjects/TestProject/create_sftp_connector.py
+Connection succesfully established ...
+################################################################################
+Below Folder is being processed...
+ /var/ftp/Adobe_Analytics/CRM/ZCCH Leads ['ZCCH Header.csv', 'ZCCH_Partner.csv', 'ZCCH_Shades.csv', 'ZCCH_Survey.csv', 'ZCCH_Text.csv']
+********************************************************************************
+file /Users/indreshkumar/PycharmProjects/TestProject/yml_files/seed_crm_zcch_header.yml is created successfully.
+Running command: td connector:guess /Users/indreshkumar/PycharmProjects/TestProject/yml_files/seed_crm_zcch_header.yml -o /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load_crm_zcch_header.yml
+returncode:  0
+file /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_header.yml is created successfully.
+Running command: td table:create ap_src_dev crm_zcch_header
+returncode:  1
+connector_name:  ap_src_crm_zcch_leads_zcch_header
+Running command: td connector:create ap_src_crm_zcch_leads_zcch_header "" ap_src_dev crm_zcch_header /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_header.yml
+returncode:  1
+********************************************************************************
+file /Users/indreshkumar/PycharmProjects/TestProject/yml_files/seed_crm_zcch_partner.yml is created successfully.
+Running command: td connector:guess /Users/indreshkumar/PycharmProjects/TestProject/yml_files/seed_crm_zcch_partner.yml -o /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load_crm_zcch_partner.yml
+returncode:  0
+file /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_partner.yml is created successfully.
+Running command: td table:create ap_src_dev crm_zcch_partner
+returncode:  1
+connector_name:  ap_src_crm_zcch_leads_zcch_partner
+Running command: td connector:create ap_src_crm_zcch_leads_zcch_partner "" ap_src_dev crm_zcch_partner /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_partner.yml
+returncode:  1
+********************************************************************************
+file /Users/indreshkumar/PycharmProjects/TestProject/yml_files/seed_crm_zcch_shades.yml is created successfully.
+Running command: td connector:guess /Users/indreshkumar/PycharmProjects/TestProject/yml_files/seed_crm_zcch_shades.yml -o /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load_crm_zcch_shades.yml
+returncode:  0
+file /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_shades.yml is created successfully.
+Running command: td table:create ap_src_dev crm_zcch_shades
+returncode:  1
+connector_name:  ap_src_crm_zcch_leads_zcch_shades
+Running command: td connector:create ap_src_crm_zcch_leads_zcch_shades "" ap_src_dev crm_zcch_shades /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_shades.yml
+returncode:  1
+********************************************************************************
+file /Users/indreshkumar/PycharmProjects/TestProject/yml_files/seed_crm_zcch_survey.yml is created successfully.
+Running command: td connector:guess /Users/indreshkumar/PycharmProjects/TestProject/yml_files/seed_crm_zcch_survey.yml -o /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load_crm_zcch_survey.yml
+returncode:  0
+file /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_survey.yml is created successfully.
+Running command: td table:create ap_src_dev crm_zcch_survey
+returncode:  1
+connector_name:  ap_src_crm_zcch_leads_zcch_survey
+Running command: td connector:create ap_src_crm_zcch_leads_zcch_survey "" ap_src_dev crm_zcch_survey /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_survey.yml
+returncode:  1
+********************************************************************************
+file /Users/indreshkumar/PycharmProjects/TestProject/yml_files/seed_crm_zcch_text.yml is created successfully.
+Running command: td connector:guess /Users/indreshkumar/PycharmProjects/TestProject/yml_files/seed_crm_zcch_text.yml -o /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load_crm_zcch_text.yml
+returncode:  0
+file /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_text.yml is created successfully.
+Running command: td table:create ap_src_dev crm_zcch_text
+returncode:  1
+connector_name:  ap_src_crm_zcch_leads_zcch_text
+Running command: td connector:create ap_src_crm_zcch_leads_zcch_text "" ap_src_dev crm_zcch_text /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_text.yml
+returncode:  1
+################################################################################
+
+Below are list of commands which fails...
+{'crm_zcch_header': [{'failed_command': 'td table:create ap_src_dev crm_zcch_header', 'returncode': 1, 'error_msg': "Table 'ap_src_dev.crm_zcch_header' already exists.\n"}, {'failed_command': 'td connector:create ap_src_crm_zcch_leads_zcch_header "" ap_src_dev crm_zcch_header /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_header.yml', 'returncode': 1, 'error_msg': 'Error: BulkLoadSession: ap_src_crm_zcch_leads_zcch_header create failed: ["Name has already been taken"]\n'}], 'crm_zcch_partner': [{'failed_command': 'td table:create ap_src_dev crm_zcch_partner', 'returncode': 1, 'error_msg': "Table 'ap_src_dev.crm_zcch_partner' already exists.\n"}, {'failed_command': 'td connector:create ap_src_crm_zcch_leads_zcch_partner "" ap_src_dev crm_zcch_partner /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_partner.yml', 'returncode': 1, 'error_msg': 'Error: BulkLoadSession: ap_src_crm_zcch_leads_zcch_partner create failed: ["Name has already been taken"]\n'}], 'crm_zcch_shades': [{'failed_command': 'td table:create ap_src_dev crm_zcch_shades', 'returncode': 1, 'error_msg': "Table 'ap_src_dev.crm_zcch_shades' already exists.\n"}, {'failed_command': 'td connector:create ap_src_crm_zcch_leads_zcch_shades "" ap_src_dev crm_zcch_shades /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_shades.yml', 'returncode': 1, 'error_msg': 'Error: BulkLoadSession: ap_src_crm_zcch_leads_zcch_shades create failed: ["Name has already been taken"]\n'}], 'crm_zcch_survey': [{'failed_command': 'td table:create ap_src_dev crm_zcch_survey', 'returncode': 1, 'error_msg': "Table 'ap_src_dev.crm_zcch_survey' already exists.\n"}, {'failed_command': 'td connector:create ap_src_crm_zcch_leads_zcch_survey "" ap_src_dev crm_zcch_survey /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_survey.yml', 'returncode': 1, 'error_msg': 'Error: BulkLoadSession: ap_src_crm_zcch_leads_zcch_survey create failed: ["Name has already been taken"]\n'}], 'crm_zcch_text': [{'failed_command': 'td table:create ap_src_dev crm_zcch_text', 'returncode': 1, 'error_msg': "Table 'ap_src_dev.crm_zcch_text' already exists.\n"}, {'failed_command': 'td connector:create ap_src_crm_zcch_leads_zcch_text "" ap_src_dev crm_zcch_text /Users/indreshkumar/PycharmProjects/TestProject/yml_files/load1_crm_zcch_text.yml', 'returncode': 1, 'error_msg': 'Error: BulkLoadSession: ap_src_crm_zcch_leads_zcch_text create failed: ["Name has already been taken"]\n'}]}
+
+Process finished with exit code 0

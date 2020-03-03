@@ -1,0 +1,17 @@
+in:
+  type: sftp
+  host: <sftpHostname>
+  port: 22
+  auth_method: Password
+  user: <sftpUsername>
+  password: <sftpPassword>
+  user_directory_is_root: true
+  timeout: 600
+  path_prefix: ''
+out:
+  type: td
+  apikey: '<YOUR_TD_API_KEY>'
+  endpoint: <endpoint> # For Example: api.treasuredata.co.jp
+  database: ''
+  table: ''
+  mode: append
