@@ -1,0 +1,16 @@
+timezone: "Asia/Tokyo"
+
+schedule:
+ daily>: 07:45:00
+
++task1:
+  py>: csv_import_td.main
+  url           : https://raw.githubusercontent.com/treasure-data/treasure-boxes/csv_import_via_http/integration-box/csv_import_via_http/sample_data/sample_member.csv
+  database      : sample_database_csv_import
+  table         : sample_table_csv_import
+  csv_setting_file: csv_setting.json
+  _env:
+    apikey: ${secret:td.apikey}
+
+  docker:
+    image: "digdag/digdag-python:3.7"

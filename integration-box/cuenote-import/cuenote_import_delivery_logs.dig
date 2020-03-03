@@ -1,0 +1,38 @@
+timezone: Asia/Tokyo
+
+schedule:
+    cron>: 0 4-6 * * *
+
+_export:
+    td:
+        database: ${secret:td.database}
+        engine: presto
+
++prep_stg_tables:
+    td_ddl>:
+    empty_tables: [log_clickcount_stg, log_deliv_stg]
+
++get_logs:
+    docker:
+        image: "digdag/digdag-python:3.7"
+    py>: get_logs.main
+    _env:
+        td_apikey: ${secret:td.apikey}
+        td_endpoint: ${secret:td.apiserver}
+        td_database: ${secret:td.database}
+        cnfc_endpoint: ${secret:cn.endpoint}
+        cnfc_user: ${secret:cn.user}
+        cnfc_password: ${secret:cn.password}
+
++repeat:
+    for_each>:
+        table: [log_clickcount, log_deliv]
+    _do:
+        +count_records_in_stg:
+            td>: queries/count_records_in_stg.sql
+            store_last_results: true
+        +records_available:
+            if>: ${td.last_results['status']}
+            _do:
+                +accumulate_to_dest:
+                    td>: queries/accumulate_to_dest.sql

@@ -1,0 +1,7 @@
+source_database : 'Database where source /table is present'
+source_table : 'Add the source table name'
+profile_result_db : 'Profiling results are stored in this DB'
+min_max_limit : 5
+val_freq_limit : 5 
+data_threshold : 0.8
+sample_size : 25

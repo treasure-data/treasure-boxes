@@ -4,41 +4,30 @@ import os
 import sys
 import tdclient
 
-os.system(f"{sys.executable} -m pip install -U pytd==0.8.0 td-client")
-
-import pytd.pandas_td as td
+os.system(f"{sys.executable} -m pip install -U pytd==1.0.0")
 
 apikey = os.environ['TD_API_KEY']
-endpoint = os.environ['TD_API_SERVER']
+apiserver = os.environ['TD_API_SERVER']
 
-con = td.connect(apikey=apikey, endpoint=endpoint)
+def read_td_table(database_name, table_name, engine_name='presto', limit=1000):
+    import pytd
+    import pandas as pd
 
-def read_td_table(database_name, table_name, engine_name = 'presto', limit=1000):
-    engine = td.create_engine(f"{engine_name}:{database_name}", con=con)
-    df = td.read_td(f'SELECT * FROM {table_name} LIMIT {limit}', engine)
+    client = pytd.Client(apikey=apikey, endpoint=apiserver, database=database_name)
+
+    res = client.query(f"select * from {table_name} limit {limit}", engine=engine_name)
+    df = pd.DataFrame(**res)
     print(df)
 
 def write_td_table(database_name, table_name):
+    import pytd
     import pandas as pd
     import random
-    # TODO TD client, check for table's existence
-    engine = td.create_engine(f"presto:{database_name}", con=con)
+
+    client = pytd.Client(apikey=apikey, endpoint=apiserver, database=database_name)
     df = pd.DataFrame({"c":[random.random() for _ in range(20)]})
 
-    # Manipulating data in Treasure Data via Python.
-    # Uses https://github.com/treasure-data/td-client-python
-
-    tdc = tdclient.Client(apikey=os.environ['TD_API_KEY'], endpoint=os.environ['TD_API_SERVER'])
-
-    try:
-        tdc.create_database(database_name)
-    except tdclient.errors.AlreadyExistsError:
-        pass
-
-    try:
-        tdc.create_log_table(database_name, table_name)
-    except tdclient.errors.AlreadyExistsError:
-        pass
+    client.create_database_if_not_exists(database_name)
 
     table_path = f"{database_name}.{table_name}"
-    td.to_td(df, table_path, con, if_exists='replace', index=False)
+    client.load_table_from_dataframe(df, table_path, if_exists="overwrite")
