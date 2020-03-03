@@ -10,7 +10,7 @@ In this directory, we have example workflows for Machine Learning.
 - Classification
   - [Click-Through-Rate Prediction](./ctr-prediction)
   - [KDDCup 2012 track 2 CTR prediction](./kdd12track2)
-  - [Salesforce.com Predictive Analytics](./oredictive-lead-scoring)
+  - [Salesforce.com Predictive Analytics](./redictive-lead-scoring)
   - [Gender Age Prediction](./gender_age_prediction)
 - Regression
   - [House price prediction](./house-price-prediction)
