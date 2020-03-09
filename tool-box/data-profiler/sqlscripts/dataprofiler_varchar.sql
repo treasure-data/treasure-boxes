@@ -1,6 +1,6 @@
 select
  '${source_database}' as  db 
- ,'$(source_table}' as tbl 
+ ,'${source_table}' as tbl 
  ,'${column}' as  column
  ,(select COUNT_IF(${column} is NULL) from ${source_database}.${source_table}) as null_cnt
 ,(select approx_distinct(${column}) from ${source_database}.${source_table}) as aprx_distinct_cnt 
