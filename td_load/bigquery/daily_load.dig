@@ -1,0 +1,14 @@
+_export:
+  td:
+    dest_database: test_db
+    dest_table: test_tab
+
++prepare_table:
+  td_ddl>:
+  create_tables: ["${td.dest_table}"]
+  database: ${td.dest_database}
+
++load:
+  td_load>: config/bq.yml
+  database: ${td.dest_database}
+  table: ${td.dest_table}
