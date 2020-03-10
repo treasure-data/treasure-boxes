@@ -21,7 +21,7 @@ _export:
     if>: ${JSON.parse(http.last_content).attempts[0].done==true}
     _do:
       # call audience workflow if there is no running attempt
-      +call_master_segment:
+      +invoke_master_segment:
         require>: audience
         project_id: ${master_segment_project_id}
         session_time: ${session_time}
