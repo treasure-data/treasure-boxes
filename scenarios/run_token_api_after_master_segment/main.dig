@@ -1,0 +1,64 @@
+timezone: Asia/Tokyo
+
+_export:
+  baseurl: https://api-workflow.treasuredata.com
+  token_workflow_id: <toke workflow id here>
+  master_segment_project_id: <master segment project id here>
+  ms_pj_name: <master segments project name here>
+  ms_wf_name: <master segments workflow name here>
+  token_wf_name: <token workflow name here>
+  
++check_current_running_master_segment:
+  http>: "${baseurl}/api/attempts?project=${encodeURIComponent(ms_pj_name)}&workflow=${encodeURIComponent(ms_wf_name)}"
+  headers:
+    - authorization: "TD1 ${secret:td.apikey}"
+  method: GET
+  store_content: true
+  
+
++if_exists_running_master_segment_attempt:
+  +check:
+    if>: ${JSON.parse(http.last_content).attempts[0].done==true}
+    _do:
+      # require audience workflow if there is no running attempt
+      +invoke_master_segment:
+        require>: audience
+        project_id: ${master_segment_project_id}
+        session_time: ${session_time}
+        ignore_failure: false
+        
+    _else_do:
+      +echo_task:
+        echo>: 'there is already running master segment workflow. Please wait until the workflow finishes '
+
+
+
+
++check_current_running_token_refresh:
+  http>: "${baseurl}/api/attempts?project=${encodeURIComponent(ms_pj_name)}&workflow=${encodeURIComponent(token_wf_name)}"
+  headers:
+    - authorization: "TD1 ${secret:td.apikey}"
+  method: GET
+  store_content: true
+
+
++if_exists_running_token_workflow_attempt:
+  +check:
+    if>: ${JSON.parse(http.last_content).attempts[0].done==true}
+    _do:
+    # if there is no current running attempts, it will start new token workflow
+      +task1:
+        http>: "${baseurl}/api/attempts"
+        method: PUT
+        content:
+          workflowId: ${token_workflow_id}
+          sessionTime: ${session_time}
+          params: {}
+        content_format: json
+        content_type: application/json
+        headers:
+          - Authorization: "TD1 ${secret:td.apikey}"
+        
+    _else_do:
+      +echo_task:
+        echo>: 'there is already running token_**** workflow.Please wait until the workflow finishes'
