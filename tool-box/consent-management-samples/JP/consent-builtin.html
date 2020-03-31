@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Treasure Data | TD-JS-SDKに含まれるオプトアウト機能の実装例</title>
+
+  <!-- Treasure Data -->
+  <script type="text/javascript">
+    !function (t, e) { if (void 0 === e[t]) { e[t] = function () { e[t].clients.push(this), this._init = [Array.prototype.slice.call(arguments)] }, e[t].clients = []; for (var r = function (t) { return function () { return this["_" + t] = this["_" + t] || [], this["_" + t].push(Array.prototype.slice.call(arguments)), this } }, s = ["blockEvents", "setSignedMode", "fetchServerCookie", "unblockEvents", "setSignedMode", "setAnonymousMode", "resetUUID", "addRecord", "fetchGlobalID", "set", "trackEvent", "trackPageview", "trackClicks", "ready"], n = 0; n < s.length; n++) { var o = s[n]; e[t].prototype[o] = r(o) } var c = document.createElement("script"); c.type = "text/javascript", c.async = !0, c.src = ("https:" === document.location.protocol ? "https:" : "http:") + "//cdn.treasuredata.com/sdk/2.2/td.min.js"; var i = document.getElementsByTagName("script")[0]; i.parentNode.insertBefore(c, i) } }("Treasure", this);
+  </script>
+
+</head>
+
+<body>
+
+  <h1>Treasure Data | TD-JS-SDKに含まれるオプトアウト機能の実装例</h1>
+
+  <!-- setAnonymousMode & setSignedMode -->
+  <h2>Anonymous Mode と Signed Mode</h2>
+  <p>TDによる計測は行うが、Cookieに保存させるID（td_client_id ならびに td_global_id）と、IPアドレスの記録を無効化することでデバイスが追跡されない。</p>
+  <p>TD-JS-SDKのデフォルトは匿名化（anonymous）状態だが、多くの場合 setSignedMode() または startInSignedMode オプションにより 識別（Signed Mode）が有効になっている。
+  </p>
+  <p>制御は「_td_signed」Cookieによって行われ、trueが識別に同意、falseが匿名状態、Cookie無しがデフォルト動作となる。</p>
+
+  <button id="btn-td-anonymous">オプトアウト（匿名化する）</button>
+  <button id="btn-td-signed">オプトイン（識別に同意する）</button>
+  ​
+  <script>
+    (function () {
+
+      // オプトアウトボタンがクリックされたら、setAnonymousMode()を呼ぶ
+      document.getElementById('btn-td-anonymous').addEventListener('click', function () {
+        td.setAnonymousMode();
+      }, false);
+
+      // オプトインボタンがクリックされたら、setSignedMode()を呼ぶ
+      document.getElementById('btn-td-signed').addEventListener('click', function () {
+        td.setSignedMode();
+      }, false);
+
+    }());
+  </script>
+  ​
+  <!-- blockEvents & unblockEvents-->
+  <h2>データ送信のブロックと解除</h2>
+  <p>TDのイベント（データ送信）そのものを発火させるか否かを切り替えることで、一切データを送らないことが可能。</p>
+  <p>TD-JS-SDKのデフォルトでは発火させる（unblock）状態となっている。</p>
+  <p>「_td_blockEvents」Cookieによって制御され、trueが計測停止、falseが計測許可、Cookie無しがデフォルト動作となる。</p>
+
+  <button id="btn-td-block">オプトアウト（計測を止める）</button>
+  <button id="btn-td-unblock">オプトイン（計測を許可する）</button>
+  ​
+  <script>
+    (function () {
+
+      // オプトアウトボタンがクリックされたら、blockEvents()を呼ぶ
+      document.getElementById('btn-td-block').addEventListener('click', function () {
+        td.blockEvents();
+      }, false);
+
+      // オプトインボタンがクリックされたら、unblockEvents()を呼ぶ
+      document.getElementById('btn-td-unblock').addEventListener('click', function () {
+        td.unblockEvents();
+      }, false);
+
+    }());
+  </script>
+
+  <!-- TD-JS-SDK -->
+  <script>
+    var td = new Treasure({
+      host: 'in.treasuredata.com',
+      writeKey: '0/abcde1234567890',
+      database: 'test_db',
+      startInSignedMode: true
+    });
+    td.trackPageview('web_log');
+  </script>
+  ​
+</body>
+
+</html>
