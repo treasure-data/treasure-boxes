@@ -28,7 +28,7 @@
     (function () {
 
       // このスクリプトで利用する変数を初期化
-      var accStatus, td, flags = ['analytics', 'personalization', 'marketing', 'identification', 'collection'];
+      var accStatus, td, flags = ['analytics', 'personalization', 'marketing', 'identification'];
 
       // 表示する情報の各言語リソース
       var langResources = {
@@ -37,12 +37,10 @@
           'description': 'サービスの利便性を高める機能の実現やサービス全体の品質改善、ならびにマーケティングのためにアクセスログの収集にご協力ください。',
           'cat-purpose': 'データの利用目的',
           'cat-identification': 'デバイスの識別',
-          'cat-collection': 'データの収集',
           'label-analytics': 'サービス改善のための分析',
           'label-personalization': 'サービス内でのパーソナライズ機能への応用',
           'label-marketing': '広告等のマーケティング目的のサービス外を含む利用',
           'label-identification': '上記の利用目的のためにCookie等を用いてデバイスを識別することを許可する。',
-          'label-collection': '上記の利用目的のためにデータを集めることを許可する',
           'btn-save': '設定を保存',
         },
         'default': {
@@ -50,12 +48,10 @@
           'description': 'We would like you to support us to collect data for improving our service quality, user experiences and marketing activities.',
           'cat-purpose': 'Purpose of Data usage',
           'cat-identification': 'Device Identification',
-          'cat-collection': 'Data Collection',
           'label-analytics': 'Analyzing for services improvement.',
           'label-personalization': 'Applying to Personalization within our services.',
           'label-marketing': 'Ads and other marketing activities inside/outside of our services.',
           'label-identification': 'Allow to use Cookies and/or other mechanism for identifying devices to realize the above purposes.',
-          'label-collection': 'Allow to collect data for achieving the above purposes.',
           'btn-save': 'Save Settings',
         }
       };
@@ -89,8 +85,8 @@
         );
       }
 
-      // SDKをロードして初期化する関数
-      function initTrackers(options = {}) {
+      // 同意内容に関わらず、SDKをロードして初期化する処理
+      function initSdks(options = {}) {
 
         // TD-JS-SDKをロード
         !function (t, e) { if (void 0 === e[t]) { e[t] = function () { e[t].clients.push(this), this._init = [Array.prototype.slice.call(arguments)] }, e[t].clients = []; for (var r = function (t) { return function () { return this["_" + t] = this["_" + t] || [], this["_" + t].push(Array.prototype.slice.call(arguments)), this } }, s = ["blockEvents", "setSignedMode", "fetchServerCookie", "unblockEvents", "setSignedMode", "setAnonymousMode", "resetUUID", "addRecord", "fetchGlobalID", "set", "trackEvent", "trackPageview", "trackClicks", "ready"], n = 0; n < s.length; n++) { var o = s[n]; e[t].prototype[o] = r(o) } var c = document.createElement("script"); c.type = "text/javascript", c.async = !0, c.src = ("https:" === document.location.protocol ? "https:" : "http:") + "//cdn.treasuredata.com/sdk/2.2/td.min.js"; var i = document.getElementsByTagName("script")[0]; i.parentNode.insertBefore(c, i) } }("Treasure", this);
@@ -105,7 +101,7 @@
 
       }
 
-      // デバイス識別を有効化する関数
+      // デバイス識別が許可されている場合に発動させる処理
       function enableIdentification(options = {}) {
 
         // TD-JS-SDK を Signed Mode に切り替える
@@ -113,7 +109,7 @@
 
       }
 
-      // デバイス識別を無効化する関数
+      // デバイス識別が無効の場合に発動させる処理
       function disableIdentification(options = {}) {
 
         // TD-JS-SDK を Anonymous Mode に切り替える
@@ -121,14 +117,28 @@
 
       }
 
-      // 計測を行う関数
-      function track(options = {}) {
+      // 分析が許可されている場合に発動させる処理
+      function dispatchAnalytics(options = {}) {
+
+      }
+
+      // パーソナライズが許可されている場合に発動させる処理
+      function dispatchPersonalization(options = {}) {
+
+      }
+
+      // マーケティング・広告が許可されている場合に発動させる処理
+      function dispatchMarketing(options = {}) {
+
+      }
+
+      // 同意内容に関わらず発動させる処理
+      function dataCollection(options = {}) {
 
         // データ利用目的の許可/拒否をツールに記録するためのオブジェクトを作成
-        var acceptedPurposes = {
-          'accepted_analytics': accStatus['analytics'] ? accStatus['analytics'] : false,
-          'accepted_personalization': accStatus['personalization'] ? accStatus['personalization'] : false,
-          'accepted_marketing': accStatus['marketing'] ? accStatus['marketing'] : false,
+        var acceptedPurposes = {};
+        for (var i = 0; i < flags.length; i++) {
+          acceptedPurposes['accepted_' + flags[i]] = accStatus[flags[i]] ? accStatus[flags[i]] : false;
         }
 
         // TD-JS-SDkでページビューを計測する
@@ -139,26 +149,38 @@
 
       // ツールを発火するプロセス
       function bootTools(accStatus = {}, skipTrack = false) {
-        if (accStatus['collection']) {
 
-          // データ収集に同意していればツールを初期化
-          initTrackers();
+        // SDKを初期化
+        initSdks();
 
-          if (accStatus['identification']) {
-            // デバイス識別に同意している場合
-            enableIdentification();
-          } else {
-            // デバイス識別に同意していない場合
-            disableIdentification();
-          }
-
-          // skipTrackフラグがfalseの場合に計測を実行
-          if (!skipTrack) {
-            track();
-          }
-
+        // デバイス識別に関する処理
+        if (accStatus['identification']) {
+          // デバイス識別に同意している場合
+          enableIdentification();
         } else {
-          // データ収集に同意していなければ何もしない
+          // デバイス識別に同意していない場合
+          disableIdentification();
+        }
+
+        // skipTrackフラグがfalseの場合に計測を実行
+        if (!skipTrack) {
+          // 分析が許可されている場合
+          if (accStatus['analytics']) {
+            dispatchAnalytics({});
+          }
+
+          // パーソナライズが許可されている場合
+          if (accStatus['personalization']) {
+            dispatchPersonalization({});
+          }
+
+          // 広告・マーケティングが許可されている場合
+          if (accStatus['marketing']) {
+            dispatchMarketing({});
+          }
+
+          // 同意内容に関わらず発火させる
+          dataCollection({});
         }
 
       }
@@ -187,9 +209,6 @@
           + '<h2>' + langResources[lang]['cat-identification'] + '</h2>'
           + '<input type="checkbox" name="chk-td-identification" id="chk-td-identification" value="1" checked  />'
           + '<label for="chk-td-identification">' + langResources[lang]['label-identification'] + '</label>'
-          + '<h2>' + langResources[lang]['cat-collection'] + '</h2>'
-          + '<input type="checkbox" name="chk-td-collection" id="chk-td-collection" value="1" checked  />'
-          + '<label for="chk-td-collection">' + langResources[lang]['label-collection'] + '</label>'
           + '<hr />'
           + '<button id="btn-td-save-consent">' + langResources[lang]['btn-save'] + '</button>'
           + '</form>';
