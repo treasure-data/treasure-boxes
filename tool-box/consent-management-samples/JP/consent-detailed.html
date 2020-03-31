@@ -239,13 +239,6 @@
         // ツールを発火
         bootTools(accStatus, false);
 
-        // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示
-        document.getElementById('btn-td-open-consent-dialogue').addEventListener('click', function () {
-          showDialog(false, function () {
-            bootTools(accStatus, true);
-          });
-        }, false);
-
       } else {
 
         // 設定が保存されていない場合はダイアログを表示
@@ -256,6 +249,13 @@
         }
 
       }
+
+      // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示
+      document.getElementById('btn-td-open-consent-dialogue').addEventListener('click', function () {
+        showDialog(false, function () {
+          bootTools(accStatus, true);
+        });
+      }, false);
 
     }());
   </script>
