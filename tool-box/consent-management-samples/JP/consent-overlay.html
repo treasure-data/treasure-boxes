@@ -55,7 +55,6 @@
         // 「閉じる」ボタンがクリックされたらダイアログを消し、_td_checked にフラグを立てる処理
         document.getElementById(closeButton.id).addEventListener('click', function () {
           document.cookie = '_td_checked=1; path=/; Max-Age=31536000;';
-          console.log(this);
           this.parentElement.remove();
         }, false);
       }
