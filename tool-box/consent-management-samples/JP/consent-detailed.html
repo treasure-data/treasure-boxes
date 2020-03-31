@@ -10,8 +10,8 @@
   <h1>Treasure Data | 詳細な同意管理と制御</h1>
 
   <h2>同意管理の粒度</h2>
-  <p>データを収集したり、デバイスを一意に識別することを許可または拒否できるだけでなく、データがどう利用されるかについても個別に同意を得るべきです。</p>
-  <p>この例では、収集、識別、3つの利用目的について個別に同意管理を行います。なお明示的な同意が得られていない限りTD-JS-SDKは発火しません。</p>
+  <p>Cookie等を利用してデバイスを一意に識別することを許可または拒否できるだけでなく、データがどう利用されるかについても個別に同意を得るべきです。</p>
+  <p>この例では、デバイスの識別と3つの利用目的について個別に同意管理を行います。</p>
 
   <h2>許可された用途の記録</h2>
   <p>計測や識別に同意を得られた場合、データの利用目的を個々のデータに付与します。</p>
@@ -21,14 +21,38 @@
   <p>GDPRのように、事業者の地域ではなく利用者の国籍に基づくルールを採用している法規に沿って同意管理を行う場合、言語にかかわらず確実に同意管理を行う必要があります。</p>
   <p>このサンプルコードでは、「langResources」オブジェクトに各言語の文言を記述することで、ダイアログの中身を多言語対応させています。</p>
 
-  <button id="btn-td-open-consent-dialogue">データ収集と利用について再設定する</button>
+  <h2>ツールの種類や利用目的による発火処理の書き方</h2>
+  <p>このサンプルコードでは以下の7つの関数が、許諾の状態に応じて呼び出されます。</p>
 
+  <h3>initSdks()</h3>
+  <p>各種SDKを動かすために必要なライブラリのロードや初期化処理を記述します。計測や追跡についての処理が含まれないようにご注意ください。</p>
+
+  <h3>enableIdentification() と　disableIdentification()</h3>
+  <p>デバイス識別が許可されている場合、または許可されていない場合に、それぞれ必要な処理を記述します。</p>
+
+  <h3>dispatchAnalytics() と suspendAnalytics()</h3>
+  <p>dispatchAnalyticsには分析目的のデータ利用が許可されている場合にのみ発火させる処理を記述します。suspendAnalyticsは許可されていない場合の処理です。</p>
+
+  <h3>dispatchPersonalization() と suspendPersonalization()</h3>
+  <p>
+    dispatchPersonalizationにはパーソナライズ等のサービスの内部に閉じた範囲でのデータ利用が許可されている場合にのみ発火させる処理を記述します。suspendPersonalizationは許可されていない場合の処理です。
+  </p>
+
+  <h3>dispatchMarketing() と suspendMarketing()</h3>
+  <p>dispatchMarketingにはサービス外での広告におけるターゲティング等に対して許可されている場合に発火させる処理を記述します。suspendMarketingは許可されていない場合の処理です。</p>
+
+  <h3>dataCollection()</h3>
+  <p>許可の有無にかかわらず最低限の計測を行う処理を記述します。デバイス識別が無効の場合にも呼び出されるので、デバイス識別に関する処理が含まれないようご注意ください。</p>
+
+  <h2>許諾状態の再設定</h2>
+  <p>id属性に「btn-td-open-consent-dialogue」を持つボタンを設置することで、クリック時に同意管理のダイアログを再表示します。</p>
+  <button id="btn-td-open-consent-dialogue">データ収集と利用について再設定する</button>
 
   <script>
     (function () {
 
       // このスクリプトで利用する変数を初期化
-      var accStatus, td, flags = ['analytics', 'personalization', 'marketing', 'identification', 'collection'];
+      var accStatus, td, flags = ['analytics', 'personalization', 'marketing', 'identification'];
 
       // 表示する情報の各言語リソース
       var langResources = {
@@ -37,12 +61,10 @@
           'description': 'サービスの利便性を高める機能の実現やサービス全体の品質改善、ならびにマーケティングのためにアクセスログの収集にご協力ください。',
           'cat-purpose': 'データの利用目的',
           'cat-identification': 'デバイスの識別',
-          'cat-collection': 'データの収集',
           'label-analytics': 'サービス改善のための分析',
-          'label-personalization': 'サービス内でのパーソナライズ機能への応用',
-          'label-marketing': '広告等のマーケティング目的のサービス外を含む利用',
+          'label-personalization': '当サービス内でのパーソナライズ機能への応用',
+          'label-marketing': '広告等のマーケティング目的として、当サービス外を含む利用',
           'label-identification': '上記の利用目的のためにCookie等を用いてデバイスを識別することを許可する。',
-          'label-collection': '上記の利用目的のためにデータを集めることを許可する',
           'btn-save': '設定を保存',
         },
         'default': {
@@ -50,12 +72,10 @@
           'description': 'We would like you to support us to collect data for improving our service quality, user experiences and marketing activities.',
           'cat-purpose': 'Purpose of Data usage',
           'cat-identification': 'Device Identification',
-          'cat-collection': 'Data Collection',
           'label-analytics': 'Analyzing for services improvement.',
-          'label-personalization': 'Applying to Personalization within our services.',
-          'label-marketing': 'Ads and other marketing activities inside/outside of our services.',
+          'label-personalization': 'Applying to Personalization within this services.',
+          'label-marketing': 'Ads and other marketing activities inside/outside of this services.',
           'label-identification': 'Allow to use Cookies and/or other mechanism for identifying devices to realize the above purposes.',
-          'label-collection': 'Allow to collect data for achieving the above purposes.',
           'btn-save': 'Save Settings',
         }
       };
@@ -89,8 +109,8 @@
         );
       }
 
-      // SDKをロードして初期化する関数
-      function initTrackers(options = {}) {
+      // 同意内容に関わらず、SDKをロードして初期化する処理
+      function initSdks(options = {}) {
 
         // TD-JS-SDKをロード
         !function (t, e) { if (void 0 === e[t]) { e[t] = function () { e[t].clients.push(this), this._init = [Array.prototype.slice.call(arguments)] }, e[t].clients = []; for (var r = function (t) { return function () { return this["_" + t] = this["_" + t] || [], this["_" + t].push(Array.prototype.slice.call(arguments)), this } }, s = ["blockEvents", "setSignedMode", "fetchServerCookie", "unblockEvents", "setSignedMode", "setAnonymousMode", "resetUUID", "addRecord", "fetchGlobalID", "set", "trackEvent", "trackPageview", "trackClicks", "ready"], n = 0; n < s.length; n++) { var o = s[n]; e[t].prototype[o] = r(o) } var c = document.createElement("script"); c.type = "text/javascript", c.async = !0, c.src = ("https:" === document.location.protocol ? "https:" : "http:") + "//cdn.treasuredata.com/sdk/2.2/td.min.js"; var i = document.getElementsByTagName("script")[0]; i.parentNode.insertBefore(c, i) } }("Treasure", this);
@@ -105,7 +125,7 @@
 
       }
 
-      // デバイス識別を有効化する関数
+      // デバイス識別が許可されている場合に発動させる処理
       function enableIdentification(options = {}) {
 
         // TD-JS-SDK を Signed Mode に切り替える
@@ -113,7 +133,7 @@
 
       }
 
-      // デバイス識別を無効化する関数
+      // デバイス識別が無効の場合に発動させる処理
       function disableIdentification(options = {}) {
 
         // TD-JS-SDK を Anonymous Mode に切り替える
@@ -121,14 +141,43 @@
 
       }
 
-      // 計測を行う関数
-      function track(options = {}) {
+      // マーケティング・広告が許可されている場合に発動させる処理
+      function dispatchMarketing(options = {}) {
+
+      }
+
+      // マーケティング・広告が許可されていない場合に発動させる処理
+      function suspendMarketing(options = {}) {
+
+      }
+
+      // パーソナライズが許可されている場合に発動させる処理
+      function dispatchPersonalization(options = {}) {
+
+      }
+
+      // パーソナライズが許可されていない場合に発動させる処理
+      function suspendPersonalization(options = {}) {
+
+      }
+
+      // 分析が許可されている場合に発動させる処理
+      function dispatchAnalytics(options = {}) {
+
+      }
+
+      // 分析が許可されていない場合に発動させる処理
+      function suspendAnalytics(options = {}) {
+
+      }
+
+      // 同意内容に関わらず発動させる処理
+      function dataCollection(options = {}) {
 
         // データ利用目的の許可/拒否をツールに記録するためのオブジェクトを作成
-        var acceptedPurposes = {
-          'accepted_analytics': accStatus['analytics'] ? accStatus['analytics'] : false,
-          'accepted_personalization': accStatus['personalization'] ? accStatus['personalization'] : false,
-          'accepted_marketing': accStatus['marketing'] ? accStatus['marketing'] : false,
+        var acceptedPurposes = {};
+        for (var i = 0; i < flags.length; i++) {
+          acceptedPurposes['consent_' + flags[i]] = accStatus[flags[i]] ? accStatus[flags[i]] : false;
         }
 
         // TD-JS-SDkでページビューを計測する
@@ -139,26 +188,27 @@
 
       // ツールを発火するプロセス
       function bootTools(accStatus = {}, skipTrack = false) {
-        if (accStatus['collection']) {
 
-          // データ収集に同意していればツールを初期化
-          initTrackers();
+        // SDKを初期化
+        initSdks({});
 
-          if (accStatus['identification']) {
-            // デバイス識別に同意している場合
-            enableIdentification();
-          } else {
-            // デバイス識別に同意していない場合
-            disableIdentification();
-          }
+        // デバイス識別に関する処理
+        accStatus['identification'] ? enableIdentification({}) : disableIdentification({});
 
-          // skipTrackフラグがfalseの場合に計測を実行
-          if (!skipTrack) {
-            track();
-          }
+        // skipTrackフラグがfalseの場合に計測を実行
+        if (!skipTrack) {
 
-        } else {
-          // データ収集に同意していなければ何もしない
+          // 広告・マーケティングが許可されている場合、拒否されている場合
+          accStatus['marketing'] ? dispatchMarketing({}) : suspendMarketing({});
+
+          // パーソナライズが許可されている場合、拒否されている場合
+          accStatus['personalization'] ? dispatchPersonalization({}) : suspendPersonalization({});
+
+          // 分析が許可されている場合、拒否されている場合
+          accStatus['analytics'] ? dispatchAnalytics({}) : suspendAnalytics({});
+
+          // 同意内容に関わらず発火させる
+          dataCollection({});
         }
 
       }
@@ -187,9 +237,6 @@
           + '<h2>' + langResources[lang]['cat-identification'] + '</h2>'
           + '<input type="checkbox" name="chk-td-identification" id="chk-td-identification" value="1" checked  />'
           + '<label for="chk-td-identification">' + langResources[lang]['label-identification'] + '</label>'
-          + '<h2>' + langResources[lang]['cat-collection'] + '</h2>'
-          + '<input type="checkbox" name="chk-td-collection" id="chk-td-collection" value="1" checked  />'
-          + '<label for="chk-td-collection">' + langResources[lang]['label-collection'] + '</label>'
           + '<hr />'
           + '<button id="btn-td-save-consent">' + langResources[lang]['btn-save'] + '</button>'
           + '</form>';
@@ -233,28 +280,24 @@
       // 設定値を復元
       accStatus = restoreSettings();
 
-      // 同意情報が保存されているかを確認し処理を分岐
-      if (accStatus) {
+      // 設定が保存されていない場合はダイアログを表示
+      bootTools(accStatus, false);
 
-        // ツールを発火
-        bootTools(accStatus, false);
+      // 同意情報が保存されていなければダイアログを表示
+      if (!accStatus && !document.getElementById('td-concent-dialogue')) {
+        showDialog(true, function () {
+          bootTools(accStatus, true);
+        });
+      }
 
-        // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示
+      // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示saisettei
+      var consentBtn = document.getElementById('btn-td-open-consent-dialogue');
+      if (consentBtn) {
         document.getElementById('btn-td-open-consent-dialogue').addEventListener('click', function () {
           showDialog(false, function () {
             bootTools(accStatus, true);
           });
         }, false);
-
-      } else {
-
-        // 設定が保存されていない場合はダイアログを表示
-        if (!document.getElementById('td-concent-dialogue')) {
-          showDialog(true, function () {
-            bootTools(accStatus, false);
-          });
-        }
-
       }
 
     }());
