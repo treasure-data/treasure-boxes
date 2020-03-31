@@ -33,7 +33,7 @@
   <h3>dispatchAnalytics() と suspendAnalytics()</h3>
   <p>dispatchAnalyticsには分析目的のデータ利用が許可されている場合にのみ発火させる処理を記述します。suspendAnalyticsは許可されていない場合の処理です。</p>
 
-  <h3>dispatchPersonalization() と suspendPersonalization</h3>
+  <h3>dispatchPersonalization() と suspendPersonalization()</h3>
   <p>
     dispatchPersonalizationにはパーソナライズ等のサービスの内部に閉じた範囲でのデータ利用が許可されている場合にのみ発火させる処理を記述します。suspendPersonalizationは許可されていない場合の処理です。
   </p>
@@ -177,7 +177,7 @@
         // データ利用目的の許可/拒否をツールに記録するためのオブジェクトを作成
         var acceptedPurposes = {};
         for (var i = 0; i < flags.length; i++) {
-          acceptedPurposes['accepted_' + flags[i]] = accStatus[flags[i]] ? accStatus[flags[i]] : false;
+          acceptedPurposes['consent_' + flags[i]] = accStatus[flags[i]] ? accStatus[flags[i]] : false;
         }
 
         // TD-JS-SDkでページビューを計測する
@@ -289,8 +289,6 @@
           bootTools(accStatus, true);
         });
       }
-
-
 
       // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示saisettei
       var consentBtn = document.getElementById('btn-td-open-consent-dialogue');
