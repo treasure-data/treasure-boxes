@@ -23,21 +23,27 @@
 
   <h2>ツールの種類や利用目的による発火処理の書き方</h2>
   <p>このサンプルコードでは以下の7つの関数が、許諾の状態に応じて呼び出されます。</p>
+
   <h3>initSdks()</h3>
   <p>各種SDKを動かすために必要なライブラリのロードや初期化処理を記述します。計測や追跡についての処理が含まれないようにご注意ください。</p>
-  <h3>enableIdentification()</h3>
-  <p>デバイス識別が許可されている場合に、識別に必要な処理を記述します。</p>
-  <h3>disableIdentification()</h3>
-  <p>デバイス識別が許可されていない、即ちオプトアウトあるいは匿名を希望している状態の場合に発火させる処理を記述します。</p>
-  <h3>dispatchAnalytics()</h3>
-  <p>分析目的のデータ利用が許可されている場合にのみ発火させる処理を記述します。</p>
-  <h3>dispatchPersonalization()</h3>
-  <p>パーソナライズ等のサービスの内部に閉じた範囲でのデータ利用が許可されている場合にのみ発火させる処理を記述します。</p>
-  <h3>dispatchMarketing()</h3>
-  <p>サービス外での広告におけるターゲティング等に対して許可されている場合に発火させる処理を記述します。</p>
+
+  <h3>enableIdentification() と　disableIdentification()</h3>
+  <p>デバイス識別が許可されている場合、または許可されていない場合に、それぞれ必要な処理を記述します。</p>
+
+  <h3>dispatchAnalytics() と suspendAnalytics()</h3>
+  <p>dispatchAnalyticsには分析目的のデータ利用が許可されている場合にのみ発火させる処理を記述します。suspendAnalyticsは許可されていない場合の処理です。</p>
+
+  <h3>dispatchPersonalization() と suspendPersonalization</h3>
+  <p>
+    dispatchPersonalizationにはパーソナライズ等のサービスの内部に閉じた範囲でのデータ利用が許可されている場合にのみ発火させる処理を記述します。suspendPersonalizationは許可されていない場合の処理です。
+  </p>
+
+  <h3>dispatchMarketing() と suspendMarketing()</h3>
+  <p>dispatchMarketingにはサービス外での広告におけるターゲティング等に対して許可されている場合に発火させる処理を記述します。suspendMarketingは許可されていない場合の処理です。</p>
+
   <h3>dataCollection()</h3>
   <p>許可の有無にかかわらず最低限の計測を行う処理を記述します。デバイス識別が無効の場合にも呼び出されるので、デバイス識別に関する処理が含まれないようご注意ください。</p>
-  
+
   <h2>許諾状態の再設定</h2>
   <p>id属性に「btn-td-open-consent-dialogue」を持つボタンを設置することで、クリック時に同意管理のダイアログを再表示します。</p>
   <button id="btn-td-open-consent-dialogue">データ収集と利用について再設定する</button>
@@ -56,8 +62,8 @@
           'cat-purpose': 'データの利用目的',
           'cat-identification': 'デバイスの識別',
           'label-analytics': 'サービス改善のための分析',
-          'label-personalization': 'サービス内でのパーソナライズ機能への応用',
-          'label-marketing': '広告等のマーケティング目的のサービス外を含む利用',
+          'label-personalization': '当サービス内でのパーソナライズ機能への応用',
+          'label-marketing': '広告等のマーケティング目的として、当サービス外を含む利用',
           'label-identification': '上記の利用目的のためにCookie等を用いてデバイスを識別することを許可する。',
           'btn-save': '設定を保存',
         },
@@ -67,8 +73,8 @@
           'cat-purpose': 'Purpose of Data usage',
           'cat-identification': 'Device Identification',
           'label-analytics': 'Analyzing for services improvement.',
-          'label-personalization': 'Applying to Personalization within our services.',
-          'label-marketing': 'Ads and other marketing activities inside/outside of our services.',
+          'label-personalization': 'Applying to Personalization within this services.',
+          'label-marketing': 'Ads and other marketing activities inside/outside of this services.',
           'label-identification': 'Allow to use Cookies and/or other mechanism for identifying devices to realize the above purposes.',
           'btn-save': 'Save Settings',
         }
@@ -135,8 +141,13 @@
 
       }
 
-      // 分析が許可されている場合に発動させる処理
-      function dispatchAnalytics(options = {}) {
+      // マーケティング・広告が許可されている場合に発動させる処理
+      function dispatchMarketing(options = {}) {
+
+      }
+
+      // マーケティング・広告が許可されていない場合に発動させる処理
+      function suspendMarketing(options = {}) {
 
       }
 
@@ -145,8 +156,18 @@
 
       }
 
-      // マーケティング・広告が許可されている場合に発動させる処理
-      function dispatchMarketing(options = {}) {
+      // パーソナライズが許可されていない場合に発動させる処理
+      function suspendPersonalization(options = {}) {
+
+      }
+
+      // 分析が許可されている場合に発動させる処理
+      function dispatchAnalytics(options = {}) {
+
+      }
+
+      // 分析が許可されていない場合に発動させる処理
+      function suspendAnalytics(options = {}) {
 
       }
 
@@ -169,33 +190,22 @@
       function bootTools(accStatus = {}, skipTrack = false) {
 
         // SDKを初期化
-        initSdks();
+        initSdks({});
 
         // デバイス識別に関する処理
-        if (accStatus['identification']) {
-          // デバイス識別に同意している場合
-          enableIdentification();
-        } else {
-          // デバイス識別に同意していない場合
-          disableIdentification();
-        }
+        accStatus['identification'] ? enableIdentification({}) : disableIdentification({});
 
         // skipTrackフラグがfalseの場合に計測を実行
         if (!skipTrack) {
-          // 分析が許可されている場合
-          if (accStatus['analytics']) {
-            dispatchAnalytics({});
-          }
 
-          // パーソナライズが許可されている場合
-          if (accStatus['personalization']) {
-            dispatchPersonalization({});
-          }
+          // 広告・マーケティングが許可されている場合、拒否されている場合
+          accStatus['marketing'] ? dispatchMarketing({}) : suspendMarketing({});
 
-          // 広告・マーケティングが許可されている場合
-          if (accStatus['marketing']) {
-            dispatchMarketing({});
-          }
+          // パーソナライズが許可されている場合、拒否されている場合
+          accStatus['personalization'] ? dispatchPersonalization({}) : suspendPersonalization({});
+
+          // 分析が許可されている場合、拒否されている場合
+          accStatus['analytics'] ? dispatchAnalytics({}) : suspendAnalytics({});
 
           // 同意内容に関わらず発火させる
           dataCollection({});
@@ -270,22 +280,17 @@
       // 設定値を復元
       accStatus = restoreSettings();
 
-      // 同意情報が保存されているかを確認し処理を分岐
-      if (accStatus) {
+      // 設定が保存されていない場合はダイアログを表示
+      bootTools(accStatus, false);
 
-        // ツールを発火
-        bootTools(accStatus, false);
-
-      } else {
-
-        // 設定が保存されていない場合はダイアログを表示
-        if (!document.getElementById('td-concent-dialogue')) {
-          showDialog(true, function () {
-            bootTools(accStatus, false);
-          });
-        }
-
+      // 同意情報が保存されていなければダイアログを表示
+      if (!accStatus && !document.getElementById('td-concent-dialogue')) {
+        showDialog(true, function () {
+          bootTools(accStatus, true);
+        });
       }
+
+
 
       // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示saisettei
       var consentBtn = document.getElementById('btn-td-open-consent-dialogue');
