@@ -3,6 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <title>Treasure Data | 詳細な同意管理と制御</title>
+
+  <!-- Treasure Data -->
+  <script type="text/javascript">
+    !function (t, e) { if (void 0 === e[t]) { e[t] = function () { e[t].clients.push(this), this._init = [Array.prototype.slice.call(arguments)] }, e[t].clients = []; for (var r = function (t) { return function () { return this["_" + t] = this["_" + t] || [], this["_" + t].push(Array.prototype.slice.call(arguments)), this } }, s = ["blockEvents", "setSignedMode", "fetchServerCookie", "unblockEvents", "setSignedMode", "setAnonymousMode", "resetUUID", "addRecord", "fetchGlobalID", "set", "trackEvent", "trackPageview", "trackClicks", "ready"], n = 0; n < s.length; n++) { var o = s[n]; e[t].prototype[o] = r(o) } var c = document.createElement("script"); c.type = "text/javascript", c.async = !0, c.src = ("https:" === document.location.protocol ? "https:" : "http:") + "//cdn.treasuredata.com/sdk/2.2/td.min.js"; var i = document.getElementsByTagName("script")[0]; i.parentNode.insertBefore(c, i) } }("Treasure", this);
+  </script>
+
 </head>
 
 <body>
@@ -48,11 +54,23 @@
   <p>id属性に「btn-td-open-consent-dialogue」を持つボタンを設置することで、クリック時に同意管理のダイアログを再表示します。</p>
   <button id="btn-td-open-consent-dialogue">データ収集と利用について再設定する</button>
 
+  <!-- TD-JS-SDK -->
+  <script>
+    var td = new Treasure({
+      host: 'in.treasuredata.com',
+      writeKey: '0/abcde1234567890',
+      database: 'test_db',
+      startInSignedMode: false // 匿名状態で起動する
+    });
+    // td.trackPageview('web_log'); 計測処理の発動は止めておく
+  </script>
+
+  <!-- 同意管理に関する処理 ここから -->
   <script>
     (function () {
 
       // このスクリプトで利用する変数を初期化
-      var accStatus, td, flags = ['analytics', 'personalization', 'marketing', 'identification'];
+      var accStatus, flags = ['analytics', 'personalization', 'marketing', 'identification'];
 
       // 表示する情報の各言語リソース
       var langResources = {
@@ -61,11 +79,22 @@
           'description': 'サービスの利便性を高める機能の実現やサービス全体の品質改善、ならびにマーケティングのためにアクセスログの収集にご協力ください。',
           'cat-purpose': 'データの利用目的',
           'cat-identification': 'デバイスの識別',
-          'label-analytics': 'サービス改善のための分析',
-          'label-personalization': '当サービス内でのパーソナライズ機能への応用',
-          'label-marketing': '広告等のマーケティング目的として、当サービス外を含む利用',
+          'label-analytics': '当サービスを改善するために分析すること。',
+          'label-personalization': '当サービス内でのパーソナライズ機能への応用すること。',
+          'label-marketing': '広告等のマーケティング目的として、当サービス外を含む利用すること。',
           'label-identification': '上記の利用目的のためにCookie等を用いてデバイスを識別することを許可する。',
           'btn-save': '設定を保存',
+        },
+        'zh': {
+          'title': '请帮助我们改善服务',
+          'description': '为了实现提高服务的便利性，提高服务的整体质量，以及为了营销的目的，请配合我们收集访问日志。',
+          'cat-purpose': '数据使用的目的',
+          'cat-identification': '设备识别',
+          'label-analytics': '改善服务的分析。',
+          'label-personalization': '适用于本服务中的个性化功能。',
+          'label-marketing': '用于广告等营销目的，包括在本服务之外的使用。',
+          'label-identification': '允许使用cookies和其他方式来识别设备的上述目的。',
+          'btn-save': '保存设置',
         },
         'default': {
           'title': 'Support us to improve services',
@@ -112,17 +141,6 @@
       // 同意内容に関わらず、SDKをロードして初期化する処理
       function initSdks(options = {}) {
 
-        // TD-JS-SDKをロード
-        !function (t, e) { if (void 0 === e[t]) { e[t] = function () { e[t].clients.push(this), this._init = [Array.prototype.slice.call(arguments)] }, e[t].clients = []; for (var r = function (t) { return function () { return this["_" + t] = this["_" + t] || [], this["_" + t].push(Array.prototype.slice.call(arguments)), this } }, s = ["blockEvents", "setSignedMode", "fetchServerCookie", "unblockEvents", "setSignedMode", "setAnonymousMode", "resetUUID", "addRecord", "fetchGlobalID", "set", "trackEvent", "trackPageview", "trackClicks", "ready"], n = 0; n < s.length; n++) { var o = s[n]; e[t].prototype[o] = r(o) } var c = document.createElement("script"); c.type = "text/javascript", c.async = !0, c.src = ("https:" === document.location.protocol ? "https:" : "http:") + "//cdn.treasuredata.com/sdk/2.2/td.min.js"; var i = document.getElementsByTagName("script")[0]; i.parentNode.insertBefore(c, i) } }("Treasure", this);
-
-        // TD-JS-SDKを初期化
-        td = new Treasure({
-          host: 'in.treasuredata.com',
-          writeKey: '0/abcde1234567890',
-          database: 'test_db',
-          startInSignedMode: false
-        });
-
       }
 
       // デバイス識別が許可されている場合に発動させる処理
@@ -130,6 +148,7 @@
 
         // TD-JS-SDK を Signed Mode に切り替える
         td.setSignedMode();
+        td.set('$global', 'td_global_id', 'td_global_id');
 
       }
 
@@ -177,7 +196,7 @@
         // データ利用目的の許可/拒否をツールに記録するためのオブジェクトを作成
         var acceptedPurposes = {};
         for (var i = 0; i < flags.length; i++) {
-          acceptedPurposes['consent_' + flags[i]] = accStatus[flags[i]] ? accStatus[flags[i]] : false;
+          acceptedPurposes['consent_' + flags[i]] = (accStatus && accStatus[flags[i]]) ? accStatus[flags[i]] : false;
         }
 
         // TD-JS-SDkでページビューを計測する
@@ -290,7 +309,7 @@
         });
       }
 
-      // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示saisettei
+      // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示
       var consentBtn = document.getElementById('btn-td-open-consent-dialogue');
       if (consentBtn) {
         document.getElementById('btn-td-open-consent-dialogue').addEventListener('click', function () {
@@ -302,6 +321,8 @@
 
     }());
   </script>
+  <!-- 同意管理に関する処理 ここまで -->
+
 
 </body>
 
