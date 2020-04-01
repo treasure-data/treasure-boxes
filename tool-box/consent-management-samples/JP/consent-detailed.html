@@ -3,6 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <title>Treasure Data | 詳細な同意管理と制御</title>
+
+  <!-- Treasure Data -->
+  <script type="text/javascript">
+    !function (t, e) { if (void 0 === e[t]) { e[t] = function () { e[t].clients.push(this), this._init = [Array.prototype.slice.call(arguments)] }, e[t].clients = []; for (var r = function (t) { return function () { return this["_" + t] = this["_" + t] || [], this["_" + t].push(Array.prototype.slice.call(arguments)), this } }, s = ["blockEvents", "setSignedMode", "fetchServerCookie", "unblockEvents", "setSignedMode", "setAnonymousMode", "resetUUID", "addRecord", "fetchGlobalID", "set", "trackEvent", "trackPageview", "trackClicks", "ready"], n = 0; n < s.length; n++) { var o = s[n]; e[t].prototype[o] = r(o) } var c = document.createElement("script"); c.type = "text/javascript", c.async = !0, c.src = ("https:" === document.location.protocol ? "https:" : "http:") + "//cdn.treasuredata.com/sdk/2.2/td.min.js"; var i = document.getElementsByTagName("script")[0]; i.parentNode.insertBefore(c, i) } }("Treasure", this);
+  </script>
+
 </head>
 
 <body>
@@ -48,11 +54,23 @@
   <p>id属性に「btn-td-open-consent-dialogue」を持つボタンを設置することで、クリック時に同意管理のダイアログを再表示します。</p>
   <button id="btn-td-open-consent-dialogue">データ収集と利用について再設定する</button>
 
+  <!-- TD-JS-SDK -->
+  <script>
+    var td = new Treasure({
+      host: 'in.treasuredata.com',
+      writeKey: '0/abcde1234567890',
+      database: 'test_db',
+      startInSignedMode: false
+    });
+    // td.trackPageview('web_log'); 計測処理の発動は止めておく
+  </script>
+
+  <!-- 同意管理に関する処理 ここから -->
   <script>
     (function () {
 
       // このスクリプトで利用する変数を初期化
-      var accStatus, td, flags = ['analytics', 'personalization', 'marketing', 'identification'];
+      var accStatus, flags = ['analytics', 'personalization', 'marketing', 'identification'];
 
       // 表示する情報の各言語リソース
       var langResources = {
@@ -112,17 +130,6 @@
       // 同意内容に関わらず、SDKをロードして初期化する処理
       function initSdks(options = {}) {
 
-        // TD-JS-SDKをロード
-        !function (t, e) { if (void 0 === e[t]) { e[t] = function () { e[t].clients.push(this), this._init = [Array.prototype.slice.call(arguments)] }, e[t].clients = []; for (var r = function (t) { return function () { return this["_" + t] = this["_" + t] || [], this["_" + t].push(Array.prototype.slice.call(arguments)), this } }, s = ["blockEvents", "setSignedMode", "fetchServerCookie", "unblockEvents", "setSignedMode", "setAnonymousMode", "resetUUID", "addRecord", "fetchGlobalID", "set", "trackEvent", "trackPageview", "trackClicks", "ready"], n = 0; n < s.length; n++) { var o = s[n]; e[t].prototype[o] = r(o) } var c = document.createElement("script"); c.type = "text/javascript", c.async = !0, c.src = ("https:" === document.location.protocol ? "https:" : "http:") + "//cdn.treasuredata.com/sdk/2.2/td.min.js"; var i = document.getElementsByTagName("script")[0]; i.parentNode.insertBefore(c, i) } }("Treasure", this);
-
-        // TD-JS-SDKを初期化
-        td = new Treasure({
-          host: 'in.treasuredata.com',
-          writeKey: '0/abcde1234567890',
-          database: 'test_db',
-          startInSignedMode: false
-        });
-
       }
 
       // デバイス識別が許可されている場合に発動させる処理
@@ -177,7 +184,7 @@
         // データ利用目的の許可/拒否をツールに記録するためのオブジェクトを作成
         var acceptedPurposes = {};
         for (var i = 0; i < flags.length; i++) {
-          acceptedPurposes['consent_' + flags[i]] = accStatus[flags[i]] ? accStatus[flags[i]] : false;
+          acceptedPurposes['consent_' + flags[i]] = (accStatus && accStatus[flags[i]]) ? accStatus[flags[i]] : false;
         }
 
         // TD-JS-SDkでページビューを計測する
@@ -290,7 +297,7 @@
         });
       }
 
-      // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示saisettei
+      // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示
       var consentBtn = document.getElementById('btn-td-open-consent-dialogue');
       if (consentBtn) {
         document.getElementById('btn-td-open-consent-dialogue').addEventListener('click', function () {
@@ -302,6 +309,8 @@
 
     }());
   </script>
+  <!-- 同意管理に関する処理 ここまで -->
+
 
 </body>
 
