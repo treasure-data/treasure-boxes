@@ -1,6 +1,10 @@
-# Cuenote FC Delivery Log Import
+# Cuenote FC Delivery Log Import (XML API)
 
 ## Prerequisite
+
+### Note
+This Workflow is for Cuenote FC's XML API.
+If your contract with YMIRLINK is for JSON API, use the [Workflow for JSON API](https://github.com/treasure-data/treasure-boxes/tree/master/integration-box/cuenote-import-json).
 
 ### Cuenote
 
@@ -62,4 +66,3 @@ Check if you see errors:
 - A workflow `cuenote_import_master` retrieves all Job Info from Cuenote API. This contains a basic information about delivery settings.
 - `cuenote_import_master` stores Job Info, then request to Cuenote API to generate delivery logs and click logs. Then it saves `expid` into `queue` table. 
 - A workflow `cuenote_import_delivery_logs` checks a status of log generation and download logs if it is ready. Downloaded logs will be uploaded to each tables assigned to log type.
-- `cuenote_import_delivery_logs` refreshes logs for past X days as you specified in `cnfc_sync_range`. (DELETE then APPEND)
