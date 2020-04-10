@@ -1,0 +1,50 @@
+# 1. Prepare SQL query to extract userIds and write it down  queries/userlist.sql.
+# 2. Set database name on _export.
+# 3. Set 'x_api_key' as Secrets.
+# 4. Set 'td.apikey' as Secrets.
+# 5. Set Yahoo DMP API information provided by TreasureData support team.
+#   - tag_definition_guid
+#   - vendor_guid
+#   - entity_id
+#   - uid_key
+# 6. Set Yahoo DMP information you want to send to.
+#   - brand_guid
+#   - tag_fields_p
+#   - tag_fields_lid
+#
+# FYI
+# Setting Workflow Secrets from TD Console
+# https://tddocs.atlassian.net/wiki/spaces/PD/pages/219185771/Setting+Workflow+Secrets+from+TD+Console
+
+
+_export:
+  td:
+    database: ******
+
++get_presigned_url:
+  docker:
+    image: "digdag/digdag-python:3.7"
+
+  py>: scripts.get_presigned_url.generate
+  yahoo_api_url       : https://api.tgm.yahoo-net.jp/v3/userlists
+  tag_definition_guid : ******
+  vendor_guid         : ******
+  entity_id           : ******
+  uid_key             : ******
+  brand_guid          : ******
+  tag_fields_p        : ******
+  tag_fields_lid      : ******
+  _env:
+    x_api_key: ${secret:x_api_key}
+
++yahoo_dmp_upload:
+  docker:
+    image: "digdag/digdag-python:3.7"
+
+  py>: scripts.put_userlist.upload
+  sqlfile      : queries/userlist.sql
+  database     : ${td.database}
+  presigned_url: ${presigned_url}
+  _env:
+    td_apikey: ${secret:td.apikey}
+
