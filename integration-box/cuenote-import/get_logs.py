@@ -38,7 +38,7 @@ def main():
                         "member_id",
                         "delivid",
                     ]
-                    df["clicked_at_c"] = pandas.to_datetime(df["clicked_at"])
+                    df["clicked_at"] = pandas.to_datetime(df["clicked_at"])
 
                 elif item.tag == "log_deliv":
                     df.columns = [
