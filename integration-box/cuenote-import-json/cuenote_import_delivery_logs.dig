@@ -1,7 +1,7 @@
 timezone: Asia/Tokyo
 
 schedule:
-    cron>: 0 4-6 * * *
+    daily>: 04:30:00
 
 _export:
     td:
