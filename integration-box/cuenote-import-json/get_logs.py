@@ -95,7 +95,7 @@ def main():
             "additional_information",
             "delivery_id"
         ]
-        df["clicked_at_c"] = pandas.to_datetime(df["clicked_at"])
+        df["clicked_at"] = pandas.to_datetime(df["clicked_at"])
         if len(df) > 0:
             client.load_table_from_dataframe(
                 df, "log_clickcount_stg", writer="bulk_import", if_exists="append"
