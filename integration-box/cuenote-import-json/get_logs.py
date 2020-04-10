@@ -22,7 +22,7 @@ def main():
 
     # Download log files from Cuenote, then upload CSVs to TD
     delivery_ids = client.query(
-        "select delivery_id from hsano_cuenote.jobinfo where TD_INTERVAL(TD_TIME_PARSE(delivery_time), '-{days_refresh_logs}d')".format(days_refresh_logs=days_refresh_logs))
+        "select delivery_id from jobinfo where TD_INTERVAL(TD_TIME_PARSE(delivery_time), '-{days_refresh_logs}d')".format(days_refresh_logs=days_refresh_logs))
     for delivery_id in delivery_ids["data"]:
 
         # Delivery Log
