@@ -6,7 +6,7 @@ import os
 import sys
 from datetime import datetime
 
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0 td-client")
+os.system(f"{sys.executable} -m pip install -U pytd==1.2.0 td-client")
 import pytd
 
 TD_API_KEY = os.environ.get("td_apikey")
