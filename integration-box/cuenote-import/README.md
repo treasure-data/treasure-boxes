@@ -1,4 +1,4 @@
-# Cuenote FC Delivery Log Import (XML API)
+# Cuenote FC Delivery Log Import
 
 ## Prerequisite
 
