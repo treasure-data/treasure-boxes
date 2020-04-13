@@ -3,8 +3,9 @@
 ## Prerequisite
 
 ### Note
-This Workflow is for Cuenote FC's XML API.
-If your contract with YMIRLINK is for JSON API, use the [Workflow for JSON API](https://github.com/treasure-data/treasure-boxes/tree/master/integration-box/cuenote-import-json).
+Cuenote has two APIs, one is XML API and another one is JSON API.
+Your API version depends on the contract with YMIRLINK so please check your contract first.
+In this repository, there are two directory: `./XML-API` is for XML API, `./JSON-API` is for JSON API.
 
 ### Cuenote
 
@@ -22,6 +23,7 @@ If your contract with YMIRLINK is for JSON API, use the [Workflow for JSON API](
 ### 1. Push the workflow
 
 ```shell script
+cd ./XML-API # or ./JSON-API
 td wf push cuenote_import
 ```
 
@@ -49,6 +51,8 @@ td wf secrets --project cuenote_import --set cn.endpoint cn.user cn.password
 |`cn.user`|`cuenote_user_hoge`|A username|
 |`cn.password`|`abc123XYZ789`|A password|
 
+Note that if your Cuenote API is JSON API, the endpoint will look like `https://fc00000.cuenote.jp/fcapi/v2.3/`.
+
 ### 4. Run a workflow "cuenote_import_master"
 
 Once you completed #1 ~ #3, run a workflow named "cuenote_import_master".
@@ -63,6 +67,12 @@ Check if you see errors:
 
 ## Basic logic
 
+### XML API
 - A workflow `cuenote_import_master` retrieves all Job Info from Cuenote API. This contains a basic information about delivery settings.
 - `cuenote_import_master` stores Job Info, then request to Cuenote API to generate delivery logs and click logs. Then it saves `expid` into `queue` table. 
 - A workflow `cuenote_import_delivery_logs` checks a status of log generation and download logs if it is ready. Downloaded logs will be uploaded to each tables assigned to log type.
+
+### JSON API
+
+- A workflow `cuenote_import_master` retrieves all Job Info from Cuenote API. This contains a basic information about delivery settings.
+- A workflow `cuenote_import_delivery_logs` downloads logs for delivery jobs within the last 14 days then refresh the log tables.
