@@ -4,7 +4,7 @@ import io
 import os
 import sys
 
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0 td-client")
+os.system(f"{sys.executable} -m pip install -U pytd==1.2.0 td-client")
 import pytd
 
 TD_API_KEY = os.environ.get("td_apikey")
@@ -38,7 +38,7 @@ def main():
                         "member_id",
                         "delivid",
                     ]
-                    df["clicked_at_c"] = pandas.to_datetime(df["clicked_at"])
+                    df["clicked_at"] = pandas.to_datetime(df["clicked_at"])
 
                 elif item.tag == "log_deliv":
                     df.columns = [
