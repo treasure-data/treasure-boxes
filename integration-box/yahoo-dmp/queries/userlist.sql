@@ -1,6 +1,7 @@
 SELECT
-  td_client_id
+  td_global_id
 FROM
-  demo_users
+  demo_pageviews
+WHERE
+  td_global_id IS NOT NULL
 LIMIT 1000
-
