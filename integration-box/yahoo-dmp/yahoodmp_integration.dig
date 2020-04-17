@@ -3,7 +3,6 @@
 # 3. Set 'x_api_key' as Secrets.
 # 4. Set 'td.apikey' as Secrets.
 # 5. Set Yahoo DMP API information provided by TreasureData support team.
-#   - tag_definition_guid
 #   - vendor_guid
 #   - entity_id
 #   - uid_key
@@ -27,7 +26,7 @@ _export:
 
   py>: scripts.get_presigned_url.generate
   yahoo_api_url       : https://api.tgm.yahoo-net.jp/v3/userlists
-  tag_definition_guid : ******
+  tag_definition_guid : yahoo_japan_ydn_custom_audience_server
   vendor_guid         : ******
   entity_id           : ******
   uid_key             : ******
