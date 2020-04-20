@@ -49,7 +49,7 @@ Available parameters for `result_settings` are here.
 - format: (string(csv|tsv), default csv)
 - compression: (string(None|gz), default None)
 - header_line: (boolean, default true)
-- delimiter: (string(","|"tab"|"|"), default ",")
+- delimiter: (string(","|"\t"|"|"), default ",")
 - null_string: (string(""|"\N"|NULL|null), default "")
 - new_line: (string(CRLF|CR|LF), default CRLF)
 
