@@ -51,7 +51,12 @@ Available parameters for `result_settings` are here.
 - mode (string(append|replace), required)
 - legacy (string('false'|'true'))
 - target_type (string(hyper|tde), optional)
+- chunk_size_in_mb (integer, optional, default: 100, min: 10, max: 1000)
+- maximum_retries (integer, default: 100, min: 10, max: 1000)
+- initial_retry_interval_millis (integer, unit: milli-second, default: 1000)
+- maximum_retry_interval_millis (integer, default: 60000)
 
 # Next Step
+
 
 If you have any questions, please contact support@treasuredata.com.
