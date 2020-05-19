@@ -1,0 +1,7 @@
+# Data:
+database: your_database # working database
+source: online_retail # input table
+
+# Decide how many samples are used for training
+# test_sample_rate = 1.0 - train_sample_rate
+train_sample_rate: 0.8
