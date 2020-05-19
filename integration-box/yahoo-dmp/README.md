@@ -33,4 +33,4 @@ Setting Workflow Secrets from TD Console
 https://tddocs.atlassian.net/wiki/spaces/PD/pages/219185771/Setting+Workflow+Secrets+from+TD+Console
 
 # Mechanism 
-<img width="1874" alt="yahoodmp_integration" src="https://user-images.githubusercontent.com/248312/82298745-8a046a00-99ef-11ea-8af4-7e2a250dfbee.png">
+<img width="2999" alt="yahoodmp_integration" src="https://user-images.githubusercontent.com/248312/82309034-8d065700-99fd-11ea-8066-96923cf397b5.png">
