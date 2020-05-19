@@ -5,7 +5,7 @@ import json
 from logging import DEBUG, INFO, StreamHandler, getLogger
 import digdag
 
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0 td-client")
+os.system(f"{sys.executable} -m pip install -U pytd==1.3.0 td-client")
 import pytd
 
 logger = getLogger(__name__)
@@ -38,7 +38,7 @@ def generate(
   }
 
   headers = {"x-api-key": os.getenv('x_api_key')}
-  response = requests.post(yahoo_api_url, data=json.dumps(post_data), headers=headers)
+  response = requests.post(yahoo_api_url, json=post_data, headers=headers)
 
   if response.status_code != 201:
     logger.error(f"Failed to call Yahoo API with http status code {response.status_code}")
@@ -56,4 +56,3 @@ def generate(
     'presigned_url': r_json["preSignedS3Url"],
     'guid': r_json["guid"]
   })
-

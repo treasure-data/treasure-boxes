@@ -16,6 +16,3 @@ def upload(sqlfile, database, presigned_url):
   csv = df.to_csv(index=False)
 
   requests.put(presigned_url, data=csv)
-
-
-
