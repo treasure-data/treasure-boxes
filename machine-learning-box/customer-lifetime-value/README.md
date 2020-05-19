@@ -52,7 +52,7 @@ A derived attribute `recency` is the number of days between the first order and 
 
 The output of workflow is a table that contains predicted CLTV for a subset of customers:
 
-| customerid<br/>`long` | predicted_cltvr<br/>`double` |
+| customerid<br/>`long` | predicted_cltv<br/>`double` |
 |:---:|:---:|
 |12355|68.84149528775471|
 |12356|172.29478943269208|
