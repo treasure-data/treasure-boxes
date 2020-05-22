@@ -25,6 +25,10 @@ def upload(sqlfile, database, presigned_url):
   df = pd.DataFrame(**res)
   csv = df.to_csv(header=False, index=False)
 
+  print('---- user list as first 10 lines----')
+  print('\n'.join(csv.splitlines()[:10]))
+  print('---- Total number of IDs = ' + str(len(csv.splitlines())) + '----')
+
   res = requests.put(
           presigned_url,
           data=gzip.compress(bytes(csv, 'utf-8')),
