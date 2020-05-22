@@ -2,7 +2,7 @@ import os
 import sys
 import requests
 
-os.system(f"{sys.executable} -m pip install -U pytd==1.0.0 td-client")
+os.system(f"{sys.executable} -m pip install -U pytd==1.3.0 td-client")
 import pytd
 import pandas as pd
 
