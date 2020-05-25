@@ -5,7 +5,7 @@ _export:
     database: ${database}
 
 +prepare:
-  td>: queries/prepare_data.sql
+  td>: queries/preprocess.sql
   create_table: cltv
 
 +shuffle:
