@@ -1,7 +1,6 @@
 _export:
   !include : config/general.yml
   td:
-    apikey: ${apikey}
     database: ${database}
 
 +prepare:
