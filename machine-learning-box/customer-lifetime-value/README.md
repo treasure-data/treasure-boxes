@@ -5,6 +5,8 @@ Predicting Customer Lifetime Value (CLTV) allows you to efficiently identify hig
 
 ## Input
 
+*Data source: [UCI Machine Learning Repository: Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail).*
+
 As an online retailer, assume we have [a `source` table](./config/general.yml#L3) that represents customer's order histories as follows:
 
 | InvoiceNo<br/>`string` | InvoiceDate<br/>`string` | CustomerID<br/>`long` | Country<br/>`string` | StockCode<br/>`string` | Description<br/>`string` | UnitPrice <br/>`double` | Quantity<br/>`long` | 
@@ -22,22 +24,22 @@ Here, each row represents single item (i.e., **StockCode**) in a basket correspo
 
 ## Workflow
 
-First, prepare the data as follows:
+Set your database and table name to [`config/general.yml`](./config/general.yml).
 
-1. Download `Online Retail.xlsx` from [UCI Machine Learning Repository: Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail). Our data model explained above is fully based on this public dataset.
-2. Convert the data into a CSV file.
-3. Import the CSV file to a Treasure Data table. 
-
-Next, set your database and table name to [`config/general.yml`](./config/general.yml).
-
-Finally, run a ready-made workflow template for CLTV prediction:
+Run a ready-made workflow template for CLTV prediction:
 
 ```sh
 $ td wf push cltv-prediction # push workflow to TD
-$ td wf start cltv-prediction predict --session now -p apikey=${YOUR_TD_API_KEY}
+$ td wf secrets --project cltv-prediction --set td.apikey td.apiserver
+$ td wf start cltv-prediction predict --session now 
 ```
 
-In the middle of the workflow, we calculate CLTV for every single **CustomerID** and enrich their attributes with basic statistics:
+|Variable|Description|Example|
+|:---|:---|:---|
+|`td.apikey`|TD API key to be used in the script. Access Type must be `Master Key`.|`1234/abcdefghijklmnopqrstuvwxyz1234567890`|
+|`td.apiserver`|TD API endpoint starting with `https://`.|`https://api.treasuredata.com`|
+
+In the middle of the workflow, we import the [Online Retail Data Set](http://archive.ics.uci.edu/ml/datasets/Online+Retail) to a table, calculate CLTV for every single **CustomerID**, and enrich their attributes with basic statistics:
 
 | customerid<br/>`long` | cltv<br/>`double` | country<br/>`string` | recency<br/>`long` | avg_basket_value<br/>`double` | avg_basket_size<br/>`long` | cnt_returns<br/>`long` | has_returned<br/>`boolean` |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
