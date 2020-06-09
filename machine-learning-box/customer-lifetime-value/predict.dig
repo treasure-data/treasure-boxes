@@ -1,0 +1,67 @@
+_export:
+  !include : config/general.yml
+  td:
+    database: ${database}
+
++data:
+  py>: data.import_table
+  database: ${database}
+  table: ${source}
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${secret:td.apiserver}
+  docker:
+      image: "digdag/digdag-python:3.7"
+
++prepare:
+  td>: queries/preprocess.sql
+  create_table: cltv
+
++shuffle:
+  td>: queries/shuffle.sql
+  create_table: cltv_shuffled
+  engine: hive
+
++split:
+  _parallel: true
+
+  +train:
+    td>: queries/split_train.sql
+    create_table: cltv_train
+
+  +test:
+    td>: queries/split_test.sql
+    create_table: cltv_test
+
++vectorize:
+  _parallel: true
+
+  +train:
+    td>: queries/vectorize.sql
+    target: train
+    create_table: cltv_train_vectorized
+    engine: hive
+
+  +test:
+    td>: queries/vectorize.sql
+    target: test
+    create_table: cltv_test_vectorized
+    engine: hive
+
++train:
+  td>: queries/train_regressor.sql
+  create_table: regressor
+  engine: hive
+
++predict:
+  td>: queries/predict_regressor.sql
+  create_table: predictions
+  engine: hive
+
++evaluate:
+  td>: queries/evaluate.sql
+  engine: hive
+  store_last_results: true
+
++show_accuracy:
+  echo>: "Accuracy RMSE: ${td.last_results.rmse}, MAE: ${td.last_results.mae}"

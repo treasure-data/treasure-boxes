@@ -1,0 +1,10 @@
+# Data:
+database: online_retail # working database
+source: transactions # input table
+
+# Decide how many samples are used for training
+# test_sample_rate = 1.0 - train_sample_rate
+train_sample_rate: 0.8
+
+# Split time-series purchase history into train and test data
+threshold_date: 2011-06-01
