@@ -67,8 +67,6 @@ Accuracy RMSE: 4623.584016620842, MAE: 1777.0782472268297
 
 It's time to tweak your model with custom hyper-parameters in [`queries/train_regressor.sql`](./queries/train_regressor.sql). Notice that this template uses a linear regressor to make CLTV prediction.
 
-[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
-
 ## Reference
 
 - [Predicting Customer Lifetime Value with AI Platform: training the models](https://cloud.google.com/solutions/machine-learning/clv-prediction-with-offline-training-train)
