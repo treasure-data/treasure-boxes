@@ -50,7 +50,7 @@ select
   t1.cltv,
   t1.country,
   -- features for training; aggregated in a training period before ${threshold_date}
-  date_diff('day', date_parse(t2.date_first_order, '%Y-%m-%d %T.%f'), date_parse(t2.date_last_order, '%Y-%m-%d %T.%f')) as recency,
+  date_diff('day', date_parse(t2.date_first_order, '%Y-%m-%d %T'), date_parse(t2.date_last_order, '%Y-%m-%d %T')) as recency,
   t2.avg_basket_value,
   t2.avg_basket_size,
   coalesce(t3.cnt_returns, 0) as cnt_returns,

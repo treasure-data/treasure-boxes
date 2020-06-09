@@ -3,6 +3,16 @@ _export:
   td:
     database: ${database}
 
++data:
+  py>: data.import_table
+  database: ${database}
+  table: ${source}
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${secret:td.apiserver}
+  docker:
+      image: "digdag/digdag-python:3.7"
+
 +prepare:
   td>: queries/preprocess.sql
   create_table: cltv
