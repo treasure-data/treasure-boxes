@@ -13,7 +13,28 @@ _export:
   content_type: application/json
   content_format: json
   content: 
-    '{ "result": "{\"type\":\"ftp\",\"host\":\"${secret:ftpHost}\",\"port\":${secret:ftpPort},\"username\":\"{$secret:ftpUser}\",\"password\":\"${secret:ftpPass}\",\"passive_mode\":true,\"ascii_mode\":true,\"ssl\":true,\"ssl_explicit\":true,\"ssl_verify\":false,\"ssl_verify_hostname\":false,\"path_prefix\":\"${secret:ftpPathPrefix}\",\"file_ext\":\".csv\",\"sequence_format\":\"\",\"header_line\":true,\"quote_policy\":\"MINIMAL\",\"delimiter\":\",\",\"null_string\":\"\",\"newline\":\"CRLF\"}"}'
+    result: |
+      {
+        "type":"ftp",
+        "host":"${secret:ftpHost}",
+        "port":${secret:ftpPort},
+        "username":"{$secret:ftpUser}",
+        "password":"${secret:ftpPass}",
+        "passive_mode":true,
+        "ascii_mode":true,
+        "ssl":true,
+        "ssl_explicit":true,
+        "ssl_verify":false,
+        "ssl_verify_hostname":false,
+        "path_prefix":"${secret:ftpPathPrefix}",
+        "file_ext":".csv",
+        "sequence_format":"",
+        "header_line":true,
+        "quote_policy":"MINIMAL",
+        "delimiter":",",
+        "null_string":"",
+        "newline":"CRLF"
+      }
 
 +teardown:
   echo>: finish ${session_time}
