@@ -10,6 +10,8 @@ _export:
 +export_to_tableau:
   http>: https://${endpoint}/v3/job/result_export/${td.last_job.id}
   method: POST
+  headers:
+    - authorization: "TD1 ${secret:td.apikey}"
   content_type: application/json
   content_format: json
   content:
