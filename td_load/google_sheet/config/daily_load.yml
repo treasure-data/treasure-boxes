@@ -1,7 +1,4 @@
-# For more advanced config options, please check these URLs.
-# @see https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082836/Bulk+Import+from+Google+Sheets
-# @see https://github.com/medjed/embulk-input-google_spreadsheets
----
+
 in:
     type: google_sheets
     auth_method: authorized_user
