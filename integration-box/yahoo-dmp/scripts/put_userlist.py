@@ -23,7 +23,7 @@ def upload(sqlfile, database, presigned_url):
   client = pytd.Client(apikey=os.getenv('td_apikey'), database=database)
   res = client.query(querytxt)
   df = pd.DataFrame(**res)
-  csv = df.to_csv(header=False, index=False)
+  csv = df.to_csv(header=False, index=False, sep='\t')
 
   print('---- user list as first 10 lines----')
   print('\n'.join(csv.splitlines()[:10]))

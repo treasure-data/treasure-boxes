@@ -13,8 +13,9 @@ _export:
   entity_id           : ******
   uid_key             : ******
   brand_guid          : ******
-  tag_fields_p        : ******
-  tag_fields_lid      : ******
+  tag_fields          :
+      p: ******
+      lid: ******
   _env:
     x_api_key: ${secret:x_api_key}
 

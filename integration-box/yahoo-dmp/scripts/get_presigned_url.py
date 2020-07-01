@@ -22,8 +22,7 @@ def generate(
         entity_id,
         uid_key,
         brand_guid,
-        tag_fields_p,
-        tag_fields_lid):
+        tag_fields):
 
   post_data = {
     "tagDefinitionGuid": tag_definition_guid,
@@ -31,10 +30,7 @@ def generate(
     "entityId": entity_id,
     "uidKey": uid_key,
     "brandGuid": brand_guid,
-    "tagFields": {
-      "p": tag_fields_p,
-      "lid": tag_fields_lid
-    }
+    "tagFields": tag_fields
   }
 
   headers = {"x-api-key": os.getenv('x_api_key')}
