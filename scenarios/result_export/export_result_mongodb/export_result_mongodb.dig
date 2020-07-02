@@ -1,18 +1,24 @@
 timezone: UTC
 
 _export:
+  mongo:
     endpoint: api.treasuredata.com
     database: sample_datasets
+    collection: MY_MONGO_CONNECTION
+    mongodb: MY_TARGET_DATABASE
+    mongotable: MY_TARGET_TABLE
+    mode: replace
 
 +select_data:
   td>: queries/sample.sql
 
 +export_to_mongodb:
-  http>: https://${endpoint}/v3/job/result_export/${td.last_job.id}
-  method: POST
-  content_type: application/json
-  content: 
-    result: 'mongodb://${secret:mongodbUser}:${secret:mongodbPass}@${secret:mongodbHost}:${secret:mongodbPort}/${secret:mongodbDatabase}/${secret:mongodbTable}?mode=replace'
-
+  td_result_export>:
+  job_id: ${td.last_job.id}
+  result_connection: ${mongo.collection}
+  result_settings:
+    database: ${mongo.mongodb}
+    table: ${mongo.mongotable}
+    mode: ${mongo.mode}
 +teardown:
   echo>: finish ${session_time}
