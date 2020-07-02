@@ -5,15 +5,13 @@ import json
 from logging import DEBUG, INFO, StreamHandler, getLogger
 import digdag
 
-os.system(f"{sys.executable} -m pip install -U pytd==1.3.0 td-client")
-import pytd
-
 logger = getLogger(__name__)
 handler = StreamHandler()
 handler.setLevel(INFO)
 logger.setLevel(INFO)
 logger.addHandler(handler)
 logger.propagate = False
+
 
 def generate(
         yahoo_api_url,
