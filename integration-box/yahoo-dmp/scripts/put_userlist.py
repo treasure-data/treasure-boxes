@@ -25,9 +25,9 @@ def upload(sqlfile, database, presigned_url):
   df = pd.DataFrame(**res)
   csv = df.to_csv(header=False, index=False, sep='\t')
 
-  print('---- user list as first 10 lines----')
-  print('\n'.join(csv.splitlines()[:10]))
-  print('---- Total number of IDs = ' + str(len(csv.splitlines())) + '----')
+  logger.info('---- user list as first 10 lines----')
+  logger.info('\n'.join(csv.splitlines()[:10]))
+  logger.info('---- Total number of IDs = ' + str(len(csv.splitlines())) + '----')
 
   res = requests.put(
           presigned_url,
@@ -40,4 +40,4 @@ def upload(sqlfile, database, presigned_url):
     logger.error(res.text)
     sys.exit(os.EX_DATAERR)
   else:
-    print(f"Succeeded calling Yahoo API with http status code {res.status_code}")
+    logger.info(f"Succeeded calling Yahoo API with http status code {res.status_code}")
