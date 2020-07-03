@@ -6,13 +6,7 @@ _export:
 
 +select_data:
   td>: queries/sample.sql
-
-+export_to_td:
-  http>: https://${endpoint}/v3/job/result_export/${td.last_job.id}
-  method: POST
-  content_type: application/json
-  content: 
-    result: 'td://${secret:tdApikey}@${secret:tdEndpoint}/${secret:tdDatabase}/${secret:tdTable}'
+  create_table: MY_DB_NAME.MY_TABLE_NAME
 
 +teardown:
   echo>: finish ${session_time}
