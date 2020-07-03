@@ -1,17 +1,14 @@
 timezone: UTC
 
 _export:
-  td:
     endpoint: api.treasuredata.com
     database: sample_datasets
-    connection: MY_FTP_CONNECTION
-    filepath: MY_FTP_PATH_PREFIX
-    extension: .csv
 
 +select_data:
   td>: queries/sample.sql
 
 +export_to_ftp:
+<<<<<<< HEAD
 
   td_result_export>:
   job_id: ${td.last_job_id}
@@ -20,6 +17,14 @@ _export:
     path_prefix: ${td.filepath}
     file_ext: ${td.extension}
     header_line: true
+=======
+  http>: https://${endpoint}/v3/job/result_export/${td.last_job.id}
+  method: POST
+  content_type: application/json
+  content_format: json
+  content: 
+    '{ "result": "{\"type\":\"ftp\",\"host\":\"${secret:ftpHost}\",\"port\":${secret:ftpPort},\"username\":\"{$secret:ftpUser}\",\"password\":\"${secret:ftpPass}\",\"passive_mode\":true,\"ascii_mode\":true,\"ssl\":true,\"ssl_explicit\":true,\"ssl_verify\":false,\"ssl_verify_hostname\":false,\"path_prefix\":\"${secret:ftpPathPrefix}\",\"file_ext\":\".csv\",\"sequence_format\":\"\",\"header_line\":true,\"quote_policy\":\"MINIMAL\",\"delimiter\":\",\",\"null_string\":\"\",\"newline\":\"CRLF\"}"}'
+>>>>>>> parent of 69502ed... result export changes from ganesh
 
 
 +teardown:
