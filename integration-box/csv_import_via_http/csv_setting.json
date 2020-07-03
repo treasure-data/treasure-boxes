@@ -1,0 +1,7 @@
+[
+  {"from_name": "ユーザーID"     ,"to_name": "userid"        ,"ignore": true},
+  {"from_name": "ユーザータイプ" ,"to_name": "usertype"      ,"ignore": true},
+  {"from_name": "ユーザー名字"   ,"to_name": "userfirstname" ,"ignore": false},
+  {"from_name": "ユーザー名前"   ,"to_name": "userlastname"  ,"ignore": false},
+  {"from_name": "更新者ID"       ,"to_name": "updateid"      ,"ignore": false}
+]

@@ -1,0 +1,33 @@
+timezone: UTC
+
+_export:
+    endpoint: api.treasuredata.com
+    database: sample_datasets
+
++select_data:
+  td>: queries/sample.sql
+
++export_to_tableau:
+  http>: https://${endpoint}/v3/job/result_export/${td.last_job.id}
+  method: POST
+  headers:
+    - authorization: "TD1 ${secret:td.apikey}"
+  content_type: application/json
+  content_format: json
+  content:
+    result: |
+      {
+        "type":"tableau",
+        "host":"${secret:tablueauHost}",
+        "username":"${secret:tablueauUser}",
+        "password":"${secret:tablueauPass}",
+        "ssl":"true",
+        "server_version":"online",
+        "datasource":"${secret:tablueauDatasource}",
+        "site":"${secret:tablueauSite}",
+        "project":"${secret:tablueauProject}",
+        "mode":"replace"
+      }
+
++teardown:
+  echo>: finish ${session_time}

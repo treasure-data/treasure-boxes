@@ -4,18 +4,14 @@
 ---
 in:
   type: s3
-  endpoint: ${secret:s3.endpoint}
   access_key_id: ${secret:s3.access_key_id}
   secret_access_key: ${secret:s3.secret_access_key}
-  bucket: bucket-name
-  path_prefix: filename_${moment(session_time).add(-1,'days').format('YYYYMMDD')} 
+  bucket: ganesh-demo-jan
+  path_prefix: ganesh
   parser:
     charset: UTF-8
     newline: CRLF
     type: csv
-    delimiter: ','
-    quote: '"'
-    escape: ''
     skip_header_lines: 1
     columns:
     - name: id
@@ -24,9 +20,8 @@ in:
       type: string
     - name: customer
       type: string
-    - name: created_at
-      type: timestamp
-      format: '%Y-%m-%d %H:%M:%S'
+    - name: time
+      type: long
 out: {}
 exec: {}
 filters: []

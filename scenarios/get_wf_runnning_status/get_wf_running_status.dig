@@ -1,0 +1,22 @@
+timezone: Asia/Tokyo
+
+_export:
+ project: prj_name
+ workflow: wf_name
+ api_host: api-workflow.treasuredata.com
+
++call_api:
+ http>: https://${api_host}/api/attempts?project=${project}&workflow=${workflow}&page_size=1&include_retried=true
+ headers:
+    - Authorization: "TD1 ${secret:td.apikey}"
+ store_content: true
+
++echo:
+ echo>: ${http.last_content}
+ 
++result:
+ if>: ${JSON.parse(http.last_content)["attempts"][0]["done"]}
+ _do:
+  echo>: "Workflow ${project}.${workflow} is not running."
+ _else_do:
+  echo>: "Workflow ${project}.${workflow} is running."

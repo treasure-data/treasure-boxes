@@ -12,8 +12,8 @@ sla:
 
 _export:
   td:
-    dest_db: dest_db
-    dest_table: dest_table
+    dest_db: dest_db_ganesh
+    dest_table: dest_table_ganesh
 
 +prepare_table:
   td_ddl>:

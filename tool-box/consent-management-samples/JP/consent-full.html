@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Treasure Data | TD-JS-SDKそのものの発動を制御する</title>
+</head>
+
+<body>
+
+  <h1>Treasure Data | TD-JS-SDKそのものの発動を制御する</h1>
+
+  <h2>TD-JS-SDKをロードするか否かを制御する</h2>
+  <p>TD-JS-SDKに組み込まれたオプトアウト機構の場合、機能を利用する際にTD-JS-SDK本体のロード、即ちtreasuredata.com下のURLへのアクセスが必要となる。</p>
+  <p>オプトアウトしている場合に、treasuredata.comへのアクセスを一切停止する必要がある場合にこちらの方法を用い、オプトアウト状態をTD-JS-SDKの外部で制御する。</p>
+
+  <button id="btn-td-disable">オプトアウト（TD-JS-SDKを発動させない）</button>
+  <button id="btn-td-enable">オプトイン（TD-JS-SDKを発動さる）</button>
+  ​
+  <script>
+    (function () {
+
+      // Cookie読み出し関数
+      function readCookie(key) {
+        return ((';' + document.cookie + ';').match(';' + key + '=([^\S;]*)') || [])[1];
+      };
+
+      // オプトアウトボタンがクリックされたら、 _td_optout Cookieに1をセットする（オプトアウトフラグを立てる）
+      document.getElementById('btn-td-disable').addEventListener('click', function () {
+        document.cookie = '_td_optout=1; path=/; Max-Age=31536000;';
+      }, false);
+
+      // オプトインボタンがクリックされたら、 _td_optout Cookieに0をセットする（オプトアウトフラグを外す）
+      document.getElementById('btn-td-enable').addEventListener('click', function () {
+        document.cookie = '_td_optout=0; path=/; Max-Age=31536000;';
+      }, false);
+
+      // オプトアウトフラグによって動作を分岐させる
+      if (readCookie('_td_optout') === '1') {
+
+        // オプトアウトフラグが1の場合は発動しない
+
+      } else {
+
+        // TD-JS-SDK ローダー
+        !function (t, e) { if (void 0 === e[t]) { e[t] = function () { e[t].clients.push(this), this._init = [Array.prototype.slice.call(arguments)] }, e[t].clients = []; for (var r = function (t) { return function () { return this["_" + t] = this["_" + t] || [], this["_" + t].push(Array.prototype.slice.call(arguments)), this } }, s = ["blockEvents", "setSignedMode", "fetchServerCookie", "unblockEvents", "setSignedMode", "setAnonymousMode", "resetUUID", "addRecord", "fetchGlobalID", "set", "trackEvent", "trackPageview", "trackClicks", "ready"], n = 0; n < s.length; n++) { var o = s[n]; e[t].prototype[o] = r(o) } var c = document.createElement("script"); c.type = "text/javascript", c.async = !0, c.src = ("https:" === document.location.protocol ? "https:" : "http:") + "//cdn.treasuredata.com/sdk/2.2/td.min.js"; var i = document.getElementsByTagName("script")[0]; i.parentNode.insertBefore(c, i) } }("Treasure", this);
+
+        // TD-JS-SDK 設定と発火
+        var td = new Treasure({
+          host: 'in.treasuredata.com',
+          writeKey: '0/abcde1234567890',
+          database: 'test_db',
+          startInSignedMode: true
+        });
+        td.trackPageview('web_log');
+      }
+
+    }());
+  </script>
+  ​
+</body>
+
+</html>

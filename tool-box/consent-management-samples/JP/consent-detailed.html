@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Treasure Data | 詳細な同意管理と制御</title>
+
+  <!-- Treasure Data -->
+  <script type="text/javascript">
+    !function (t, e) { if (void 0 === e[t]) { e[t] = function () { e[t].clients.push(this), this._init = [Array.prototype.slice.call(arguments)] }, e[t].clients = []; for (var r = function (t) { return function () { return this["_" + t] = this["_" + t] || [], this["_" + t].push(Array.prototype.slice.call(arguments)), this } }, s = ["blockEvents", "setSignedMode", "fetchServerCookie", "unblockEvents", "setSignedMode", "setAnonymousMode", "resetUUID", "addRecord", "fetchGlobalID", "set", "trackEvent", "trackPageview", "trackClicks", "ready"], n = 0; n < s.length; n++) { var o = s[n]; e[t].prototype[o] = r(o) } var c = document.createElement("script"); c.type = "text/javascript", c.async = !0, c.src = ("https:" === document.location.protocol ? "https:" : "http:") + "//cdn.treasuredata.com/sdk/2.2/td.min.js"; var i = document.getElementsByTagName("script")[0]; i.parentNode.insertBefore(c, i) } }("Treasure", this);
+  </script>
+
+</head>
+
+<body>
+
+  <h1>Treasure Data | 詳細な同意管理と制御</h1>
+
+  <h2>同意管理の粒度</h2>
+  <p>Cookie等を利用してデバイスを一意に識別することを許可または拒否できるだけでなく、データがどう利用されるかについても個別に同意を得るべきです。</p>
+  <p>この例では、デバイスの識別と3つの利用目的について個別に同意管理を行います。</p>
+
+  <h2>許可された用途の記録</h2>
+  <p>計測や識別に同意を得られた場合、データの利用目的を個々のデータに付与します。</p>
+  <p>利用目的についてはツールが強制できるわけではないため、データを集計・抽出・外部連携する際には、同意が得られている用途と利用目的が一致することをクエリー等で保証する必要があります。</p>
+
+  <h2>多言語化</h2>
+  <p>GDPRのように、事業者の地域ではなく利用者の国籍に基づくルールを採用している法規に沿って同意管理を行う場合、言語にかかわらず確実に同意管理を行う必要があります。</p>
+  <p>このサンプルコードでは、「langResources」オブジェクトに各言語の文言を記述することで、ダイアログの中身を多言語対応させています。</p>
+
+  <h2>ツールの種類や利用目的による発火処理の書き方</h2>
+  <p>このサンプルコードでは以下の7つの関数が、許諾の状態に応じて呼び出されます。</p>
+
+  <h3>initSdks()</h3>
+  <p>各種SDKを動かすために必要なライブラリのロードや初期化処理を記述します。計測や追跡についての処理が含まれないようにご注意ください。</p>
+
+  <h3>enableIdentification() と　disableIdentification()</h3>
+  <p>デバイス識別が許可されている場合、または許可されていない場合に、それぞれ必要な処理を記述します。</p>
+
+  <h3>dispatchAnalytics() と suspendAnalytics()</h3>
+  <p>dispatchAnalyticsには分析目的のデータ利用が許可されている場合にのみ発火させる処理を記述します。suspendAnalyticsは許可されていない場合の処理です。</p>
+
+  <h3>dispatchPersonalization() と suspendPersonalization()</h3>
+  <p>
+    dispatchPersonalizationにはパーソナライズ等のサービスの内部に閉じた範囲でのデータ利用が許可されている場合にのみ発火させる処理を記述します。suspendPersonalizationは許可されていない場合の処理です。
+  </p>
+
+  <h3>dispatchMarketing() と suspendMarketing()</h3>
+  <p>dispatchMarketingにはサービス外での広告におけるターゲティング等に対して許可されている場合に発火させる処理を記述します。suspendMarketingは許可されていない場合の処理です。</p>
+
+  <h3>dataCollection()</h3>
+  <p>許可の有無にかかわらず最低限の計測を行う処理を記述します。デバイス識別が無効の場合にも呼び出されるので、デバイス識別に関する処理が含まれないようご注意ください。</p>
+
+  <h2>許諾状態の再設定</h2>
+  <p>id属性に「btn-td-open-consent-dialogue」を持つボタンを設置することで、クリック時に同意管理のダイアログを再表示します。</p>
+  <button id="btn-td-open-consent-dialogue">データ収集と利用について再設定する</button>
+
+  <!-- TD-JS-SDK -->
+  <script>
+    var td = new Treasure({
+      host: 'in.treasuredata.com',
+      writeKey: '0/abcde1234567890',
+      database: 'test_db',
+      startInSignedMode: false // 匿名状態で起動する
+    });
+    // td.trackPageview('web_log'); 計測処理の発動は止めておく
+  </script>
+
+  <!-- 同意管理に関する処理 ここから -->
+  <script>
+    (function () {
+
+      // このスクリプトで利用する変数を初期化
+      var accStatus, flags = ['analytics', 'personalization', 'marketing', 'identification'];
+
+      // 表示する情報の各言語リソース
+      var langResources = {
+        'ja': {
+          'title': 'サービス改善にご協力ください',
+          'description': 'サービスの利便性を高める機能の実現やサービス全体の品質改善、ならびにマーケティングのためにアクセスログの収集にご協力ください。',
+          'cat-purpose': 'データの利用目的',
+          'cat-identification': 'デバイスの識別',
+          'label-analytics': '当サービスを改善するために分析すること。',
+          'label-personalization': '当サービス内でのパーソナライズ機能への応用すること。',
+          'label-marketing': '広告等のマーケティング目的として、当サービス外を含む利用すること。',
+          'label-identification': '上記の利用目的のためにCookie等を用いてデバイスを識別することを許可する。',
+          'btn-save': '設定を保存',
+        },
+        'zh': {
+          'title': '请帮助我们改善服务',
+          'description': '为了实现提高服务的便利性，提高服务的整体质量，以及为了营销的目的，请配合我们收集访问日志。',
+          'cat-purpose': '数据使用的目的',
+          'cat-identification': '设备识别',
+          'label-analytics': '改善服务的分析。',
+          'label-personalization': '适用于本服务中的个性化功能。',
+          'label-marketing': '用于广告等营销目的，包括在本服务之外的使用。',
+          'label-identification': '允许使用cookies和其他方式来识别设备的上述目的。',
+          'btn-save': '保存设置',
+        },
+        'default': {
+          'title': 'Support us to improve services',
+          'description': 'We would like you to support us to collect data for improving our service quality, user experiences and marketing activities.',
+          'cat-purpose': 'Purpose of Data usage',
+          'cat-identification': 'Device Identification',
+          'label-analytics': 'Analyzing for services improvement.',
+          'label-personalization': 'Applying to Personalization within this services.',
+          'label-marketing': 'Ads and other marketing activities inside/outside of this services.',
+          'label-identification': 'Allow to use Cookies and/or other mechanism for identifying devices to realize the above purposes.',
+          'btn-save': 'Save Settings',
+        }
+      };
+
+      // 動作を切り替えるためのCookie読み出し関数
+      function readCookie(key) {
+        return (('; ' + document.cookie + ';').match('; ' + key + '=([^\S;]*)') || [])[1];
+      };
+
+      // 設定値を読み出してオブジェクト化
+      function restoreSettings() {
+        var cookieValue = readCookie('_td_acceptance');
+        var result;
+        if (cookieValue) {
+          try {
+            result = JSON.parse(cookieValue);
+          } catch (error) {
+            console.log('Unable to parse the cookie.');
+          }
+        }
+        return result;
+      }
+
+      // ブラウザの言語設定を取得する関数
+      function getLang() {
+        return (
+          (window.navigator.languages && window.navigator.languages[0])
+          || window.navigator.language
+          || window.navigator.userLanguage
+          || window.navigator.browserLanguage
+        );
+      }
+
+      // 同意内容に関わらず、SDKをロードして初期化する処理
+      function initSdks(options = {}) {
+
+      }
+
+      // デバイス識別が許可されている場合に発動させる処理
+      function enableIdentification(options = {}) {
+
+        // TD-JS-SDK を Signed Mode に切り替える
+        td.setSignedMode();
+        td.set('$global', 'td_global_id', 'td_global_id');
+
+      }
+
+      // デバイス識別が無効の場合に発動させる処理
+      function disableIdentification(options = {}) {
+
+        // TD-JS-SDK を Anonymous Mode に切り替える
+        td.setAnonymousMode();
+
+      }
+
+      // マーケティング・広告が許可されている場合に発動させる処理
+      function dispatchMarketing(options = {}) {
+
+      }
+
+      // マーケティング・広告が許可されていない場合に発動させる処理
+      function suspendMarketing(options = {}) {
+
+      }
+
+      // パーソナライズが許可されている場合に発動させる処理
+      function dispatchPersonalization(options = {}) {
+
+      }
+
+      // パーソナライズが許可されていない場合に発動させる処理
+      function suspendPersonalization(options = {}) {
+
+      }
+
+      // 分析が許可されている場合に発動させる処理
+      function dispatchAnalytics(options = {}) {
+
+      }
+
+      // 分析が許可されていない場合に発動させる処理
+      function suspendAnalytics(options = {}) {
+
+      }
+
+      // 同意内容に関わらず発動させる処理
+      function dataCollection(options = {}) {
+
+        // データ利用目的の許可/拒否をツールに記録するためのオブジェクトを作成
+        var acceptedPurposes = {};
+        for (var i = 0; i < flags.length; i++) {
+          acceptedPurposes['consent_' + flags[i]] = (accStatus && accStatus[flags[i]]) ? accStatus[flags[i]] : false;
+        }
+
+        // TD-JS-SDkでページビューを計測する
+        td.set('$global', acceptedPurposes);
+        td.trackPageview('web_log');
+
+      }
+
+      // ツールを発火するプロセス
+      function bootTools(accStatus = {}, skipTrack = false) {
+
+        // SDKを初期化
+        initSdks({});
+
+        // デバイス識別に関する処理
+        accStatus['identification'] ? enableIdentification({}) : disableIdentification({});
+
+        // skipTrackフラグがfalseの場合に計測を実行
+        if (!skipTrack) {
+
+          // 広告・マーケティングが許可されている場合、拒否されている場合
+          accStatus['marketing'] ? dispatchMarketing({}) : suspendMarketing({});
+
+          // パーソナライズが許可されている場合、拒否されている場合
+          accStatus['personalization'] ? dispatchPersonalization({}) : suspendPersonalization({});
+
+          // 分析が許可されている場合、拒否されている場合
+          accStatus['analytics'] ? dispatchAnalytics({}) : suspendAnalytics({});
+
+          // 同意内容に関わらず発火させる
+          dataCollection({});
+        }
+
+      }
+
+      // ダイアログを構築し表示する関数
+      function showDialog(forceDefault = true, callback = function () { }) {
+
+        // ダイアログを構築
+        var lang = langResources[getLang()] ? getLang() : 'default';
+        var dialogDiv = document.createElement('div');
+        dialogDiv.id = 'td-concent-dialogue';
+        dialogDiv.style = 'position: fixed; bottom: 0; right: 0; width: 420px; margin: 0px; padding: 20px; border: 1px solid #ccc; background: #555; color: #ccc; font-size: 65%';
+        dialogDiv.innerHTML = ''
+          + '<h1>' + langResources[lang]['title'] + '</h1>'
+          + '<p>' + langResources[lang]['description'] + '</p>'
+          + '<hr />'
+          + '<h2>' + langResources[lang]['cat-purpose'] + '</h2>'
+          + '<input type="checkbox" name="chk-td-analytics" id="chk-td-analytics" value="1" checked />'
+          + '<label for="chk-td-analytics">' + langResources[lang]['label-analytics'] + '</label>'
+          + '<br />'
+          + '<input type="checkbox" name="chk-td-personalization" id="chk-td-personalization" value="1" checked  />'
+          + '<label for="chk-td-personalization">' + langResources[lang]['label-personalization'] + '</label>'
+          + '<br />'
+          + '<input type="checkbox" name="chk-td-marketing" id="chk-td-marketing" value="1" checked  />'
+          + '<label for="chk-td-marketing">' + langResources[lang]['label-marketing'] + '</label>'
+          + '<h2>' + langResources[lang]['cat-identification'] + '</h2>'
+          + '<input type="checkbox" name="chk-td-identification" id="chk-td-identification" value="1" checked  />'
+          + '<label for="chk-td-identification">' + langResources[lang]['label-identification'] + '</label>'
+          + '<hr />'
+          + '<button id="btn-td-save-consent">' + langResources[lang]['btn-save'] + '</button>'
+          + '</form>';
+
+        // ダイアログに関するHTMLをページに挿入する
+        var scriptTag = document.currentScript || (function () {
+          var tags = document.getElementsByTagName('script')
+          return tags.item(tags.length - 1)
+        }());
+        document.getElementsByTagName('body')[0].insertBefore(dialogDiv, scriptTag);
+
+        // 設定状態に応じてチェックボックスを更新
+        if (!forceDefault) {
+          for (var i = 0; i < flags.length; i++) {
+            document.getElementById('chk-td-' + flags[i]).checked = accStatus[flags[i]] || false;
+          }
+        }
+
+        // 「設定を保存」ボタンがクリックされたらダイアログを消し、_td_acceptance を更新する
+        document.getElementById('btn-td-save-consent').addEventListener('click', function () {
+
+          // 設定値を保存
+          for (var i = 0; i < flags.length; i++) {
+            if (!accStatus) {
+              accStatus = {};
+            }
+            accStatus[flags[i]] = document.getElementById('chk-td-' + flags[i]).checked;
+          }
+          document.cookie = '_td_acceptance=' + JSON.stringify(accStatus) + '; path=/; Max-Age=31536000;';
+
+          // ダイアログを閉じる
+          this.parentElement.remove();
+
+          // コールバックを発動
+          callback();
+
+        }, false);
+
+      };
+
+      // 設定値を復元
+      accStatus = restoreSettings();
+
+      // 設定が保存されていない場合はダイアログを表示
+      bootTools(accStatus, false);
+
+      // 同意情報が保存されていなければダイアログを表示
+      if (!accStatus && !document.getElementById('td-concent-dialogue')) {
+        showDialog(true, function () {
+          bootTools(accStatus, true);
+        });
+      }
+
+      // ページ中のボタン（id属性に btn-td-open-consent-dialogue を持つ）がクリックされたらダイアログを表示
+      var consentBtn = document.getElementById('btn-td-open-consent-dialogue');
+      if (consentBtn) {
+        document.getElementById('btn-td-open-consent-dialogue').addEventListener('click', function () {
+          showDialog(false, function () {
+            bootTools(accStatus, true);
+          });
+        }, false);
+      }
+
+    }());
+  </script>
+  <!-- 同意管理に関する処理 ここまで -->
+
+
+</body>
+
+</html>

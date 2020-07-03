@@ -18,13 +18,12 @@ C AS(
     contact.name as lead_contact_name,
     contact.email,
     contact.title as job_title,
-    user.name as lead_contact_owner,
     account.name as account_name,
     account.id as account_id,
-    account.${region},
-    account.${industry},
+    account.CHANGE_ME_region as region,
+    account.CHANGE_ME_industry as Industry,
     coalesce(contact.leadsource, 'Other') as leadsource,
-    contact.${status} as lead_contact_status,
+    contact.status as lead_contact_status,
 
     COALESCE(
       DOB.created_date,
@@ -34,33 +33,33 @@ C AS(
       )
     ) AS createddate,
     TD_TIME_PARSE(
-      contact.${timestamp_raw},
+      contact.CHANGE_ME_timestamp_raw,
       'UTC'
     ) AS timestamp_raw,
     TD_TIME_PARSE(
-      contact.${timestamp_mql},
+      contact.CHANGE_ME_timestamp_mql,
       'UTC'
     ) AS timestamp_mql,
     TD_TIME_PARSE(
-      contact.${timestamp_sql},
+      contact.CHANGE_ME_timestamp_sql,
       'UTC'
     ) AS timestamp_sql,
     TD_TIME_PARSE(
-      contact.${timestamp_engaged},
+      contact.CHANGE_ME_timestamp_engaged,
       'UTC'
     ) AS timestamp_engaged,
     TD_TIME_PARSE(
-      contact.${timestamp_nurture},
+      contact.CHANGE_ME_timestamp_nurture,
       'UTC'
     ) AS timestamp_nurture,
     TD_TIME_PARSE(
-      contact.${timestamp_disqualified},
+      contact.CHANGE_ME_timestamp_disqualified,
       'UTC'
     ) AS timestamp_disqualified,
       
-      case when account.${account_tier} is not null then account.id else null end as target_account_id,
-      case when account.${account_tier} is not null then account.name else null end as target_account_name,
-      account.${account_tier},
+      case when account.CHANGE_ME_account_tier is not null then account.id else null end as target_account_id,
+      case when account.CHANGE_ME_account_tier is not null then account.name else null end as target_account_name,
+      account.CHANGE_ME_account_tier as account_tier,
       account.type as account_type
   FROM
     contact LEFT
@@ -79,11 +78,8 @@ C AS(
   ON
     ocr.opportunityid = o.id
   LEFT JOIN
-    USER
-  on
-    contact.ownerid = USER.id
   WHERE
-    contact.email not like '%@${company_domain}' 
+    contact.email not like '%CHANGE_ME_@company_domain' 
     or contact.email is NULL
   GROUP BY
     1,
@@ -106,8 +102,7 @@ C AS(
     18,
     19,
     20,
-    21,
-    22
+    21
   ORDER BY
     1,
     2 DESC
@@ -122,11 +117,10 @@ L AS(
     lead.firstname || ' ' || lead.lastname AS lead_contact_name,
     lead.email,
     lead.job_title,
-    user.name as lead_contact_owner,
     coalesce(account.name, lead.company) as account_name,
     account.id as account_id,
-    lead.${region},
-    account.${industry},
+    lead.CHANGE_ME_region,
+    account.CHANGE_ME_industry as industry,
     coalesce(lead.leadsource, 'Other') as leadsource,
     lead.status as lead_contact_status,
 
@@ -135,47 +129,43 @@ L AS(
       'UTC'
     ) AS createddate,
     TD_TIME_PARSE(
-      lead.${timestamp_raw},
+      lead.CHANGE_ME_timestamp_raw,
         'UTC'
     ) AS timestamp_raw,
     TD_TIME_PARSE(
-      lead.${timestamp_mql},
+      lead.CHANGE_ME_timestamp_mql,
       'UTC'
     ) AS timestamp_mql,
     TD_TIME_PARSE(
-      lead.${timestamp_sql},
+      lead.CHANGE_ME_timestamp_sql,
       'UTC'
     ) AS timestamp_sql,
     TD_TIME_PARSE(
-      lead.${timestamp_engaged},
+      lead.CHANGE_ME_timestamp_engaged,
       'UTC'
     ) AS timestamp_engaged,
     TD_TIME_PARSE(
-      lead.${timestamp_nurture},
+      lead.CHANGE_ME_timestamp_nurture,
       'UTC'
     ) AS timestamp_nurture,
     TD_TIME_PARSE(
-      lead.${timestamp_disqualified},
+      lead.CHANGE_ME_timestamp_disqualified,
       'UTC'
     ) AS timestamp_disqualified,
 
-    case when account.${account_tier} is not null then account.id else null end as target_account_id,
-    case when account.${account_tier} is not null then account.name else null end as target_account_name,
-    account.${account_tier} as account_tier,
+    case when account.CHANGE_ME_account_tier is not null then account.id else null end as target_account_id,
+    case when account.CHANGE_ME_account_tier is not null then account.name else null end as target_account_name,
+    account.CHANGE_ME_account_tier as account_tier,
     account.type as account_type
   FROM
     lead
   Left JOIN
     account
-    on coalesce(lead.${enriched_matched_account_id} = account.id
-  LEFT JOIN
-    USER
-  on
-    lead.ownerid = USER.id
+    on coalesce(lead.CHANGE_ME_enriched_account_id = account.id
   WHERE
     lead.isconverted <> 1
     and 
-    lead.email not like '%@${company_domain}'  or lead.email is null)
+    lead.email not like '%CHANGE_ME_@companydomain.com'  or lead.email is null)
   GROUP BY
     1,
     2,
@@ -197,8 +187,7 @@ L AS(
     18,
     19,
     20,
-    21,
-    22
+    21
   ORDER BY
     1,
     2 DESC

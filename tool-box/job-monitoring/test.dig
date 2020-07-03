@@ -1,5 +1,3 @@
-_export:
-  !include : config/params.yml
 
 _error:
   td_ddl>:

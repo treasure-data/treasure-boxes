@@ -1,0 +1,92 @@
+_export:
+  !include : config/source_config.yml 
+  td:
+   database: dataprofiling_results
+    
++drop_tables: 
+   td_ddl>: 
+   drop_tables: ['${source_table}_profile_bigint'
+     ,'${source_table}_profile_bigint_vf'
+     ,'${source_table}_profile_double'
+     ,'${source_table}_profile_double_vf'
+     ,'${source_table}_profile_varchar','${source_table}_profile_varchar_vf'
+      ,'${source_table}_profile_pii'
+       ,'${source_table}_column_metadata']
+
+#Step 1: Use Information_Schema to build a table with all the column details for the table which needs data profiling      
++create_column_metadata: 
+   td>: sqlscripts/tbl_column_metadata.sql
+   create_table: ${source_table}_column_metadata 
+
+#Step 2: Get all the columns which are of type 'bigint'
++get_bigint_columns: 
+  td>: sqlscripts/getbigintcolumns.sql
+  store_last_results: true
+
+#Step 3: Check if datatype 'bigint' exists and if it exists build basic statistics and  valuefreq table
++check_if_int_exists: 
+  if>: ${td.last_results.column_details !=null}
+  _do: 
+     +profile_coltype_bigint: 
+        for_each>: 
+            column: '${td.last_results.column_details}'
+        _do:
+            +basic_data_profile_bigint:
+              td>: sqlscripts/dataprofiler_bigint.sql
+              insert_into: ${source_table}_dataprofiler_bigint
+            +value_frequency_table: 
+              td>: sqlscripts/dataprofiler_bigint_valuefreq.sql
+              insert_into: ${source_table}_dataprofiler_bigint_vf   
+  _else_do:
+    echo>: 'No integer column type '   
+
+#Step 4: Get all the columns which are of type 'double'
++get_double_columns: 
+  td>: sqlscripts/getdoublecolumns.sql
+  store_last_results: true
+
+#Step 5: Check if datatype 'double' exists and if it exists build basic statistics and  valuefreq table
++check_if_double_exists: 
+   if>: ${td.last_results.column_details !=null}  
+   _do:
+      +profile_coltype_double: 
+        for_each>: 
+            column: '${td.last_results.column_details}'
+        _do:
+            +basic_data_profile_bigint:
+              td>: sqlscripts/dataprofiler_double.sql
+              insert_into: ${source_table}_dataprofiler_double
+            +value_frequency_table: 
+              td>: sqlscripts/dataprofiler_double_valuefreq.sql
+              insert_into: ${source_table}_dataprofiler_double_vf  
+   _else_do:
+      echo>: 'No double column type'
+
+#Step 5: Check if datatype 'varchar' exists and if it exists build basic statistics and  valuefreq table
++get_coltype_varchar: 
+  td>: sqlscripts/getvarcharcolumns.sql
+  store_last_results: true
+
++check_if_varchar_exists: 
+   if>: ${td.last_results.column_details !=null}  
+   _do:
+     +profile_varchar:
+        for_each>: 
+            column: '${td.last_results.column_details}'
+        _do: 
+            +basic_data_profile_varchar:
+                td>: sqlscripts/dataprofiler_varchar.sql
+                insert_into: ${source_table}_dataprofiler_varchar
+        
+            +value_varchar_frequency_table: 
+                td>: sqlscripts/dataprofiler_varchar_valuefreq.sql
+                insert_into: ${source_table}_dataprofiler_varchar_vf
+                
+            +pii_detection_varchar: 
+                td>: sqlscripts/pii_detection.sql
+                insert_into: ${source_table}_dataprofiler_pii
+   _else_do:
+     echo>: 'No varchar column type'
+
+
+

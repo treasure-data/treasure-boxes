@@ -1,0 +1,21 @@
+in:
+  type: bigquery
+  project_id: xxxxxxx
+  auth_method: json_key
+  json_keyfile: {content: "${secret:bq.json_key}"}
+  import_type: query
+  query: |-
+    SELECT
+      *
+    FROM `test_dataset.test_*`
+    WHERE _TABLE_SUFFIX BETWEEN '${moment(session_time).add(-1, "days").format("YYYYMMDD")}' AND '${session_date_compact}'
+  export_to_gcs: false
+filters:
+- type: add_time
+  to_column:
+    name: time
+    type: timestamp
+  from_value:
+    mode: upload_time
+out: {}
+

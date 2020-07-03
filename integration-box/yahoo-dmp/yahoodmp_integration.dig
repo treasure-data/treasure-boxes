@@ -1,0 +1,31 @@
+_export:
+  td:
+    database: ******
+
++get_presigned_url:
+  docker:
+    image: "digdag/digdag-python:3.7"
+
+  py>: scripts.get_presigned_url.generate
+  yahoo_api_url       : https://api.tgm.yahoo-net.jp/v3/userlists
+  tag_definition_guid : yahoo_japan_ydn_custom_audience_server
+  vendor_guid         : ******
+  entity_id           : ******
+  uid_key             : ******
+  brand_guid          : ******
+  tag_fields_p        : ******
+  tag_fields_lid      : ******
+  _env:
+    x_api_key: ${secret:x_api_key}
+
++yahoo_dmp_upload:
+  docker:
+    image: "digdag/digdag-python:3.7"
+
+  py>: scripts.put_userlist.upload
+  sqlfile      : queries/userlist.sql
+  database     : ${td.database}
+  presigned_url: ${presigned_url}
+  _env:
+    td_apikey: ${secret:td.apikey}
+

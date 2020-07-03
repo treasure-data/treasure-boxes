@@ -12,6 +12,7 @@ _export:
   td>: queries/sample.sql
 
 +export_to_ftp:
+
   td_result_export>:
   job_id: ${td.last_job_id}
   result_connection: ${td.connection}
@@ -19,6 +20,7 @@ _export:
     path_prefix: ${td.filepath}
     file_ext: ${td.extension}
     header_line: true
+
 
 +teardown:
   echo>: finish ${session_time}

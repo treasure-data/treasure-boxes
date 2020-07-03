@@ -1,0 +1,16 @@
+timezone: Asia/Tokyo
+
+schedule:
+  daily>: 03:00:00
+
++get_jobs:
+    docker:
+        image: "digdag/digdag-python:3.7"
+    py>: get_jobs.main
+    _env:
+        td_apikey: ${secret:td.apikey}
+        td_endpoint: ${secret:td.apiserver}
+        td_database: ${secret:td.database}
+        cnfc_endpoint: ${secret:cn.endpoint}
+        cnfc_user: ${secret:cn.user}
+        cnfc_password: ${secret:cn.password}

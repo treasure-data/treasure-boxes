@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Treasure Data | Cookie利用に関する告知ダイアログをオーバーレイ表示する</title>
+
+  <!-- Treasure Data -->
+  <script type="text/javascript">
+    !function (t, e) { if (void 0 === e[t]) { e[t] = function () { e[t].clients.push(this), this._init = [Array.prototype.slice.call(arguments)] }, e[t].clients = []; for (var r = function (t) { return function () { return this["_" + t] = this["_" + t] || [], this["_" + t].push(Array.prototype.slice.call(arguments)), this } }, s = ["blockEvents", "setSignedMode", "fetchServerCookie", "unblockEvents", "setSignedMode", "setAnonymousMode", "resetUUID", "addRecord", "fetchGlobalID", "set", "trackEvent", "trackPageview", "trackClicks", "ready"], n = 0; n < s.length; n++) { var o = s[n]; e[t].prototype[o] = r(o) } var c = document.createElement("script"); c.type = "text/javascript", c.async = !0, c.src = ("https:" === document.location.protocol ? "https:" : "http:") + "//cdn.treasuredata.com/sdk/2.2/td.min.js"; var i = document.getElementsByTagName("script")[0]; i.parentNode.insertBefore(c, i) } }("Treasure", this);
+  </script>
+
+</head>
+
+<body>
+
+  <h1>Treasure Data | Cookie利用に関する告知ダイアログをオーバーレイ表示する</h1>
+
+  <h2>オーバーレイ表示</h2>
+  <p>Cookieによるデバイス識別とアクセスログの収集を行っていることを通知するのみで、直接のオプトイン/オプトアウト制御をしない方式。</p>
+  <p>閉じるボタンを押すと告知を読んだと見なし、「_td_checked」Cookieに1をセットし次回以降はダイアログは表示されない。</p>
+
+  <script>
+    (function () {
+
+      // 動作を切り替えるためのCookie読み出し関数
+      function readCookie(key) {
+        return ((';' + document.cookie + ';').match(';' + key + '=([^\S;]*)') || [])[1];
+      };
+
+      // Cookieに関する告知が読まれていない場合=「_td_checked」Cookieに1が無い場合に説明文を表示する
+      if (readCookie('_td_checked') !== '1') {
+
+        // Cookieについて説明するテキストを用意
+        var cookieMessage = document.createElement('p');
+        cookieMessage.innerHTML = 'サービスの利便性向上や利用実体の分析のためにCookieを用いた端末の識別と、アクセスログの収集を行っています。詳しい情報とオプトアウトは「<a href="">Cookieポリシー</a>」をご覧ください。';
+
+        // メッセージを閉じるボタンを用意
+        var closeButton = document.createElement('button');
+        closeButton.innerText = '閉じる';
+        closeButton.id = 'btn-td-close';
+
+        // ダイアログ全体を構築
+        var dialogDiv = document.createElement('div');
+        dialogDiv.style = 'position: fixed; bottom: 0; right: 0; width: 260px; margin: 0px; padding: 20px; border: 1px solid #ccc; background: #555; color: #ccc; font-size: 10pt';
+        dialogDiv.appendChild(cookieMessage);
+        dialogDiv.appendChild(closeButton);
+
+        // 上記で生成したダイアログに関するHTMLをページに挿入する
+        var scriptTag = document.currentScript || (function () {
+          var tags = document.getElementsByTagName('script')
+          return tags.item(tags.length - 1)
+        }());
+        document.getElementsByTagName('body')[0].insertBefore(dialogDiv, scriptTag);
+
+        // 「閉じる」ボタンがクリックされたらダイアログを消し、_td_checked にフラグを立てる処理
+        document.getElementById(closeButton.id).addEventListener('click', function () {
+          document.cookie = '_td_checked=1; path=/; Max-Age=31536000;';
+          this.parentElement.remove();
+        }, false);
+      }
+
+    }());
+  </script>
+  ​
+  <!-- TD-JS-SDK -->
+  <script>
+    var td = new Treasure({
+      host: 'in.treasuredata.com',
+      writeKey: '0/abcde1234567890',
+      database: 'test_db',
+      startInSignedMode: true
+    });
+    td.trackPageview('web_log');
+  </script>
+
+</body>
+
+</html>

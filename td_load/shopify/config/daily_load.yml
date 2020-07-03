@@ -4,8 +4,9 @@ in:
   apikey: ${secret:shopify.apikey}
   password: ${secret:shopify.password}
   store_name: ${secret:shopify.store_name}
-  from_date: ${shopify.from_date}
-  fetch_days: ${shopify.fetch_days}
+  from_date: "2020-01-09"
+  fetch_days: 2
+  incremental: "true"
 out:
   mode: replace
 exec: {}

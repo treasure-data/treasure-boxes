@@ -1,0 +1,28 @@
+
+in:
+    type: google_sheets
+    auth_method: authorized_user
+    client_id:  ${secret:gsheet.client_id}
+    client_secret:  ${secret:gsheet.client_secret}
+    refresh_token:  ${secret:gsheet.refresh_token}
+
+    
+    spreadsheets_url: https://docs.google.com/spreadsheets/d/**********************/edit#gid=0
+
+    worksheet_title: sheet_name_here
+    start_row: 1
+    major_dimension: ROWS
+    value_render_option: FORMATTED_VALUE
+    datetime_render_option: FORMATTED_STRING
+    key: spreadsheet_key_here
+    # https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081625/Google+Sheets+Export+Integration#Find-the-Spreadsheet-Key
+    
+    null_string: '\N'
+    default_typecast: strict
+    columns:
+        - {name: test_name, type: string}
+        - {name: test_index, type: string}
+
+out: {}
+exec: {}
+filters: []

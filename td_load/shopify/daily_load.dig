@@ -16,8 +16,8 @@ _export:
     from_date: "${last_session_date}"
     fetch_days: 2
   td:
-    dest_db: dest_db
-    dest_table: dest_table
+    dest_db: dest_db_ganesh
+    dest_table: dest_table_ganesh_shopify
 
 +prepare_table:
   td_ddl>:
