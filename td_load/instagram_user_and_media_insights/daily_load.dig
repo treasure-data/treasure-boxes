@@ -1,0 +1,24 @@
+schedule:
+  daily>: 02:00:00
+
+sla:
+  time: 08:00
+  +notice:
+    mail>: {data: Treasure Workflow Notification}
+    subject: This workflow is taking long time to finish
+    to: [me@example.com]
+
+_export:
+  td:
+    dest_db: dest_db
+    dest_table: dest_table
+
++prepare_table:
+  td_ddl>:
+  database: ${td.dest_db}
+  create_tables: ["${td.dest_table}"]
+
++load:
+  td_load>: config/daily_load.yml
+  database: ${td.dest_db}
+  table: ${td.dest_table}

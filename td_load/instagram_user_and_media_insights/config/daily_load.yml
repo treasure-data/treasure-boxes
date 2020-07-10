@@ -1,0 +1,18 @@
+in:
+  type: instagram_insight
+  access_token: ${instagram.access_token}
+  facebook_page_name: '172411252833693'
+  data_type: user
+  incremental: true
+  since: '2020-04-15'
+  until: '2020-06-18'
+  use_individual_metrics: true
+  incremental_user_metrics:
+    - { value: email_contacts-day }
+    - { value: impressions-days_28 }
+out: {mode: append}
+exec: {}
+filters:
+  - from_value: {mode: upload_time}
+    to_column: {name: time}
+    type: add_time
