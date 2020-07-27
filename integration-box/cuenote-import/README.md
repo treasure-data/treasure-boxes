@@ -10,7 +10,7 @@ In this repository, there are two directory: `./XML-API` is for XML API, `./JSON
 ### Cuenote
 
 - You need to have a username and a password for Cuenote API.
-- IP addresses used by [Treasure Data Custom Script](https://support.treasuredata.com/hc/en-us/articles/360033974194-IP-Addresses-used-by-Custom-Scripts) must be allowed by the whitelist.
+- IP addresses used by Treasure Data Custom Script must be allowed by the whitelist.
 - For more information about preparation, please contact a representative or a support of YMIRLINK.
 
 ### Treasure Data
@@ -36,7 +36,7 @@ td wf secrets --project cuenote_import --set td.apikey td.apiserver td.database
 |variable|sample|description|
 |:----|:----|:----|
 |`td.apikey`|`000/1234567890abcde`|Treasure Data's API key with Master-Key permission|
-|`td.apiserver`|`https://api.treasuredata.com`|An endpoint of Treasure Data API. Use your [regional endpoint](https://support.treasuredata.com/hc/en-us/articles/360001474288-Sites-and-Endpoints).|
+|`td.apiserver`|`https://api.treasuredata.com`|An endpoint of Treasure Data API. Use your [regional endpoint](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085143/Sites+and+Endpoints).|
 |`td.database`|`cuenote`|A name of database dedicated for Cuenote integration.|
 
 ### 3. Set variables for Cuenote API
@@ -69,7 +69,7 @@ Check if you see errors:
 
 ### XML API
 - A workflow `cuenote_import_master` retrieves all Job Info from Cuenote API. This contains a basic information about delivery settings.
-- `cuenote_import_master` stores Job Info, then request to Cuenote API to generate delivery logs and click logs. Then it saves `expid` into `queue` table. 
+- `cuenote_import_master` stores Job Info, then request to Cuenote API to generate delivery logs and click logs. Then it saves `expid` into `queue` table.
 - A workflow `cuenote_import_delivery_logs` checks a status of log generation and download logs if it is ready. Downloaded logs will be uploaded to each tables assigned to log type.
 
 ### JSON API
