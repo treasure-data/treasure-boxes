@@ -1,8 +1,8 @@
 # Workflow: td_load example (Google Cloud Storage)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for Google Cloud Storage](https://docs.treasuredata.com/articles/data-connector-google-cloud-storage) with [td_load](http://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for Google Cloud Storage](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082555/Google+Cloud+Storage+Import+Integration) with [td_load](https://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
 
-The workflow also uses [Secrets](https://docs.treasuredata.com/articles/workflows-secrets) feature, so that you don't have to include your database credentials to your workflow files.
+The workflow also uses [Secrets](https://tddocs.atlassian.net/wiki/spaces/PD/pages/223379597/Setting+Workflow+Secrets+from+the+Command+Line) feature, so that you don't have to include your database credentials to your workflow files.
 
 # Prerequisites (v0.9.21 or earlier)
 
