@@ -5,7 +5,7 @@ This example workflow exports TD job results into a Google Sheets with [td](http
 # Prerequisites
 
 You need to create a new Authentication for Google Sheets in advance.
-Please refer to the section '2. Account authentication' in the [Treasure Data Documentation](https://support.treasuredata.com/hc/en-us/articles/360009671913-Writing-Job-Results-to-Google-Sheets) in order to find the procedure.
+Please refer to the section '2. Account authentication' in the [Treasure Data Documentation](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081625/Google+Sheets+Export+Integration) in order to find the procedure.
 
 The connection name is used in the dig file.
 
@@ -17,7 +17,7 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push td_gsheet
 
-If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project td_gsheet --set key
@@ -55,7 +55,7 @@ Available parameters for `result_settings` are here.
 
 **※You must choose to use either the *****spreadsheet_id***** OR *****spreadsheet_title.***** You cannot use both.**
 
-For more details, please see [Treasure Data documentation](https://support.treasuredata.com/hc/en-us/articles/360009671913-Writing-Job-Results-to-Google-Sheets)
+For more details, please see [Treasure Data documentation](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081625/Google+Sheets+Export+Integration)
 
 # Next Step
 
