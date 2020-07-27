@@ -12,7 +12,7 @@ Steps 2 and 3 can be made into a Treasure Workflow which enables you to define r
 
 You can read additional information:
 1. [Efficiently Analyze Infinitely Growing Data with Incremental Queries](https://blog.treasuredata.com/blog/2017/07/25/analyze-infinitely-growing-data-incremental-queries/)
-2. [Treasure Workflow Docs](https://docs.treasuredata.com/articles/workflows)
+2. [Treasure Workflow Docs](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081518/Workflow+Reference)
 
 ## Scenario
 
@@ -32,7 +32,7 @@ In this scenario, some workflow operators are used. Please refer to the document
 The initial load file ([initial_task.dig](initial_task.dig)) run the first query that creates the intermediate table that subsequent queries will run against.
 
 ## Daily Run
-The daily run file is scheduled to run every day at 1:00. It performs two tasks. 
+The daily run file is scheduled to run every day at 1:00. It performs two tasks.
 	- It updates the intermediate table created by initial_task.dig.
 	- Run the query in the analytics.sql file against the intermediate table.
 
@@ -50,6 +50,6 @@ You can trigger the session manually to watch it execute.
 
 
 # Next Step
-This is a simple example using only one intermediate table and just one subsequent query. However, you can use workflows and intermediate tables to chain together many sequential queries that normally would be one very large query that consumed a lot of time and resources. Consider workflows and intermediate tables as a possible solution for your large, time and resource consuming jobs. Feel free to contact support for assistance with reviewing any queries to see if workflows can improve performance.  
+This is a simple example using only one intermediate table and just one subsequent query. However, you can use workflows and intermediate tables to chain together many sequential queries that normally would be one very large query that consumed a lot of time and resources. Consider workflows and intermediate tables as a possible solution for your large, time and resource consuming jobs. Feel free to contact support for assistance with reviewing any queries to see if workflows can improve performance.
 
 If you have any questions, please contact to support@treasuredata.com.

@@ -11,8 +11,8 @@ The purpose of this scenario is to make the workflow succeed regardless of wheth
 *Requirement*
 Digdag has 2 types of operators to execute another dig. The `ignore_failure` parameter is supported by `require>` operator only. So you have to use `require>` operator if you want to ignore failure.
 
- - `td>: operator`: [td>: Running Treasure Data Query](http://docs.digdag.io/operators/td.html)
- - `require>: [require>: Depends on another workflow](http://docs.digdag.io/operators/require.html)
+ - `td>: operator`: [td>: Running Treasure Data Query](https://docs.digdag.io/operators/td.html)
+ - `require>: [require>: Depends on another workflow](https://docs.digdag.io/operators/require.html)
 
 # How to Run for Server/Client Mode
 

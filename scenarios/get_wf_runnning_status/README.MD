@@ -6,11 +6,11 @@
 To get running status of another workflow
 
 ## Regarding api_host
-"api_host" in get_wf_running_status.dig is up to your account's site.  
+"api_host" in get_wf_running_status.dig is up to your account's site.
 You have to change it if your account's site is located in EU or Tokyo.
 
-Please refer to the doc for more details.  
-[https://support.treasuredata.com/hc/en-us/articles/360001474288-Sites-and-Endpoints](https://support.treasuredata.com/hc/en-us/articles/360001474288-Sites-and-Endpoints)
+Please refer to the doc for more details.
+https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085143/Sites+and+Endpoints
 
 # How to Run
 First, upload the project.
