@@ -32,20 +32,20 @@ Random sampling is a simple way to split data.
     # prepare.dig
     _export:
       train_sample_rate: 0.8
-    
+
     +shuffle:
       td>: queries/shuffle.sql
       engine: presto
       create_table: samples_shuffled
-    
+
     +split:
       _parallel: true
-    
+
       +train:
         td>: queries/split_train.sql
         engine: presto
         create_table: samples_train
-    
+
       +test:
         td>: queries/split_test.sql
         engine: presto
@@ -63,7 +63,7 @@ In shuffle.sql, we add a random float number distributed uniformly from 0.0 to 
 
 Presto doesn't have a way to use a random seed. If you want to split a reproducible way, use Hive instead.
 
-`rowid()` function assigns a unique id for each row. Although `select *` could include [v columns](https://support.treasuredata.com/hc/en-us/articles/360001266468-Schema-Management#Understanding%20the%20TD%20Default%20Schema%C2%A0), it's better to specify target columns, respectively.
+`rowid()` function assigns a unique id for each row. Although `select *` could include [v columns](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083743/Schema+Management#Understanding-the-TD-Default-Schema), it's better to specify target columns, respectively.
 
     -- Hive: queries/shuffle.sql
     select
@@ -99,20 +99,20 @@ The steps to apply stratified sampling is similar to random sampling. Here is an
     # prepare.dig
     _export:
       train_sample_rate: 0.8
-    
+
     +shuffle:
       td>: queries/shuffle.sql
       engine: presto
       create_table: samples_shuffled
-    
+
     +split:
       _parallel: true
-    
+
       +train:
         td>: queries/split_train.sql
         engine: presto
         create_table: samples_train
-    
+
       +test:
         td>: queries/split_test.sql
         engine: presto
@@ -204,7 +204,7 @@ Min-max scaling is used for normalization. The following workflow applies min-ma
         td>: queries/minmax_train.sql
         engine: presto
         store_last_results: true
-    
+
       +test:
         td>: queries/minmax_test.sql
         engine: presto
@@ -244,11 +244,11 @@ You can create a train/test table as follows:
 
     +preprocess:
       _parallel: true
-    
+
       +train:
         td>: queries/preprocess_train.sql
         create_table: train
-    
+
       +test:
         td>: queries/preprocess_test.sql
         create_table: test
@@ -287,7 +287,7 @@ You can [standardize](https://en.wikipedia.org/wiki/Standard_score) data by usin
         td>: queries/calc_stats.sql
         engine: presto
         store_last_results: true
-    
+
       +transform:
         td>: queries/transform.sql
         create_table: standardized_table
@@ -332,7 +332,7 @@ However, RandomForest classifier/regressor is an exception that accepts only an 
 The `feature_hashing` function enables you to convert string index to integer index as follows:
 
     select feature_hashing(array('aaa:1.0','aaa','bbb:2.0', '3:0.3'))
-    
+
     -- ["4063537:1.0","4063537","8459207:2.0", "4331412:0.3"]
 
 The original motivation for using the `feature_hashing` function is to restrict the size of the feature space. It also converts numerical values into other ones. For more detail of Feature Hashing, see [this document](https://en.wikipedia.org/wiki/Feature_hashing).
@@ -505,15 +505,15 @@ In this example, we assume you want to search for two hyperparameters: `eta0` an
 You can train and evaluate as shown in the following.
 
     _parallel: true
-    
+
     _do:
       _export:
         suffix: _${reg}_${eta0.toString().replace('.', '_')}
-    
+
       +train:
-        td>: queries/tarin_regressor.sql	
+        td>: queries/tarin_regressor.sql
         create_table: regressor${suffix}
-    
+
       +evaluate:
         td>: queries/evaluate_params.sql
         insert_into: accuracy_test
@@ -580,7 +580,7 @@ Now, you can find the best model by using the following workflow.
         engine: presto
         measure: rmse
         store_last_results: true
-    
+
       +save_model:
         td_ddl>:
         suffix: _${td.last_results.reg}_${td.last_results.eta0.toString().replace('.', '_')}
@@ -604,42 +604,42 @@ Here is the whole workflow for a grid search. This workflow and the queries can 
       for_each>:
         eta0: [5.0, 1.0, 0.5, 0.1, 0.05, 0.01, 0.001]
         reg: ['no', 'rda', 'l1', 'l2', 'elasticnet']
-    
+
       _parallel: true
-    
+
       _do:
         +train:
           td>: queries/train_regressor.sql
           suffix: _${reg}_${eta0.toString().replace('.', '_')}
           create_table: regressor${suffix}
-    
+
         +evaluate:
           td>: queries/evaluate_params.sql
           insert_into: accuracy_test
           suffix: _${reg}_${eta0.toString().replace('.', '_')}
-    
+
     +parsist_best:
       +choose_best:
         td>: queries/best_param.sql
         engine: presto
         measure: rmse
         store_last_results: true
-    
+
       +show_accuracy:
         echo>: "Best model reg: ${td.last_results.reg}, eta0: ${td.last_results.eta0} RMSE: ${td.last_results.rmse}, MAE: ${td.last_results.mae}"
-    
+
       +save_model:
         td_ddl>:
         suffix: _${td.last_results.reg}_${td.last_results.eta0.toString().replace('.', '_')}
         rename_tables: [{from: "regressor${suffix}", to: regressor_best}]
-    
+
       +clean_up:
         for_each>:
           eta0: [5.0, 1.0, 0.5, 0.1, 0.05, 0.01, 0.001]
           reg: ['no', 'rda', 'l1', 'l2', 'elasticnet']
-    
+
         _parallel: true
-    
+
         _do:
           +drop_table:
             td_ddl>:
@@ -656,19 +656,19 @@ Here is the whole workflow for a grid search. This workflow and the queries can 
       n_iter: 20 # Iteration number for parameter search
       eta0: [5.0, 1.0, 0.5, 0.1, 0.05, 0.01, 0.001]
       reg: ['no', 'rda', 'l1', 'l2', 'elasticnet']
-    
+
     +parameter_tuning:
       for_each>:
         param: ${param_list}
-    
+
       _parallel: true
-    
+
       _do:
         +train:
           td>: queries/train_regressor.sql
           suffix: _${param.reg}_${param.eta0.replace('.', '_')}
           create_table: regressor${suffix}
-    
+
         +evaluate:
           td>: queries/evaluate_params.sql
           insert_into: accuracy_test
@@ -679,17 +679,17 @@ The following Python script generates a parameter list. Before running this code
     # rand.py
     def rand_params(n_iter, eta0, reg):
         from sklearn.model_selection import ParameterSampler
-    
+
         param_dist = {"eta0": eta0, "reg": reg}
-    
+
         param_list = list(ParameterSampler(param_dist, n_iter=n_iter))
         try:
             import digdag
             digdag.env.store({"param_list": param_list})
-    
+
         except ImportError:
             pass
-    
+
         return True
 
 If you want to generate random numbers under certain distribution, you can use `scipy.stats`. You need to install scipy via `pip install scipy` as well.
@@ -698,19 +698,19 @@ If you want to generate random numbers under certain distribution, you can use `
     def rand_params(n_iter):
         from sklearn.model_selection import ParameterSampler
         from scipy.stats import randint as sp_randint
-    
+
         param_dist = {"max_depth": [3, None],
                   "max_features": sp_randint(1, 11),
                   "min_samples_split": sp_randint(2, 11),
                   "bootstrap": [True, False],
                   "criterion": ["gini", "entropy"]}
-    
+
         param_list = list(ParameterSampler(param_dist, n_iter=n_iter))
         try:
             import digdag
             digdag.env.store({"param_list": param_list})
-    
+
         except ImportError:
             pass
-    
+
         return True
