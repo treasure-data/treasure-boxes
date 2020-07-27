@@ -8,7 +8,7 @@ This box provides a sample SQL query that can be used to assess whether or not a
 ----
 ## Implementation
 1. Download this folder locally
-2. Use [TD Toolbelt](https://support.treasuredata.com/hc/en-us/articles/360001262207-Treasure-Workflow-Quick-Start-using-TD-Toolbelt-in-a-CLI) to upload this folder as a Treasure Workflow project in your Treasure Data account
+2. Use [TD Toolbelt](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083651/Treasure+Workflow+Quick+Start+using+TD+Toolbelt+in+a+CLI) to upload this folder as a Treasure Workflow project in your Treasure Data account
 3. Define the variables listed below to specify what data to process in order to enrich the necessary customer profiles
 
 ----
