@@ -6,7 +6,7 @@ PDM itself, however, does not store device data (i.e., resource values of your d
 
 ## Overview
 
-This Box demonstrates a simple way of pulling resource values from PDM to TD via [`ConnectAPI`](https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html) called by [PDM Python Client](https://github.com/ARMmbed/mbed-cloud-sdk-python) running on the [Treasure Workflow Custom Scripting](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084269/Custom%2BScripts) capability.
+This Box demonstrates a simple way of pulling resource values from PDM to TD via [`ConnectAPI`](https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html) called by [PDM Python Client](https://github.com/ARMmbed/mbed-cloud-sdk-python) running on the [Treasure Workflow Custom Scripting](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084247/Introduction+to+Custom+Scripts) capability.
 
 We assume your device has already been registered to PDM. For instance, if you are right after finishing [PDM IoT Connection Tutorial](https://os.mbed.com/guides/connect-device-to-pelion/), device and resource information can be listed as follows:
 

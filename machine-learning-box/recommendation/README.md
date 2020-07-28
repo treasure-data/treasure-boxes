@@ -38,7 +38,7 @@ $ td wf start recommendation recommend --session now
 
 ### Workflow with PySpark
 
-You also can try [Spark.ml collaborative filtering](https://spark.apache.org/docs/2.4.0/ml-collaborative-filtering.html) recommendation for top-k item recommendation. Ensure both [Python Custom Scripting](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084269/Custom%2BScripts) and [td-spark](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082542/Using+Apache+Spark+Driver+TD-Spark+in+your+Spark+Environment) enabled.
+You also can try [Spark.ml collaborative filtering](https://spark.apache.org/docs/2.4.0/ml-collaborative-filtering.html) recommendation for top-k item recommendation. Ensure both [Python Custom Scripting](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084247/Introduction+to+Custom+Scripts) and [td-spark](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082542/Using+Apache+Spark+Driver+TD-Spark+in+your+Spark+Environment) enabled.
 
 ```sh
 $ ./data.sh
