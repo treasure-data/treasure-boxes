@@ -9,11 +9,11 @@ To kill the attempt automatically if the attempt violates sla.
 - python custom scripting is enabled on your account
 
 ## Regarding baseurl
-"baseurl" in kill_wf_attempt.dig is up to your account's site.  
-You have to change baseurl if your account's site is EU or Tokyo.
+"baseurl" in kill_wf_attempt.dig is up to your account's site.
+You have to change baseurl if your account's site is EU, Tokyo.
 
-Please refer to the doc for more details.  
-[https://support.treasuredata.com/hc/en-us/articles/360001474288](https://support.treasuredata.com/hc/en-us/articles/360001474288)
+Please refer to the doc for more details.
+https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085143/Sites+and+Endpoints
 
 # How to Run
 First, upload the project.

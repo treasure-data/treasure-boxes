@@ -1,6 +1,6 @@
 # For more advanced config options, please check these URLs.
-# @see https://support.treasuredata.com/hc/en-us/articles/360001405608-Amazon-S3-Import
-# @see https://support.treasuredata.com/hc/en-us/articles/360001405947-expand-json-filter-plugin-for-Data-Connector
+# @see https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082523/Amazon+S3+Import+Integration
+# @see https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083538/expand+json+Filter+Function
 # @see https://github.com/embulk/embulk-input-s3
 ---
 in:
@@ -17,7 +17,7 @@ filters:
 - type: expand_json
   json_column_name: record
   root: "$."
-  # if true, workflow will fail when this filter gets invalid data format. 
+  # if true, workflow will fail when this filter gets invalid data format.
   stop_on_invalid_record: false
   expanded_columns:
     - {name: "id", type: long}
@@ -27,7 +27,7 @@ filters:
     - {name: "email.secondary", type: string}
 # time column is set to workflow session time
 - type: add_time
-  to_column: 
+  to_column:
     name: time
     type: timestamp
   from_value:

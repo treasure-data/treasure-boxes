@@ -9,7 +9,7 @@ This workflow project including CustomScript (Python) enables you to import csv 
 - column_setting_file: set CSV setting file name.
 
 ## Set apikey as secret ()
-https://support.treasuredata.com/hc/en-us/articles/360001266788-Workflows-Secrets-Management
+https://tddocs.atlassian.net/wiki/spaces/PD/pages/223379597/Setting+Workflow+Secrets+from+the+Command+Line
 
 ## Edit csv_setting.json
 You can change behavior followings.
@@ -17,10 +17,10 @@ You can change behavior followings.
 - specify ignoring column to import. If you want to ignore, you should change to true from false.
 
 ## update workflow project to TreasureData
-Submit workflow to TreasureData.  
-https://support.treasuredata.com/hc/en-us/articles/360001262207-Treasure-Workflow-Quick-Start-using-TD-Toolbelt-in-a-CLI#Submit%20the%20workflow%20to%20Treasure%20Data
+Submit workflow to TreasureData.
+https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083651/Treasure+Workflow+Quick+Start+using+TD+Toolbelt+in+a+CLI
 
 ## Appendix
-You can specify http settings in detail depend on pandas.read_csv function (encoding, compression, and so on).  
-like `df = pd.read_csv(url, compression = "zip", encoding = "SHIFT_JIS")`.  
+You can specify http settings in detail depend on pandas.read_csv function (encoding, compression, and so on).
+like `df = pd.read_csv(url, compression = "zip", encoding = "SHIFT_JIS")`.
 https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html

@@ -1,15 +1,15 @@
 
-# Fuzzy Matching to identify similar profiles in treasure data  
-  
-This project provides the workflows necessary to use Fuzzy Matching algorithms like Levenshtein to do probabilistic matching of the profiles. Once higher probability of similar profiles is gathered, they can further be compared with behavioral data using deterministic matching. Report is generated to give an overview of similar profiles and relevant profiles then can be chosen to stay into treasure data platform. For more description , please refer to the Treasure Box overview page for [Fuzzy Matching](https://boxes.treasuredata.com/hc/en-us/articles/360032618714-Fuzzy-Matching-on-PII-data)  
-  
-## Getting Started  
+# Fuzzy Matching to identify similar profiles in treasure data
+
+This project provides the workflows necessary to use Fuzzy Matching algorithms like Levenshtein to do probabilistic matching of the profiles. Once higher probability of similar profiles is gathered, they can further be compared with behavioral data using deterministic matching. Report is generated to give an overview of similar profiles and relevant profiles then can be chosen to stay into treasure data platform. For more description , please refer to the Treasure Box overview page for [Fuzzy Matching](https://boxes.treasuredata.com/hc/en-us/articles/360032618714-Fuzzy-Matching-on-PII-data)
+
+## Getting Started
 
 1. Download this folder locally.
-2. Use [TD Toolbelt](https://support.treasuredata.com/hc/en-us/articles/360001262207) to upload this folder as a Treasure Workflow project into your Treasure data account  
+2. Use [TD Toolbelt](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083651/Treasure+Workflow+Quick+Start+using+TD+Toolbelt+in+a+CLI) to upload this folder as a Treasure Workflow project into your Treasure data account
 3. Provide the database name ,table name(ex. user_master with first and last name information) and column name with information of first and last name in the demo_fuzzy.dig file as variables
 4. Run the demo_fuzzy.dig file
-  
+
 ### How it works
 
 Here is a brief description what each task in the workflow do
@@ -23,8 +23,8 @@ Here is a brief description what each task in the workflow do
 7. Create a Match store which holds the information of group_key and index of corresponding similar profiles as a metadata for easy retrieval of profiles
 8. Similar profiles gathered based on the cut off value can be visualized using any reporting tool
 
-### Outputs  
-  
+### Outputs
+
 Here are snapshots how this workflow results in TD.
 
 ### Before Data Cleaning

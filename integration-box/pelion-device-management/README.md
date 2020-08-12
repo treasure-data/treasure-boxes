@@ -1,12 +1,12 @@
 # Pulling Device Resource Values from Pelion Device Management to Treasure Data
 
-**[Pelion Device Management](https://www.pelion.com/iot-device-management/)** (PDM) is an IoT device management platform that accelerates your IoT project by providing a way to connect, secure, monitor and update massively deployed devices at scale and ease. 
+**[Pelion Device Management](https://www.pelion.com/iot-device-management/)** (PDM) is an IoT device management platform that accelerates your IoT project by providing a way to connect, secure, monitor and update massively deployed devices at scale and ease.
 
 PDM itself, however, does not store device data (i.e., resource values of your devices), and hence **[Pelion Data Management](https://www.arm.com/products/iot/pelion-iot-platform/data-management)** (Treasure Data; TD) becomes a place where your device data is securely stored in the cloud for analyzing historical data, integrating with the other Physical and Digital data sources, gaining deeper insights and making business outcomes.
 
 ## Overview
 
-This Box demonstrates a simple way of pulling resource values from PDM to TD via [`ConnectAPI`](https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html) called by [PDM Python Client](https://github.com/ARMmbed/mbed-cloud-sdk-python) running on the [Treasure Workflow Custom Scripting](https://support.treasuredata.com/hc/en-us/articles/360026713713-Introduction-to-Custom-Scripts) capability.
+This Box demonstrates a simple way of pulling resource values from PDM to TD via [`ConnectAPI`](https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html) called by [PDM Python Client](https://github.com/ARMmbed/mbed-cloud-sdk-python) running on the [Treasure Workflow Custom Scripting](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084247/Introduction+to+Custom+Scripts) capability.
 
 We assume your device has already been registered to PDM. For instance, if you are right after finishing [PDM IoT Connection Tutorial](https://os.mbed.com/guides/connect-device-to-pelion/), device and resource information can be listed as follows:
 
@@ -28,12 +28,12 @@ Next, push the workflow to TD:
 td wf push pelion_device
 ```
 
-Here, get your API key and endpoint from [PDM](https://preview.pelion.com/docs/device-management/current/integrate-web-app/api-keys.html) and [TD](https://support.treasuredata.com/hc/en-us/articles/360000763288-Get-API-Keys), and set them to the workflow secrets:
+Here, get your API key and endpoint from [PDM](https://preview.pelion.com/docs/device-management/current/integrate-web-app/api-keys.html) and [TD](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081428/Getting+Your+API+Keys), and set them to the workflow secrets:
 
 ```sh
 td wf secrets \
 	--project pelion_device \
-	--set td.apikey td.apiserver pdm.apikey pdm.host 
+	--set td.apikey td.apiserver pdm.apikey pdm.host
 ```
 
 |Variable|Description|Example|

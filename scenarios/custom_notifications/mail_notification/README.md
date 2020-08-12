@@ -11,9 +11,9 @@ By default the notification on a workflow failure will only go to the owner of t
 
 In this scenario, some workflow operators are used. Please refer to the documentation for each operator.
 
- - `td>: operator`: [td>: Running Treasure Data Query](http://docs.digdag.io/operators/td.html)
- - `mail>: operator`: [mail>: Sending email](http://docs.digdag.io/operators/mail.html)
- - `_error: task`: [_error:](http://docs.digdag.io/concepts.html?highlight=_error#dynamic-task-generation-and-check-error-tasks)
+ - `td>: operator`: [td>: Running Treasure Data Query](https://docs.digdag.io/operators/td.html)
+ - `mail>: operator`: [mail>: Sending email](https://docs.digdag.io/operators/mail.html)
+ - `_error: task`: [_error:](https://docs.digdag.io/concepts.html?highlight=_error#dynamic-task-generation-and-check-error-tasks)
 
 # How to use
 

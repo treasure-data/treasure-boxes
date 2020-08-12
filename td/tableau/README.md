@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Tableau)
 
-This example workflow ingests data using [Tableau Server with Treasure Data](https://docs.treasuredata.com/articles/tableau-server) or [Tableau Online with Treasure Data](https://docs.treasuredata.com/articles/tableau-online) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Tableau Server with Treasure Data](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082963/Tableau+Server+Export+Integration) or [Tableau Online with Treasure Data](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081683/Tableau+Online+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -21,7 +21,7 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push tableau
 
-If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project tableau --set key

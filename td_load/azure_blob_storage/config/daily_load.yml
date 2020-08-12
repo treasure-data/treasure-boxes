@@ -1,5 +1,5 @@
 # For more advanced config options, please check these URLs.
-# @see https://support.treasuredata.com/hc/en-us/articles/360001405648
+# @see https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081764/Microsoft+Azure+Blob+Storage+Import+Integration
 # @see https://github.com/embulk/embulk-input-azure_blob_storage
 ---
 in:

@@ -12,7 +12,7 @@ This way, you can gain insights not only in real-time by Swim but also in a batc
 
 ## Usage
 
-[`patch-tutorial.diff`](./patch-tutorial.diff) adds code fragments to the definition of *Web Agent,* which indicates an interconnected, distributed object of Swim applications, in [swimos/tutorial](https://github.com/swimos/tutorial): 
+[`patch-tutorial.diff`](./patch-tutorial.diff) adds code fragments to the definition of *Web Agent,* which indicates an interconnected, distributed object of Swim applications, in [swimos/tutorial](https://github.com/swimos/tutorial):
 
 ```sh
 cd tutorial/server
@@ -20,7 +20,7 @@ git apply ../../patch-tutorial.diff
 # set values to TD_WRITE_KEY, TD_DATABASE, TD_TABLE variables
 ```
 
-By running the Swim application, a mock data source publishes random records (e.g., `{'foo': 62, 'bar': 126, 'baz': 174}`) to a Web Agent, and the agent passes the records to [Treasure Data Postback API](https://support.treasuredata.com/hc/en-us/articles/360000675487-Postback-API) along with setting value to the other [Lanes](https://developer.swim.ai/concepts/lanes/):
+By running the Swim application, a mock data source publishes random records (e.g., `{'foo': 62, 'bar': 126, 'baz': 174}`) to a Web Agent, and the agent passes the records to [Treasure Data Postback API](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083818/Postback+API) along with setting value to the other [Lanes](https://developer.swim.ai/concepts/lanes/):
 
 ```sh
 ./gradlew run

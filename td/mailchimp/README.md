@@ -2,7 +2,7 @@
 
 [Our blog post](https://blog.treasuredata.com/blog/2016/08/31/increase-customer-engagement-with-mailchimp/) describes an importance of customer engagement with Mailchimp and Treasure Data
 
-This example workflow gives you an overview and directions on how to build personalized email lists on Mailchimp using [Treasure Data's Result Output to Mailchimp](https://docs.treasuredata.com/articles/result-into-mailchimp) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow gives you an overview and directions on how to build personalized email lists on Mailchimp using [Treasure Data's Result Output to Mailchimp](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081611/Mailchimp+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 In order to register your credential in TreasureData, please create connection setting on [Connector UI](https://console.treasuredata.com/app/connections).
 
@@ -19,7 +19,7 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push mailchimp_export
 
-If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project mailchimp_export --set key
@@ -56,7 +56,7 @@ Available parameters for `result_settings` are here.
 - retry_initial_wait_msec: (int, default 1000)
 - max_retry_wait_msec: (int, default 32000)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-mailchimp)
+For more details, please see [Treasure Data documentation](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081611/Mailchimp+Export+Integration)
 
 # Next Step
 

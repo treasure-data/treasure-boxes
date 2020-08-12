@@ -15,4 +15,4 @@ $ td wf start td-spark pyspark --session now
 
 ## Further Readings
 
-- [td-spark Official doc](https://support.treasuredata.com/hc/en-us/articles/360001487167-Apache-Spark-Driver-td-spark-FAQs)
+- [td-spark Official doc](https://treasure-data.github.io/td-spark/)

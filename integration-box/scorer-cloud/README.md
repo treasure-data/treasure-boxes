@@ -72,7 +72,7 @@ td wf secrets --project scorer \
               --set s3.secret_access_key=${S3_SECRET_ACCESS_KEY}
 ```
 
-When `schedule>` section of the `.dig` file is configured as `daily>: 00:00:00`, the workflow automatically pulls the data created by SCORER Cloud from S3 every day at midnight. 
+When `schedule>` section of the `.dig` file is configured as `daily>: 00:00:00`, the workflow automatically pulls the data created by SCORER Cloud from S3 every day at midnight.
 
 Verify if the workflow runs correctly:
 
@@ -82,7 +82,7 @@ td wf start scorer scorer --session now
 
 ## Sample Application: Counting Number of Unique Person
 
-Once the results are copied to Treasure Data, we can build various applications on top of that. 
+Once the results are copied to Treasure Data, we can build various applications on top of that.
 
 To give an example, for individual pair of estimated demographics, following query counts number of unique person in a video with 1-day time interval:
 
@@ -92,27 +92,27 @@ with people as (
     date_parse(datetime, '%Y-%m-%d %T.%f') as datetime,
     uid,
     json_parse(attributes) as attributes
-  from 
+  from
     sense_video
   where
     type = 1 -- pedestrian
     and confidence > 0.9
 )
-select 
-  json_extract_scalar(attributes, '$.Age') as age, 
+select
+  json_extract_scalar(attributes, '$.Age') as age,
   json_extract_scalar(attributes, '$.Gender') as gender,
   count(distinct uid) as num_unique_person_today
-from 
+from
   people
-where 
+where
   TD_INTERVAL(to_unixtime(datetime), '1d', 'JST')
   and cast(json_extract(attributes, '$.AgeConf') as double) > 0.9
   and cast(json_extract(attributes, '$.GenderConf') as double) > 0.9
-group by 
+group by
   1, 2
 ```
 
-See [documentation](https://support.treasuredata.com/hc/en-us/articles/360001450828-Supported-Presto-and-TD-Functions#TD_INTERVAL) to learn more about `TD_INTERVAL`.
+See [documentation](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083429/Supported+Presto+and+TD+Functions#TD_INTERVAL) to learn more about `TD_INTERVAL`.
 
 Output can be:
 

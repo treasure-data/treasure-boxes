@@ -1,11 +1,11 @@
 # Workflow: td example (Result Output to Marketo)
 
-This example workflow exports TD job results into Marketo [Treasure Data's Writing Job Results into Marketo](https://support.treasuredata.com/hc/en-us/articles/360001536087-Writing-Job-Results-into-Marketo) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into Marketo [Treasure Data's Writing Job Results into Marketo](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081744/Marketo+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
 The Marketo connection name is required for use in the workflow file.
-Create a new Marketo Connection using [Create Connection](https://docs.treasuredata.com/articles/result-into-marketo#step-1-create-a-new-connection) or use your existing connection. 
+Create a new Marketo Connection using [Create Connection](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081744/Marketo+Export+Integration#Create-a-New-Connection) or use your existing connection.
 
 
 # How to Run
@@ -41,7 +41,7 @@ Available parameters for `result_settings` are here.
 - upload_chunk_size_in_bytes: Max upload chunk size in bytes (integer, optional)
 - batch_max_wait_msec: Batch max wait in milliseconds (integer, optional)
 
-For more details on Result output to Marketo, please see [Treasure Data documentation](https://support.treasuredata.com/hc/en-us/articles/360001536087-Writing-Job-Results-into-Marketo)
+For more details on Result output to Marketo, please see [Treasure Data documentation](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081744/Marketo+Export+Integration)
 
 # Next Step
 

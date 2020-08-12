@@ -1,6 +1,6 @@
 # Treasure Data MQTT Broker
 
-[Treasure Data MQTT broker](https://support.treasuredata.com/hc/en-us/articles/360034799633-Data-Ingestion-Using-the-Treasure-Data-MQTT-Broker-Experimental) allows you to ingest data through the [MQTT protocol](http://mqtt.org/). 
+[Treasure Data MQTT broker](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084422/MQTT+Broker+with+Treasure+Data) allows you to ingest data through the [MQTT protocol](http://mqtt.org/).
 
 Notice that our broker only accepts `publish` operation against a topic `mqtt-ingest`, and you cannot subscribe the topic. Plus, the MQTT broker currently requires client to be connected over SSL with a pair of given client certificate and RSA private key.
 

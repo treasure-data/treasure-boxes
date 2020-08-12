@@ -1,10 +1,10 @@
 # Workflow: td example (Result Output to Twitter Tailored Audience)
 
-This example workflow outputs data to a twitter tailorerd audience using [Writing Job Results into your Twitter Tailored Audience](https://support.treasuredata.com/hc/en-us/articles/360001286587-Writing-Job-Results-To-Your-Twitter-Tailored-Audience) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow outputs data to a twitter tailorerd audience using [Writing Job Results into your Twitter Tailored Audience](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081589/Twitter+Tailored+Audience+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
-In order to register your credential in Treasure Data, please create connection by following the instructions on this page [Writing Job Results into your Twitter Tailored Audience](https://support.treasuredata.com/hc/en-us/articles/360001286587-Writing-Job-Results-To-Your-Twitter-Tailored-Audience) 
+In order to register your credential in Treasure Data, please create connection by following the instructions on this page [Writing Job Results into your Twitter Tailored Audience](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081589/Twitter+Tailored+Audience+Export+Integration)
 
 The connection name is used in the dig file.
 
@@ -15,7 +15,7 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push twitter_tailored_audience
 
-If you want to mask any settings, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask any settings, please set it by `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project twitter_tailored_audience --set key
@@ -48,8 +48,8 @@ Available parameters for `result_settings` are here.
 - max_retry_wait_msec: Maximum time in milliseconds between retrying attempts. (int, optional, default: 320000)
 
 
-For more details, please see [Treasure Data documentation (GUI)](https://support.treasuredata.com/hc/en-us/articles/360001262227-Treasure-Workflow-Quick-Start-Tutorial-for-the-GUI)
-or [Treasure Data documentation(CLI)](https://support.treasuredata.com/hc/en-us/articles/360001262207-Treasure-Workflow-Quick-Start-Tutorial-for-the-CLI)
+For more details, please see [Treasure Data documentation (GUI)](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084846/Using+Workflow+from+TD+Console)
+or [Treasure Data documentation(CLI)](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083651/Treasure+Workflow+Quick+Start+using+TD+Toolbelt+in+a+CLI)
 
 # Next Step
 If you have any questions, please contact support@treasuredata.com.

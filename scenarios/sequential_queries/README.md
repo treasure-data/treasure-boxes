@@ -10,13 +10,13 @@ The purpose of this scenario is to get monthly ranking of access users per day. 
 *Steps*
 1. Clear the aggregated table.
 2. Run the queries to insert top 10 users per day to aggregated table.
-3. Run the query to analyze top 10 users of the month. 
+3. Run the query to analyze top 10 users of the month.
 
 In this scenario, some workflow operators are used. Please refer to the documentation for each operator.
 
- - `td>: operator`: [td>: Running Treasure Data Query](http://docs.digdag.io/operators/td.html)
- - `td_ddl: operator`: [td_ddl: Treasure Data operations](http://docs.digdag.io/operators/td_ddl.html)
- - `loop>: operator`: [loop>: Repeat tasks](http://docs.digdag.io/operators/loop.html)
+ - `td>: operator`: [td>: Running Treasure Data Query](https://docs.digdag.io/operators/td.html)
+ - `td_ddl: operator`: [td_ddl: Treasure Data operations](https://docs.digdag.io/operators/td_ddl.html)
+ - `loop>: operator`: [loop>: Repeat tasks](https://docs.digdag.io/operators/loop.html)
 
 # How to Run for Server/Client Mode
 

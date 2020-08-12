@@ -1,5 +1,5 @@
 # Workflow: export_result to TD
-This example shows how use result_export API in Treasure Data workflow. 
+This example shows how use result_export API in Treasure Data workflow.
 You can export result to Another Treasure Data Account without running the same query.
 
 ## Scenario
@@ -21,11 +21,11 @@ $ td wf secret --project export_result_td --set td.apikey
 $ td wf secret --project export_result_td --set http.authorization
 ```
 
-Note: http.authorization is used as header in your API request. 
+Note: http.authorization is used as header in your API request.
 You must http.authorization like this : ```TD1 <Your APIKey>```
 
 For detail, please refer to the below page.
-https://support.treasuredata.com/hc/en-us/articles/
+https://tddocs.atlassian.net/wiki/spaces/PD/overview
 
 
 Third, please set your other services' credentials by ```td wf secrets``` command.
@@ -38,7 +38,7 @@ $ td wf secret --project export_result_td --set tdTable // Tabale
 ```
 
 For detail, please refer to below page.
-https://support.treasuredata.com/hc/en-us/articles/360001266788-Workflows-Secrets-Management#L5
+https://tddocs.atlassian.net/wiki/spaces/PD/pages/223379597/Setting+Workflow+Secrets+from+the+Command+Line
 
 Finally, you can trigger the session manually.
 
