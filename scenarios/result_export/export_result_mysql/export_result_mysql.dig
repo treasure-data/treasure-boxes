@@ -1,18 +1,24 @@
 timezone: UTC
 
 _export:
-  endpoint: api.treasuredata.com
-  database: sample_datasets
+  mysql: 
+    endpoint: api.treasuredata.com
+    database: sample_datasets
+    connection: MY_REMOTE_CONNECTION
+    dbname: MY_DB_NAME
+    table: MY_TABLE_NAME
+    mode: append
 
 +select_data:
   td>: queries/sample.sql
 
 +export_to_mysql:
-  http>: https://${endpoint}/v3/job/result_export/${td.last_job.id}
-  method: POST
-  content_type: application/json
-  content: 
-    result: 'mysql://${secret:mysqlUser}:${secret:mysqlPass}@${secret:mysqlHost}:${secret:mysqlPort}/${secret:mysqlDatabase}/${secret:mysqlTable}?mode=replace'
-
+  td_result_export>:
+  job_id: ${td.last_job.id}
+  result_connection: ${mysql.connection}
+  result_settings:
+    database: ${mysql.dbname}
+    table: ${mysql.table}
+    mode: ${mysql.mode}
 +teardown:
   echo>: finish ${session_time}
