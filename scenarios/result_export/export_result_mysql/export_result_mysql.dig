@@ -1,9 +1,9 @@
 timezone: UTC
 
 _export:
-  mysql: 
-    endpoint: api.treasuredata.com
+  td:
     database: sample_datasets
+  mysql: 
     connection: MY_REMOTE_CONNECTION
     dbname: MY_DB_NAME
     table: MY_TABLE_NAME
