@@ -4,7 +4,7 @@ _export:
   td:
     database: sample_datasets
   mongo:
-    collection: MY_MONGO_CONNECTION
+    connection: MY_MONGO_CONNECTION
     mongodb: MY_TARGET_DATABASE
     mongotable: MY_TARGET_TABLE
     mode: replace
@@ -15,7 +15,7 @@ _export:
 +export_to_mongodb:
   td_result_export>:
   job_id: ${td.last_job.id}
-  result_connection: ${mongo.collection}
+  result_connection: ${mongo.connection}
   result_settings:
     database: ${mongo.mongodb}
     table: ${mongo.mongotable}

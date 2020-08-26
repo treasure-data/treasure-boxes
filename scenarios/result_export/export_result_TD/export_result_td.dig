@@ -3,10 +3,23 @@ timezone: UTC
 _export:
   td:
     database: sample_datasets
+    target_db: MY_TARGET_DATABASE_NAME
+    target_table: MY_TARGET_TABLE
+    connection: MY_TARGET_TD_CONNECTION
 
 +select_data:
   td>: queries/sample.sql
-  create_table: MY_DB_NAME.MY_TABLE_NAME
 
++export_to_td:
+  td_result_export>:
+  job_id: ${td.last_job.id}
+  result_connection: ${td.connection}
+  result_settings:
+    database: ${td.target_db}
+    table: ${td.target_table}
+    time_column: created_at
+    auto_create_table: true 
+    mode: append
+ 
 +teardown:
   echo>: finish ${session_time}
