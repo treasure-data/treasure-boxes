@@ -1,33 +1,26 @@
 timezone: UTC
 
 _export:
-    endpoint: api.treasuredata.com
+  td:
     database: sample_datasets
+  tableau:
+    datasource: MY_DATA_SOURCE
+    connection: MY_TABLEAU_CONNECTION
+    site: MY_SITE
+    project: MY_PROJECT
+    mode: append
 
 +select_data:
   td>: queries/sample.sql
 
 +export_to_tableau:
-  http>: https://${endpoint}/v3/job/result_export/${td.last_job.id}
-  method: POST
-  headers:
-    - authorization: "TD1 ${secret:td.apikey}"
-  content_type: application/json
-  content_format: json
-  content:
-    result: |
-      {
-        "type":"tableau",
-        "host":"${secret:tablueauHost}",
-        "username":"${secret:tablueauUser}",
-        "password":"${secret:tablueauPass}",
-        "ssl":"true",
-        "server_version":"online",
-        "datasource":"${secret:tablueauDatasource}",
-        "site":"${secret:tablueauSite}",
-        "project":"${secret:tablueauProject}",
-        "mode":"replace"
-      }
-
+  td_result_export>:
+  job_id: ${td.last_job.id}
+  result_connection: ${tableau.connection}
+  result_settings:
+    datasource: ${tableau.datasource}
+    site: ${tableau.site}
+    project: ${tableau.project}
+    mode: ${tableau.mode}
 +teardown:
   echo>: finish ${session_time}

@@ -1,18 +1,25 @@
 timezone: UTC
 
 _export:
-    endpoint: api.treasuredata.com
+  td:
     database: sample_datasets
+    target_db: MY_TARGET_DATABASE_NAME
+    target_table: MY_TARGET_TABLE
+    connection: MY_TARGET_TD_CONNECTION
 
 +select_data:
   td>: queries/sample.sql
 
 +export_to_td:
-  http>: https://${endpoint}/v3/job/result_export/${td.last_job.id}
-  method: POST
-  content_type: application/json
-  content: 
-    result: 'td://${secret:tdApikey}@${secret:tdEndpoint}/${secret:tdDatabase}/${secret:tdTable}'
-
+  td_result_export>:
+  job_id: ${td.last_job.id}
+  result_connection: ${td.connection}
+  result_settings:
+    database: ${td.target_db}
+    table: ${td.target_table}
+    time_column: created_at
+    auto_create_table: true 
+    mode: append
+ 
 +teardown:
   echo>: finish ${session_time}
