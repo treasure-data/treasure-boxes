@@ -14,8 +14,8 @@ _export:
   uid_key             : ******
   brand_guid          : ******
   tag_fields          :
-      p: ******
-      lid: ******
+      p: "******"
+      lid: "******"
   _env:
     x_api_key: ${secret:x_api_key}
 

@@ -58,15 +58,15 @@ information are provided by TreasureData support team.
     For Direct Targeting
     ```
       tag_fields:
-          p: ******
-          lid: ******
+          p: "******"
+          lid: "******"
     ```
 
     CustomSegment Targeting
     ```
       tag_fields          :
-        _a: ******
-        _d: ******
+        _a: "******"
+        _d: "******"
         vars:
           type  : 1
           price : 2
