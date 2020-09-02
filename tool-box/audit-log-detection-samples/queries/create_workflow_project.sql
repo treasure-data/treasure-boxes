@@ -5,7 +5,7 @@ select
   ,user_id
   ,user_email
 from
-  td_audit_log.access
+  access
 where
   td_interval(time, '-1d', 'JST')
   and

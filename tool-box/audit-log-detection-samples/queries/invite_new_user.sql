@@ -1,7 +1,7 @@
 select
   td_time_format(time, 'yyyy-MM-dd HH:mm:ss', 'JST') as time 
-  ,user_email -- Inviteしたユーザ
-  ,resource_name -- Inviteされたユーザ
+  ,user_email -- Inviting user
+  ,resource_name -- Invited user
 from
   access
 where

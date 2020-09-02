@@ -68,7 +68,7 @@ _export:
   +bulk_load_with_source:
     td>: queries/bulk_load_with_source.sql
 
-  +bukl_load_with_yml:
+  +bulk_load_with_yml:
     td>: queries/bulk_load_with_yml.sql
 
 +data_export:
