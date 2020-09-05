@@ -58,20 +58,20 @@ information are provided by TreasureData support team.
     For Direct Targeting
     ```
       tag_fields:
-          p: ******
-          lid: ******
+          p: "******"
+          lid: "******"
     ```
 
     CustomSegment Targeting
     ```
       tag_fields          :
-        _a: ******
-        _d: ******
+        _a: "******"
+        _d: "******"
         vars:
           type  : 1
           price : 2
     ```
-    `_a` is a clientId for Yahoo! DMP, `_b` is a DatasourceNo for Yahoo! DMP. Both values are provided by Yahoo. (Please contact Yahoo representative)
+    `_a` is a clientId for Yahoo! DMP, `_b` is a DatasourceNo for Yahoo! DMP. Both values are provided by Yahoo (Please contact Yahoo representative). Both _a and _b values are required to be enclosed by quotation because those values could be like 0001 which are expected as string.
     As for `vars` value, you have to set combinations of a column name and column number.
     Assuming that your sql result is following, you should set type: 1 and price: 2.
     ```
