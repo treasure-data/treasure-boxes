@@ -1,6 +1,6 @@
 _export:
   td:
-    database: ******
+    database: sync_user_db
 
 +get_presigned_url:
   docker:
