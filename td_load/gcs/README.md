@@ -4,21 +4,12 @@ This example workflow ingests data in daily basis, using [Treasure Data's Data C
 
 The workflow also uses [Secrets](https://tddocs.atlassian.net/wiki/spaces/PD/pages/223379597/Setting+Workflow+Secrets+from+the+Command+Line) feature, so that you don't have to include your database credentials to your workflow files.
 
-# Prerequisites (v0.9.21 or earlier)
-
-NOTE: Latest version fixes this issue.
-
-In order to register your GCP's json_key in Secrets, please convert "\n" to "\\n" in your json file.
-
-    # Convert json_key for Secrets
-    $ awk '{gsub("\\\\n","\\\\n"); print $0;}' credential.json > converted.json
-
 # How to Run for Local Mode
 
 First, please set database credentials by `td wf secrets` command.
 
     # Set Secrets for local
-    $ td wf secrets --local td_load_example --set gcp.json_key=@converted.json
+    $ td wf secrets --local td_load_example --set gcp.json_key=@credentails.json
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 
@@ -38,7 +29,7 @@ First, please upload the workflow.
 Next, please set database credentials by `td wf secrets` command.
 
     # Set Secrets for Server
-    $ td wf secrets --project td_load_gcs --set gcp.json_key=@converted.json
+    $ td wf secrets --project td_load_gcs --set gcp.json_key=@credentails.json
 
 Now you can reference these credentials by `${secret:}` syntax within yml file for `td_load` operator.
 
