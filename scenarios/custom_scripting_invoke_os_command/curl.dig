@@ -1,0 +1,9 @@
+timezone: UTC
+
++setup:
+  echo>: start ${session_time}
+
++task1:
+  py>: py_scripts.sample.run
+  docker:
+    image: "digdag/digdag-python:3.7"
