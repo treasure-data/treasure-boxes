@@ -12,8 +12,6 @@ with source as (
     td_interval(time, '-1d', 'JST')
     and
     event_name = 'permission_policy_modify'
-    and
-    resource_name = 'test_ysmr_user'
 )
 
 ,old as (
