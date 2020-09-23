@@ -3,6 +3,10 @@ timezone: UTC
 _export:
   td:
     database: sample_datasets
+  ftp:
+    connection: my_ftp_saved_connection_name #change this with your ftp connection name
+    filepath: my_file_path #change this with file path
+    extension: csv # or tsv
 
 +select_data:
   td>: queries/sample.sql
@@ -10,10 +14,10 @@ _export:
 +export_to_ftp:
   td_result_export>:
   job_id: ${td.last_job_id}
-  result_connection: ${td.connection}
+  result_connection: ${ftp.connection}
   result_settings:
-    path_prefix: ${td.filepath}
-    file_ext: ${td.extension}
+    path_prefix: ${ftp.filepath}
+    file_ext: ${ftp.extension}
     header_line: true
 
 +teardown:
