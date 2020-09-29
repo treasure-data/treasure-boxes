@@ -1,0 +1,44 @@
+timezone: UTC
+
+_export:
+  !include : config/params.yml
+  td:
+    engine: presto
+    database: ${in_db}
+
+## Create original union of pageviews and formfills and add conversion event column
++create_union_table:
+  td>: queries/new_union.sql
+  create_table: ${union_table}
+  engine: presto
+
+# ## Get helpful stats broken down by channel and source. This does not need to run everytime wokflow runs, and can be activated only when client needs granular insights on channel_source breakdown
+# # +create_channel_source_stats:
+# #   td>: queries/channel_source_stats.sql
+# #   create_table: ${channel_stats}
+# #   engine: presto
+
+## Add ab_rnd attribute for Random shuffling of TensorFlow records
++create_ab_rnd_table:
+  td>: queries/union_ab_rand.sql
+  create_table: ${rand_shuffle}
+  engine: hive
+  engine_version: stable
+
+#Drop Transition tables not needed after model ends running
++cleanup:
+  td_ddl>:
+  drop_tables: ['${union_table}']
+
+##----------------------------
+##----------------------------
+##PLEASE COMMENT CODE BELOW OUT IF DATA VOLUME IS LARGE AND YOU PLAN TO RUN MODEL LOCALLY!
+##------------------------------
+##------------------------------
+
++execute_python_code:
+  docker:
+    image: "digdag/digdag-python:3.7"
+  py>: td_mta.docker_main.run
+  _env:
+    TD_API_KEY: ${secret:td_api_key}
