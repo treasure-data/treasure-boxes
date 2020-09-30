@@ -67,7 +67,7 @@ The output of workflow consists of the following three tables:
 
 | topic | words |
 |:-:|:--|
-| 0 | [ "museum", "art", "short", "museums", "tomb", "black", "nazi", "divorce", ... ] |
+| 0 | [ "museum", "art", "short", "museums", "tomb", "black", "n___", "divorce", ... ] |
 | 1 | [ "band", "recording", "poet", "album", "charles", "nea", "fulton", "rjr", ... ] |
 | 2 | [ "family", "gallery", "friends", "the dog", "nixon", "art", "door", "monet", ... ] |
 | 3 | [ "people", "government", "president", "officials", "police", "united", ... ] |
