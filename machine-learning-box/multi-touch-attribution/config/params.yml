@@ -1,7 +1,7 @@
 in_db: mta_sample
 in_table: touchpoints
 
-# Variables below point to the names of key columns used by the SQL queries
+# key column names
 unique_id: user_id
 time_col: time
 source_col: source

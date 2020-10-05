@@ -6,39 +6,120 @@ This Box provides a data-driven, machine learning-based templatized solution for
 
 Unlike traditional rule-based MTA solutions, our template takes an advanced machine learning-based approach to accurately model customer's path to conversion and understand better about how/why marketing touchpoints bring your customer to the goal. Eventually, the insights enable you to effectively and efficiently optimize the marketing campaigns with optimal budget allocation.
 
-The implementation is based on a [state-of-the-art academic paper](https://arxiv.org/abs/1902.00215), and one of the key concepts used in the technique is called the [Shapley value](https://en.wikipedia.org/wiki/Shapley_value) calculation. Overall performance of this template has been proven on the Treasure Data platform with some of our real datasets.
+The implementation is based on a [state-of-the-art academic paper](https://arxiv.org/abs/1902.00215) employing a Deep Learning technique, and one of the key concepts used in the technique is called the [Shapley value](https://en.wikipedia.org/wiki/Shapley_value) calculation. Overall performance of this template has been proven on the Treasure Data platform with some of our real datasets.
+
+The template eventually brings deeper insights about conversion histories and enables you to build a follwoing dashboard, for example:
+
+![dashboard](./docs/images/dashboard.png)
 
 ## Input
 
-Assume we have two tables `pageviews_table` and `formfills_table` in a Treasure Data database, which contain raw data representing different touchpoints collected by [td-js-sdk](https://github.com/treasure-data/td-js-sdk). These tables respectively contain non-conversion and conversion events.
+Assume we have a following [`touchpoints`](https://gist.github.com/takuti/c890cdcbae7946f21a0afc3a4d88ec9f) table that collects user behaviors and conversion events with their sources:
 
-`pageviews_table`:
+| `time` | `user_id` | `source` | `conversion` |
+|:---:|:---:|:---:|:---:|
+| 1596012307 | yl38g61s2x | sfmc | 0 |
+| 1596012340 | d4dbvpwcyj | instagram | 0 |
+| 1596012427 | egeaf1po46 | facebook | 0 |
+| 1596012553 | gls9vyk2de | google | 1 |
+| 1596012645 | ps6cc25f24 | instagram | 0 |
+| ... | ... | ...| ... |
 
-| `time` | `canonical_id` | `td_url` | `td_referrer` | ... | `channel_id_rec` | `channels` | `channel_source` |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 
-`formfills_table`:
+If you have a `pageviews` table collected by [td-js-sdk](https://github.com/treasure-data/td-js-sdk), preprocess the records in advance and parse `td_url` & `td_referrer` for extracting source of every single touchpoint. A query snippet below is an example of how to extract variety of sources from the `pageviews` data:
 
-| `time` | `canonical_id` | `td_url` | `td_referrer` | ... | `channel_id_rec` | `form_id` |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-
-
+```sql
+select
+  ${time_col},
+  ${unique_id},
+  (
+    CASE
+      WHEN url_extract_parameter(td_url, 'utm_source') IS NULL THEN (
+        CASE
+          WHEN regexp_like(td_referrer, 'google.co') THEN 'google'
+          WHEN regexp_like(td_referrer, 'instagram') THEN 'instagram'
+          WHEN regexp_like(td_referrer, 'facebook') THEN 'facebook'
+          WHEN regexp_like(td_referrer, 'youtube') THEN 'youtube'
+          WHEN regexp_like(td_referrer, 'twitter') THEN 'twitter'
+          WHEN regexp_like(td_referrer, 'linkedin') THEN 'linkedin'
+          -- ... (as many possible sources as you want)
+          ELSE 'direct & others'
+        END
+      )
+      ELSE url_extract_parameter(td_url, 'utm_source')
+    END
+  ) as ${source_col} ,
+  -- ... (assign 0 or 1 depending on your definition of "conversion")
+    as ${conversion_column}
+from
+  pageviews
+where
+  TD_INTERVAL(${time_col}, '-30d') -- last 30 days, for example
+```
 
 ## Workflow
 
 ```sh
-$ td wf push mta # push workflow to TD
-$ td wf start mta mta_shapley --session now -p td_api_key=${YOUR_TD_API_KEY}
+# Push workflow to TD
+$ td wf push mta
+
+# Set secrets from STDIN like: td.apikey=1/xxxxx, td.apiserver=https://api.treasuredata.com
+$ td workflow secrets \
+  --project mta \
+  --set td.apikey \
+  --set td.apiserver
+
+$ td wf start mta mta_shapley --session now
 ```
 
+By default, the workflow automatically imports a dummy dataset to `mta_sample.touchpoints`. 
+
+Edit [`config/params.yml`](./config/params.yml) if you use your own dataset.
 
 ## Output
 
+Eventually, three tables are derived as a result of successful workflow execution.
+
+### Table: `metrics`
+
+| `loss` | `rmse` | `val_loss` | `val_rmse` |
+|:---|:---|:---|:---|
+|0.49751710891723633|0.4046436846256256|0.6924436688423157|0.499650239944458|
+|0.42745542526245117|0.37608763575553894|0.6913946270942688|0.4991241991519928|
+|0.3927740454673767|0.3654404878616333|0.6890262365341187|0.4979383051395416|
+
+The table contains evaluation metrics obtained from the training and validation process. A single row corresponds to a single epoch, and `loss` / `rmse` and `val_loss` / `val_rmse` are respectively represent the values for training and validation. 
+
+Check if `val_loss` or `val_rmse` stop decreasing and start getting bigger; next time, you might want to stop the model training at a specific epoch. You also want to make sure that there is not a huge difference between training and validation metrics, because that might point to model overfitting. 
+
+### Table: `shapley`
+
+| `instagram` | `google` | `sfmc` | `facebook` | `direct` | `days_before_conversion` |
+|:---|:---|:---|:---|:---|:---|
+|-0.0010403504129499197|-0.004529354628175497|-0.0004913342418149114|-0.004142973572015762|-0.0002199627342633903|2|
+|-0.0007449646363966167|-0.006828240118920803|-0.000607220979873091|-0.00694135669618845|-0.0003867909254040569|1|
+|0.18350449204444885|0.34311071038246155|0.08801353722810745|0.33066612482070923|0.08063764125108719|0|
+
+This is the table we've all been waiting for. The number of rows would equal the number of lookback days that we chose in [`td_mta/config.py`](./td_mta/config.py). 
+
+In a column called `days_before_conversion`, `0` indicates the effect of each channel on the conversion event when users are exposed to that channel less than 24 hours before that conversion event. Going up the days index, you will see how Shapley values / attribution percentages change the farther the touchpoint is from the final conversion event. 
+
+By visualizing the values as follows, this table gives insights into how different channels perform throughout the customer journey to conversion and which ones are more effective as a first-touch vs. last-touch in that journey.
+
+![shapley](./docs/images/shapley_by_day.png)
+
+### Table: `shapley_channel`
+
+| `instagram` | `google` | `sfmc` | `facebook` | `direct` |
+|:---|:---|:---|:---|:---|
+|0.18171918392181396|0.33175310492515564|0.08691497892141342|0.3195818066596985|0.0800308883190155|
+
+This table has the aggregate Shapley values summed across all days of the lookback window. These values can be considered as the total attribution percentage that each channel should be assigned towards conversions. 
 
 ## How this workflow works
 
-For further reading for algorithm and/or workflow details, refer [this page](./docs/more.md).
+For further reading for algorithm and workflow details, refer [`docs/more.md`](./docs/more.md).
 
 ## Want to learn more & try on your data?
 
-As the sample configuration and public documentation above show, the model is fully customizable for your data depending on your own definition of conversion. Contact your Customer Success Representative if you are interested in building and testing the advanced MTA solution.
+The model is fully customizable for your data depending on your own definition of conversion. Contact your Customer Success Representative if you are interested in building and testing the advanced MTA solution.
