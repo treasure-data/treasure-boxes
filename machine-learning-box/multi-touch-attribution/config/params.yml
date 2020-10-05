@@ -1,30 +1,8 @@
-# Variable below points to the Database where the model will read data from and and write the model output tables to
-in_db: 'ENTER WORKING DATABASE'
-
-# Variable below defines the table that tracks digital touchpoints associated with 'Form-fill' events, which we are counting as the conversion event for this model example
-enriched_formfills: 'ENTER NAME OF USER TOUCHPOINTS TABLE A IN CDP'
-
-# Variable below defines the table that tracks digital touchpoints associated with pageviews across multiple domains
-enriched_pageviews: 'ENTER NAME OF USER TOUCHPOINTS TABLE A IN CDP'
-
-# Variable below defines the final UNION table of the pageviews and formfills table that will be used by the LSTM Deep Learning Model after an ab_rnd is assigned to each user
-union_table: mta_union_conversions
-
-# Variable below defines how much historical data we want the model to analyze. Given the large volume of the data it's important to keep this range as reasonable as possible and only analyze historical data that is more current and relevant to currently active marketing campaigns.
-time_interval: '-30d'  # = last 30 days
+in_db: mta_sample
+in_table: touchpoints
 
 # Variables below point to the names of key columns used by the SQL queries
-unique_id: canonical_id
+unique_id: user_id
+time_col: time
 source_col: source
-channel_col: channels
-channel_source_col: channel_source
-time_column: time
-conversion_column: conversion
-
-# Variables below defines the names of the tables that different parts of the Workflow and the Python code will output into the CDP
-
-# Variable below defines the table that contains the counts of distinct channels and sources available in the touchpoints union table for the selected time interval
-channel_stats: channel_source_stats
-
-# Variable below defines the FINAL TABLE union table with a unique ab_rnd value assigned to each user_id to allow for random sampling of TensorFlow records
-rand_shuffle: mta_user_rnd
+conversion_col: conversion

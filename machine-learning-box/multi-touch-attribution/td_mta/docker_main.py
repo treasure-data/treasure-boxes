@@ -10,10 +10,18 @@ from td_mta.td_connector import TDConnector
 from td_mta.train_model_from_tfrecords import train_model_from_tfrecords
 from td_mta.shapley import calculate_shapley
 
-config = Config()
 
+def run(db, table, user_column, time_column, action_column, conversion_column):
+    config = Config(
+                 db=db,
+                 table=table,
+                 metrics_table='metrics',
+                 shapley_table='shapley',
+                 user_column=user_column,
+                 time_column=time_column,
+                 action_column=action_column,
+                 conversion_column=conversion_column)
 
-def run():
     print(f'==Config:')
     print(json.dumps(config.__dict__, indent=4))
     with open('config.json', 'w') as f:
