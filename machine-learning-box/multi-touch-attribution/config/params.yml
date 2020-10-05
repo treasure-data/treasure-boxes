@@ -1,10 +1,24 @@
+# Name of database where model will read and write data to.
 in_db: mta_sample
+
+# Enter name of a touchpoints table with `ab_rnd` attribute created by the
+# query `queries/shuffle.sql`
 in_table: touchpoints
 
-# key column names
+# This points to the column that contains unique user IDs, most commonly
+# 'canonical_id' since this is typically the output of our ID unification
+# algorithm.
 unique_id: user_id
+
+# Name of the column that contains timestamp for each touchpoint.
 time_col: time
+
+# This tells LSTM model to use that column as the categorical features when
+# predicting probabilities of conversion. In other words - this is the column
+# that you are trying to get the final shapely values for.
 source_col: source
+
+# Name of the column that marks conversion events.
 conversion_col: conversion
 
 # Lookback window you want to set before the model starts to define how many
