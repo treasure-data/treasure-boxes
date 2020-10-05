@@ -6,3 +6,8 @@ unique_id: user_id
 time_col: time
 source_col: source
 conversion_col: conversion
+
+# Lookback window you want to set before the model starts to define how many
+# days from conversion events do you want to track back to define what
+# marketing touchpoints were part of the user journey.
+lookback_window_days: 3

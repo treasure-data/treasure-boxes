@@ -39,5 +39,6 @@ _export:
   time_column: ${time_col}
   action_column: ${source_col}
   conversion_column: ${conversion_col}
+  lookback_window_days: ${lookback_window_days}
   _env:
     TD_API_KEY: ${secret:td.apikey}

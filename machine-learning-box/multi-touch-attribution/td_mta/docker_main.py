@@ -11,7 +11,7 @@ from td_mta.train_model_from_tfrecords import train_model_from_tfrecords
 from td_mta.shapley import calculate_shapley
 
 
-def run(db, table, user_column, time_column, action_column, conversion_column):
+def run(db, table, user_column, time_column, action_column, conversion_column, lookback_window_days):
     config = Config(
                  db=db,
                  table=table,
@@ -20,7 +20,8 @@ def run(db, table, user_column, time_column, action_column, conversion_column):
                  user_column=user_column,
                  time_column=time_column,
                  action_column=action_column,
-                 conversion_column=conversion_column)
+                 conversion_column=conversion_column,
+                 lookback_window_days=lookback_window_days)
 
     print(f'==Config:')
     print(json.dumps(config.__dict__, indent=4))

@@ -100,7 +100,7 @@ Check if `val_loss` or `val_rmse` stop decreasing and start getting bigger; next
 |-0.0007449646363966167|-0.006828240118920803|-0.000607220979873091|-0.00694135669618845|-0.0003867909254040569|1|
 |0.18350449204444885|0.34311071038246155|0.08801353722810745|0.33066612482070923|0.08063764125108719|0|
 
-This is the table we've all been waiting for. The number of rows would equal the number of lookback days that we chose in [`td_mta/config.py`](./td_mta/config.py). 
+This is the table we've all been waiting for. The number of rows would equal the number of lookback days that we chose in [`config/params.yml`](./config/params.yml). 
 
 In a column called `days_before_conversion`, `0` indicates the effect of each channel on the conversion event when users are exposed to that channel less than 24 hours before that conversion event. Going up the days index, you will see how Shapley values / attribution percentages change the farther the touchpoint is from the final conversion event. 
 
