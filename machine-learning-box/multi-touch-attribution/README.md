@@ -50,7 +50,7 @@ select
     END
   ) as ${source_col} ,
   -- ... (assign 0 or 1 depending on your definition of "conversion")
-    as ${conversion_column}
+    as ${conversion_col}
 from
   pageviews
 where
