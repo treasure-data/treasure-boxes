@@ -1,5 +1,5 @@
 select
-  td_time_format(time, 'yyyy-MM-dd HH:mm;ss', 'JST') as time
+  td_time_format(time, 'yyyy-MM-dd HH:mm:ss', 'JST') as time
   ,resource_id as job_id
   ,split(target_table, '.')[1] as database
   ,split(target_table, '.')[2] as "table"

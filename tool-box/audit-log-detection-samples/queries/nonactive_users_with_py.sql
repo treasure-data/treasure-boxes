@@ -3,7 +3,7 @@ with users as (
     cast(json_extract_scalar(user, '$.id') as integer) as id
     ,json_extract_scalar(user, '$.email') as email
   from
-    unnest(cast(json_extract('${users}', '$') as array<json>)) as t(user)
+    unnest(cast(json_extract('${users}', '$.users') as array<json>)) as t(user)
 )
 
 ,active_users as (

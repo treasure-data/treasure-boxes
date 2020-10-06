@@ -1,5 +1,5 @@
 select
-  td_time_format(time, 'yyyy-MM-dd HH:mm;ss', 'JST')
+  td_time_format(time, 'yyyy-MM-dd HH:mm:ss', 'JST')
   ,split(resource_name, '.')[1] as database
   ,split(resource_name, '.')[2] as "table"
   ,user_id

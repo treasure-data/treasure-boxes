@@ -20,29 +20,16 @@ _export:
   +get_non_active_users:
     _export:
       days: 30 # Days to distinguish active/non-active
-
-    +using_api: # An error may happens because the size of API response is too large.
-      +get_user_list:
-        http>: "https://${td.endpoint}/v4/users"
-        method: GET
-        headers:
-          - authorization: "TD1 ${secret:td.apikey}"
-        retry: true
-        store_content: true
-
-      +result:
-        td>: queries/nonactive_users.sql
   
-    +using_python:
-      +get_user_list:
-        py>: py.td.get_users
-        _env:
-          TD_API_KEY: ${secret:td.apikey}
-          TD_ENDPOINT: ${td.endpoint}
-        docker:
-          image: "digdag/digdag-python:3.7"
+    +get_user_list:
+      py>: py.td.get_users
+      _env:
+        TD_API_KEY: 3867/c3b18bb90e24540f977369217038d7628c7223af # ${secret:td.apikey}
+        TD_ENDPOINT: ${td.endpoint}
+      docker:
+        image: "digdag/digdag-python:3.7"
     
-      +result:
+    +result:
         td>: queries/nonactive_users_with_py.sql
 
   +promote_db_permission_to_fullaccess:

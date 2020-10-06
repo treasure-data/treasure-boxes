@@ -1,5 +1,5 @@
 select
-  td_time_format(time, 'yyyy-MM-dd HH:mm;ss', 'JST') as time
+  td_time_format(time, 'yyyy-MM-dd HH:mm:ss', 'JST') as time
   ,split(resource_path, '.')[1] as audience
   ,split(resource_path, '.')[2] as segment
   ,resource_name as activation

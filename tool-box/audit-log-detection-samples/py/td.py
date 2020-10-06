@@ -10,6 +10,6 @@ def get_users():
   headers = {
     'AUTHORIZATION': f'TD1 {apikey}',
   }
-  response = requests.get(f'https://{endpoint}/v4/users', headers=headers)
+  response = requests.get(f'https://{endpoint}/v3/user/list', headers=headers)
   digdag.env.store({'users': response.content.decode()})
   return True  

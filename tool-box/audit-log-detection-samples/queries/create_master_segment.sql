@@ -1,5 +1,5 @@
 select
-  td_time_format(time, 'yyyy-MM-dd HH:mm;ss', 'JST') as created_time
+  td_time_format(time, 'yyyy-MM-dd HH:mm:ss', 'JST') as created_time
   ,resource_id as ms_id
   ,resource_name as ms_name
   ,user_id

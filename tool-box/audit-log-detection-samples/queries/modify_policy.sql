@@ -1,6 +1,6 @@
 with source as (
   select
-    td_time_format(time, 'yyyy-MM-dd HH:mm;ss', 'JST') as time
+    td_time_format(time, 'yyyy-MM-dd HH:mm:ss', 'JST') as time
     ,id
     ,resource_id as policy_id
     ,resource_name as policy_name
@@ -12,6 +12,8 @@ with source as (
     td_interval(time, '-1d', 'JST')
     and
     event_name = 'permission_policy_modify'
+    and
+    resource_name = 'test_ysmr_user'
 )
 
 ,old as (
