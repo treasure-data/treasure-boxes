@@ -16,7 +16,7 @@ This table is often created by using SQL code to parse and join multiple user-ac
 
 ## How to configure the Python model
 
-The workflow template reads some of the basic configurations from [`config/params.yml`](../config/params.yml) and dynamically passes the parameters to [`td_mta/config.py`](../td_mta/config.py) that Python scripts eventually load for running machine learning operations.
+The workflow template reads some of the basic configurations from [`config/params.yml`](../config/params.yml) and [`config/model.json`](../config/model.json), and dynamically passes the parameters to [`td_mta/config.py`](../td_mta/config.py) that Python scripts eventually load for running machine learning operations.
 
 See more details below:
 

@@ -16,8 +16,8 @@ _export:
     TD_API_KEY: ${secret:td.apikey}
     TD_API_SERVER: ${secret:td.apiserver}
 
-## Add ab_rnd attribute for Random shuffling of TensorFlow records
-+create_ab_rnd_table:
+# Add rand attribute for Random shuffling of TensorFlow records
++shuffle_random:
   td>: queries/shuffle.sql
   create_table: ${in_table}_shuffled
   engine: hive
@@ -36,9 +36,6 @@ _export:
   db: ${in_db}
   table: ${in_table}_shuffled
   user_column: ${unique_id}
-  time_column: ${time_col}
-  action_column: ${source_col}
-  conversion_column: ${conversion_col}
-  lookback_window_days: ${lookback_window_days}
+  user_rnd_column: ${rnd_column}
   _env:
     TD_API_KEY: ${secret:td.apikey}

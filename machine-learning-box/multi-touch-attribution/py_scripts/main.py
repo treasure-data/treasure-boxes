@@ -11,17 +11,19 @@ from td_mta.train_model_from_tfrecords import train_model_from_tfrecords
 from td_mta.shapley import calculate_shapley
 
 
-def run(db, table, user_column, time_column, action_column, conversion_column, lookback_window_days):
-    config = Config(
-                 db=db,
-                 table=table,
-                 metrics_table='metrics',
-                 shapley_table='shapley',
-                 user_column=user_column,
-                 time_column=time_column,
-                 action_column=action_column,
-                 conversion_column=conversion_column,
-                 lookback_window_days=int(lookback_window_days))
+def run(db, table, user_column, user_rnd_column):
+    common_config = {
+        'db': db,
+        'table': table,
+        'user_column': user_column,
+        'user_rnd_column': user_rnd_column
+    }
+
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, 'config', 'model.json')
+    with open(path) as f:
+        model_config = json.load(f)
+
+    config = Config(**{**common_config, **model_config})
 
     print(f'==Config:')
     print(json.dumps(config.__dict__, indent=4))

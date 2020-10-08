@@ -1,0 +1,17 @@
+{
+    "metrics_table": "metrics",
+    "shapley_table": "shapley",
+    "if_exists": "overwrite",
+    "time_column": "time",
+    "action_column": "source",
+    "conversion_column": "conversion",
+    "users_per_tfrecord": 10000,
+    "lookback_window_days": 3,
+    "dropout_rate": 0.5,
+    "model_width": 128,
+    "train_epochs": 3,
+    "train_batch_size": 100,
+    "validation_batch_size": 1000,
+    "validation_fraction": 0.1,
+    "shuffle_buffer_size": 10000
+}

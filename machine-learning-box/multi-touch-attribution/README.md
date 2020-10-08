@@ -71,9 +71,9 @@ $ td workflow secrets \
 $ td wf start mta mta_shapley --session now
 ```
 
-By default, the workflow automatically imports a dummy dataset to `mta_sample.touchpoints`. 
+By default, the workflow automatically imports a dummy dataset to `mta_sample.touchpoints`. Edit [`config/params.yml`](./config/params.yml) if you use your own dataset. 
 
-Edit [`config/params.yml`](./config/params.yml) if you use your own dataset.
+Meanwhile, [`config/model.json`](./config/model.json) enables you to further customize the model. See [`docs/more.md`](./docs/more.md) for more information about the advanced config parameters.
 
 ## Output
 
