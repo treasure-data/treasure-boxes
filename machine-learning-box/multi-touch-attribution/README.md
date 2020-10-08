@@ -1,20 +1,19 @@
-
 Data-Driven Multi-Touch Attribution
 ===
 
-This Box provides a data-driven, machine learning-based templatized solution for **[Multi-Touch Attribution](https://en.wikipedia.org/wiki/Attribution_(marketing))** (**MTA**), running on your pageview data stored in Treasure Data. 
+This Box provides a data-driven, machine learning-based templatized solution for **[Multi-Touch Attribution](https://en.wikipedia.org/wiki/Attribution_(marketing))** (MTA), running on your pageview data stored in Treasure Data. 
 
-Unlike traditional rule-based MTA solutions, our template takes an advanced machine learning-based approach to accurately model customer's path to conversion and understand better about how/why marketing touchpoints bring your customer to the goal. Eventually, the insights enable you to effectively and efficiently optimize the marketing campaigns with optimal budget allocation.
+Unlike traditional rule-based MTA solutions such as first-touch and last-touch model, our template takes an advanced machine learning-based approach to accurately model customer's path to conversion and understand better about how/why marketing touchpoints bring your customer to the goal. Eventually, the insights enable you to effectively and efficiently optimize the marketing campaigns with optimal budget allocation.
 
-The implementation is based on a [state-of-the-art academic paper](https://arxiv.org/abs/1902.00215) employing a Deep Learning technique, and one of the key concepts used in the technique is called the [Shapley value](https://en.wikipedia.org/wiki/Shapley_value) calculation. Overall performance of this template has been proven on the Treasure Data platform with some of our real datasets.
+The implementation is based on a [state-of-the-art academic paper](https://arxiv.org/abs/1902.00215) employing a Deep Learning technique, and one of the key concepts used in the technique is called the [Shapley value](https://en.wikipedia.org/wiki/Shapley_value) calculation. The overall performance of this template has been proven on the Treasure Data platform with some of our real datasets.
 
-The template eventually brings deeper insights about conversion histories and enables you to build a follwoing dashboard, for example:
+The template ultimately generates deeper insights about conversion histories and allows you to build the following dashboard, for example:
 
 ![dashboard](./docs/images/dashboard.png)
 
 ## Input
 
-Assume we have a following [`touchpoints`](https://gist.github.com/takuti/c890cdcbae7946f21a0afc3a4d88ec9f) table that collects user behaviors and conversion events with their sources:
+Assume we have a following [`touchpoints`](https://gist.github.com/takuti/c890cdcbae7946f21a0afc3a4d88ec9f) table that collects user behaviors and conversion events with their sources (i.e., marketing channels):
 
 | `time` | `user_id` | `source` | `conversion` |
 |:---:|:---:|:---:|:---:|
@@ -26,7 +25,7 @@ Assume we have a following [`touchpoints`](https://gist.github.com/takuti/c890cd
 | ... | ... | ...| ... |
 
 
-If you have a `pageviews` table collected by [td-js-sdk](https://github.com/treasure-data/td-js-sdk), preprocess the records in advance and parse `td_url` & `td_referrer` for extracting source of every single touchpoint. A query snippet below is an example of how to extract variety of sources from the `pageviews` data:
+If you have a `pageviews` table collected by [td-js-sdk](https://github.com/treasure-data/td-js-sdk), preprocess the records in advance and parse `td_url` & `td_referrer` for extracting source channel of every single touchpoint. A query snippet below is an example of how to extract a variety of sources from the `pageviews` data:
 
 ```sql
 select
@@ -90,7 +89,7 @@ Eventually, three tables are derived as a result of successful workflow executio
 
 The table contains evaluation metrics obtained from the training and validation process. A single row corresponds to a single epoch, and `loss` / `rmse` and `val_loss` / `val_rmse` are respectively represent the values for training and validation. 
 
-Check if `val_loss` or `val_rmse` stop decreasing and start getting bigger; next time, you might want to stop the model training at a specific epoch. You also want to make sure that there is not a huge difference between training and validation metrics, because that might point to model overfitting. 
+Check if `val_loss` or `val_rmse` stop decreasing and start getting bigger; next time, you might want to stop the model training at a specific epoch. You also want to make sure there is not a huge difference between training and validation metrics, because such a gap might point to model overfitting. 
 
 ### Table: `shapley`
 
@@ -100,11 +99,11 @@ Check if `val_loss` or `val_rmse` stop decreasing and start getting bigger; next
 |-0.0007449646363966167|-0.006828240118920803|-0.000607220979873091|-0.00694135669618845|-0.0003867909254040569|1|
 |0.18350449204444885|0.34311071038246155|0.08801353722810745|0.33066612482070923|0.08063764125108719|0|
 
-This is the table we've all been waiting for. The number of rows would equal the number of lookback days that we chose in [`config/params.yml`](./config/params.yml). 
+This is the main table we've all been waiting for. The number of rows is equal to the number of lookback days that we chose in [`config/params.yml`](./config/params.yml). 
 
-In a column called `days_before_conversion`, `0` indicates the effect of each channel on the conversion event when users are exposed to that channel less than 24 hours before that conversion event. Going up the days index, you will see how Shapley values / attribution percentages change the farther the touchpoint is from the final conversion event. 
+In a column called `days_before_conversion`, `0` indicates, for example, the effect of each channel on the conversion events when users are exposed to a channel in less than 24 hours before their conversion. Going up the day's index, you will see how Shapley values and attribution percentages change at farther touchpoints from the final conversion event. 
 
-By visualizing the values as follows, this table gives insights into how different channels perform throughout the customer journey to conversion and which ones are more effective as a first-touch vs. last-touch in that journey.
+By visualizing the values as follows, this table gives insights into how different channels perform throughout the customer journey to conversion and which ones are more effective as a first-touch vs. last-touch on that journey.
 
 ![shapley](./docs/images/shapley_by_day.png)
 
