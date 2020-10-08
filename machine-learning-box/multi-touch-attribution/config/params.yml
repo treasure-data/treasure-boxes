@@ -1,8 +1,8 @@
 # Name of database where model will read and write data to.
 in_db: mta_sample
 
-# Enter name of a touchpoints table with `ab_rnd` attribute created by the
-# query `queries/shuffle.sql`
+# Enter name of a touchpoints table. `queries/shuffle.sql` enriches the table
+# with an `ab_rnd` attribute.
 in_table: touchpoints
 
 # This points to the column that contains unique user IDs, most commonly
