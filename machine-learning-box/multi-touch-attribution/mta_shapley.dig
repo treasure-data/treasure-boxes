@@ -7,7 +7,7 @@ _export:
     database: ${in_db}
 
 +data:
-  py>: data.import_sample
+  py>: py_scripts.data.import_sample
   database: ${td.database}
   table: ${in_table}
   docker:
@@ -32,7 +32,7 @@ _export:
 +execute_python_code:
   docker:
     image: "digdag/digdag-python:3.7"
-  py>: td_mta.docker_main.run
+  py>: py_scripts.main.run
   db: ${in_db}
   table: ${in_table}_shuffled
   user_column: ${unique_id}

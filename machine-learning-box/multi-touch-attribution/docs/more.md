@@ -61,11 +61,11 @@ The final task of the sample workflow below instantiates a temporal Python execu
 +execute_python_code:
   docker:
     image: "digdag/digdag-python:3.7"
-  py>: td_mta.docker_main.run
+  py>: py_scripts.main.run
   # ...
 ```
 
-The important syntax here is the notation `td_mta.docker_main.run`; after the `py>` operator tells workflow to look at the `td_mta` project folder, the workflow task finds `docker_main.py` and execute the `run()` function defined in the script. This is where the full Python code for the Deep Learning/LSTM-based Shapely values model is executed.
+The important syntax here is the notation `py_scripts.main.run`; after the `py>` operator tells workflow to look at the `py_scripts` folder, the workflow task finds `main.py` and execute the `run()` function defined in the script. This is where the full Python code for the Deep Learning/LSTM-based Shapely values model is executed.
 
 It is also important to copy your Master API Key from your TD account and create a `secret` in the workflow called `td.apikey`, where you can paste the API Key to keep it safe. That secret is then interpreted as an environmental variable `TD_API_KEY`, which is needed by the Python code to read and write data to TD.
 
