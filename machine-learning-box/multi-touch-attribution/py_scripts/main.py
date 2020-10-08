@@ -44,20 +44,3 @@ def run(db, table, user_column, user_rnd_column):
     TDConnector.write(shapley_df, db=config.db, table=config.shapley_table, if_exists=config.if_exists)
     TDConnector.write(channel_shapley_df, db=config.db, table=config.shapley_table + '_channel',
                       if_exists=config.if_exists)
-
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description='Customer Journey MTA',
-                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--config', '-c', metavar='', help='json file with configuration')
-    args = parser.parse_args()
-
-    if args.config is not None:
-        with open(args.config) as f:
-            config = json.load(f)
-        print(f"==Read config from {args.config}: {config}")
-        config = Config(**config)
-
-    run()
