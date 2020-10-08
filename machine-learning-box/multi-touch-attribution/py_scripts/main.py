@@ -21,7 +21,7 @@ def run(db, table, user_column, time_column, action_column, conversion_column, l
                  time_column=time_column,
                  action_column=action_column,
                  conversion_column=conversion_column,
-                 lookback_window_days=lookback_window_days)
+                 lookback_window_days=int(lookback_window_days))
 
     print(f'==Config:')
     print(json.dumps(config.__dict__, indent=4))
