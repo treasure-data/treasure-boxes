@@ -1,0 +1,31 @@
+name: pj_dm_sample
+apikey: 3867/22689041aa28feddaa4abcd49acebb0e2d5f20db
+type: elasticube
+schedule: dummy
+datamodel:
+  datasets:
+    pj_ti_database:
+      type: presto
+      database: pj_ti_database
+      tables:
+        pj_ti_table:
+          columns:
+            time:
+              type: bigint
+            type:
+              type: text
+            _2020_04:
+              type: float
+            _2020_09:
+              type: float
+shared_users:
+  - sri+demo@treasure-data.com
+  - dylan@treasure-data.com
+  - shirai@treasure-data.com
+  - praveena+demo@treasure-data.com
+  - ivan+demo@treasure-data.com
+  - nkobayashi+demo@treasure-data.com
+  - kazunori.yoshimura+demo@treasure-data.com
+  - pradeep.savadi+demo@treasure-data.com
+  - jung-hoon.lee+demo@treasure-data.com
+  - merritt.tidwell+demo@treasure-data.com
