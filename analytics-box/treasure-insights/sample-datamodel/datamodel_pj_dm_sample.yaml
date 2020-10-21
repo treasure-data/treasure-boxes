@@ -1,5 +1,5 @@
 name: pj_dm_sample
-apikey: 3867/22689041aa28feddaa4abcd49acebb0e2d5f20db
+apikey: APIKEY
 type: elasticube
 schedule: dummy
 datamodel:
