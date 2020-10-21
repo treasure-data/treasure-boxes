@@ -1,0 +1,33 @@
+_export:
+  td:
+    database: sample_database
+    table: auth0
+    endpoint: https://api.treasuredata.com/
+  auth0:
+    endpoint: https://<your-tenant>.auth0.com/
+    connection_id: con_XXXXXXXXXXXXX
+
++get_token:
+  http>: ${auth0.endpoint}oauth/token
+  store_content: true
+  method: POST
+  content:
+    client_id: ${secret:auth0.client_id}
+    client_secret: ${secret:auth0.client_secret}
+    audience: "https://treasure-data-dev.auth0.com/api/v2/"
+    grant_type: client_credentials
+  headers:
+    - content-type: application/json
+
++monitor_and_get:
+  py>: scripts.main.load
+  docker:
+    image: "digdag/digdag-python:3.7"
+  database: ${td.database}
+  table: ${td.table}
+  td_endpoint: ${td.endpoint}
+  auth0_endpoint: ${auth0.endpoint}
+  auth0_token: ${JSON.parse(http.last_content).access_token}
+  connection_id: ${auth0.connection_id}
+  _env:
+    TD_APIKEY: ${secret:td.apikey}
