@@ -1,25 +1,24 @@
-TreasureData: Create DataModel
+# Treasure Insights - Sample ShellScript to Create DataModel
 
 You can build Treasure Insight dashboard using API
 
-Requirement
+## Requirement
 
-. Treasure Insight
-. Dashboard Access
-. API Key
-. Sharing Users
-. Database name
-. Table name
+* Treasure Insight License
+* Treasure Insights Dashboard Access
+* TD API Key
+* Treasure Insights Sharing Users
+* TD Database name
+* TD Table name
 
-Config File
+# Step
 
-Prepare a configuration file for Data Model
+1. Prepare a configuration file for Data Model
+2. Run create_config_yaml_file.sh `$ ./create_config_yaml_file.sh`
 
-Run create_config_yaml_file.sh
+# Config Example
 
-(praveena) bash-3.2$ ./create_config_yaml_file.sh
-
-Create a Data Model
+TBD
 
 
 
