@@ -1,0 +1,115 @@
+timezone: Asia/Tokyo
+
+_export:
+  td:
+    database: td_audit_log
+    endpoint: api.treasuredata.com
+
++account_management:
+  +invite_new_user:
+    td>: queries/invite_new_user.sql
+  
+  +promote_to_admin:
+    td>: queries/promote_to_admin.sql
+  
+  +get_active_users:
+    _export:
+      days: 30 # Days to distinguish active/non-active
+    td>: queries/active_users.sql
+  
+  +get_non_active_users:
+    _export:
+      days: 30 # Days to distinguish active/non-active
+  
+    +get_user_list:
+      py>: py.td.get_users
+      _env:
+        TD_API_KEY: ${secret:td.apikey}
+        TD_ENDPOINT: ${td.endpoint}
+      docker:
+        image: "digdag/digdag-python:3.7"
+    
+    +result:
+        td>: queries/nonactive_users_with_py.sql
+
+  +promote_db_permission_to_fullaccess:
+    td>: queries/promote_to_fullaccess.sql
+
+  +attach_user_to_policy:
+    td>: queries/attach_user_to_policy.sql
+    
+  +modify_policy:
+    td>: queries/modify_policy.sql
+
+
++data_import:
+  +all_operations_importing_data:
+    td>: queries/operation_importing_data.sql
+
+  +file_upload:
+    td>: queries/file_upload.sql
+
+  +bulk_import:
+    td>: queries/bulk_import.sql
+
+  +bulk_load_with_source:
+    td>: queries/bulk_load_with_source.sql
+
+  +bulk_load_with_yml:
+    td>: queries/bulk_load_with_yml.sql
+
++data_export:
+  +result_export_job:
+    td>: queries/result_export_job.sql
+
+  +result_download:
+    td>: queries/result_download.sql
+
+  +result_downlaod_with_toolbelt:
+    td>: queries/result_download_with_toolbelt.sql
+
+  +run_activation:
+    td>: queries/run_activation.sql
+
+  +table_export:
+    td>: queries/table_export.sql
+
++create_resources:
+  +authentication:
+    td>: queries/create_authentication.sql
+  
+  +source:
+    td>: queries/create_source.sql
+  
+  +database:
+    td>: queries/create_database.sql
+
+  +workflow:
+    td>: queries/create_workflow_project.sql
+
+  +master_segment:
+    td>: queries/create_master_segment.sql
+
+  +segment:
+    td>: queries/create_segment.sql
+
+  +activation:
+    td>: queries/create_activation.sql
+
+  +policy:
+    td>: queries/create_policy.sql
+
++others:
+  +get_long_duration_job:
+    _export:
+      threshold: 3600
+    td>: queries/get_long_duration_job.sql
+  
+  +get_job_with_query_matching_pattern:
+    _export:
+      pattern: email
+    td>: queries/get_job_with_query_matching_pattern.sql
+ 
+  +get_job_issued_by_pytd:
+    td>: queries/get_job_issued_by_pytd.sql
+ 
