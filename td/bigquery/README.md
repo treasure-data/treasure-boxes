@@ -46,7 +46,7 @@ Available parameters for `result_settings` are here.
 - project: (string, required)
 - dataset: (string, required)
 - table: (string, required)
-- auto_create_table: (boolean, default false)
+- auto_create_table: (boolean, default false. You need to set true when mode is replace or replace_backup.)
 - mode: (string, optional, defaut append, options: append, replace, replace_backup, delete_in_advance)
 - max_bad_records: (int, optional, default 0)
 - ignore_unknown_values: (boolean, default false)
