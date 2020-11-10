@@ -8,6 +8,10 @@ _export:
     database: db_name
     table: tab_name
 
++create_backup_table:
+  td_ddl>:
+  create_tables: ["${td.table}_bk"]
+
 +backup_records:
   td>: queries/backup.sql
 
