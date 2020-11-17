@@ -1,10 +1,10 @@
 # Workflow: td example (Result Output to Google AdWords Remarketing Lists)
 
-This example workflow outputs data to a google adwords remarketing lists using [Writing Job Results into Google AdWords Remarketing Lists](https://support.treasuredata.com/hc/en-us/articles/360001666767-Writing-Job-Results-into-Google-AdWords-Remarketing-Lists) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow outputs data to a google adwords remarketing lists using [Writing Job Results into Google AdWords Remarketing Lists](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082644/Google+Ads+Remarketing+Lists+Export+Integration) with [td](http://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
-In order to register your credential in Treasure Data, please create connection by following the instructions on this page [Writing Job Results into Google Adwords Remarketing Lists]( https://support.treasuredata.com/hc/en-us/articles/360001666767-Writing-Job-Results-into-Google-AdWords-Remarketing-Lists) 
+In order to register your credential in Treasure Data, please create connection by following the instructions on this page [Writing Job Results into Google Adwords Remarketing Lists](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082644/Google+Ads+Remarketing+Lists+Export+Integration)
 
 The connection name is used in the dig file.
 
@@ -51,8 +51,8 @@ Available parameters for `result_settings` are here.
 - maximum_retry_interval_millis : Max retry wait in milliseconds. (int, optional, default: 300000)
 
 
-For more details, please see [Treasure Data documentation (GUI)](https://support.treasuredata.com/hc/en-us/articles/360001262227-Treasure-Workflow-Quick-Start-Tutorial-for-the-GUI)
-or [Treasure Data documentation(CLI)](https://support.treasuredata.com/hc/en-us/articles/360001262207-Treasure-Workflow-Quick-Start-Tutorial-for-the-CLI)
+For more details, please see [Treasure workflow documentation (GUI)](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084846/Using+Workflow+from+TD+Console)
+or [Treasure workflow documentation (CLI)](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1672953/Using+TD+Workflow+from+the+Command+Line)
 
 # Next Step
 If you have any questions, please contact support@treasuredata.com.

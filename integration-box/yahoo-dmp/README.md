@@ -7,7 +7,7 @@ There are 2 ways to create targeting campaign on Yahoo! Display Network.
 - Require to have accounts for TreasureData, Yahoo Display Network, Yahoo! DMP
 - Require to have clientId(referred to `_a`), DatasourceNo(referred to `_b`) provided by Yahoo!
 - Require to have vendor_guid, entity_id, uid_key, and x-api-key provided by TreasureData support team.
-- Set up Treasure Data Toolbelt: Command-line Interface (https://support.treasuredata.com/hc/en-us/articles/360000720048-Treasure-Data-Toolbelt-Command-line-Interface) 
+- Set up Treasure Data Toolbelt: Command-line Interface (https://tddocs.atlassian.net/wiki/spaces/PD/pages/2065286/Using+TD+Toolbelt)
 
 # Installation (Setup)  
 Download this workflow. 
