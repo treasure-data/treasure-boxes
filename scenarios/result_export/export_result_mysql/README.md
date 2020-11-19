@@ -4,6 +4,13 @@ You can export result to Your MySQL without running the same query.
 
 ## Scenario
 
+## Note
+
+Using `td_result_export` operator is much easier and simpler for calling API by yourself.  
+If you want to know how to use `td_result_export`, please check the [Doc](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084693/Reference+for+Treasure+Data+Operators#td_result_export%3E%3A)  
+
+The sample is [here](https://github.com/treasure-data/treasure-boxes/blob/master/scenarios/result_export/export_result_prallel.dig)
+
 1. Run Query
 2. Export Result to MySQL
 

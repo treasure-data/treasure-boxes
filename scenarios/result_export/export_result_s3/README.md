@@ -2,6 +2,13 @@
 This example shows how use result_export API in Treasure Data workflow.
 You can export result to Your S3 without running the same query.
 
+## Note
+
+Using `td_result_export` operator is much easier and simpler for calling API by yourself.  
+If you want to know how to use `td_result_export`, please check the [Doc](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084693/Reference+for+Treasure+Data+Operators#td_result_export%3E%3A)  
+
+The sample is [here](https://github.com/treasure-data/treasure-boxes/blob/master/scenarios/result_export/export_result_prallel.dig)
+
 ## Scenario
 
 1. Run Query
