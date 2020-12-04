@@ -13,8 +13,8 @@ export default class {
     }
 
     readCookie(key) {
-        const cookies = window.document.cookie || '';
-        return (`; ${cookies};`.match(`; ${key}=([^\S;]*)`) || [])[1];
+      var b = document.cookie.match('(^|;)\\s*' + key + '\\s*=\\s*([^;]+)');
+      return b ? b.pop() : '';
     }
 
     mergeObj(objArray) {

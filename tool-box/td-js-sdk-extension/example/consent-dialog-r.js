@@ -9,7 +9,8 @@ function optoutTd(){
 
 (function() {
   function readCookie(key) {
-    return ((';' + document.cookie + ';').match(';' + key + '=([^\S;]*)') || [])[1];
+    var b = document.cookie.match('(^|;)\\s*' + key + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
   };
 
   var optoutFlag = readCookie('_td_optout');
