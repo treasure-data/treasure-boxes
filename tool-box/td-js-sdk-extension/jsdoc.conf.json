@@ -1,0 +1,8 @@
+{
+  "source": {
+    "include": ["./src"]
+  },
+  "opts": {
+    "destination": "./jsdoc/"
+  }
+}

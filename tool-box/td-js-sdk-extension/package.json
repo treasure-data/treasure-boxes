@@ -1,0 +1,37 @@
+{
+  "name": "td-js-sdk-extension",
+  "version": "0.1.7",
+  "description": "Extension Pack for TD-JS-SDK",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "jsdoc": "jsdoc ./src -c jsdoc.conf.json",
+    "lint": "eslint ./src",
+    "format": "prettier --write 'src/*.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hjmsano/td-js-sdk-extension.git"
+  },
+  "author": "Hajime Sano",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hjmsano/td-js-sdk-extension/issues"
+  },
+  "homepage": "https://github.com/hjmsano/td-js-sdk-extension#readme",
+  "dependencies": {
+    "prettier": "^1.19.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "eslint": "^5.16.0",
+    "jsdoc": "^3.6.4",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  },
+  "main": "webpack.config.js"
+}
