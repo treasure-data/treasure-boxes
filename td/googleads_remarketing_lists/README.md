@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Google AdWords Remarketing Lists)
 
-This example workflow outputs data to a google adwords remarketing lists using [Writing Job Results into Google AdWords Remarketing Lists](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082644/Google+Ads+Remarketing+Lists+Export+Integration) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow outputs data to a google adwords remarketing lists using [Writing Job Results into Google AdWords Remarketing Lists](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082644/Google+Ads+Remarketing+Lists+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -15,7 +15,7 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push googleads_remarketing_lists
 
-If you want to mask any settings, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask any settings, please set it by `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project googleads_remarketing_lists --set key

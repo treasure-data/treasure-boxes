@@ -24,7 +24,7 @@ The purpose of this scenario is to get the number of unique users who accessed t
 
 In this scenario, some workflow operators are used. Please refer to the documentation for each operator.
 
- - `td>: operator`: [td>: Running Treasure Data Query](http://docs.digdag.io/operators/td.html)
+ - `td>: operator`: [td>: Running Treasure Data Query](https://docs.digdag.io/operators/td.html)
 
 # How to use
 

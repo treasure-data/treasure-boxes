@@ -1,6 +1,6 @@
 # Workflow: http for Slack Example
 
-This example workflow notifies calculated data from TreasureData to Slack, using [http](http://docs.digdag.io/operators/http.html) operator.
+This example workflow notifies calculated data from TreasureData to Slack, using [http](https://docs.digdag.io/operators/http.html) operator.
 
 # Preparation
 

@@ -1,6 +1,6 @@
 # Workflow: td_load Example (FTP(S))
 
-This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for FTP](https://docs.treasuredata.com/articles/data-connector-ftp) with [td_load](http://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for FTP](https://docs.treasuredata.com/articles/data-connector-ftp) with [td_load](https://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
 
 The workflow also uses [Secrets](https://docs.treasuredata.com/articles/workflows-secrets) feature, so that you don't have to include your datasource credentials to your workflow files.
 
@@ -11,7 +11,7 @@ First, you can upload the workflow and trigger the session manually.
     # Upload
     $ td wf push td_load_example
 
-Second, please set FTP credentials by `td wf secrets` command. We recommend you to use text file for setting secret_key_file. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+Second, please set FTP credentials by `td wf secrets` command. We recommend you to use text file for setting secret_key_file. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project td_load_example --set ftp.host

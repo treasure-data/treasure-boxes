@@ -1,6 +1,6 @@
 # Workflow: td_load example (MySQL)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for MySQL](https://docs.treasuredata.com/articles/data-connector-mysql) with [td_load](http://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for MySQL](https://docs.treasuredata.com/articles/data-connector-mysql) with [td_load](https://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
 
 The workflow also uses [Secrets](https://docs.treasuredata.com/articles/workflows-secrets) feature, so that you don't have to include your database credentials to your workflow files.
 

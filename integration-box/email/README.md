@@ -1,6 +1,6 @@
 # Workflow: mail
 
-This example sends email using [mail operator](http://docs.digdag.io/operators/mail.html).
+This example sends email using [mail operator](https://docs.digdag.io/operators/mail.html).
 
 # How to Run
 The mail operator behaves differently in local mode and server mode.
@@ -10,7 +10,7 @@ First, please make your dig file and mail text.
 - [send_email.dig](send_email.dig)
 - [body.txt](body.txt)
 
-Second, please set the secrets using `td wf secrets` command. The mail operator uses that secrets for sending email. For more details, please see digdag documentation [secrets](http://docs.digdag.io/command_reference.html#secrets) and [mail operator](http://docs.digdag.io/operators/mail.html#secrets).
+Second, please set the secrets using `td wf secrets` command. The mail operator uses that secrets for sending email. For more details, please see digdag documentation [secrets](https://docs.digdag.io/command_reference.html#secrets) and [mail operator](https://docs.digdag.io/operators/mail.html#secrets).
 
     # Set Secrets on your local for testing
     $ td wf secrets --local --set mail.host

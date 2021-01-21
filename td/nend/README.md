@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to nend)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into nend](https://docs.treasuredata.com/articles/iresult-into-nend) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into nend](https://docs.treasuredata.com/articles/iresult-into-nend) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -19,7 +19,7 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push td_nend
 
-If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project td_nend --set key

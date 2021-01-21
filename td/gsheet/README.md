@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Google Sheets)
 
-This example workflow exports TD job results into a Google Sheets with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into a Google Sheets with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
