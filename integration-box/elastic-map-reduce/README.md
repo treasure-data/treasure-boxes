@@ -6,7 +6,7 @@ This example workflow allows the user to run a simple python script using Treasu
 
 This example workflow uses [TD-Pandas](https://docs.treasuredata.com/articles/jupyter-pandas) for creating a pandas dataframe from a td-query, and pushing a dataframe back to Treasure Data as a new table.
 
-This example workflow also uses the [EMR-operator](http://docs.digdag.io/operators/emr.html), that creates a new minimal ephemeral cluster with just one node.
+This example workflow also uses the [EMR-operator](https://docs.digdag.io/operators/emr.html), that creates a new minimal ephemeral cluster with just one node.
 
 This example workflow also uses the [Sample Datasets](https://console.treasuredata.com/app/databases/27777) database in Treasure Data.
 

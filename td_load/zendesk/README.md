@@ -1,6 +1,6 @@
 # Workflow: td_load Example (Zendesk)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for Zendesk](https://docs.treasuredata.com/articles/data-connector-zendesk) with [td_load](http://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for Zendesk](https://docs.treasuredata.com/articles/data-connector-zendesk) with [td_load](https://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
 
 The workflow also uses [Secrets](https://docs.treasuredata.com/articles/workflows-secrets) feature, so that you don't have to include your datasource credentials to your workflow files.
 

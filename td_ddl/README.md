@@ -2,7 +2,7 @@
 
 This example manipulates tables in Treasure Data daily basis.
 
-The workflow uses [td_ddl](http://docs.digdag.io/operators/td_ddl.html) operaton.
+The workflow uses [td_ddl](https://docs.digdag.io/operators/td_ddl.html) operaton.
 
 # How to Run
 
