@@ -10,7 +10,7 @@ Second, `pytd` creates a table on Treasure Data with the dataframe.
 
 | Variable | Description | Example |
 | -------- | ----------- | --------|
-| td.apikey | Master API Key for Treasure Data. [link](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081428/Getting+Your+API+Keys) | `1234/abcdefghijklmnopqrstuvwxyz1234567890`|
+| td.apikey | Master API Key for Treasure Data. [link](https://docs.treasuredata.com/display/public/PD/Getting+Your+API+Keys) | `1234/abcdefghijklmnopqrstuvwxyz1234567890`|
 | td.database | Treasure Data's database name to export data. | `example_db` |
 | td.table | Treasure Data's table name to export data. | `example_table` |
 | td.sql | SQL to pass to Treasure Data's to retrieve a prediction data. | `select * from pred_data` |

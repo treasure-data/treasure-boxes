@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to SFTP)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into SFTP](https://docs.treasuredata.com/articles/result-into-sftp) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into SFTP](https://docs.treasuredata.com/display/public/INT/SFTP+Server+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -53,7 +53,7 @@ Available parameters for `result_settings` are here.
 - null_string: (string(""|"\N"|NULL|null), default "")
 - newline: (string(CRLF|CR|LF), default CRLF)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-sftp#usage-from-cli)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/SFTP+Server+Export+Integration#SFTPServerExportIntegration-UsagefromCLI)
 
 # Next Step
 

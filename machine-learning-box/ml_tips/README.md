@@ -77,4 +77,4 @@ echo>: auc: 0.8044451551007356    logloss: 0.5337748192743182
 
 Treasure Workflow and Hivemall provide an easy way for feature engineerings such as feature scaling and missing value imputation.
 
-[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
+[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/display/public/PD/Consultation).

@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to BigQuery)
 
-This example workflow ingests data using [Treasure Data's Writing Job Results into Google BigQuery](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081809/Google+BigQuery+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Treasure Data's Writing Job Results into Google BigQuery](https://docs.treasuredata.com/display/public/INT/Google+BigQuery+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -53,7 +53,7 @@ Available parameters for `result_settings` are here.
 - allow_quoted_newlines: (boolean, default false)
 - schema_file: (string(json), required)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-google-bigquery#use-from-cli)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Google+BigQuery+Export+Integration)
 
 # Next Step
 

@@ -1,5 +1,5 @@
 # Workflow: td_load example (Google BigQuery)
-This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for Google BigQuery](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081348/Google+BigQuery+Import+Integration) with [td_load](https://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for Google BigQuery](https://docs.treasuredata.com/display/public/INT/Google+BigQuery+Import+Integration) with [td_load](https://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
 
 # How to Run for Server Mode
 First, please upload the workflow. `bigquery` is the project name.

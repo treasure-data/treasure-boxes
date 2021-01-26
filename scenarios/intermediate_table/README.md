@@ -12,7 +12,7 @@ Steps 2 and 3 can be made into a Treasure Workflow which enables you to define r
 
 You can read additional information:
 1. [Efficiently Analyze Infinitely Growing Data with Incremental Queries](https://blog.treasuredata.com/blog/2017/07/25/analyze-infinitely-growing-data-incremental-queries/)
-2. [Treasure Workflow Docs](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081518/Workflow+Reference)
+2. [Treasure Workflow Docs](https://docs.treasuredata.com/display/public/PD/Workflow+Reference)
 
 ## Scenario
 

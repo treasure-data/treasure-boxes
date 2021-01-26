@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to nend)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into nend](https://docs.treasuredata.com/articles/iresult-into-nend) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into nend](https://docs.treasuredata.com/display/public/INT/nend+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -49,7 +49,7 @@ Available parameters for `result_settings` are here.
 - retry_limit: (integer, default 4)
 - mode: (string(append|replace), default replace)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-nend)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/nend+Export+Integration)
 
 # Next Step
 

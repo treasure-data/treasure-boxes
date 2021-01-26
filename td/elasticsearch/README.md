@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Elasticsearch)
 
-This example workflow exports TD job results into Elasticsearch, using [Treasure Data's Writing Job Results into Elasticsearch](https://docs.treasuredata.com/articles/result-into-elasticsearch) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into Elasticsearch, using [Treasure Data's Writing Job Results into Elasticsearch](https://docs.treasuredata.com/display/public/INT/Elastic+Cloud+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -51,7 +51,7 @@ Available parameters for `result_settings` are here.
 - bulk_size: (long, default 5242880)
 - concurrent_requests: (int, default 5)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-elasticsearch).
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Elastic+Cloud+Export+Integration).
 
 # Result URL format
 

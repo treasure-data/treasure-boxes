@@ -6,7 +6,7 @@ This project provides the workflows necessary to use Fuzzy Matching algorithms l
 ## Getting Started
 
 1. Download this folder locally.
-2. Use [TD Toolbelt](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083651/Treasure+Workflow+Quick+Start+using+TD+Toolbelt+in+a+CLI) to upload this folder as a Treasure Workflow project into your Treasure data account
+2. Use [TD Toolbelt](https://docs.treasuredata.com/display/public/PD/Treasure+Workflow+Quick+Start+using+TD+Toolbelt+in+a+CLI) to upload this folder as a Treasure Workflow project into your Treasure data account
 3. Provide the database name ,table name(ex. user_master with first and last name information) and column name with information of first and last name in the demo_fuzzy.dig file as variables
 4. Run the demo_fuzzy.dig file
 

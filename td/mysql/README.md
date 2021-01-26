@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to MySQL)
 
-This example workflow ingests data using [Treasure Data's Writing Job Results into MySQL Table)](https://docs.treasuredata.com/articles/result-into-mysql) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Treasure Data's Writing Job Results into MySQL Table](https://docs.treasuredata.com/display/public/INT/MySQL+Tables+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -50,7 +50,7 @@ Available parameters for `result_settings` are here.
 - unique: (string, available for update mode)
 - use_compression: (boolean, default false)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-mysql#four-modes-to-modify-data-appendreplacetruncateupdate)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/MySQL+Tables+Export+Integration#MySQLTablesExportIntegration-SetTransferSettings)
 
 # Next Step
 

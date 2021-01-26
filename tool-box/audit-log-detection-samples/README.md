@@ -47,5 +47,5 @@ This file is a workflow to run all the task above. When trying it, please set fo
 |secret:td.apikey | 1/xxxx |
 
 ### Documents
-- [Premium Audit Log Events](https://tddocs.atlassian.net/wiki/spaces/PD/pages/233734195/Premium+Audit+Log+Events)
-- [Premium Audit Log Reference](https://tddocs.atlassian.net/wiki/spaces/PD/pages/208437326/Premium+Audit+Log+Reference)
+- [Premium Audit Log Events](https://docs.treasuredata.com/display/public/PD/Premium+Audit+Log+Events)
+- [Premium Audit Log Reference](https://docs.treasuredata.com/display/public/PD/Premium+Audit+Log+Reference)

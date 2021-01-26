@@ -1,6 +1,6 @@
 # Workflow: Result Output to DoubleClick Bid Manager
 
-This example workflow ingests data using [Writing Job Results into Google DoubleClick Bid Manager on the DoubleClick Data Platform](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082604/Google+DoubleClick+Bid+Manager+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Writing Job Results into Google DoubleClick Bid Manager on the DoubleClick Data Platform](https://docs.treasuredata.com/display/public/INT/Google+DoubleClick+Bid+Manager+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -37,7 +37,7 @@ Available parameters for `result_settings` are here.
 - cookie_column_header: (string, required)
 - membership_lifespan: (int, optional)
 
-For more details, please see [Treasure Data documentation](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082604/Google+DoubleClick+Bid+Manager+Export+Integration)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Google+DoubleClick+Bid+Manager+Export+Integration)
 
 # Next Step
 

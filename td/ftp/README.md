@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to FTP(S))
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into FTP(S)](https://docs.treasuredata.com/articles/result-into-ftp) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into FTP(S)](https://docs.treasuredata.com/display/public/INT/FTP+Server+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -47,7 +47,7 @@ Available parameters for `result_settings` are here.
 - null_string: (string(""|"\N"|NULL|null), default "")
 - newline: (string(CRLF|CR|LF), default CRLF)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-ftp#usage-from-cli)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/FTP+Server+Export+Integration#FTPServerExportIntegration-UsagefromCLI)
 
 # Next Step
 

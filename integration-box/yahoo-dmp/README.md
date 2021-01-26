@@ -7,7 +7,7 @@ There are 2 ways to create targeting campaign on Yahoo! Display Network.
 - Require to have accounts for TreasureData, Yahoo Display Network, Yahoo! DMP
 - Require to have clientId(referred to `_a`), DatasourceNo(referred to `_b`) provided by Yahoo!
 - Require to have vendor_guid, entity_id, uid_key, and x-api-key provided by TreasureData support team.
-- Set up Treasure Data Toolbelt: Command-line Interface (https://tddocs.atlassian.net/wiki/spaces/PD/pages/2065286/Using+TD+Toolbelt)
+- Set up Treasure Data Toolbelt: Command-line Interface (https://docs.treasuredata.com/display/public/PD/TD+Toolbelt)
 
 # Installation (Setup)  
 Download this workflow. 
@@ -94,7 +94,7 @@ $ td wf push yahoodmp_integration
 
 FYI
 Setting Workflow Secrets from TD Console
-https://tddocs.atlassian.net/wiki/spaces/PD/pages/219185771/Setting+Workflow+Secrets+from+TD+Console
+https://docs.treasuredata.com/display/public/PD/Setting+Workflow+Secrets+from+TD+Console
 
 # Mechanism 
 <img width="2999" alt="yahoodmp_integration" src="https://user-images.githubusercontent.com/248312/82309034-8d065700-99fd-11ea-8066-96923cf397b5.png">

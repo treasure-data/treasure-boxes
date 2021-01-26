@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to s3)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into AWS S3](https://docs.treasuredata.com/articles/result-into-s3) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into AWS S3](https://docs.treasuredata.com/display/public/INT/Amazon+S3+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -54,7 +54,7 @@ Available parameters for `result_settings` are here.
 - quote: (string, optional)
 - escape: (string, optional)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-s3#usage)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Amazon+S3+Export+Integration#usage)
 
 # Next Step
 

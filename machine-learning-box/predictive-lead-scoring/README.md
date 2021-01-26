@@ -17,7 +17,7 @@ Here is an overview of what we try to tackle:
 4. Integrate transformed job titles with other attributes
 5. Launch predictive analytics, and find out our potential customers for sales team
 
-In this page, we mainly focus on **step 2** to **5**. In order to transfer your SFDC data to Treasure Data as **step 1**, you first need to refer to the following article: **[How to integrate Salesforce data with Treasure Data](https://docs.treasuredata.com/articles/data-connector-salesforce)**.
+In this page, we mainly focus on **step 2** to **5**. In order to transfer your SFDC data to Treasure Data as **step 1**, you first need to refer to the following article: **[How to integrate Salesforce data with Treasure Data](https://docs.treasuredata.com/display/public/INT/Salesforce+Import+Integration)**.
 
 Note that you can skip **step 3** if you use [resources/title_mapping.csv](./resources/title_mapping.csv).
 
@@ -126,4 +126,4 @@ The following tables suggest probability which indicates how this qualified lead
 
 Treasure Machine Learning and Workflow make predictive analytics more handy. Once `prediction_qualified_lead` and/or `prediction_opportunity` table has been created, you can connect the result with the other tools such as SFDC itself and BI tools.
 
-[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
+[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/display/public/PD/Consultation).

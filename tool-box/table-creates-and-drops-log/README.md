@@ -47,7 +47,7 @@ variables: 'google_sheet_id' and 'google_sheet_connection_name' as well as the s
     * Copy and paste the anomalous_table_creates_and_deletes_log.dig into the workflow.
 2. Specify the options available:
     * **database:** Set the name of an existing database where you would like your log files to be maintained. If there is not
-already a database you would like to use, please [create one](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083644/Database+and+Table+Management)
+already a database you would like to use, please [create one](https://docs.treasuredata.com/display/public/PD/Database+and+Table+Management)
 and enter the name here.
     * **lookback_range_days:** Should be an intiger representing a number of days, see Overview for more details.
     * **anomaly_range_days:** Should be an intiger representing a number of days, see Overview for more details.
@@ -58,7 +58,7 @@ delete actions. There is an
 , copy that ID and paste it into the google_sheet_id: in the workflow. If you do not want to use Google Sheets just enter
 '#' in front of this variable and in all lines within the '+create_google_sheet_of_anomalous_jobs' step of the workflow.
     * **google_sheet_connection_name:** Enter the name of your
-[Google Sheets connection](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081625/Google+Sheets+Export+Integration)
+[Google Sheets connection](https://docs.treasuredata.com/display/public/INT/Google+Sheets+Export+Integration)
 within your Treasure Data account.
     * **mailing_list:** Enter all emails you would like to recieve notifications of anomalous actions seperated by commas.
     * **exclude_databases:** If you do not wish to exclude databases please enter: []. Otherwise use regex to identify the

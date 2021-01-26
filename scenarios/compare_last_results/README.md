@@ -13,7 +13,7 @@ The `store_last_results` can store the first 1 row of the query results to ${td.
 
 In this scenario, some workflow operators are used. Please refer to the documentation for each operator.
 
- - `td>: operator`: [td>: Running Treasure Data Query](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084693/Reference+for+Treasure+Data+Operators#td%3E:)
+ - `td>: operator`: [td>: Running Treasure Data Query](https://docs.treasuredata.com/display/public/PD/Reference+for+Treasure+Data+Operators#ReferenceforTreasureDataOperators-td%3E:)
  - `for_each>: operator`: [for_each>: Repeat tasks for values](https://docs.digdag.io/operators/for_each.html)
  - `if>: operator`: [if>: Conditional execution](https://docs.digdag.io/operators/if.html)
 

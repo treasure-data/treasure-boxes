@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to MongoDB)
 
-This example workflow exports TD job results into MongoDB, using [Treasure Data's Writing Job Results into your Mongodb Collections](https://docs.treasuredata.com/articles/result-into-mongodb) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into MongoDB, using [Treasure Data's Writing Job Results into your Mongodb Collections](https://docs.treasuredata.com/display/public/INT/MongoDB+Collections+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -48,7 +48,7 @@ Available parameters for `result_settings` are here.
 - mode: (string(append|replace|truncate|update), default append)
 - unique: (string, available for update mode)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-mongodb).
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/MongoDB+Collections+Export+Integration).
 
 # Next Step
 
