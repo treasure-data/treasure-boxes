@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Salesforce Marketing Cloud (ExactTarget))
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into Salesforce Marketing Cloud (ExactTarget)](https://docs.treasuredata.com/articles/result-into-salesforce-marketing-cloud) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into Salesforce Marketing Cloud (ExactTarget)](https://docs.treasuredata.com/display/public/INT/Salesforce+Marketing+Cloud+ExactTarget+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -53,7 +53,7 @@ Available parameters for `result_settings` are here.
 - null_string: (string(""|"\N"|NULL|null), default "")
 - newline: (string(CRLF|CR|LF), default CRLF)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-salesforce-marketing-cloud#run-a-treasure-data-job-to-complete-an-initial-import-to-salesforce)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Salesforce+Marketing+Cloud+ExactTarget+Export+Integration+Using+CLI)
 
 # Next Step
 

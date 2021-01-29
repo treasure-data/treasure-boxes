@@ -10,7 +10,7 @@ _export:
     image: "digdag/digdag-python:3.7"
   _env:
     # For secrets documentation,
-    # See https://tddocs.atlassian.net/wiki/spaces/PD/pages/223379597/Setting+Workflow+Secrets+from+the+Command+Line
+    # See https://docs.treasuredata.com/display/public/PD/Setting+Workflow+Secrets+from+the+Command+Line
     S3_ACCESS_KEY_ID: ${secret:s3.access_key_id}
     S3_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}
 

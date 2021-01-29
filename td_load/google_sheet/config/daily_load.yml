@@ -15,7 +15,7 @@ in:
     value_render_option: FORMATTED_VALUE
     datetime_render_option: FORMATTED_STRING
     key: spreadsheet_key_here
-    # https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081625/Google+Sheets+Export+Integration#Find-the-Spreadsheet-Key
+    # https://docs.treasuredata.com/display/public/INT/Google+Sheets+Export+Integration#Find-the-Spreadsheet-Key
     
     null_string: '\N'
     default_typecast: strict

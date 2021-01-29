@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Google Cloud Storage)
 
-This example workflow ingests data using [Treasure Data's Writing Job Results into Google Cloud Storage](https://tddocs.atlassian.net/wiki/spaces/PD/pages/4949333/Google+Cloud+Storage+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Treasure Data's Writing Job Results into Google Cloud Storage](https://docs.treasuredata.com/display/public/INT/Google+Cloud+Storage+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -55,7 +55,7 @@ Available parameters for `result_settings` are here.
 - newline: (string(CRLF|CR|LF), default CRLF)
 - application_name: (string, Arbitrary client name associated with API requests)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-google-cloud-storage#use-from-cli)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Exporting+Data+from+Google+Cloud+Storage+CLI)
 
 # Next Step
 

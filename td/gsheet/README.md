@@ -5,7 +5,7 @@ This example workflow exports TD job results into a Google Sheets with [td](http
 # Prerequisites
 
 You need to create a new Authentication for Google Sheets in advance.
-Please refer to the section '2. Account authentication' in the [Treasure Data Documentation](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081625/Google+Sheets+Export+Integration) in order to find the procedure.
+Please refer to the section '2. Account authentication' in the [Treasure Data Documentation](https://docs.treasuredata.com/display/public/INT/Google+Sheets+Export+Integration) in order to find the procedure.
 
 The connection name is used in the dig file.
 
@@ -55,7 +55,7 @@ Available parameters for `result_settings` are here.
 
 **※You must choose to use either the *****spreadsheet_id***** OR *****spreadsheet_title.***** You cannot use both.**
 
-For more details, please see [Treasure Data documentation](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081625/Google+Sheets+Export+Integration)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Google+Sheets+Export+Integration)
 
 # Next Step
 

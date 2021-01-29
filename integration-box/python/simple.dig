@@ -9,7 +9,7 @@
     _env:
         MY_ENV_VAR: "hello"
         # One can use secrets as well.
-        # See https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085133/About+Workflow+Secret+Management
+        # See https://docs.treasuredata.com/display/public/PD/About+Workflow+Secret+Management
     docker:
         image: "digdag/digdag-python:3.7"
 

@@ -84,4 +84,4 @@ What you need to prepare is just an input table.
 Note that you can find stopwords in various languages in [PostgreSQL repository](https://github.com/postgres/postgres/tree/master/src/backend/snowball/stopwords).
 Better to replace [stopwords.csv](.resources/stopwords.csv) for non-English texts.
 
-[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
+[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/display/public/PD/Consultation).

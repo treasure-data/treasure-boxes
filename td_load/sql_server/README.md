@@ -1,13 +1,13 @@
 # Workflow: td_load example (Microsoft SQL Server)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for Microsoft SQL Server](https://docs.treasuredata.com/articles/data-connector-microsoft-sql-server) with [td_load](https://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Data Connector for Microsoft SQL Server](https://docs.treasuredata.com/display/public/INT/Microsoft+SQL+Server+Import+Integration) with [td_load](https://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
 
 # Register Data Connector Job
 
 Data Connector for Microsoft SQL Server supports incremental mode using incremental_columns. If you want to use it, you have to register Connector Job without schedule.
 
 
-First, please prepare the load.yml refer to [Treasure Data's Data Connector for Microsoft SQL Server](https://docs.treasuredata.com/articles/data-connector-microsoft-sql-server).
+First, please prepare the load.yml refer to [Treasure Data's Data Connector for Microsoft SQL Server](https://docs.treasuredata.com/display/public/INT/Microsoft+SQL+Server+Import+Integration).
 
 Please note the following conditions in regard to connection setting:
 - If you are using Azure, omit the instance name and provide the port # only.
@@ -15,7 +15,7 @@ Please note the following conditions in regard to connection setting:
 
 - Sample of [load.yml](load.yml)
 
-Second, please register it without schedule. ([Create the schedule](https://docs.treasuredata.com/articles/data-connector-microsoft-sql-server#create-the-schedule))
+Second, please register it without schedule. ([Create the schedule](https://docs.treasuredata.com/display/public/INT/Microsoft+SQL+Server+Import+Integration#MicrosoftSQLServerImportIntegration-Scheduledexecution))
 
     # Sample Command
     td connector:create connector_job_name "" dest_db dest_table load.yml

@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Microsoft SQL Server)
 
-This example workflow exports TD job results into SQL Server, using [Treasure Data's Writing Job Results into SQL Server tables](https://docs.treasuredata.com/articles/result-into-microsoft-sql-server) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into SQL Server, using [Treasure Data's Writing Job Results into SQL Server tables](https://docs.treasuredata.com/display/public/INT/Microsoft+SQL+Server+Tables+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -55,7 +55,7 @@ Available parameters for `result_settings` are here.
 - If you are using Azure, omit the instance name and provide the port # only.
 - If you are not using Azure and want to use your own instance: please make sure that you can connect to the database using only the instance name, without the port. If the instance name does not work, you have to set the correct port instead of instance.
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-microsoft-sql-server)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Microsoft+SQL+Server+Tables+Export+Integration)
 
 # Next Step
 

@@ -1,6 +1,6 @@
 # For more advanced config options, please check these URLs.
-# @see https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082523/Amazon+S3+Import+Integration
-# @see https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083538/expand+json+Filter+Function
+# @see https://docs.treasuredata.com/display/public/INT/Amazon+S3+Import+Integration
+# @see https://docs.treasuredata.com/display/public/PD/Expanding+JSON+Filter
 # @see https://github.com/embulk/embulk-input-s3
 ---
 in:

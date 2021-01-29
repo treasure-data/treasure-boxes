@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Redshift)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into AWS Redshift](https://docs.treasuredata.com/articles/result-into-redshift) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into AWS Redshift](https://docs.treasuredata.com/display/public/INT/Amazon+Redshift+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -49,7 +49,7 @@ Available parameters for `result_settings` are here.
 - unique: (string, available for update mode)
 - schema: (string, optional)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-redshift)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Amazon+Redshift+Export+Integration)
 
 # Next Step
 

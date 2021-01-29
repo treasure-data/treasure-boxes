@@ -21,7 +21,7 @@ As of 2019-7-2, we supported for Grid and Carousel type of creative.
 
 ## Log detail
 
-In Addition to [default params of TreasureData Javascript SDK](https://docs.treasuredata.com/articles/javascript-sdk#step-2-initialize-amp-send-events-to-the-cloud), Each event logs as follows parameters.
+In Addition to [default params of TreasureData Javascript SDK](https://docs.treasuredata.com/display/public/INT/Brightcove+Player+Import+Integration#BrightcovePlayerImportIntegration-Parameters), Each event logs as follows parameters.
 
 |`bc_event` column|additional column|example|
 |:---:|:---:|:---:|

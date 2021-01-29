@@ -11,7 +11,7 @@ This workflow checks if there is running master segment workflow or not. After f
 You have to change it if your account's site is located in EU or Tokyo.
 
 Please refer to the doc for more details.
-https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085143/Sites+and+Endpoints
+https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints
 
 # How to Run
 First, upload the project.

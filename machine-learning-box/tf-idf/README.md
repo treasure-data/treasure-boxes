@@ -63,4 +63,4 @@ For further reading for algorithm and/or workflow details, please refer [this pa
 
 Treasure Workflow and TF-IDF weighting technique enable you to analyze a collection of massive documents on cloud. Once you find TF-IDF scores and top-k words for each document, you can use the results in a wide variety of applications such as document clustering and recommendation.
 
-[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
+[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/display/public/PD/Consultation).

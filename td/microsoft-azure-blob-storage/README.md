@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Microsoft Azure Blob Storage)
 
-This example workflow exports TD job results into Microsoft Azure Blob Storage, using [Treasure Data's Writing Job Results into Microsoft Azure Blob Storage](https://docs.treasuredata.com/articles/result-into-microsoft-azure-blob-storage) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into Microsoft Azure Blob Storage, using [Treasure Data's Writing Job Results into Microsoft Azure Blob Storage](https://docs.treasuredata.com/display/public/INT/Microsoft+Azure+Blob+Storage+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -53,7 +53,7 @@ Available parameters for `result_settings` are here.
 - null_string: (string(""|"\N"|NULL|null), default "")
 - new_line: (string(CRLF|CR|LF), default CRLF)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-microsoft-azure-blob-storage)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Microsoft+Azure+Blob+Storage+Export+Integration)
 
 # Next Step
 

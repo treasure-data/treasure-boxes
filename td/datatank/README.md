@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Data Tanks)
 
-This example workflow exports data to [Data Tanks](https://docs.treasuredata.com/articles/datatanks) using [Treasure Data's Writing Job Results into PostgreSQL Table)](https://docs.treasuredata.com/articles/result-into-postgresql) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow exports data to [Data Tanks](https://docs.treasuredata.com/display/public/PD/Data+Tanks+Using+Presto) using [Treasure Data's Writing Job Results into PostgreSQL Table)](https://docs.treasuredata.com/display/public/INT/PostgreSQL+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 Data Tanks is an add-on feature. Please contact Treasure Data Support if you're interested.
 

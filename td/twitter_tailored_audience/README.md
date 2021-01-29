@@ -1,10 +1,10 @@
 # Workflow: td example (Result Output to Twitter Tailored Audience)
 
-This example workflow outputs data to a twitter tailorerd audience using [Writing Job Results into your Twitter Tailored Audience](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081589/Twitter+Tailored+Audience+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow outputs data to a twitter tailorerd audience using [Writing Job Results into your Twitter Tailored Audience](https://docs.treasuredata.com/display/public/INT/Twitter+Tailored+Audience+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
-In order to register your credential in Treasure Data, please create connection by following the instructions on this page [Writing Job Results into your Twitter Tailored Audience](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081589/Twitter+Tailored+Audience+Export+Integration)
+In order to register your credential in Treasure Data, please create connection by following the instructions on this page [Writing Job Results into your Twitter Tailored Audience](https://docs.treasuredata.com/display/public/INT/Twitter+Tailored+Audience+Export+Integration)
 
 The connection name is used in the dig file.
 
@@ -48,8 +48,8 @@ Available parameters for `result_settings` are here.
 - max_retry_wait_msec: Maximum time in milliseconds between retrying attempts. (int, optional, default: 320000)
 
 
-For more details, please see [Treasure Data documentation (GUI)](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084846/Using+Workflow+from+TD+Console)
-or [Treasure Data documentation(CLI)](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083651/Treasure+Workflow+Quick+Start+using+TD+Toolbelt+in+a+CLI)
+For more details, please see [Treasure Data documentation (GUI)](https://docs.treasuredata.com/display/public/PD/Using+Workflow+from+TD+Console)
+or [Treasure Data documentation(CLI)](https://docs.treasuredata.com/display/public/PD/Treasure+Workflow+Quick+Start+using+TD+Toolbelt+in+a+CLI)
 
 # Next Step
 If you have any questions, please contact support@treasuredata.com.

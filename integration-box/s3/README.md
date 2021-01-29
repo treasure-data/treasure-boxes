@@ -4,7 +4,7 @@ This is a simple example integration to upload/download a data from Python Custo
 
 Ensure to create S3 bucket your own, and your S3 bucket has appropriate policy to upload/download from Python Custom Scripting. See also https://docs.aws.amazon.com/AmazonS3/latest/dev/using-iam-policies.html
 
-To set credentials securely, we recommend to use secrets for Treasure Workflow. See also https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085133/About+Workflow+Secret+Management
+To set credentials securely, we recommend to use secrets for Treasure Workflow. See also https://docs.treasuredata.com/display/public/PD/About+Workflow+Secret+Management
 
 ## Prerequisites
 

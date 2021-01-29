@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Web Server)
 
-This example workflow ingests data using [Treasure Data's Writing Job Results into Web Server)](https://docs.treasuredata.com/articles/result-into-web) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Treasure Data's Writing Job Results into Web Server)](https://docs.treasuredata.com/display/public/INT/Web+Server+and+HTTP+PUT+Endpoint+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -45,7 +45,7 @@ Available parameters for `result_settings` are here.
 
 - path: (string, required)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-web#for-on-demand-jobs)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Web+Server+and+HTTP+PUT+Endpoint+Export+Integration#WebServerandHTTPPUTEndpointExportIntegration-ForOn-DemandJobs)
 
 # Next Step
 

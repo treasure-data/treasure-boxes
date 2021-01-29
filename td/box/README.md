@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Data Tanks)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into BOX](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083770/Box+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into BOX](https://docs.treasuredata.com/display/public/INT/Box+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # How to Run
 

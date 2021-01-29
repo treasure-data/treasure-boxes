@@ -28,7 +28,7 @@ https://auth0.com/docs/hooks
 Treasure Data users can ingest data through the public REST API. You can use Treasure Data to create custom webhooks into your data.
 
 Please see:
-https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083818/Postback+API
+https://docs.treasuredata.com/display/public/PD/Postback+API
 
 
 # Sample

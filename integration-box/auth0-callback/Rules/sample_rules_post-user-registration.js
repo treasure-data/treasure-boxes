@@ -15,7 +15,7 @@ function (user, context, callback) {
     // Set your TD's environment info
     let option = {
         // Set the destination Endpoint, DB name and, Table name
-        // Endpoint: https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085143/Sites+and+Endpoints (JS/Mobile SDK/Postback part)
+        // Endpoint: https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints (JS/Mobile SDK/Postback part)
         url: 'https://{ENDPOINT}/postback/v3/event/{YOUR_DB}/{YOUR_TABLE}',
         method: 'POST',
         headers: {

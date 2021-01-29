@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to PostgreSQL)
 
-This example workflow ingests data using [Treasure Data's Writing Job Results into PostgreSQL Table)](https://docs.treasuredata.com/articles/result-into-postgresql) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Treasure Data's Writing Job Results into PostgreSQL Table](https://docs.treasuredata.com/display/public/INT/PostgreSQL+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -38,7 +38,7 @@ You can trigger the session manually.
 
     # Run
     $ td wf run td_postgresql.dig
-    
+
 # Supplemental
 
 Available parameters for `result_settings` are here.
@@ -51,7 +51,7 @@ Available parameters for `result_settings` are here.
 - schema: (string, optional)
 - fdw: (string(None|cstore), default None)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-postgresql#result-output-url-format)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/PostgreSQL+Export+Integration#result-output-url-format)
 
 # Next Step
 

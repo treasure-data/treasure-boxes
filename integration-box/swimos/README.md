@@ -20,7 +20,7 @@ git apply ../../patch-tutorial.diff
 # set values to TD_WRITE_KEY, TD_DATABASE, TD_TABLE variables
 ```
 
-By running the Swim application, a mock data source publishes random records (e.g., `{'foo': 62, 'bar': 126, 'baz': 174}`) to a Web Agent, and the agent passes the records to [Treasure Data Postback API](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083818/Postback+API) along with setting value to the other [Lanes](https://developer.swim.ai/concepts/lanes/):
+By running the Swim application, a mock data source publishes random records (e.g., `{'foo': 62, 'bar': 126, 'baz': 174}`) to a Web Agent, and the agent passes the records to [Treasure Data Postback API](https://docs.treasuredata.com/display/public/PD/Postback+API) along with setting value to the other [Lanes](https://developer.swim.ai/concepts/lanes/):
 
 ```sh
 ./gradlew run

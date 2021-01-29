@@ -12,7 +12,7 @@ This project provides the workflows necessary to enrich customer profiles with s
 ----
 ## Implementation
 1. Download this folder locally
-2. Use [TD Toolbelt](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083651/Treasure+Workflow+Quick+Start+using+TD+Toolbelt+in+a+CLI) to upload this folder as a Treasure Workflow project in your Treasure Data account
+2. Use [TD Toolbelt](https://docs.treasuredata.com/display/public/PD/Treasure+Workflow+Quick+Start+using+TD+Toolbelt+in+a+CLI) to upload this folder as a Treasure Workflow project in your Treasure Data account
 3. Define the variables listed below to specify what data to process in order to enrich the necessary customer profiles
 
 ----

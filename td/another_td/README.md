@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Another TD Account)
 
-This example workflow ingests data using [Treasure Data's Writing Job Results into TD Table)](https://docs.treasuredata.com/articles/result-into-td) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Treasure Data's Writing Job Results into TD Table)](https://docs.treasuredata.com/display/public/INT/Treasure+Data+Data+Exchange+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -50,7 +50,7 @@ Available parameters for `result_settings` are here.
 - IDCF  : api.ybi.idcfcloud.net
 - AWS TOKYO: api.treasuredata.co.jp
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-td#two-ways-to-modify-data-appendreplace)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Treasure+Data+Data+Exchange+Export+Integration#TreasureDataDataExchangeExportIntegration-TwoWaystoModifyData)
 
 # Next Step
 

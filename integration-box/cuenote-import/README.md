@@ -36,7 +36,7 @@ td wf secrets --project cuenote_import --set td.apikey td.apiserver td.database
 |variable|sample|description|
 |:----|:----|:----|
 |`td.apikey`|`000/1234567890abcde`|Treasure Data's API key with Master-Key permission|
-|`td.apiserver`|`https://api.treasuredata.com`|An endpoint of Treasure Data API. Use your [regional endpoint](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085143/Sites+and+Endpoints).|
+|`td.apiserver`|`https://api.treasuredata.com`|An endpoint of Treasure Data API. Use your [regional endpoint](https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints).|
 |`td.database`|`cuenote`|A name of database dedicated for Cuenote integration.|
 
 ### 3. Set variables for Cuenote API

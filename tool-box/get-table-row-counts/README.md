@@ -28,7 +28,7 @@ schedule:
 ```
 
 ### TD endpoint
-You need to modify td_endpoint setting in [get_row_count.dig](get_row_count.dig) file for your TD region accordingly. See our [document](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085143/Sites+and+Endpoints#Endpoints) for details.
+You need to modify td_endpoint setting in [get_row_count.dig](get_row_count.dig) file for your TD region accordingly. See our [document](https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints#Endpoints) for details.
 ```
     td_endpoint: "https://api.treasuredata.com/"
 ```
