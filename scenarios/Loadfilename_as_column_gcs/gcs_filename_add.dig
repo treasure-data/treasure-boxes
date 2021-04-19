@@ -1,0 +1,26 @@
+timezone: Asia/Tokyo
+_export:
+  gcs:
+    bucket: td_test_bucket
+    path_prefix: files
+    upload_path_prefix: with_filename
+    datafile: data.tmp
+  td:
+    database: database_name
+    table: master_with_filename
+    endpoint: api.treasuredata.com
+
++read_gcsfiles:
+  docker:
+    image: "digdag/digdag-python:3.7"
+  py>: gcs_filename_add.main_proc
+  _env:
+    gcp_json_key: ${secret:gcp.json_key}
+    gcs_bucket: ${gcs.bucket}
+    gcs_path_prefix: ${gcs.path_prefix}
+    gcs_upload_path_prefix: ${gcs.upload_path_prefix}
+    gcs_datafile: ${gcs.datafile}
+
+
++load_from_gcs:
+  td_load>: load_gcs.yml
