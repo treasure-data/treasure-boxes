@@ -1,0 +1,18 @@
+timezone: Asia/Tokyo
+_export:
+  gcs:
+    bucket: td_test_bucket
+ 
++read_gcsfiles:
+  docker:
+    image: "digdag/digdag-python:3.7"
+  py>: gcs_filename_add.main_proc
+  _env:
+    gcp_json_key: ${secret:gcp.json_key}
+
+ 
++load_from_gcs:
+  td_load>: load_gcs.yml
+  database: ue_database
+  table: master_with_filename
+  endpoint: api.treasuredata.com

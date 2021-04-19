@@ -1,0 +1,26 @@
+in:
+  type: gcs
+  auth_method: json_key
+  json_keyfile: { content: "${secret:gcp.json_key}" }
+  bucket: "${gcs.bucket}"
+  path_prefix: "with_filename/data.tmp"
+  parser:
+    charset: UTF-8
+    newline: LF
+    type: csv
+    delimiter: ","
+    quote: "\""
+    escape: "\""
+    trim_if_not_quoted: false
+    skip_header_lines: 0
+    allow_extra_columns: false
+    allow_optional_columns: false
+    columns:
+    - {name: filename, type: string}
+    - {name: data, type: string}
+out: {}
+exec: {}
+filters:
+- type: add_time
+  to_column: {name: time}
+  from_value: {mode: upload_time}
