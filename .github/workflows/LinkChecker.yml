@@ -1,0 +1,80 @@
+name: Link Checker
+
+on: 
+  schedule:
+    # Run on 1st day of every month
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'  
+
+jobs:
+  # Set the job key. The key is displayed as the job name
+  # when a job name is not provided
+  boxes-checker:
+    name: Treasure Boxes Link Checker
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps: 
+      - name: Setup Environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - run: pip3 install git+https://github.com/linkchecker/linkchecker.git
+      - run: mkdir ./logs
+
+      - name: Check Links
+        run: '(linkchecker -t 100 -o html http://boxes.treasuredata.com > ./logs/boxes.treasuredata.com.html) || true'
+        continue-on-error: true
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: boxes.treasuredata.com.html
+          path: ./logs/boxes.treasuredata.com.html
+
+#       - name: Send email
+#         uses: dawidd6/action-send-mail@v2
+#         with:
+#           server_address: smtp.gmail.com
+#           server_port: 465
+#           username: ${{secrets.MAIL_USERNAME}}
+#           password: ${{secrets.MAIL_PASSWORD}}
+#           subject: Linchecker results for boxes.treasuredata.com
+#           # Literal body:
+#           # body: LinkChecker for docs.treasuredata.com
+#           # Read file contents as body:
+#           body: file://./logs/boxes.treasuredata.com.html
+#           to: kitazawa@treasure-data.com
+#           from: ci-bot@treasure-data.com # <user@example.com>
+#           # Optional carbon copy recipients
+#           # cc: austin.blackstone@treasure-data.com
+#           # Optional blind carbon copy recipients
+#           # bcc: project-lead@treasure-data.com
+#           # Optional unsigned/invalid certificates allowance:
+#           # ignore_cert: false
+#           # Optional content type (defaults to text/plain):
+#           content_type: text/html
+#           # Optional converting Markdown to HTML (set content_type to text/html too):
+#           convert_markdown: true
+#           # Optional attachments:
+#           attachments: ./logs/boxes.treasuredata.com.html
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        if: ${{ failure() }}
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DOCS }}
+          SLACK_CHANNEL: docs
+          SLACK_USERNAME: CI_Bot
+          SLACK_TITLE: Link Check of boxes.treasuredata.com
+          MSG_MINIMAL: true
+          SLACK_ICON_EMOJI: ':failed:'
+          SLACK_MESSAGE: 'Monthly link check: broken links detected on boxes.treasuredata.com. Please see report artifact on https://github.com/treasure-data/treasure-boxes/actions/workflows/linkchecker.yml'
+          SLACK_FOOTER: Powered by the Evangelism Team - Austin Blackstone
+          SLACK_COLOR: '#E10600'
