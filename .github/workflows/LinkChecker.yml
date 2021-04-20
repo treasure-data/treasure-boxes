@@ -47,7 +47,7 @@ jobs:
 #           password: ${{secrets.MAIL_PASSWORD}}
 #           subject: Linchecker results for boxes.treasuredata.com
 #           # Literal body:
-#           # body: LinkChecker for docs.treasuredata.com
+#           # body: LinkChecker for boxes.treasuredata.com
 #           # Read file contents as body:
 #           body: file://./logs/boxes.treasuredata.com.html
 #           to: kitazawa@treasure-data.com
@@ -69,8 +69,8 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         if: ${{ failure() }}
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DOCS }}
-          SLACK_CHANNEL: docs
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: project-treasure_box
           SLACK_USERNAME: CI_Bot
           SLACK_TITLE: Link Check of boxes.treasuredata.com
           MSG_MINIMAL: true
