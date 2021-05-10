@@ -10,6 +10,9 @@
     "format": "prettier --write 'src/*.js'",
     "audit:fix": "yarn-audit-fix"
   },
+  "resolutions": {
+    "jsdoc/**/underscore": ">=1.12.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hjmsano/td-js-sdk-extension.git"
