@@ -1,7 +1,7 @@
 timezone: UTC
 
 # See
-# https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081710/Scheduling+Workflows+from+the+Command+Line
+# https://docs.treasuredata.com/display/public/PD/Scheduling+Workflows+from+the+Command+Line
 # for scheduling workflow
 schedule:
   hourly>: 00:00

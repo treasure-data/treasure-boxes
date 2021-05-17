@@ -2,7 +2,7 @@
 
 This example workflow ingests data from datasource with [JSON Lines](http://jsonlines.org/) format using [expand_json filter](https://github.com/civitaspo/embulk-filter-expand_json).
 
-The workflow also uses [Secrets](https://docs.treasuredata.com/articles/workflows-secrets) feature, so that you don't have to include your datasource credentials to your workflow files.
+The workflow also uses [Secrets](https://docs.treasuredata.com/display/public/PD/Workflows+and+Machine+Learning-secrets) feature, so that you don't have to include your datasource credentials to your workflow files.
 
 # File format
 

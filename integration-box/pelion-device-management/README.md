@@ -6,7 +6,7 @@ PDM itself, however, does not store device data (i.e., resource values of your d
 
 ## Overview
 
-This Box demonstrates a simple way of pulling resource values from PDM to TD via [`ConnectAPI`](https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html) called by [PDM Python Client](https://github.com/ARMmbed/mbed-cloud-sdk-python) running on the [Treasure Workflow Custom Scripting](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1084247/Introduction+to+Custom+Scripts) capability.
+This Box demonstrates a simple way of pulling resource values from PDM to TD via [`ConnectAPI`](https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html) called by [PDM Python Client](https://github.com/ARMmbed/mbed-cloud-sdk-python) running on the [Treasure Workflow Custom Scripting](https://docs.treasuredata.com/display/public/PD/Introduction+to+Custom+Scripts) capability.
 
 We assume your device has already been registered to PDM. For instance, if you are right after finishing [PDM IoT Connection Tutorial](https://os.mbed.com/guides/connect-device-to-pelion/), device and resource information can be listed as follows:
 
@@ -28,7 +28,7 @@ Next, push the workflow to TD:
 td wf push pelion_device
 ```
 
-Here, get your API key and endpoint from [PDM](https://preview.pelion.com/docs/device-management/current/integrate-web-app/api-keys.html) and [TD](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081428/Getting+Your+API+Keys), and set them to the workflow secrets:
+Here, get your API key and endpoint from [PDM](https://preview.pelion.com/docs/device-management/current/integrate-web-app/api-keys.html) and [TD](https://docs.treasuredata.com/display/public/PD/Getting+Your+API+Keys), and set them to the workflow secrets:
 
 ```sh
 td wf secrets \

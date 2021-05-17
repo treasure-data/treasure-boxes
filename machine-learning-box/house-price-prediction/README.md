@@ -58,4 +58,4 @@ This workflow outputs predicted price of houses in `predictions` table as follow
 
 Treasure Workflow provides an easy way to predict continuous values, like a price or energy consumption, using Linear Regression predictor.
 
-[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/articles/data-science-consultation).
+[Contact us](https://www.treasuredata.com/contact_us) if you interested in [our paid consulting service](https://docs.treasuredata.com/display/public/PD/Consultation).

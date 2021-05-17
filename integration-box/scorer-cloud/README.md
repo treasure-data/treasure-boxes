@@ -112,7 +112,7 @@ group by
   1, 2
 ```
 
-See [documentation](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083429/Supported+Presto+and+TD+Functions#TD_INTERVAL) to learn more about `TD_INTERVAL`.
+See [documentation](https://docs.treasuredata.com/display/public/PD/Supported+Presto+and+TD+Functions) to learn more about `TD_INTERVAL`.
 
 Output can be:
 

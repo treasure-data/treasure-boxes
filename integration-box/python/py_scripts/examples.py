@@ -1,4 +1,4 @@
-# Note that "meg" parameter comes from the `msg` field in simple.dig
+# Note that "msg" parameter comes from the `msg` field in simple.dig
 # This is how parameters can be passed in
 def print_arg(msg):
     print(f"Message is {msg}")

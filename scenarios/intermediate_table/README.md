@@ -12,7 +12,7 @@ Steps 2 and 3 can be made into a Treasure Workflow which enables you to define r
 
 You can read additional information:
 1. [Efficiently Analyze Infinitely Growing Data with Incremental Queries](https://blog.treasuredata.com/blog/2017/07/25/analyze-infinitely-growing-data-incremental-queries/)
-2. [Treasure Workflow Docs](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081518/Workflow+Reference)
+2. [Treasure Workflow Docs](https://docs.treasuredata.com/display/public/PD/Workflow+Reference)
 
 ## Scenario
 
@@ -24,7 +24,7 @@ The purpose of this scenario is to get the number of unique users who accessed t
 
 In this scenario, some workflow operators are used. Please refer to the documentation for each operator.
 
- - `td>: operator`: [td>: Running Treasure Data Query](http://docs.digdag.io/operators/td.html)
+ - `td>: operator`: [td>: Running Treasure Data Query](https://docs.digdag.io/operators/td.html)
 
 # How to use
 

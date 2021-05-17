@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Web Server)
 
-This example workflow ingests data using [Treasure Data's Writing Job Results into Web Server)](https://docs.treasuredata.com/articles/result-into-web) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Treasure Data's Writing Job Results into Web Server)](https://docs.treasuredata.com/display/public/INT/Web+Server+and+HTTP+PUT+Endpoint+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -19,7 +19,7 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push web_server
 
-If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project web_server --set key
@@ -45,7 +45,7 @@ Available parameters for `result_settings` are here.
 
 - path: (string, required)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-web#for-on-demand-jobs)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Web+Server+and+HTTP+PUT+Endpoint+Export+Integration#WebServerandHTTPPUTEndpointExportIntegration-ForOn-DemandJobs)
 
 # Next Step
 

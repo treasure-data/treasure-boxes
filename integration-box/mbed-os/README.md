@@ -64,7 +64,7 @@ Compile the Box code, and enter to a serial terminal:
 mbed compile --target auto --toolchain GCC_ARM --flash --sterm
 ```
 
-The terminal tells you that device heap information is being collected and sent to [Treasure Data Postback API](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083818/Postback+API):
+The terminal tells you that device heap information is being collected and sent to [Treasure Data Postback API](https://docs.treasuredata.com/display/public/PD/Postback+API):
 
 ```
 Treasure Boxes (Integration): Mbed OS + Treasure Data
@@ -94,10 +94,10 @@ This Box is a modified version of the following repository:
 
 Official documentation using Mbed Online Compiler is available at:
 
-- [Data Ingestion from Mbed OS (HTTP over Wi-Fi)](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081510/Mbed+OS+for+Device+Tracking)
+- [Data Ingestion from Mbed OS (HTTP over Wi-Fi)](https://docs.treasuredata.com/display/public/INT/Mbed+OS+for+Device+Tracking)
 
 Besides Postback API, there are alternative ways to ingest data from Mbed OS to Treasure Data; for example:
 
 - [Fluentd](https://github.com/BlackstoneEngineering/mbed-os-example-fluentlogger)
-- [Fluent Bit](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082746/Embedded+Apps+C+and+C+Import+Integration)
+- [Fluent Bit](https://docs.treasuredata.com/pages/releaseview.action?pageId=329063)
 - [MQTT Broker](../mqtt)

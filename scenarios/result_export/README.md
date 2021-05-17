@@ -27,7 +27,7 @@ Note: http.authorization is used as header in your API request.
 You must http.authorization like this : ```TD1 <Your APIKey>```
 
 For detail, please refer to the below page.
-https://tddocs.atlassian.net/wiki/spaces/PD/overview
+https://docs.treasuredata.com/display/public/PD/Product+Documentation+Home
 
 
 Third, please set your other services' credentials by ```td wf secrets``` command.
@@ -42,7 +42,7 @@ $ td wf secret --project export_result_parallel --set @credential.yml
 ```
 
 For detail, please refer to below page.
-https://tddocs.atlassian.net/wiki/spaces/PD/pages/223379597/Setting+Workflow+Secrets+from+the+Command+Line
+https://docs.treasuredata.com/display/public/PD/Setting+Workflow+Secrets+from+the+Command+Line
 
 Finally, you can trigger the session manually.
 

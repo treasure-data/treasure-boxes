@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Elasticsearch)
 
-This example workflow exports TD job results into Elasticsearch, using [Treasure Data's Writing Job Results into Elasticsearch](https://docs.treasuredata.com/articles/result-into-elasticsearch) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into Elasticsearch, using [Treasure Data's Writing Job Results into Elasticsearch](https://docs.treasuredata.com/display/public/INT/Elastic+Cloud+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -19,7 +19,7 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push sample_project
 
-If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project sample_project --set key
@@ -51,7 +51,7 @@ Available parameters for `result_settings` are here.
 - bulk_size: (long, default 5242880)
 - concurrent_requests: (int, default 5)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-elasticsearch).
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Elastic+Cloud+Export+Integration).
 
 # Result URL format
 

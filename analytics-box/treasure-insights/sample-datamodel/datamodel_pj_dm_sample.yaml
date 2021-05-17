@@ -1,0 +1,22 @@
+name: pj_dm_sample
+apikey: APIKEY
+type: elasticube
+schedule: dummy
+datamodel:
+  datasets:
+    pj_ti_database:
+      type: presto
+      database: pj_ti_database
+      tables:
+        pj_ti_table:
+          columns:
+            time:
+              type: bigint
+            type:
+              type: text
+            _2020_04:
+              type: float
+            _2020_09:
+              type: float
+shared_users:
+  - praveena+demo@treasure-data.com

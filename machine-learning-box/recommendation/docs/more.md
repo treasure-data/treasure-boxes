@@ -1,7 +1,7 @@
 After you read this page, you can:
 
 - get a basic understanding of a recommendation technique,
-- understand basic usage of [Treasure Workflow](https://docs.treasuredata.com/articles/workflows) for a recommendation purpose,
+- understand basic usage of [Treasure Workflow](https://docs.treasuredata.com/display/public/PD/Workflows+and+Machine+Learning) for a recommendation purpose,
 - try the template on publicly available data,
 - make recommendation on your own data stored in TD.
 

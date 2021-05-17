@@ -1,6 +1,13 @@
 # Workflow: export_result
-This example shows how use result_export API in Treasure Data workflow. 
+This example shows how use result_export API in Treasure Data workflow.
 You can export result to Your MongoDB without running the same query.
+
+## Note
+
+Using `td_result_export` operator is much easier and simpler for calling API by yourself.
+If you want to know how to use `td_result_export`, please check the [Doc](https://docs.treasuredata.com/display/public/PD/Reference+for+Treasure+Data+Operators#ReferenceforTreasureDataOperators-td_result_export%3E:)
+
+The sample is [here](https://github.com/treasure-data/treasure-boxes/blob/master/scenarios/result_export/export_result_prallel.dig)
 
 ## Scenario
 
@@ -25,7 +32,7 @@ Note: http.authorization is used as header in your API request.
 You must http.authorization like this : ```TD1 <Your APIKey>```
 
 For detail, please refer to the below page.
-https://tddocs.atlassian.net/wiki/spaces/PD/overview
+https://docs.treasuredata.com/display/public/PD/Product+Documentation+Home
 
 
 Third, please set your other services' credentials by ```td wf secrets``` command.
@@ -40,7 +47,7 @@ $ td wf secret --project export_result_mongodb --set mongodbTable // RedShift Ta
 ```
 
 For detail, please refer to below page.
-https://tddocs.atlassian.net/wiki/spaces/PD/pages/223379597/Setting+Workflow+Secrets+from+the+Command+Line
+https://docs.treasuredata.com/display/public/PD/Setting+Workflow+Secrets+from+the+Command+Line
 
 Finally, you can trigger the session manually.
 

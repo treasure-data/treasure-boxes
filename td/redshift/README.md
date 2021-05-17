@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Redshift)
 
-This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into AWS Redshift](https://docs.treasuredata.com/articles/result-into-redshift) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into AWS Redshift](https://docs.treasuredata.com/display/public/INT/Amazon+Redshift+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
@@ -19,7 +19,7 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push sample_project
 
-If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project sample_project --set key
@@ -49,7 +49,7 @@ Available parameters for `result_settings` are here.
 - unique: (string, available for update mode)
 - schema: (string, optional)
 
-For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-redshift)
+For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Amazon+Redshift+Export+Integration)
 
 # Next Step
 

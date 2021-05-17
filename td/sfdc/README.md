@@ -1,11 +1,11 @@
 # Workflow: td example (Result Output to Salesforce)
 
-This example workflow exports TD job results into Salesforce [Treasure Data's Writing Job Results into Salesforce](https://docs.treasuredata.com/articles/result-into-salesforce) with [td](http://docs.digdag.io/operators/td.html) operator.
+This example workflow exports TD job results into Salesforce [Treasure Data's Writing Job Results into Salesforce](https://docs.treasuredata.com/display/public/INT/Salesforce+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 
 Salesforce.com organization and username, password, and security token for API integration
-https://docs.treasuredata.com/articles/result-into-salesforce#prerequisites
+https://docs.treasuredata.com/display/public/INT/Salesforce+Export+Integration#SalesforceExportIntegration-Prerequisites
 
 ![](https://t.gyazo.com/teams/treasure-data/0153ad6cb81d8a2ca71d3c55fe6c21e1.png)
 
@@ -20,7 +20,7 @@ First, please upload your workflow project by `td wf push` command.
     # Upload
     $ td wf push td_sfdc
 
-If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+If you want to mask setting, please set it by `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project td_sfdc --set key
@@ -53,7 +53,7 @@ Available parameters for `result_settings` are here.
 - retry: (integer, default 2)
 - split_records: (integer, default 10000)
 
-For more details on Result output to Salesforce, please see [Treasure Data documentation](https://docs.treasuredata.com/articles/result-into-salesforce)
+For more details on Result output to Salesforce, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/Salesforce+Export+Integration)
 
 # Next Step
 

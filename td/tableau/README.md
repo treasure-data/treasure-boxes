@@ -1,6 +1,6 @@
 # Workflow: td example (Result Output to Tableau)
 
-This example workflow ingests data using [Tableau Server with Treasure Data](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1082963/Tableau+Server+Export+Integration) or [Tableau Online with Treasure Data](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081683/Tableau+Online+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Tableau Server with Treasure Data](https://docs.treasuredata.com/display/public/INT/Tableau+Server+Export+Integration) or [Tableau Online with Treasure Data](https://docs.treasuredata.com/display/public/INT/Tableau+Online+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 

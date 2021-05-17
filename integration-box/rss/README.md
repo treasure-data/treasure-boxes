@@ -14,7 +14,7 @@ $ td wf secrets --project rss_import --set td.apikey --set td.apiserver
 |Variable|Description|Example|
 |:---|:---|:---|
 |`td.apikey`|An API key to be used in the script. Access Type must be `Master Key`.|`1234/abcdefghijklmnopqrstuvwxyz1234567890`|
-|`td.apiserver`|TD's API endpoint starting with `https://`. See our [document](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085143/Sites+and+Endpoints#Endpoints) for details.|`https://api.treasuredata.com`|
+|`td.apiserver`|TD's API endpoint starting with `https://`. See our [document](https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints#Endpoints) for details.|`https://api.treasuredata.com`|
 
 ### Set RSS url list
 Set rss_url_list you want to get imported in [rss_import.dig](rss_import.dig) file.

@@ -1,0 +1,10 @@
+timezone: UTC
+
++td-result-output-power-bi:
+  td>: queries/sample.sql
+  result_connection: your_connections_name
+  result_settings:
+    workspace_id: your_workspace_id
+    dataset: your_dataset_name
+    table: your_table_name
+    replace_existing_data: false

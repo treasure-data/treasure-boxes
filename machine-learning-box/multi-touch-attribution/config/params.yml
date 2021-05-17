@@ -1,0 +1,15 @@
+# Name of database where model will read and write data to.
+in_db: mta_sample
+
+# Enter name of a touchpoints table. `queries/shuffle.sql` enriches the table
+# with a rand attribute specified by `rnd_column` below.
+in_table: touchpoints
+
+# This points to the column that contains unique user IDs, most commonly
+# 'canonical_id' since this is typically the output of our ID unification
+# algorithm.
+unique_id: user_id
+
+# Name of rand digit attribute for random
+# shuffling.
+rnd_column: ab_rnd

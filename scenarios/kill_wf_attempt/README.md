@@ -13,7 +13,7 @@ To kill the attempt automatically if the attempt violates sla.
 You have to change baseurl if your account's site is EU, Tokyo.
 
 Please refer to the doc for more details.
-https://tddocs.atlassian.net/wiki/spaces/PD/pages/1085143/Sites+and+Endpoints
+https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints
 
 # How to Run
 First, upload the project.

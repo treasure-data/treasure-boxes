@@ -1,6 +1,6 @@
 # Workflow: http for Chatwork Example
 
-This example workflow notifies calculated data from TreasureData to Chatwork, using [http](http://docs.digdag.io/operators/http.html) operator.
+This example workflow notifies calculated data from TreasureData to Chatwork, using [http](https://docs.digdag.io/operators/http.html) operator.
 
 # Preparation
 

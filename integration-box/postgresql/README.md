@@ -1,6 +1,6 @@
 # Workflow: pg
 
-This example executes queries to PostgreSQL server using [pg operator](http://docs.digdag.io/operators/pg.html).
+This example executes queries to PostgreSQL server using [pg operator](https://docs.digdag.io/operators/pg.html).
 
 # How to Run
 
@@ -9,7 +9,7 @@ First, you can upload the workflow and trigger the session manually.
     # Upload
     $ td wf push pg_example
 
-Second, please set password for postgre server using `td wf secrets` command. For more details, please see [digdag documentation](http://docs.digdag.io/command_reference.html#secrets)
+Second, please set password for postgre server using `td wf secrets` command. For more details, please see [digdag documentation](https://docs.digdag.io/command_reference.html#secrets)
 
     # Set Secrets
     $ td wf secrets --project pg_example --set pg.password

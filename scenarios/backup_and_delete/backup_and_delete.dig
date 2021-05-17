@@ -1,0 +1,19 @@
+timezone: Asia/Tokyo
+
+schedule:
+  daily>: 01:00:00
+
+_export:
+  td:
+    database: db_name
+    table: tab_name
+
++create_backup_table:
+  td_ddl>:
+  create_tables: ["${td.table}_bk"]
+
++backup_records:
+  td>: queries/backup.sql
+
++delete_records:
+  td>: queries/delete.sql

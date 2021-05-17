@@ -1,6 +1,6 @@
 # Workflow: Instagram User and Media Insights
 
-This is example workflow ingests insights, using [Treasure Data's Data Connector for Instagram User and Media Insights](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1081577/Instagram+User+and+Media+Insights+Import+Integration) with [`td_load`](https://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
+This is example workflow ingests insights, using [Treasure Data's Data Connector for Instagram User and Media Insights](https://docs.treasuredata.com/display/public/INT/Instagram+User+and+Media+Insights+Import+Integration) with [`td_load`](https://docs.digdag.io/operators.html#td-load-treasure-data-bulk-loading) operator.
 
 ## Prerequisites
 
