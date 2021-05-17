@@ -14,7 +14,7 @@ _export:
     
 +import_ms_lists_to_td:
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: "digdag/digdag-python:3.9"
     
   py>: getcdpsegments.getSegmentLists
   _env:
@@ -32,7 +32,7 @@ _export:
   _do:
     +step1:
       docker:
-        image: "digdag/digdag-python:3.7"
+        image: "digdag/digdag-python:3.9"
     
       py>: getcdpsegments.getSegmentLists
       _env:

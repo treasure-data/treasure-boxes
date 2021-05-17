@@ -11,7 +11,7 @@ _export:
     TD_API_KEY: ${secret:td.apikey}
     TD_API_SERVER: ${secret:td.apiserver}
   docker:
-      image: "digdag/digdag-python:3.7"
+      image: "digdag/digdag-python:3.9"
 
 +prepare:
   td>: queries/preprocess.sql

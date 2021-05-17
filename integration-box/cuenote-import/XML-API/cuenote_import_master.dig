@@ -5,7 +5,7 @@ schedule:
 
 +get_jobs:
     docker:
-        image: "digdag/digdag-python:3.7"
+        image: "digdag/digdag-python:3.9"
     py>: get_jobs.main
     _env:
         td_apikey: ${secret:td.apikey}

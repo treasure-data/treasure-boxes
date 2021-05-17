@@ -4,7 +4,7 @@ _export:
 
 +get_presigned_url:
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: "digdag/digdag-python:3.9"
 
   py>: scripts.get_presigned_url.generate
   yahoo_api_url       : https://api.tgm.yahoo-net.jp/v3/userlists
@@ -21,7 +21,7 @@ _export:
 
 +yahoo_dmp_upload:
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: "digdag/digdag-python:3.9"
 
   py>: scripts.put_userlist.upload
   sqlfile      : queries/userlist.sql

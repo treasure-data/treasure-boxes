@@ -27,7 +27,7 @@ _export:
         TD_API_KEY: ${secret:td.apikey}
         TD_ENDPOINT: ${td.endpoint}
       docker:
-        image: "digdag/digdag-python:3.7"
+        image: "digdag/digdag-python:3.9"
     
     +result:
         td>: queries/nonactive_users_with_py.sql

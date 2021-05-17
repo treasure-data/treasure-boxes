@@ -60,7 +60,7 @@ The final task of the sample workflow below instantiates a temporal Python execu
 ```yaml
 +execute_python_code:
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: "digdag/digdag-python:3.9"
   py>: py_scripts.main.run
   # ...
 ```
