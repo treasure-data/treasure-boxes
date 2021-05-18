@@ -24,7 +24,6 @@ def upload_td(records):
     #r.read().decode("utf-8")
 
     resp = json.loads(req.data.decode('utf-8'))
-    print(resp['ganesh_db_demo.kinesis_temp'])
     print("Success: %s records" % len(resp))
  
 def lambda_handler(event):
