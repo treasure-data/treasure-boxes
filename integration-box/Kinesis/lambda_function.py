@@ -20,7 +20,7 @@ def upload_td(records):
     resp = json.loads(req.data.decode('utf-8'))
     print("Success: %s records" % len(resp))
  
-def lambda_handler(event):
+def lambda_handler(event, context):
     records = []
     for record in event['Records']:
         # Kinesis data is base64 encoded so decode here
