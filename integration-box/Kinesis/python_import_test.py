@@ -1,9 +1,9 @@
 import base64, time, json, sys
 import dateutil, dateutil.parser, datetime
 import urllib3
-td_database = 'ganesh_db_demo'
-td_table = 'kinesis_temp'
-td_master_key = '1/dfdd22d68aa1b80a98bf272f87cae59593816b1d'
+td_database = 'my_db'
+td_table = 'my_table'
+td_master_key = '.....'
 td_endpoint = 'https://in.treasuredata.com/js/v3/event'
  
 def upload_td(records):
