@@ -26,7 +26,7 @@ def lambda_handler(event, context):
         # Kinesis data is base64 encoded so decode here
         # We also assume payload comes as JSON form
         # Depending on the payload format, change code below to extract exact content from JSON object
-        payload = json.loads(base64.b64decode(record["Sns"]))
+        payload = json.loads(base64.b64decode(record["data"]))
         if (not 'time'in payload):
             payload['time'] = int(time.time())
         elif isinstance(payload['time'], basestring = str):
