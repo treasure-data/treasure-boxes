@@ -3,7 +3,7 @@ schedule:
 
 +job-monitoring:
     docker:
-        image: "digdag/digdag-python:3.7"
+        image: "digdag/digdag-python:3.9"
     py>: job-monitoring.monitoring
     database: ${secret:td.database}
     table: ${secret:td.table}

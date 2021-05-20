@@ -8,7 +8,7 @@ schedule:
 
 +step1:
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: "digdag/digdag-python:3.9"
   py>: py_scripts.tasks.rss_import
   dest_db: ${td.database}
   dest_table: ${td.table}

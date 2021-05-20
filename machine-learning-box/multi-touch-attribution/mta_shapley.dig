@@ -11,7 +11,7 @@ _export:
   database: ${td.database}
   table: ${in_table}
   docker:
-    image: 'digdag/digdag-python:3.7'
+    image: 'digdag/digdag-python:3.9'
   _env:
     TD_API_KEY: ${secret:td.apikey}
     TD_API_SERVER: ${secret:td.apiserver}
@@ -31,7 +31,7 @@ _export:
 
 +execute_python_code:
   docker:
-    image: "digdag/digdag-python:3.7"
+    image: "digdag/digdag-python:3.9"
   py>: py_scripts.main.run
   db: ${in_db}
   table: ${in_table}_shuffled
