@@ -4,14 +4,14 @@ import urllib3
 
 td_database = '<YOUR_DATABASE_NAME>'
 td_table = '<YOUR_TABLE_NAME>'
-td_master_key = '<YOUR_WRITE_ONLY_API_KEY>'
+td_write_key = '<YOUR_WRITE_ONLY_API_KEY>'
 td_endpoint = 'https://in.treasuredata.com/js/v3/event'
  
 def upload_td(records):
     headers = {
         'Content-Type': 'application/json',
         'X-TD-Data-Type': 'k',
-        'X-TD-Write-Key': td_master_key,
+        'X-TD-Write-Key': td_write_key,
     }
     data = json.dumps({ '%s.%s' % (td_database, td_table): records }).encode("utf-8")
     http = urllib3.PoolManager()
@@ -22,7 +22,7 @@ def upload_td(records):
  
 def lambda_handler(event, context):
     records = []
-    for record in event['Records']:
+    for record in event['records']:
         # Kinesis data is base64 encoded so decode here
         # We also assume payload comes as JSON form
         # Depending on the payload format, change code below to extract exact content from JSON object
