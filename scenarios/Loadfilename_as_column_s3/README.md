@@ -7,9 +7,9 @@ The purpose of this scenario is to capture loaded file name as data from S3 on A
 
 *Steps*
 1. Obtain file names and file contents from multiple files in a specific bucket of S3.
-   the file sample
-   name: files_aaa_20210401
-   contents:
+   <br>the sample
+   <br>file name: files_aaa_20210401
+   <br>contents:
    ```
    aaa
    ```
@@ -40,10 +40,11 @@ First, please upload the workflow.
     $ td wf push s3_filename_add
 
 And Set the S3 Access key ID and Secret access key to the workflow secret as follows.
-Access key ID,Secret access key
 
-    td wf secrets --project s3_filename_add --set s3.access_key_id=<Access key ID>
-    td wf secrets --project s3_filename_add --set s3.secret_access_key=<Secret access key>
+    # Set Secrets
+    $ td wf secrets --project s3_filename_add --set s3.access_key_id
+    $ td wf secrets --project s3_filename_add --set s3.secret_access_key
+
 
 You can trigger the session manually to watch it execute.
 
