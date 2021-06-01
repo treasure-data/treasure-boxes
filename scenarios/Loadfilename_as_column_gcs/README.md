@@ -7,9 +7,9 @@ The purpose of this scenario is to capture loaded file name as data from Google 
 
 *Steps*
 1. Obtain file names and file contents from multiple files in a specific bucket of GCS.
-   the file sample
-   name: files_aaa_20210401
-   contents:
+   <br>the sample
+   <br>file name: files_aaa_20210401
+   <br>contents:
    ```
    aaa
    ```
@@ -42,7 +42,7 @@ First, please upload the workflow.
     # Upload
     $ td wf push gcs_filename_add
 
-And Set the GCP service account credential to the workflow secret as follows.
+And set the GCP service account credential to the workflow secret as follows.
 
     td wf secrets --project gcs_filename_add --set gcp.json_key=@credential.json
 
