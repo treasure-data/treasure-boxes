@@ -1,0 +1,23 @@
+{
+  "name": "gtm-jssdk-template",
+  "version": "1.0.0",
+  "description": "Making the td-js-sdk avaiable in Google Tag Manager Custom Template",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "TreasureData",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/treasure-data/treasure-boxes"
+  },
+  "dependencies": {
+    "td-js-sdk": "^2.5.2"
+  },
+  "devDependencies": {
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
+  }
+}
