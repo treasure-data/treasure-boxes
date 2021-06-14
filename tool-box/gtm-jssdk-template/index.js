@@ -19,8 +19,6 @@ module.exports = {
     td.fetchGlobalID();
   },
   init(options) {
-    console.log("init:", options);
     td = new Treasure(options);
-    console.log("instance:", td);
   },
 };
