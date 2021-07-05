@@ -1,0 +1,31 @@
+timezone: Asia/Tokyo
+
+_export:
+  baseurl: https://api-workflow.treasuredata.com
+  target_workflow_name: XXXXXXXXXX
+  target_project_id: XXXXXX
+
+# obtain the latest workflow id to run latest revision
++get_lastest_workflowid:
+  http>: "${baseurl}/api/projects/${target_project_id}/workflows?name=${target_workflow_name}"
+  store_content: true
+  method: GET
+  headers:
+    - Authorization: "TD1 ${secret:td.another_account_apikey}"
+
++echo_task:
+  echo>: target workflow ID will be ${JSON.parse(http.last_content).workflows[0].id}
+
+
+# using the workflow id on the previous task, execute the workflow session
++call_another_workflow:
+  http>: "${baseurl}/api/attempts"
+  method: PUT
+  content:
+    workflowId: ${JSON.parse(http.last_content).workflows[0].id}
+    sessionTime: ${session_time}
+    params: {}
+  content_format: json
+  content_type: application/json
+  headers:
+    - Authorization: "TD1 ${secret:td.another_account_apikey}"
