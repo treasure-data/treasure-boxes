@@ -63,7 +63,7 @@ In shuffle.sql, we add a random float number distributed uniformly from 0.0 to 
 
 Presto doesn't have a way to use a random seed. If you want to split a reproducible way, use Hive instead.
 
-`rowid()` function assigns a unique id for each row. Although `select *` could include [v columns](https://tddocs.atlassian.net/wiki/spaces/PD/pages/1083743/Schema+Management#Understanding-the-TD-Default-Schema), it's better to specify target columns, respectively.
+`rowid()` function assigns a unique id for each row. Although `select *` could include [v columns](https://docs.treasuredata.com/display/public/PD/Schema+Management#SchemaManagement-UnderstandingtheTDDefaultSchema), it's better to specify target columns, respectively.
 
     -- Hive: queries/shuffle.sql
     select
