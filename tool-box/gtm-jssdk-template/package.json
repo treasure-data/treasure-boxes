@@ -1,6 +1,6 @@
 {
   "name": "gtm-jssdk-template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Making the td-js-sdk avaiable in Google Tag Manager Custom Template",
   "main": "index.js",
   "scripts": {

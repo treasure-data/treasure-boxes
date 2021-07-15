@@ -18,6 +18,14 @@ module.exports = {
   fetchGlobalID: function () {
     td.fetchGlobalID();
   },
+  fetchServerCookie(force) {
+    return new Promise(function(resolve, reject) {
+      td.fetchServerCookie(resolve, reject, force)
+    });
+  },
+  setServerCookie: function(sscId){
+    td.set('$global', { td_ssc_id: sscId });
+  },
   init(options) {
     td = new Treasure(options);
   },
