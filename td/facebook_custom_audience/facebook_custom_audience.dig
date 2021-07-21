@@ -7,7 +7,6 @@ _export:
   result_connection: your_connections_name
   result_settings:
     ad_account_id: your_facebook_ad_account_id
-    api_version: v3.1
     output_name: name_of_custom_audience
     description: description_of_custom_audience
     pre_hashed: false
