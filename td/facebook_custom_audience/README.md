@@ -40,7 +40,6 @@ You can trigger the session manually.
 Available parameters for `result_settings` are here.
 
 - ad_account_id: your Facebook Ad Account ID, without act_ prefix (string, required)
-- api_version: Facebook Graph API version (string, default: "v2.11")
 - output_name: name of output Custom Audience (string, required)
 - description: description of output Custom Audience (string, optional)
 - pre_hashed : Whether or not the data has already been hashed. If not, the plugin will automatically hash the data (boolean, default: false)
