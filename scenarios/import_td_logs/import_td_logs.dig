@@ -9,6 +9,7 @@ _export:
   api_endpoint: https://api.treasuredata.com
   dla_host: dla1.treasuredata-co.jp 
   user_id: abcdefg012345
+  site: aws
   account_id: 1
   query_logs_table: query_logs
   workflow_logs_table: workflow_logs

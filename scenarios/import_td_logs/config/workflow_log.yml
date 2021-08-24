@@ -3,7 +3,7 @@ in:
   host: ${dla_host}
   user: ${user_id}
   secret_key_file: {"content": "${secret:sftp.dla_secret_key_file}"}
-  path_prefix: "/treasure-data-logs/production/${account_id}/workflow_logs/v1/data.csv"
+  path_prefix: "/treasure-data-logs/${site}/${account_id}/workflow_logs/v1/data.csv"
   parser:
     charset: UTF-8
     newline: CRLF
