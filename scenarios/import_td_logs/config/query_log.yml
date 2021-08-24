@@ -1,0 +1,41 @@
+in:
+  type: sftp
+  host: ${dla_host}
+  user: ${user_id}
+  secret_key_file: {"content": "${secret:sftp.dla_secret_key_file}"}
+  path_prefix: "/treasure-data-logs/production/${account_id}/query_logs/v1/data.csv"
+  parser:
+    charset: UTF-8
+    newline: CRLF
+    type: csv
+    delimiter: ","
+    quote: "\""
+    escape: "\""
+    trim_if_not_quoted: false
+    skip_header_lines: 1
+    allow_extra_columns: false
+    allow_optional_columns: false
+    columns:
+      - {name: date, type: string}
+      - {name: account_id, type: string}
+      - {name: user_id, type: string}
+      - {name: project_name, type: string}
+      - {name: workflow_name, type: string}
+      - {name: task_id, type: string}
+      - {name: job_id, type: long}
+      - {name: query_id, type: string}
+      - {name: created_at, type: string}
+      - {name: scheduled_at, type: string}
+      - {name: start_at, type: string}
+      - {name: end_at, type: string}
+      - {name: queued_sec, type: long}
+      - {name: running_sec, type: long}
+      - {name: result_type, type: string}
+      - {name: load_type, type: string}
+      - {name: records, type: long}
+      - {name: type, type: string}
+      - {name: query_status, type: string}
+      - {name: result_size, type: long}
+      - {name: split_hours, type: double}
+      - {name: time, type: long}
+out: {}
