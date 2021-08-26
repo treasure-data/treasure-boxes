@@ -34,10 +34,10 @@ _export:
 
   +users:
     _env:
-        TD_API_KEY: ${secret:td.apikey}
+      TD_API_KEY: ${secret:td.apikey}
     py>: script.import_td_users.import_users
     database: ${td.database}
     table: ${users_table}
     api_endpoint: ${api_endpoint}
     docker:
-        image: "digdag/digdag-python:3.9"
+      image: "digdag/digdag-python:3.9"
