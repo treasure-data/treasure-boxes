@@ -38,4 +38,5 @@ in:
       - {name: result_size, type: long}
       - {name: split_hours, type: double}
       - {name: time, type: long}
-out: {}
+out:
+  mode: replace

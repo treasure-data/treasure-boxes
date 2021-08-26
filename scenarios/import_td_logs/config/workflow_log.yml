@@ -37,4 +37,5 @@ in:
       - {name: state, type: string}
       - {name: date, type: string}
       - {name: time, type: long}
-out: {}
+out:
+  mode: replace
