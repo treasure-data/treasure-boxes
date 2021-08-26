@@ -19,11 +19,7 @@ in:
       - {name: date, type: string}
       - {name: account_id, type: string}
       - {name: user_id, type: string}
-      - {name: project_name, type: string}
-      - {name: workflow_name, type: string}
-      - {name: task_id, type: string}
       - {name: job_id, type: long}
-      - {name: query_id, type: string}
       - {name: created_at, type: string}
       - {name: scheduled_at, type: string}
       - {name: start_at, type: string}
@@ -36,7 +32,12 @@ in:
       - {name: type, type: string}
       - {name: query_status, type: string}
       - {name: result_size, type: long}
+      - {name: query_id, type: string}
       - {name: split_hours, type: double}
+      - {name: average_hive_cores, type: double}
+      - {name: project_name, type: string}
+      - {name: workflow_name, type: string}
+      - {name: task_id, type: string}
       - {name: time, type: long}
 out:
   mode: replace
