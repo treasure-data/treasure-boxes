@@ -1,0 +1,11 @@
+select
+  age
+  ,balance
+  ,day
+  ,duration
+  ,campaign
+  ,pdays
+  ,previous
+  ,rank
+from
+  classification_train

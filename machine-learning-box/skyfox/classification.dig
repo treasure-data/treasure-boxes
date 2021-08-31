@@ -1,0 +1,103 @@
+_export:
+  !include : config/common.yml
+  !include : config/classification.yml
+
++get_token:
+  py>: pyscripts.skyfox.Skyfox.get_token
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_ENDPOINT: ${'https://' + td.endpoint}
+    SKYFOX_USERNAME: ${secret:skyfox.username}
+    SKYFOX_PASSWORD: ${secret:skyfox.password}
+    SKYFOX_AUTH_ENDPOINT: ${skyfox.auth_endpoint}
+    SKYFOX_ENDPOINT: ${skyfox.endpoint}
+    S3_ACCESSKEY: ${secret:s3.awsAccessKeyId}
+    S3_SECRETKEY: ${secret:s3.awsSecretAccessKey}
+    SESSION_UNIXTIME: ${session_unixtime}
+ 
++train:
+  +extract_data:
+    td>: queries/extract_train_classification.sql
+    result_url: "s3://${secret:s3.awsAccessKeyId}:${secret:s3.awsSecretAccessKey}@/${s3.bucket}/${s3.path_prefix_train}"
+
+  +upload_data:
+    py>: pyscripts.skyfox.Skyfox.upload
+    bucket: ${s3.bucket}
+    path: ${s3.path_prefix_train}
+    job_id: ${td.last_job_id}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      TD_ENDPOINT: ${'https://' +td.endpoint}
+      SKYFOX_USERNAME: ${secret:skyfox.username}
+      SKYFOX_PASSWORD: ${secret:skyfox.password}
+      SKYFOX_AUTH_ENDPOINT: ${skyfox.auth_endpoint}
+      SKYFOX_ENDPOINT: ${skyfox.endpoint}
+      S3_ACCESSKEY: ${secret:s3.awsAccessKeyId}
+      S3_SECRETKEY: ${secret:s3.awsSecretAccessKey}
+      SESSION_UNIXTIME: ${session_unixtime}
+
+  +train_model:
+    py>: pyscripts.skyfox.Skyfox.train
+    data_id: ${data_id}
+    target_variable: ${skyfox.target_variable}
+    transformer_id: Q5w0W1VJ0Kv7OJ4m
+    algorithm_id: 25
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      TD_ENDPOINT: ${'https://' +td.endpoint}
+      SKYFOX_USERNAME: ${secret:skyfox.username}
+      SKYFOX_PASSWORD: ${secret:skyfox.password}
+      SKYFOX_AUTH_ENDPOINT: ${skyfox.auth_endpoint}
+      SKYFOX_ENDPOINT: ${skyfox.endpoint}
+      S3_ACCESSKEY: ${secret:s3.awsAccessKeyId}
+      S3_SECRETKEY: ${secret:s3.awsSecretAccessKey}
+      SESSION_UNIXTIME: ${session_unixtime}
+
++predict:
+  +extract:
+    td>: queries/extract_predict_classification.sql
+    result_url: "s3://${secret:s3.awsAccessKeyId}:${secret:s3.awsSecretAccessKey}@/${s3.bucket}/${s3.path_prefix_predict}"
+    
+  +upload:
+    py>: pyscripts.skyfox.Skyfox.upload
+    bucket: ${s3.bucket}
+    path: ${s3.path_prefix_predict}
+    job_id: ${td.last_job_id}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      TD_ENDPOINT: ${'https://' +td.endpoint}
+      SKYFOX_USERNAME: ${secret:skyfox.username}
+      SKYFOX_PASSWORD: ${secret:skyfox.password}
+      SKYFOX_AUTH_ENDPOINT: ${skyfox.auth_endpoint}
+      SKYFOX_ENDPOINT: ${skyfox.endpoint}
+      S3_ACCESSKEY: ${secret:s3.awsAccessKeyId}
+      S3_SECRETKEY: ${secret:s3.awsSecretAccessKey}
+      SESSION_UNIXTIME: ${session_unixtime}
+
+  +predict:
+    py>: pyscripts.skyfox.Skyfox.predict
+    data_id: ${data_id}
+    model_id: ${model_id}
+    dest_database: ${td.dest_database}
+    dest_table: ${td.dest_table}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      TD_ENDPOINT: ${'https://' +td.endpoint}
+      SKYFOX_USERNAME: ${secret:skyfox.username}
+      SKYFOX_PASSWORD: ${secret:skyfox.password}
+      SKYFOX_AUTH_ENDPOINT: ${skyfox.auth_endpoint}
+      SKYFOX_ENDPOINT: ${skyfox.endpoint}
+      S3_ACCESSKEY: ${secret:s3.awsAccessKeyId}
+      S3_SECRETKEY: ${secret:s3.awsSecretAccessKey}
+      SESSION_UNIXTIME: ${session_unixtime}
+    

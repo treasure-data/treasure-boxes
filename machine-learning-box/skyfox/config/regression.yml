@@ -1,0 +1,8 @@
+s3:
+  path_prefix_train: skyfox/regression_train.csv
+  path_prefix_predict: skyfox/regression_pred.csv
+td:
+  dest_database: skyfox
+  dest_table: regression_result
+skyfox:
+  target_variable: temperature

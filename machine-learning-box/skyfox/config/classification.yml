@@ -1,0 +1,8 @@
+s3:
+  path_prefix_train: skyfox/classification_train.csv
+  path_prefix_predict: skyfox/classification_pred.csv
+td:
+  dest_database: skyfox
+  dest_table: classification_result
+skyfox:
+  target_variable: rank

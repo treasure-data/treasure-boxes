@@ -1,0 +1,9 @@
+select
+  weather
+  ,humidity
+  ,local_pressure
+  ,visibility
+  ,wind_direction
+  ,wind_speed
+from
+  regression_pred
