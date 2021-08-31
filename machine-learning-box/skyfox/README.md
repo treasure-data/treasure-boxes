@@ -14,7 +14,7 @@ Following workflows require to set [config/common.yml](./config/common.yml) with
 
 #### config/common.yml
 |Key|Description|Sample|
-|--|--|--|--|
+|--|--|--|
 |td.database|Database name to put sample data|skyfox|
 |td.endpoint|An endpoint of your Treasure Data|api.treasuredata.com|
 |s3.bucket|Your S3 bucket name|api.treasuredata.com|
@@ -23,7 +23,7 @@ Following workflows require to set [config/common.yml](./config/common.yml) with
 
 #### Secret variables
 |Key|Description|Sample|
-|--|--|--|--|
+|--|--|--|
 |td.apikey|Master API Key of Treasure Data|1/xxxxxxxxxxxxxx|
 |skyfox.username|User name of Skyfox|skyfox_user|
 |skyfox.password|Password of Skyfox|skyfox_password|
@@ -43,7 +43,7 @@ This workflow trains a classification model with sample data ingested by [ingest
 It requires you to set [config/classification.yml](./config/classification.yml).
 
 |Key|Description|Sample|
-|--|--|--|--|
+|--|--|--|
 |s3.path_prefix_train|Object key on AWS S3 to export training data|skyfox/classification_train.csv|
 |s3.path_prefix_predict|Object key on AWS S3 to export prediction data|skyfox/classification_pred.csv|
 |td.dest_database|A database name of Treasure Data to create a result table|skyfox|
@@ -58,7 +58,7 @@ This workflow trains a regression model with sample data ingested by [ingest.dig
 It requires you to set [config/regression.yml](./config/regression.yml).
 
 |Key|Description|Sample|
-|--|--|--|--|
+|--|--|--|
 |s3.path_prefix_train|Object key on AWS S3 to export training data|skyfox/classification_train.csv|
 |s3.path_prefix_predict|Object key on AWS S3 to export prediction data|skyfox/classification_pred.csv|
 |td.dest_database|A database name of Treasure Data to create a result table|skyfox|
