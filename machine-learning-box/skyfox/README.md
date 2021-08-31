@@ -10,8 +10,9 @@ This directory includes some workflows to
 Skyfox requires AWS S3 to train models and predict with models. You have to prepare AWS S3.
 
 ### Configuration
-Following workflows require to set [config/common.yml](./config/common.yml) with your environment.
+Following workflows require to set [config/common.yml](./config/common.yml) with your environment and secret variables.
 
+#### config/common.yml
 |Key|Description|Sample|
 |--|--|--|--|
 |td.database|Database name to put sample data|skyfox|
@@ -19,6 +20,20 @@ Following workflows require to set [config/common.yml](./config/common.yml) with
 |s3.bucket|Your S3 bucket name|api.treasuredata.com|
 |skyfox.auth_endpoint|Skyfox's endpoint for authentication|sandbox-users-api.skyfox.ai|
 |skyfox.endpoint|Skyfox's endpoint except for authentication| sandbox-api.skyfox.ai|
+
+#### Secret variables
+|Key|Description|Sample|
+|--|--|--|--|
+|td.apikey|Master API Key of Treasure Data|1/xxxxxxxxxxxxxx|
+|skyfox.username|User name of Skyfox|skyfox_user|
+|skyfox.password|Password of Skyfox|skyfox_password|
+|s3.awsAccessKeyId|Access Key ID accessible to AWS S3|AXXXXXXXXXXXXZ|
+|s3.awsSecretAccessKey|Secret Access Key ID accessible to AWS S3|axxxxxxxxxxxxxxxxxxxxxxxxxz|
+
+You can use this command to set secret variables.
+```
+td workflow secrets --project "YOUR PROJECT" --set td.apikey skyfox.username skyfox.password s3.awsAccessKeyId s3.awsSecretAccessKey
+```
 
 ### [ingest.dig](./ingest.dig)
 This workflow creates tables with sample data for following workflows.
