@@ -1,0 +1,10 @@
+select
+  weather
+  ,humidity
+  ,local_pressure
+  ,visibility
+  ,wind_direction
+  ,wind_speed
+  ,temperature
+from
+  regression_train

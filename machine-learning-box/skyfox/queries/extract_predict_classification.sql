@@ -1,0 +1,10 @@
+select
+  age
+  ,balance
+  ,day
+  ,duration
+  ,campaign
+  ,pdays
+  ,previous
+from
+  classification_pred

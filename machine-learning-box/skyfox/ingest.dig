@@ -1,0 +1,45 @@
+_export:
+  !include : config/common.yml
+
++init:
+  td_ddl>:
+  create_databases: ['${td.database}']
+
++ingest:
+  _parallel: true
+
+  +classification:
+    py>: pyscripts.ingest.classification_dataset
+    database: ${td.database}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      TD_API_SERVER: ${td.endpoint}
+  
+  +regression:
+    py>: pyscripts.ingest.regression_dataset
+    database: ${td.database}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      TD_API_SERVER: ${td.endpoint}
+  
+  +timeseries1:
+    py>: pyscripts.ingest.timeseries1_dataset
+    database: ${td.database}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      TD_API_SERVER: ${td.endpoint}
+  
+  +timeseries2:
+    py>: pyscripts.ingest.timeseries2_dataset
+    database: ${td.database}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      TD_API_SERVER: ${td.endpoint}
