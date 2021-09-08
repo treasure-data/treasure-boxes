@@ -4,5 +4,5 @@ td:
 s3:
   bucket: YOUR BUCKET NAME
 skyfox:
-  auth_endpoint: sandbox-users-api.skyfox.ai
-  endpoint: sandbox-api.skyfox.ai
+  auth_endpoint: YOUR AUTH ENDPOINT
+  endpoint: YOUR ENDPOINT
