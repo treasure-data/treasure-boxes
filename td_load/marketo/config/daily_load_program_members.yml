@@ -1,0 +1,41 @@
+in:
+  account_id: ${secret:marketo.account_id}
+  client_id: ${secret:marketo.client_id}
+  client_secret: ${secret:marketo.client_secret}
+  target: program_members
+  included_fields: []
+  marketo_limit_interval_milis: 20000
+  maximum_retries: 7
+  batch_size: 300
+  max_return: 200
+  bulk_job_timeout_second: 3600
+  polling_interval_second: 60
+  read_timeout_millis: 60000
+  type: marketo
+filters:
+- rules:
+  - rule: upper_to_lower
+  - pass_types:
+    - a-z
+    - 0-9
+    pass_characters: _
+    replace: _
+    rule: character_types
+  - pass_types:
+    - a-z
+    pass_characters: _
+    prefix: _
+    rule: first_character_types
+  - rule: unique_number_suffix
+    max_length: 128
+  type: rename
+- from_value:
+    mode: upload_time
+  to_column:
+    name: time
+  type: add_time
+exec: {}
+out:
+  default_timezone: UTC
+  time_column: time
+  mode: append
