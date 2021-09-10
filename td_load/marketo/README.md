@@ -22,6 +22,7 @@ Now you can reference these credentials by `${secret:}` syntax within yml file f
 
 - [config/daily_load_activity_log.yml](config/daily_load_activity_log.yml)
 - [config/daily_load_lead.yml](config/daily_load_lead.yml)
+- [config/daily_load_program_members.yml](config/daily_load_program_members.yml)
 
 If you use Treasure Workflow UI, overwrite above parameters into ${secret:marketo.xxxx} in yml files directly.
 
