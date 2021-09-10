@@ -35,4 +35,4 @@ Finaly, you can trigger the session manually.
 
 # Next Step
 
-If you have any questions, please contact [support@treasure-data.com](support@treasure-data.com).
+If you have any questions, please contact support@treasure-data.com
