@@ -2,6 +2,8 @@
 
 You can integrate Treasure Data's Profiles API with Optimizely Web Experimentation SDK to create a personalized experience for your customers. Optimizely Web Experimentation is an experimentation platform that allows you to test real visitor experiences on your site using a variety of options including A/B testing, multivariate testing, and personalized campaigns. Optimizely empowers you to make better decisions by improving customer experiences through experimentation.
 
+This integration is a custom integration by the Treasure Data Solution Architect team. If you have any questions, please reach out to your customer success manager.
+
 ## Prerequisites 
 
 - Basic knowledge of JavaScript and HTML
@@ -103,6 +105,6 @@ Please refer to **sample_api_direct.js**
 
 ## Reference
 
-- https://help.optimizely.com/Get_Started/Get_started_with_Optimizely_X_Web_Experimentation
-- https://help.optimizely.com/Build_Campaigns_and_Experiments/Experiment_Types%3A_AB%2C_Multivariate%2C_and_Multi-page
-- https://support.treasuredata.com/hc/en-us/sections/360000271688-Profiles-API
+- [Optimizely - Getting Started Guide](https://help.optimizely.com/Get_Started/Get_started_with_Optimizely_X_Web_Experimentation_)
+- [Optimizely - Building Campaigns](https://help.optimizely.com/Build_Campaigns_and_Experiments/Experiment_Types%3A_AB%2C_Multivariate%2C_and_Multi-page)
+- [Treasure Data - Using API Tokens](https://docs.treasuredata.com/display/public/PD/Working+with+Profiles+and+the+Profiles+API+Tokens)
