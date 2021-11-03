@@ -1,0 +1,24 @@
+timezone: UTC
+
+_export:
+  td:
+    database: database_name
+ 
++s3v2_export:
+  td>: queries/sample.sql
+  database: ${td.database}
+  result_connection: s3_v2_connector_name
+  result_settings:
+    bucket: bucket_name
+    path: /path/to/results_${moment(session_time).format("YYYYMMDD")}.csv
+    sse_type: sse-s3
+    format: csv
+    compression: none
+    header: true
+    delimiter: default
+    null_value:  empty
+    newline: LF
+    quote_policy: MINIMAL
+    escape: '"'
+    quote: '"'
+    part_size: 20
