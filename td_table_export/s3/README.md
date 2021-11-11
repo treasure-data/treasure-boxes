@@ -1,10 +1,12 @@
-# Workflow: td_table_export example (Result Output to S3)
+# Workflow: td_table_export example (Bulk Export to S3)
 
 This example workflow exports TD job results into AWS S3 with [td_table_export](http://docs.digdag.io/operators/td_table_export.html) operator.
 
 # Prerequisites
 
 [TD Toolbelt](https://docs.treasuredata.com/display/public/PD/Installing+TD+Toolbelt+and+Treasure+Agent#InstallingTDToolbeltandTreasureAgent-InstallingTDToolbelt)
+
+[Using Bulk Export to Amazon S3 Bucket](https://docs.treasuredata.com/display/public/PD/Using+Bulk+Export+to+Amazon+S3+Bucket)
 
 # How to Run
 
