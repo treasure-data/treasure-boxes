@@ -1,0 +1,9 @@
++export:
+  td_table_export>:
+  database: database_name
+  table: table_name
+  file_format: jsonl.gz
+  from: 2021-11-01 00:00:00 +0800
+  to: 2021-12-01 00:00:00 +0800
+  s3_bucket: bucket_name
+  s3_path_prefix: path/to/results
