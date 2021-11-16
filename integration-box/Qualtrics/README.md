@@ -7,7 +7,7 @@
 
 ## Workflows
 
-### Contact Autoamtion Export workflow (TD to Qualtrics)
+### Contact Automation Export workflow (TD to Qualtrics)
 
 [workflows/qualtrics_export](./workflows/qualtrics_export)
 
@@ -21,20 +21,20 @@
 
 |Key|Description|Sample|
 |--|--|--|
-|td.endpoint|Endpoint for your Treasure Data Account|https://api.treasuredata.com|
-|td.database|Database that has source table|qualtrics_segments|
-|td.table|The source table (in td.database)|segment_1|
+|td.endpoint|(required) Endpoint for your Treasure Data Account (see [Treasure Data Documentation](https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints#SitesandEndpoints-Endpoints))|https://api.treasuredata.com|
+|td.database|(required) Database that has source table|qualtrics_segments|
+|td.table|(required) The source table (in td.database)|segment_1|
 |td.data_timezone|Timezone of timestamps stored in td.table|'JST' (default 'UTC')|
-|qualtrics.endpoint|Qualtrics' API endpoint|https://iad1.qualtrics.com/|
-|qualtrics.aid|Qualtrics' Contact Automation ID (string starts with 'AU_')|AU_abcdefghijklmno|
-|columns|list of list [TD column name, CSV file header name, Qualtrics column TYPE]|(see below)|
+|qualtrics.endpoint|(required) Qualtrics' API endpoint|https://iad1.qualtrics.com/|
+|qualtrics.aid|(required) Qualtrics' Contact Automation ID (string starts with 'AU_')|AU_abcdefghijklmno|
+|columns|(required) list of list [TD column name, CSV file header name, Qualtrics column TYPE]|(see below)|
 
 Set secrets as below.
 
 |Key|Description|
 |--|--|
-|td.apikey|TD API key|
-|qualtrics.apikey|Qualtrics API key|
+|td.apikey|(required) TD API key|
+|qualtrics.apikey|(required) Qualtrics API key|
 
 Using TD Toolbelt:
 
@@ -48,15 +48,15 @@ Variable `columns` have list of list that has `[TD column name, CSV file header 
 
 - TD column name: column name of specified TD table.
 - CSV file header name: this is usually same as TD column name if 'example file' used for data mapping is TD table output.
-- Qualtrics column TYPE (Optional): Add 'Transaction' as the third element if the data is timestamp and export as 'Transaction Data'
+- Qualtrics column TYPE (Optional): Add 'Transaction' as the third element if the data is timestamp and export as 'Transaction Data'.  Otherwise, this element does not have to exist, or ignored if exists.
 
 ```yaml
   columns: [
-    ['contactid', 'contactid',
+    ['contactid', 'contactid'],
     ['firstname', 'firstname'],
     ['lastname', 'lastname'],
     ['email', 'email'],
-    ['creationdate', 'creationdate', 'Transaction']
+    ['creationdate', 'creationdate', 'Transaction'] # timestamp as Transaction data
   ]
 ```
 
@@ -74,20 +74,20 @@ Variable `columns` have list of list that has `[TD column name, CSV file header 
 
 |Key|Description|Sample|
 |--|--|--|
-|td.endpoint|Endpoint for your Treasure Data Account|https://api.treasuredata.com|
-|td.database|Database that has source table|qualtrics_results|
-|td.table|The source table (in td.database)|survey_data|
-|td.convert_to_long|'true' to convert question columns to long format|'true'|
-|qualtrics.endpoint|Qualtrics' API endpoint|https://iad1.qualtrics.com/|
-|qualtrics.surveyid|Qualtrics' Survey ID (string starts with 'SV_')|SV_abcdefghijklmno|
-|qualtrics.columns_to_keep_wide|list of column names to keep as wide format|(see below)|
+|td.endpoint|(required) Endpoint for your Treasure Data Account (see [Treasure Data Documentation](https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints#SitesandEndpoints-Endpoints))|https://api.treasuredata.com|
+|td.database|(required) Database that has source table|qualtrics_results|
+|td.table|(required) The source table (in td.database)|survey_data|
+|td.convert_to_long|'true' to convert question columns to long format|'true' (default 'false')|
+|qualtrics.endpoint|(required) Qualtrics' API endpoint|https://iad1.qualtrics.com/|
+|qualtrics.surveyid|(required) Qualtrics' Survey ID (string starts with 'SV_')|SV_abcdefghijklmno|
+|qualtrics.columns_to_keep_wide|list of column names to keep as wide format|(see below 'long and wide format')|
 
 Set secrets as below.
 
 |Key|Description|
 |--|--|
-|td.apikey|TD API key|
-|qualtrics.apikey|Qualtrics API key|
+|td.apikey|(required) TD API key|
+|qualtrics.apikey|(required) Qualtrics API key|
 
 Using TD Toolbelt:
 
