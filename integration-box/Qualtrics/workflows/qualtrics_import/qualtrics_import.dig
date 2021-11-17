@@ -1,0 +1,30 @@
+_export:
+  td:
+    endpoint: https://api.treasuredata.com
+    database:  # database on Plazma that has user table
+    table:  # Plazma table
+    convert_to_long:  # 'true' to convert question columns to long format
+    mode:  # default 'append' - see parameter if_exists in https://pytd-doc.readthedocs.io/en/latest/generated/pytd.table.Table.html#pytd.table.Table.import_dataframe
+  qualtrics:
+    endpoint: 
+    surveyid: 
+    columns_to_keep_wide:  # column names to be kept in wide format (works only if td.convert_to_long is true)
+    # userLanguage and all columns that come before it are fixed and maintained in wide format by default
+    # get from qualtrics export column name (csv 3rd row ImportId)
+    # space char between words will automatically translated to underscore upon TD import
+
++import_tasks:
+  py>: pyscripts.import.main
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${td.endpoint}
+    TD_CONVERT_TO_LONG: ${td.convert_to_long}
+    TD_DB: ${td.database}
+    TD_TABLE: ${td.table}
+    TD_IF_EXISTS: ${td.mode}
+    QUALTRICS_API_KEY: ${secret:qualtrics.apikey}
+    QUALTRICS_ENDPOINT: ${qualtrics.endpoint}
+    QUALTRICS_SURVEYID: ${qualtrics.surveyid}
+    QUALTRICS_EMBEDDED_DATA_LABELS: ${qualtrics.columns_to_keep_wide}

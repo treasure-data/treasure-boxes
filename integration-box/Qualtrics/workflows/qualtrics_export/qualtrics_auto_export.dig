@@ -1,0 +1,31 @@
+_export:
+  td:
+    endpoint: https://api.treasuredata.com
+    database:  # database on Plazma that has user table
+    table:  # Plazma table
+    data_timezone: # timezone of TD-stored timestamps (default UTC)
+  qualtrics:
+    # put API key in secret:qualtrics.apikey
+    endpoint: 
+    aid:  # Qualtrics Automation ID
+  columns: [
+    # list of list [TD COLUMN NAME, CSV FILE HEADER NAME, Qualtrics column TYPE]
+    # if Qualtrics column type is Tranaction, that column must be in timestamp string, and will be imported as timestamp by Qualtrics
+    # Space characters around the header names are automatically omitted by Qualtrics server
+  ]
+
++export_tasks:
+  py>: pyscripts.export.main
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${td.endpoint}
+    TD_DATA_TIMEZONE: ${td.data_timezone}
+    QUALTRICS_API_KEY: ${secret:qualtrics.apikey}
+    QUALTRICS_ENDPOINT: ${qualtrics.endpoint}
+    QUALTRICS_AID: ${qualtrics.aid}
+    db: ${td.database}
+    table: ${td.table}
+    columns: ${columns}
+
