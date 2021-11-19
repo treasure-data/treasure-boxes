@@ -1,0 +1,14 @@
+sql: |
+  SELECT 
+    member_id,
+    name,
+    tool
+  FROM
+    test_segment_user
+  WHERE
+    member_id IS NOT NULL
+    AND LENGTH(name) <= 20
+    AND LENGTH(tool) <= 20
+    -- 20 characters limit
+  ORDER BY
+    member_id
