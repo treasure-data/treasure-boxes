@@ -1,0 +1,18 @@
+timezone: Asia/Tokyo
+
+_export:
+  acid: {{Account identifier provided by DAC}}
+  sa_email: {{Email address for service account provided by DAC}}
+  database: {{Name of database has a table for user IDs}}
+  filename: {{Name of output CSV file you want to set}}
+  sqlfile: {{Path to the file contains SQL to retrieve user IDs}}
+  endpoint: https://line-api.dialogone.jp/v1/line/external-segments/file
+
++upload_userlist_to_done:
+  py>: post_userlist_to_done.upload
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    PRIVATE_KEY: ${secret:private_key}
+    PRIVATE_KEY_ID: ${secret:private_key_id}
+  docker:
+    image: "digdag/digdag-python:3.9"
