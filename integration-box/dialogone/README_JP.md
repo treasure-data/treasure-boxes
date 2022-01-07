@@ -18,7 +18,7 @@ DACが開発・提供している「DialogOne」は、コミュニケーショ�
 | sqlfile | ユーザーIDリストを取得するためのクエリが記載されているファイル名 | `user_id_list.sql` |  |
 
 # SQLクエリ
-下記のようにLINE userID用のカラムのみ取得するクエリを作成してください。
+下記のようにLINE user ID用のカラムのみ取得するクエリを作成してください。
 
 `user_id_list.sql`
 ```
