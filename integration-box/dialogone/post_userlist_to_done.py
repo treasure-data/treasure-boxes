@@ -20,8 +20,8 @@ logger.setLevel(INFO)
 logger.addHandler(handler)
 logger.propagate = False
 
-expiry_length = 600
-interval_length = 60
+expiry_length = 3600
+interval_length = 1
 
 def upload(sqlfile, database, sa_email, endpoint, acid, filename):
     """Upload a user list for creating Done segments."""
