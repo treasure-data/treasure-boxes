@@ -17,7 +17,7 @@ And this workflow helps you to post the segment users' list to DialogOne for mes
 | sqlfile | Name of file contains SQL to retrieve user IDs. | `user_id_list.sql` |  |
 
 # SQL query
-Set only one column for LINE user ID in the query like below.
+Set only one column for LINE user ID in the query like below.  
 ※LINE user ID: a string matches the regex pattern `U[0-9a-f]{32}`
 
 `user_id_list.sql`
@@ -29,7 +29,7 @@ FROM
 ```
 
 # About uploaded file
-When you upload the same name file as you have uploaded before, the older file replaces the newer one.
+When you upload the same name file as you have uploaded before, the older file replaces the newer one.  
 A file uploaded / updated expires in 30 days.
 
 # Installation (TD Toolbelt)  
