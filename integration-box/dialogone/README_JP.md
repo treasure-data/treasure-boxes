@@ -14,20 +14,8 @@ DACが開発・提供している「DialogOne」は、コミュニケーショ�
 | private_key_id | サービスアカウントの秘密鍵ID | `abcdef123456789abcdef123456789abcdef1234`| DAC |
 | td.apikey | **Master**のAPIキー([link](https://docs.treasuredata.com/display/public/PD/Getting+Your+API+Keys)) | `1234/abcdefghijklmnopqrstuvwxyz1234567890`| Treasure Data |
 | database | ユーザーIDを格納するテーブルが存在するデータベース名 | `sample_database` | Treasure Data |
-| filename | 出力するCSVファイルにつけるファイル名 (※255文字以下で半角英数字、アンダーバー、ドット、ハイフンのみ使用可能) | `output_user_list`|  |
-| sqlfile | ユーザーIDリストを取得するためのクエリが記載されているファイル名 | `user_id_list.sql` |  |
-
-# SQLクエリ
-下記のようにLINE user ID用のカラムのみ取得するクエリを作成してください。  
-※LINE user ID: `U[0-9a-f]{32}`の正規表現にマッチする文字列。
-
-`user_id_list.sql`
-```
-SELECT 
-  user_id
-FROM
-  sample_db.sample_table
-```
+| table | ユーザーIDを格納するテーブル | `sample_table` | Treasure Data |
+| user_id_column | ユーザーIDを格納されているカラム名 | `user_id` | Treasure Data |
 
 # アップロードファイルについて
 以前アップロードしたものと同じ名前でファイルをアップロードした場合、後から登録したもので上書きされます。  
@@ -40,7 +28,6 @@ Githubからファイルをダウンロード・解凍が完了したら、解�
 Digdagファイル(.dig)の方をエディタで開き、 `td.apikey`、`private_key`、`private_key_id`**以外**の変数の値を用意したものに書き換えてください。
 
 なお、Digdagファイルは任意のプロジェクト名で変更可能ですが、Pythonファイル(.py)の方の名前は変更しないでください。
-
 
 
 ### 2. Treasure Dataにアップロードする

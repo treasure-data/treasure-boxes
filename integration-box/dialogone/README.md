@@ -12,21 +12,9 @@ And this workflow helps you to post the segment users' list to DialogOne for mes
 | private_key | Private key for service account. | `-----BEGIN PRIVATE KEY-----\nABCDEFGHIJKLMNOPQRSTUVWXYZ......abcdefghijklmnopqrstuvwxyz+1234567890=\n-----END PRIVATE KEY-----\n`| DAC |
 | private_key_id | Private key ID for service account. | `abcdef123456789abcdef123456789abcdef1234`| DAC |
 | td.apikey | **Master** API Key. [link](https://docs.treasuredata.com/display/public/PD/Getting+Your+API+Keys) | `1234/abcdefghijklmnopqrstuvwxyz1234567890`| Treasure Data |
-| database | Name of database has a table for user IDs. | `sample_database` | Treasure Data |
-| filename | Name of output CSV file you want to set. (*less than 255 characters and use only alphanumeric characters, numbers, underscores, dots, and hyphens.) | `output_user_list`|  |
-| sqlfile | Name of file contains SQL to retrieve user IDs. | `user_id_list.sql` |  |
-
-# SQL query
-Set only one column for LINE user ID in the query like below.  
-※LINE user ID: a string matches the regex pattern `U[0-9a-f]{32}`
-
-`user_id_list.sql`
-```
-SELECT 
-  user_id
-FROM
-  sample_db.sample_table
-```
+| database | Name of database has a table for LINE UserIDs. | `sample_database` | Treasure Data |
+| table | Name of table for LINE UserIDs. | `sample_table` | Treasure Data |
+| user_id_column | Name of column for LINE UserIDs. | `user_id` | Treasure Data |
 
 # About uploaded file
 When you upload the same name file as you have uploaded before, the older file replaces the newer one.  

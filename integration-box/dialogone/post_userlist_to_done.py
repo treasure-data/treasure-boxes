@@ -23,39 +23,45 @@ logger.propagate = False
 expiry_length = 3600
 interval_length = 1
 
-def upload(sqlfile, database, sa_email, endpoint, acid, filename):
+def upload_user_list(database, table, user_id_column, filename, sa_email, acid):
     """Upload a user list for creating Done segments."""
 
     csvs = []
     row_len_limit = 50000000 # max data length per a API call
     file_name_limit = 255
+    endpoint = 'https://line-api.dialogone.jp/v1/line/external-segments/file'
 
-    # get user list from Treasure Data
-    with open(sqlfile) as f:
-        querytxt = f.read()
+    apikey = os.getenv("TD_API_KEY")
+    td_endpoint = os.getenv("TD_ENDPOINT")
+    if td_endpoint is None:
+        td_endpoint = 'api.treasuredata.com'
 
-    client = pytd.Client(apikey=os.getenv("TD_API_KEY"), database=database)
-    res = client.query(querytxt)   
+    sql = retrive_user_id_sql(table, user_id_column)
+    logger.info("---- sql ----")
+    logger.info(f"\n{sql}\n")
+    logger.info("-------------")    
+       
+    client = pytd.Client(apikey=apikey, endpoint=td_endpoint, database=database)
+    res = client.query(sql)   
     df = pd.DataFrame(**res)  
     
     while (len(df) > row_len_limit):
         d = df[:row_len_limit]
         r = df[row_len_limit:]
         csv = d.to_csv(header=False, index=False)
-        
-        logger.info("---- user list as first 10 lines----")
-        logger.info("\n".join(csv.splitlines()[:10]))
-        logger.info("---- Total number of IDs = " +
-                str(len(csv.splitlines())) + "----")
-
         csvs.append(csv)
         df = r
 
     if (len(df) > 0):
-        csv = df.to_csv(header=True, index=False)
+        csv = df.to_csv(header=False, index=False)
         csvs.append(csv)
 
     for i, csv in enumerate(csvs):
+
+        logger.info("---- user list as first 10 lines----")
+        logger.info("\n".join(csv.splitlines()[:10]))
+        logger.info("---- Total number of IDs = " + str(len(csv.splitlines())) + "----")
+
         idx = i + 1
         file_name = filename
         if (len(csvs) > 1):
@@ -98,6 +104,16 @@ def upload(sqlfile, database, sa_email, endpoint, acid, filename):
             logger.debug('*** Waiting till next call ***')
             time.sleep(interval_length)
 
+def retrive_user_id_sql(table, column):
+    return f"""
+    SELECT
+      {column}
+    FROM 
+      {table}
+    WHERE 
+      {column} is not null
+      AND REGEXP_LIKE({column}, 'U[0-9a-f]{{{32}}}')
+    """
 
 def generate_jwt(sa_email):
     """Generates a signed JSON Web Token using a Google API Service Account."""
