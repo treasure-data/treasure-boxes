@@ -1,16 +1,18 @@
 timezone: Asia/Tokyo
 
 _export:
+  database: {{Name of database has a table for LINE UserIDs}}
+  table: {{Name of table for LINE UserIDs}}
+  user_id_column: {{Name of column for LINE UserIDs}}
+  filename: {{Name of output CSV file you want to set}}
+
   acid: {{Account identifier provided by DAC}}
   sa_email: {{Email address for service account provided by DAC}}
-  database: {{Name of database has a table for user IDs}}
-  filename: {{Name of output CSV file you want to set}}
-  sqlfile: {{Path to the file contains SQL to retrieve user IDs}}
-  endpoint: https://line-api.dialogone.jp/v1/line/external-segments/file
 
 +upload_userlist_to_done:
-  py>: post_userlist_to_done.upload
+  py>: post_userlist_to_done.upload_user_list
   _env:
+    # TD_ENDPOINT: api.treasuredata.co.jp -- This param is essesential when you use an AWS account on Tokyo region
     TD_API_KEY: ${secret:td.apikey}
     PRIVATE_KEY: ${secret:private_key}
     PRIVATE_KEY_ID: ${secret:private_key_id}
