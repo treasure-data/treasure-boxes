@@ -1,7 +1,6 @@
 _export:
   td:
-  database: sample_datasets
-  engine: presto
+    database: sample_datasets
   wf_name: teams_notification_workflow
   api_region: "treasuredata.com"
   
