@@ -1,0 +1,78 @@
+_export:
+  td:
+  database: sample_datasets
+  engine: presto
+  wf_name: teams_notification_workflow
+  api_region: "treasuredata.com"
+  
+_error:
+  http>: https://[IncomingWebhookURL]
+  method: POST
+  content: |
+    {"type":"message","attachments":[
+      {"contentType":"application/vnd.microsoft.card.adaptive","contentUrl":null,"content":
+        { "msteams": {"width": "Full"},
+          "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+          "type": "AdaptiveCard",
+          "version": "1.0",
+          "body": [
+            {
+              "type": "Container",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "Treasure Data Workflow Failure Notification",
+                  "weight": "bolder",
+                  "size": "medium"
+                },
+              ]
+            },
+            {
+              "type": "Container",
+              "items": [
+                {
+                  "type": "TextBlock",
+                  "text": "please re run ${wf_name}",
+                  "wrap": true
+                },
+                {
+                  "type": "FactSet",
+                  "facts": [
+                    {
+                      "title": "workflow_name:",
+                      "value": "${wf_name}"
+                    },
+                    {
+                      "title": "session_time:",
+                      "value": "${session_local_time}"
+                    },
+                    {
+                      "title": "Console Access:",
+                      "value": "[https://console.${api_region}/app/workflows/sessions/${session_id}](https://console.${api_region}/app/workflows/sessions/${session_id})"
+                    },
+                    {
+                      "title": "Error message:",
+                      "value": "${error.message}"
+                    },
+                    {
+                      "title": "Stack Trace:",
+                      "value": "${error.stacktrace}"
+                    },
+                    {
+                      "title": "What should we do?:",
+                      "value": "Check the failed workflow and fix the problem. Then, rerun it."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+        }
+        ]
+    }
+  content_format: text
+  content_type: application/json
+
++step1:
+  td>: select.sql
