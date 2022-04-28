@@ -13,7 +13,7 @@ You should check the following and implement LINE Login on your web apps before 
 - [Developing the LIFF application.](https://developers.line.biz/ja/docs/liff/developing-liff-apps/)
 - [Understand TD JS SDK script.](https://github.com/treasure-data/td-js-sdk)
 
-Please check security guideline and document of LINE Developer Console for implementing LINE Login and how you will give a privacy policy information to get LINE User ID. The following is the sample of privacy policy information. 
+Please check security guideline and document of LINE Developer Console for implementing LINE Login and consider how you will give a privacy policy information to get LINE User ID. The following is the sample of privacy policy information. 
 
 - [Developer's Guideline](https://developers.line.biz/ja/docs/line-login/development-guidelines/)
 - [Security Check List](https://developers.line.biz/ja/docs/line-login/security-checklist/)
