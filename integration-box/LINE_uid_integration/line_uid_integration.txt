@@ -1,0 +1,69 @@
+  <script type="text/javascript">
+  !function(t,e){if(void 0===e[t]){e[t]=function(){e[t].clients.push(this),this._init=[Array.prototype.slice.call(arguments)]},e[t].clients=[];for(var r=["addRecord","blockEvents","fetchServerCookie","fetchGlobalID","fetchUserSegments","resetUUID","ready","setSignedMode","setAnonymousMode","set","trackEvent","trackPageview","trackClicks","unblockEvents"],s=0;s<r.length;s++){var c=r[s];e[t].prototype[c]=function(t){return function(){return this["_"+t]=this["_"+t]||[],this["_"+t].push(Array.prototype.slice.call(arguments)),this}}(c)}var n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=("https:"===document.location.protocol?"https:":"http:")+"//cdn.treasuredata.com/sdk/3.0/td.min.js";var o=document.getElementsByTagName("script")[0];o.parentNode.insertBefore(n,o)}}("Treasure",this);
+  </script>
+    <script type="text/javascript">
+      (function () {liff.ready
+        .then(function() {
+          if (liff.isLoggedIn()) {
+            liff
+              .getProfile()
+              .then(function(profile) {
+                return {
+                  line_user_id: profile.userId,
+                  line_disp_name: profile.displayName
+                };
+              })
+              .then(function(lineUserData) {
+                sendTd(lineUserData)
+              })
+          }
+        })
+      }());
+      function sendTd (lineUserData) {
+        var hostName = location.hostname;
+        var sscDomains = {
+          'ssc domain':'ssc server'
+        };
+        var table = 'td table'
+        var initParams = {
+          host: 'in.treasuredata.com',
+          writeKey: 'td write key',
+          database: 'td database name',
+          startInSignedMode: true
+        };
+        if (location.protocol == 'https:') {
+          Object.keys(sscDomains).forEach(function (key) {
+            var p = new RegExp('^(.*\\.)?' + key.replace(/\./g,'\\.') + '$');
+            if (p.test(hostName)) {
+              initParams["useServerSideCookie"] = true;
+              initParams["sscDomain"] = key;
+              initParams["sscServer"] = sscDomains[key] + '.' + key;
+            }
+          });
+        }
+        var td = new Treasure(initParams);
+        if (lineUserData != undefined) {
+          td.set(table, lineUserData);
+        }
+        td.set('$global', 'td_global_id', 'td_global_id');
+        try{
+          td.fetchServerCookie(successCallback, errorCallback);
+        } catch (e) {
+          fireEvents();
+        }
+        function fireEvents () {
+          // td.trackPageview(table);
+          var url = location.href;
+          var base_url = url.replace(/\?.*$/,"");
+          td.set(table, 'td_url', base_url);
+          td.trackEvent(table);
+        }
+        function successCallback (result) {
+          td.set('$global', {td_ssc_id: result});
+          fireEvents();
+        }
+        function errorCallback () {
+          fireEvents();
+        }
+      }
+  </script>
