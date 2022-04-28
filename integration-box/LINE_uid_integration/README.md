@@ -34,7 +34,7 @@ LINE User ID Integration
    If you do not want to receive messages, please change the setting by clicking [Talk Settings => Block].
 ```
 
-The sample of privacy policy information for English for Japanese
+The sample of privacy policy information for Japanese
 ```
 LINEアカウント連携について
 1. LINEから連携される情報について
