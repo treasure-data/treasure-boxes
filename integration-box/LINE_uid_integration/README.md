@@ -1,4 +1,4 @@
-# LINE User ID integration to Treasure-data. 
+# LINE User ID integration to your treasuredata environment.  
 [LINE](https://line.me/ja/) is in Asia what Facebook Messaging and Instagram are to US mobile users—a fast and easy way to communicate with friends and to discover new promotions about your favorite products and services. LINE is the number one mobile messaging platform in Japan and Taiwan and is also one of the largest Ads delivery platforms. 
 
 ## Important Notes
