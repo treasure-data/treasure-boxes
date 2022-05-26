@@ -1,35 +1,60 @@
-import base64, time, json, sys
-import dateutil, dateutil.parser, datetime
-import urllib3
+import base64
+import time
+import json
+import os
+import random
+import urllib.request
 
-td_database = '<YOUR_DATABASE_NAME>'
-td_table = '<YOUR_TABLE_NAME>'
-td_write_key = '<YOUR_WRITE_ONLY_API_KEY>'
-td_endpoint = 'https://in.treasuredata.com/js/v3/event'
- 
-def upload_td(records):
+TD_DATABASE = os.environ.get("TD_DATABASE")
+TD_TABLE = os.environ.get("TD_TABLE")
+TD_API_KEY = os.environ.get("TD_API_KEY")
+TD_ENDPOINT = os.environ.get("TD_ENDPOINT", "https://us01.records.in.treasuredata.com")
+TD_RETRIES = int(os.environ.get("TD_RETRIES", "10"))
+
+
+def publish(records, retry_count=0):
     headers = {
-        'Content-Type': 'application/json',
-        'X-TD-Data-Type': 'k',
-        'X-TD-Write-Key': td_write_key,
+        "Content-Type": "application/vnd.treasuredata.v1+json",
+        "Accept": "application/vnd.treasuredata.v1+json",
+        "Authorization": f"TD1 {TD_API_KEY}",
     }
-    data = json.dumps({ '%s.%s' % (td_database, td_table): records }).encode("utf-8")
-    http = urllib3.PoolManager()
-    req = http.request('POST',url=td_endpoint, body=data, headers=headers)
- 
-    resp = json.loads(req.data.decode('utf-8'))
-    print("Success: %s records" % len(resp))
- 
+    request = urllib.request.Request(
+        f"{TD_ENDPOINT}/{TD_DATABASE}/{TD_TABLE}",
+        json.dumps({"events": records}).encode("utf-8"),
+        headers,
+    )
+    with urllib.request.urlopen(request) as response:
+        if response.status == 200:
+            return
+        if response.status in (400, 401, 403, 422):
+            raise RuntimeError(f"unexpected response: {response.status}")
+        retries = records if response.status != 206 else failures(response, records)
+        time.sleep(1 + random.uniform(0, 1))
+        if retry_count > TD_RETRIES:
+            print(f"Failed to send {len(retries)} records after {retry_count} tries")
+        else:
+            publish(retries)
+
+
+def failures(response, records):
+    parsed = json.load(response)
+    return [
+        entry
+        for receipt, entry in zip(parsed["receipts"], records)
+        if not receipt["success"]
+    ]
+
+
+def transform(record):
+    # Kinesis data is base64 encoded so decode here
+    # We also assume payload comes as JSON form
+    # Depending on the payload format, change code below to extract exact content from JSON object
+    payload = json.loads(base64.b64decode(record["data"]))
+    if "time" not in payload:
+        payload["time"] = int(time.time())
+    return payload
+
+
 def lambda_handler(event, context):
-    records = []
-    for record in event['records']:
-        # Kinesis data is base64 encoded so decode here
-        # We also assume payload comes as JSON form
-        # Depending on the payload format, change code below to extract exact content from JSON object
-        payload = json.loads(base64.b64decode(record["data"]))
-        if (not 'time'in payload):
-            payload['time'] = int(time.time())
-        elif isinstance(payload['time'], basestring = str):
-            payload['time'] = int((dateutil.parser.parse(payload['time']).replace(tzinfo=dateutil.tz.tzutc()) - datetime.datetime.utcfromtimestamp(0).replace(tzinfo=dateutil.tz.tzutc())).total_seconds())
-        records.append(payload)
-    upload_td(records)
+    records = map(transform, event)
+    publish(records)
