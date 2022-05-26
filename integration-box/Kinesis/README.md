@@ -6,7 +6,7 @@ This example processes data from a sample similar to Kinesis Firehose data strea
 
 1. Lambda handler function is the main method that processes steam events. When that function is invoked, Lambda invokes the handler method. By default, it has the name `lambda_function.lambda_handler`
 2. An event object, which is taken as an argument for lambda_handler is a JSON-formatted document.
-3. Kinesis Firehose event are base64 encoded and needs to be decoded. We also assume payload comes in JSON form.
+3. Kinesis Firehose events are base64 encoded and need to be decoded. We also assume the payload comes in JSON form.
 4. Below is the sample from firehose stream event in JSON form. And the lambda_function script is set to handle this input type.
 
 ```json
