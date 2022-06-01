@@ -1,0 +1,19 @@
+_export:
+    global:
+        !include : 'config/input_params.yml'
+#Description
+#This wf is the base to calling either backup a Master Segment or restore a Master Segment from existing backup
+#Just call the appropriate utility to perform the wf tasks
+
++base_ms:
+    +ms_backup_call:
+        if>: ${global.enable_backup == 'yes'}
+        _do:
+            +run_backup_wf:
+                call>: master_seg_backup.dig
+    
+    +ms_restore_call:
+        if>: ${global.enable_restore == 'yes'}
+        _do:
+            +run_backup_wf:
+                call>: master_seg_restore.dig

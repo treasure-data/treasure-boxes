@@ -1,0 +1,17 @@
+_export:
+
++task1:
+  docker:
+    image: "digdag/digdag-python:3.9"
+
+  _env:
+    TD_SOURCE_API_MASTER_KEY: ${secret:source_api_key}
+    TD_DEST_API_MASTER_KEY: ${secret:dest_api_key}
+    
+    SOURCE_MS_NUMBER: 225352
+    DEST_MS_NUMBER: 230098
+
+    SEG_FOLDER_NAME: 'Reusable Segments'
+    
+
+  py>: migrate_segment_folder.execute
