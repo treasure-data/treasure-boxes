@@ -1,0 +1,4 @@
+input_database: ml_datasets
+output_database: automl_test
+
+expr_tracking_table: automl_experiments
