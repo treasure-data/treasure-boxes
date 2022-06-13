@@ -6,7 +6,7 @@ _export:
 
 +datasets:
   for_each>:
-    table: [gluon_train, bank_marketing_train, vehicle_coupon_train, online_retail_train, telco_churn_train, boston_house_train]
+    table: [gluon_train, bank_marketing_train, vehicle_coupon_train, online_retail_ltv_train, telco_churn_train, boston_house_train]
   _parallel:
     limit: 3
   _do:
