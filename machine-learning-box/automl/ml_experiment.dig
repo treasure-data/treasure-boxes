@@ -14,7 +14,6 @@ _export:
 +load_datasets:
   ipynb>:
     notebook: ml_datasets
-    input_table: dummy.removed_later     # temporary workaround.
     output_database: ${input_database}
 #   datasets: gluon, bank_marketing
     datasets: gluon
@@ -33,6 +32,7 @@ _export:
     # timeout: 60 * 3                    # timeout for notebook cell-level execution. This is a hard limit. Note it's cell-level timeout. No timeout if not specified.
     export_leaderboard: ${output_database}.leaderboard_gluon_train
     export_feature_importance: ${output_database}.feature_importance_gluon_train
+    # hide_table_contents: true
 
 +print_train_result:
   echo>: "executed ${automl.last_executed_notebook}.ipynb"
@@ -59,6 +59,7 @@ _export:
     #ignore_columns: time               # target column should not be in test data
     export_leaderboard: ${output_database}.leaderboard_gluon_predict
     export_feature_importance: ${output_database}.feature_importance_gluon_predict
+    # hide_table_contents: true
 
 +print_predict_result:
   echo>: "executed ${automl.last_executed_notebook}.ipynb"

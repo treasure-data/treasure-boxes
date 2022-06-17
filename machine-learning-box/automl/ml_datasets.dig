@@ -8,7 +8,6 @@ _export:
 +load_datasets:
   ipynb>:
     notebook: ml_datasets
-    input_table: dummy.removed_later     # temporary workaround.
     output_database: ml_datasets
     datasets: all
 #   datasets: gluon, bank_marketing
