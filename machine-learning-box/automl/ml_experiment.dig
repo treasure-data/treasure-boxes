@@ -28,7 +28,7 @@ _export:
     #problem_type: binary                # ‘binary’, ‘multiclass’, ‘regression’, or ‘quantile’. autolugon automatically detect problem types
     #eval_metric: roc_auc                # autolugon automatically select a right eval_metric for a given setting if not specified.
     ignore_columns: time,rowid           # Note time column is ignored by the default.
-    time_limit: 60 * 3                   # fit timeout. 3 min just for training time. Recommend 60 * 60 or so for production purposes (Note 24 hours at max). Note this is a soft limit, not hard limit.
+    time_limit: 60 * 3                   # fit timeout. 3 min just for training time. Default: 60 * 60 (1hr). 1hr or more is recommended for production purposes (Note 24 hours at max). Note this is a soft limit, not hard limit.
     # timeout: 60 * 3                    # timeout for notebook cell-level execution. This is a hard limit. Note it's cell-level timeout. No timeout if not specified.
     export_leaderboard: ${output_database}.leaderboard_gluon_train
     export_feature_importance: ${output_database}.feature_importance_gluon_train
