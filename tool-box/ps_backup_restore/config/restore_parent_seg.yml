@@ -1,0 +1,12 @@
+ms_name: pse_restore_0509
+
+ms_table_restore: pse_restore_ms
+folder_stg_tbl: pse_folder_stg_restore
+
+restore_ps_config_v4: no
+restore_folders_and_segments_v5: yes
+
+root_folder_id: 399619
+aws_bucket_name: ganesh-demo-mar
+aws_folder_config_path: 20220510/folder_config_061627.json
+aws_ms_config_path: 20220510/ms_config_061627.json

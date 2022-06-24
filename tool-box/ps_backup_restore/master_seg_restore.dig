@@ -1,0 +1,64 @@
+_export:
+    restore:
+        !include : 'config/restore_parent_seg.yml'
+    td:
+        !include : 'config/database.yml'
++task_store_results:
+    +create_tmp_tables:
+        td_ddl>: 
+        empty_tables: ["${restore.ms_table_restore}","${restore.folder_stg_tbl}"]
+        database: ${td.database}
++retrieve_ms_config_s3:
+  if>: ${restore.restore_ps_config_v4 == 'yes'}
+  _do:
+    +load_s3_json:
+        td_load>: config/restore_ms_config_load.yml
+        database: ${td.database}
+        table: ${restore.ms_table_restore}
+
+    +fetch_json_to_post:
+        td>: queries/restore_ms_sql.sql
+        database: ${td.database}
+        store_last_results: true
+    
+    
+    +call_restore:
+        http>: https://api-cdp.treasuredata.com/audiences
+        method: POST
+        headers:
+            - Authorization: "TD1 ${secret:td.apikey}"
+        content_type: application/json
+        content: 
+            '${td.last_results._col0}'
+
++retrieve_folder_config:
+  if>: ${restore.restore_folders_and_segments_v5 == 'yes'}
+  _do:
+    +read_folder_config_json:
+        td_load>: config/restore_folder_config_load.yml
+        database: ${td.database}
+        table: ${restore.folder_stg_tbl}
+
+    +extract_folder_config:
+        td>: queries/restore_folder_struct.sql
+        database: ${td.database}
+        store_last_results: true
+    
+    +call_restore_script:
+        docker:
+            image: "digdag/digdag-python:3.9"
+        py>: python_script.restore_main.main
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+            TD_API_SERVER: ${secret:endpoint}
+            database: ${td.database}
+            ROOT_FOLDER_ID: ${restore.root_folder_id}
+            AWS_BUCKET: ${restore.aws_bucket_name}
+            AWS_PATH_PREFIX: ${restore.aws_folder_config_path}
+            AWS_ACCESS_KEY_ID: ${secret:s3.access_key_id}
+            AWS_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}
+
+#    +iterate_folders:
+#        +create_folders_segments:
+#    'https://api.treasuredata.com'
+

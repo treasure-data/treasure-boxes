@@ -1,0 +1,1 @@
+select json_parse(concat('[',array_join(array_agg(config), ','),']')) from ${backup.stg_seg_curr_config_tbl}

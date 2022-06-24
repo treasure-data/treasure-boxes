@@ -1,0 +1,1 @@
+select current_node_id from ${td.database}.${backup.stg_folder_extract_tbl} where current_node_type='segment-batch' group by 1

@@ -1,0 +1,27 @@
+in:
+  type: s3
+  access_key_id: ${secret:s3.access_key_id}
+  secret_access_key: ${secret:s3.secret_access_key}
+  bucket: ${restore.aws_bucket_name}
+  path_prefix: ${restore.aws_ms_config_path}
+  allow_optional_columns: true
+  parser:
+    type: json
+
+filters:
+- type: expand_json
+  json_column_name: record
+  root: "$."
+  # if true, workflow will fail when this filter gets invalid data format.
+  stop_on_invalid_record: false
+  expanded_columns:
+    - {name: "_col0", type: json}
+- type: add_time
+  to_column:
+    name: time
+    type: timestamp
+  from_value:
+    mode: fixed_time
+    value: ${session_unixtime}
+out: {}
+exec: {}

@@ -1,0 +1,119 @@
+_export:
+    backup:
+        !include : 'config/backup_parent_seg.yml'
+    td:
+        !include : 'config/database.yml'
+
++create_config_bckup_table:
+    +create:
+        td_ddl>: 
+        create_tables: ["${backup.stg_ms_config_tbl}","${backup.stg_folder_extract_tbl}","${backup.stg_seg_config_tbl}"]
+        database: ${td.database}
+    
+    +create_tmp_tables:
+        td_ddl>: 
+        empty_tables: ["${backup.stg_folder_curr_config_tbl}","${backup.stg_seg_curr_config_tbl}"]
+        database: ${td.database}
+
++get_master_seg_config:
+    +ms_api_call:
+        http>: https://api-cdp.treasuredata.com/audiences/${backup.src_ms_id}
+        method: GET
+        headers:
+            - Authorization: "TD1 ${secret:td.apikey}"
+        store_content: true
+
+    +write_result_to_s3:
+        +query_for_json:
+            td>:
+            query: SELECT '${JSON.parse(http.last_content)}'
+            
+        +load:
+            td_result_export>:
+            job_id: ${td.last_job.id}
+            result_connection: ${backup.s3.connection_name}
+            result_settings:
+                bucket: ${backup.s3.bucket}
+                format: jsonl
+                path: ${moment(session_time).format("YYYYMMDD")}/ms_config_${moment(session_time).format("HHmmss")}.json
+
+    +write_result_to_td:
+        +insert:
+            td>:
+                data: "INSERT INTO ${td.database}.${backup.stg_ms_config_tbl} SELECT JSON_FORMAT(JSON '${JSON.parse(http.last_content)}') as config"
+
+    
+
+    #echo>: ${http.last_content}
+
++get_folder_config:
+    +folder_api_call:
+        http>: https://api-cdp.treasuredata.com/entities/by-folder/${backup.root_folder_id}?depth=10
+        method: GET
+        headers:
+            - Authorization: "TD1 ${secret:td.apikey}"
+        store_content: true
+
+    +write_result_to_s3:
+        +query_for_json:
+            td>:
+            query: SELECT '${JSON.parse(http.last_content)}'
+
+        +load:
+            td_result_export>:
+            job_id: ${td.last_job.id}
+            result_connection: ${backup.s3.connection_name}
+            result_settings:
+                bucket: ${backup.s3.bucket}
+                format: jsonl
+                path: ${moment(session_time).format("YYYYMMDD")}/folder_config_${moment(session_time).format("HHmmss")}.json
+
+    +write_folder_result_to_td:
+        +insert:
+            td>:
+                data: "INSERT INTO ${td.database}.${backup.stg_folder_curr_config_tbl} SELECT JSON_FORMAT(JSON '${JSON.parse(http.last_content)}') as config"
+
+        +extract_config:
+            td>: queries/folder_config_extract.sql
+            insert_into: ${td.database}.${backup.stg_folder_extract_tbl} 
+            database: ${td.database}
+
+    #For each folder obtain list of segments and loop through to get configuration of each segment
++get_segment_config:
+    +loop_each_segment:
+        td_for_each>: queries/segment_list.sql
+        _do:
+            +run_segment_api:
+                http>: https://api-cdp.treasuredata.com/entities/segments/${td.each.current_node_id}
+                method: GET
+                headers:
+                    - Authorization: "TD1 ${secret:td.apikey}"
+                store_content: true
+            +write_curr_config:
+                td>:
+                    data: "INSERT INTO ${td.database}.${backup.stg_seg_curr_config_tbl} SELECT JSON_FORMAT(JSON '${JSON.parse(http.last_content)}') as config"
+
+            +write_to_td:
+                +insert:
+                    td>:
+                    query: "INSERT INTO ${td.database}.${backup.stg_seg_config_tbl} SELECT JSON_FORMAT(JSON '${JSON.parse(http.last_content)}') as config"
+    +write_to_s3:
+        +query_for_json:
+            td>: queries/segments_config_extract.sql
+            database: ${td.database}
+        
+        +export_to_s3:
+            td_result_export>:
+            job_id: ${td.last_job.id}
+            result_connection: ${backup.s3.connection_name}
+            result_settings:
+                bucket: ${backup.s3.bucket}
+                format: jsonl
+                path: ${moment(session_time).format("YYYYMMDD")}/all_segments_config_${moment(session_time).format("HHmmss")}.json
+
+#    +segment_api_call:
+#        http>: https://api-cdp.treasuredata.com/entities/segments/${segment_id}
+#+store_result_to_s3:der obtain list of segments and loop through to get configuration of each segment
+#    +get_segment_config:
+#
+#+store_result_to_s3:
