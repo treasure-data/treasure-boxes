@@ -1,45 +1,28 @@
-timezone: Asia/Tokyo
-#timezone: PST
-
 _export:
   !include : config/params.yaml
   td:
     engine: presto
-    database: ${output_database}
 
 +create_tbl_if_not_exists:
   td_ddl>:
-    create_tables: ["${expr_tracking_table}"]
-
-+load_datasets:
-  ipynb>:
-    notebook: ml_datasets
-    output_database: ${input_database}
-#   datasets: gluon, bank_marketing
-    datasets: gluon
+    create_tables: ["${expr_tracking_table}", "${output_database}"]
 
 +gluon_train:
   ml_train>:
     notebook: gluon_train
     model_name: gluon_model_${session_id}
-    input_table: ${input_database}.gluon_train # expect database_name.table_name
-    target_column: class
-    # The following options are optional ones
-    #problem_type: binary                # ‘binary’, ‘multiclass’, ‘regression’, or ‘quantile’. autolugon automatically detect problem types
-    #eval_metric: roc_auc                # autolugon automatically select a right eval_metric for a given setting if not specified.
-    ignore_columns: time,rowid           # Note time column is ignored by the default.
-    time_limit: 60 * 3                   # fit timeout. 3 min just for training time. Default: 60 * 60 (1hr). 1hr or more is recommended for production purposes (Note 24 hours at max). Note this is a soft limit, not hard limit.
-    # timeout: 60 * 3                    # timeout for notebook cell-level execution. This is a hard limit. Note it's cell-level timeout. No timeout if not specified.
-    export_leaderboard: ${output_database}.leaderboard_gluon_train
-    export_feature_importance: ${output_database}.feature_importance_gluon_train
-    # hide_table_contents: true
+    input_table: ${input_database}.${train_data_table}
+    target_column: ${target_column}
+    time_limit: ${fit_time_limit}
+    export_leaderboard: ${output_database}.leaderboard_${train_input_table}
+    export_feature_importance: ${output_database}.feature_importance_${train_input_table}
 
 +print_train_result:
-  echo>: "executed ${automl.last_executed_notebook}.ipynb"
+  echo>: "Executed training and built gluon_model_${session_id}: ${automl.last_executed_notebook}.ipynb"
 
 +track_experiment:
   td>: queries/track_experiment.sql
-  insert_into: automl_experiments
+  insert_into: ${output_database}.automl_experiments
   last_executed_notebook: ${automl.last_executed_notebook}
   user_id: ${automl.last_executed_user_id}
   user_email: ${automl.last_executed_user_email}
@@ -52,14 +35,8 @@ _export:
   ml_predict>:
     notebook: gluon_predict
     model_name: gluon_model_${session_id}
-    input_table: ${input_database}.gluon_test # expect database_name.table_name
-    output_table: ${output_database}.gluon_predicted  # expect database_name.table_name. DB will be created if not exists. table is overwrite'd.
-    # optional
-    #rowid_column: rowid                # Note when rowid_column is specified, only rowid column + prediction result columns are resulted in the output table
-    #ignore_columns: time               # target column should not be in test data
-    export_leaderboard: ${output_database}.leaderboard_gluon_predict
-    export_feature_importance: ${output_database}.feature_importance_gluon_predict
-    # hide_table_contents: true
+    input_table: ${input_database}.${test_data_table}
+    output_table: ${output_database}.predicted_${test_data_table}_${session_id}
 
 +print_predict_result:
-  echo>: "executed ${automl.last_executed_notebook}.ipynb"
+  echo>: "Run prediction and resulted to ${output_database}.predicted_${test_data_table}_${session_id}: ${automl.last_executed_notebook}.ipynb"

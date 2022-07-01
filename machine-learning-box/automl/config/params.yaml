@@ -1,4 +1,10 @@
 input_database: ml_datasets
 output_database: automl_test
 
+train_data_table: gluon_train
+target_column: class
+test_data_table: gluon_test
+
 expr_tracking_table: automl_experiments
+
+fit_time_limit: 60 * 3 # # fit timeout. 3 min just for training time. Default: 60 * 60 (1hr).
