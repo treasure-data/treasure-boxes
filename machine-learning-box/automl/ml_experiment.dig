@@ -15,8 +15,8 @@ _export:
     input_table: ${input_database}.${train_data_table}
     target_column: ${target_column}
     time_limit: ${fit_time_limit}
-    export_leaderboard: ${output_database}.leaderboard_${train_input_table}
-    export_feature_importance: ${output_database}.feature_importance_${train_input_table}
+    export_leaderboard: ${output_database}.leaderboard_${train_data_table}
+    export_feature_importance: ${output_database}.feature_importance_${train_data_table}
 
 +print_train_result:
   echo>: "Executed training and built gluon_model_${session_id}: ${automl.last_executed_notebook}.ipynb"
