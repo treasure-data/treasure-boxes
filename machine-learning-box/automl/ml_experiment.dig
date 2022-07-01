@@ -2,6 +2,7 @@ _export:
   !include : config/params.yaml
   td:
     engine: presto
+    database: ${output_database}
 
 +create_tbl_if_not_exists:
   td_ddl>:
