@@ -4,9 +4,13 @@ _export:
     engine: presto
     database: ${output_database}
 
++create_database_if_not_exists:
+  td_ddl>:
+    create_databases: ["${output_database}"]
+
 +create_tbl_if_not_exists:
   td_ddl>:
-    create_tables: ["${expr_tracking_table}", "${output_database}"]
+    create_tables: ["${expr_tracking_table}"]
 
 +gluon_train:
   ml_train>:
