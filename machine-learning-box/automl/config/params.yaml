@@ -7,4 +7,4 @@ test_data_table: gluon_test
 
 expr_tracking_table: automl_experiments
 
-fit_time_limit: 60 * 3 # # fit timeout. 3 min just for training time. Default: 60 * 60 (1hr).
+fit_time_limit: 60 * 3   # fit timeout in sec. 3 min just for demo. Default: 60 * 60 (1hr).
