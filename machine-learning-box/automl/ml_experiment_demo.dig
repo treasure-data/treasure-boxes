@@ -7,13 +7,10 @@ _export:
     engine: presto
     database: ${output_database}
 
-+create_database_if_not_exists:
++create_db_tbl_if_not_exists:
   td_ddl>:
-    create_databases: ["${output_database}"]
-
-+create_tbl_if_not_exists:
-  td_ddl>:
-    create_tables: ["${expr_tracking_table}"]
+  create_databases: ["${output_database}"]
+  create_tables: ["${expr_tracking_table}"]
 
 +load_datasets:
   ipynb>:
