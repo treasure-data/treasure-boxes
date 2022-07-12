@@ -16,6 +16,7 @@ _export:
   ipynb>:
     notebook: ml_datasets
     output_database: ${input_database}
+    input_table: ${input_database}.dummy
 #   datasets: gluon, bank_marketing
     datasets: gluon
 
