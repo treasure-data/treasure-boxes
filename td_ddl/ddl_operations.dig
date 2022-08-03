@@ -2,7 +2,7 @@ timezone: UTC
 
 _export:
   td:
-    database: www_access
+    database: sample_datasets
 
 schedule:
   daily>: 02:00:00
@@ -13,7 +13,7 @@ schedule:
 
 +insert_data:
   td>:
-  query: select count(*) from tab;
+  query: select * from www_access limit 1000;
   insert_into: my_table_${session_date_compact}
 
 +swap_table1:
