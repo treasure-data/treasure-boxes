@@ -40,6 +40,17 @@ Now, you can trigger the session manually.
     # Run
     $ td wf start td_load_example daily_load --session now
     
+# Required Keys
+
+| Keys     | Description |
+| -------- | ----------- |
+| client_id | Client ID for SFMC. |
+| client_secret | Client secret for SFMC. |
+| auth_uri | Authentication url. |
+| de_name | Data Extention name. |
+
+If you use SFMC enhanced package ([SFMC v2 integration](https://docs.treasuredata.com/display/public/INT/Salesforce+Marketing+Cloud+Import+Integration+CLI+v2)), set `auth_type: v2`, which option is `v1` to default.
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

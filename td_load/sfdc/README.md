@@ -30,6 +30,17 @@ Now, you can trigger the session manually.
     # Run
     $ td wf start td_load_example daily_load --session now
     
+# Required Keys
+
+| Keys     | Description |
+| -------- | ----------- |
+| username | User name for force.com REST API. |
+| password | Password for Force.com REST API. |
+| client_id | Client ID for your application. |
+| client_secret | Client secret for your application. |
+| login_url | Your Login URL for Salesforce. |
+| target | Target objact name. |
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

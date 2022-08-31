@@ -25,7 +25,18 @@ Now, you can upload the workflow and trigger the session manually.
     
     # Run
     $ td wf start td_load_example daily_load --session now
-    
+
+# Required Keys
+
+| Keys     | Description |
+| -------- | ----------- |
+| host     | Host information for MySQL. |
+| user     | User name. |
+| database | Database name. |
+
+When you set `user_custom_query` is true, `query` option is required.
+When you set `user_custom_query` is false, `select` and `table` options are required.
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

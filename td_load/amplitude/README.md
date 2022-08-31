@@ -26,6 +26,13 @@ Now, you can trigger the session manually.
     # Run
     $ td wf start td_load_example daily_load --session now
     
+# Required Keys
+
+| Keys       | Description |
+| ---------- | ----------- |
+| api_key    | API to authenticate Aplitude. |
+| start_time | Export data from this time. The format is "%Y%m%dT%H" in UTC timezone. |
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

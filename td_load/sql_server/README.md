@@ -60,6 +60,14 @@ You can check the `last_record` of imported records.
       - 7
       - 1461826241
 
+# Required Keys
+
+| Keys     | Description |
+| -------- | ----------- |
+| host     | Host name. |
+| user     | User name. |
+| database | Database name. |
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

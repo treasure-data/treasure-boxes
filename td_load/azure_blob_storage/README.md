@@ -26,6 +26,16 @@ Now, you can trigger the session manually.
     # Run
     $ td wf start td_load_example daily_load --session now
 
+# Required Keys
+
+| Keys         | Description |
+| ------------ | ----------- |
+| account_name | Storage account name. |
+| account_key  | Primary access key. |
+| container    | Azure cloud storage container name. |
+| path_prefix  | All files starting with this prefix will be imported in lexicographic order. |
+| parser       | Parser settings for import target files. |
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.
