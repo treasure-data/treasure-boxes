@@ -31,12 +31,12 @@ Move to the directory includes the Digdag file and excute the command below.
 
     $ td wf push [Digdag file name]
 ### 3. Set Secrets.
-Set the values below as [Secrets](https://docs.treasuredata.com/display/public/PD/About+Workflow+Secret+Management).
 - td.apikey
 - api_key (provided by DAC)
 - acid (provided by DAC)
 - service_id (provided by DAC)
 
+Set these values as [Secrets](https://docs.treasuredata.com/display/public/PD/About+Workflow+Secret+Management) by excuting the command below.
 
     $ td wf secrets --project [Digdag file name] --set td.apikey
     $ td wf secrets --project [Digdag file name] --set api_key
