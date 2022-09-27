@@ -7,7 +7,7 @@ _export:
   filename: {{Name of output CSV file you want to set}}
 
 +upload_userlist_to_done:
-  py>: post_userlist_to_done.upload_user_list
+  py>: post_userlist_to_done.main
   _env:
     # TD_ENDPOINT: api.treasuredata.co.jp -- This param is essesential when you use an AWS account on Tokyo region
     TD_API_KEY: ${secret:td.apikey}
