@@ -1,13 +1,14 @@
 timezone: Asia/Tokyo
 
 _export:
+  acid: {{Account identifier provided by DAC}}
+  api_key: {{API key provided by DAC}}
+  service_id: {{Service ID provided by DAC}}
+
   database: {{Name of database has a table for LINE UserIDs}}
   table: {{Name of table for LINE UserIDs}}
   user_id_column: {{Name of column for LINE UserIDs}}
   filename: {{Name of output CSV file you want to set}}
-
-  acid: {{Account identifier provided by DAC}}
-  sa_email: {{Email address for service account provided by DAC}}
 
 +upload_userlist_to_done:
   py>: post_userlist_to_done.upload_user_list
