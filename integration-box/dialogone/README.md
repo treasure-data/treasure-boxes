@@ -37,6 +37,7 @@ Set the values below as [Secrets](https://docs.treasuredata.com/display/public/P
 - acid (provided by DAC)
 - service_id (provided by DAC)
 
+
     $ td wf secrets --project [Digdag file name] --set td.apikey
     $ td wf secrets --project [Digdag file name] --set api_key
     $ td wf secrets --project [Digdag file name] --set acid
