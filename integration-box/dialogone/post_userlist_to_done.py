@@ -17,14 +17,7 @@ logger.addHandler(handler)
 logger.propagate = False
 
 
-def upload(**kwargs):
-    acid = kwargs.get('acid') 
-    api_key = kwargs.get('api_key')
-    service_id = kwargs.get('service_id')
-
-    endpoint = 'https://line-api.dialogone.jp/v1/line/external-segments/file'
-    url = f"{endpoint}/{service_id}/{acid}"
-
+def main(**kwargs):
     database = kwargs.get('database')
     table = kwargs.get('table')
     column = kwargs.get('user_id_column')
@@ -46,21 +39,8 @@ def upload(**kwargs):
             file_name = f"{filename}_{idx}"
         file_name = f"{file_name}.csv" 
 
-        # post request to Done API     
-        token = hashlib.sha256(f"{api_key}{file_name}".encode("utf-8")).hexdigest()
-        headers = {
-            "X-DialogOne-Access-Token": token
-        }
-
-        files = {
-            'file': (file_name, csv, "text/csv")
-        }
-        
-        res = requests.post(
-            url,
-            headers=headers,
-            files=files 
-        )
+        # post request to Done API 
+        res = upload_to_api(file_name, csv)
 
         if res.status_code != 200:
             logger.error(
@@ -78,11 +58,20 @@ def upload(**kwargs):
             time.sleep(60)
 
 def retrive_user_id_csv(database, table, column):
-    csvs = []
-    row_len_limit = 50000000 # max data length per a API call
+    td_endpoint = os.getenv("TD_ENDPOINT")
+    if td_endpoint is None:
+        td_endpoint = 'api.treasuredata.com'
 
     client = pytd.Client(apikey=os.getenv("TD_API_KEY"), database=database)
-    query = f"""
+    sql = get_sql(database, table, column)
+
+    res = client.query(sql)
+    df = pd.DataFrame(**res)  
+
+    return divide_data(df)
+
+def get_sql(database, table, column):
+    return f"""
         SELECT
             {column}
         FROM 
@@ -92,8 +81,10 @@ def retrive_user_id_csv(database, table, column):
             AND REGEXP_LIKE({column}, 'U[0-9a-f]{{{32}}}')
         """
 
-    res = client.query(query)
-    df = pd.DataFrame(**res)  
+def divide_data(df):
+    # divide data per proper size
+    csvs = []
+    row_len_limit = 50000000 # max data length per a API call
 
     while (len(df) > row_len_limit):
         d = df[:row_len_limit]
@@ -113,3 +104,26 @@ def retrive_user_id_csv(database, table, column):
         csvs.append(csv)
 
     return csvs
+
+def upload_to_api(file_name, csv):
+    api_key = os.getenv('DONE_API_KEY')
+    url = get_request_url()
+
+    token = hashlib.sha256(f"{api_key}{file_name}".encode("utf-8")).hexdigest()
+    headers = {
+        "X-DialogOne-Access-Token": token
+    }
+    files = {
+        "file": (file_name, csv, "text/csv")
+    }
+        
+    return requests.post(url,headers=headers,files=files)
+    
+def get_request_url():
+    #endpoint = 'https://line-api.dialogone.jp/v1/line/external-segments/file'
+    endpoint = "https://staging-line-api.dialogone.jp/v1/line/external-segments/file"
+
+    acid = os.getenv("DONE_ACID")
+    service_id = os.getenv("DONE_SERVICE_ID")
+
+    return f"{endpoint}/{service_id}/{acid}"
