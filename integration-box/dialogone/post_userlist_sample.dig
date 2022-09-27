@@ -1,10 +1,6 @@
 timezone: Asia/Tokyo
 
 _export:
-  acid: {{Account identifier provided by DAC}}
-  api_key: {{API key provided by DAC}}
-  service_id: {{Service ID provided by DAC}}
-
   database: {{Name of database has a table for LINE UserIDs}}
   table: {{Name of table for LINE UserIDs}}
   user_id_column: {{Name of column for LINE UserIDs}}
@@ -15,7 +11,8 @@ _export:
   _env:
     # TD_ENDPOINT: api.treasuredata.co.jp -- This param is essesential when you use an AWS account on Tokyo region
     TD_API_KEY: ${secret:td.apikey}
-    PRIVATE_KEY: ${secret:private_key}
-    PRIVATE_KEY_ID: ${secret:private_key_id}
+    DONE_API_KEY: ${secret:api_key} 
+    DONE_SERVICE_ID: ${secret:service_id}
+    DONE_ACID: ${secret:acid}
   docker:
     image: "digdag/digdag-python:3.9"
