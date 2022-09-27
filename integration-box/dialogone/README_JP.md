@@ -9,9 +9,8 @@ DACが開発・提供している「DialogOne」は、コミュニケーショ�
 | 変数 | 備考 | データ例 | データ取得元 |
 | -------- | ----------- | -------- | -------- |
 | acid |アカウント識別子 | `abcdef123456789a`| DAC |
-| sa_email | サービスアカウントのE-mailアドレス | `example@test-project.iam.gserviceaccount.com`| DAC |
-| private_key | サービスアカウントの秘密鍵 | `-----BEGIN PRIVATE KEY-----\nABCDEFGHIJKLMNOPQRSTUVWXYZ......abcdefghijklmnopqrstuvwxyz+1234567890=\n-----END PRIVATE KEY-----\n`| DAC |
-| private_key_id | サービスアカウントの秘密鍵ID | `abcdef123456789abcdef123456789abcdef1234`| DAC |
+| api_key | APIキー | `a1b2c3d4-5ef6-777a-888b-9abc12ed345f`| DAC |
+| service_id | サービスID | `4`| DAC |
 | td.apikey | **Master**のAPIキー([link](https://docs.treasuredata.com/display/public/PD/Getting+Your+API+Keys)) | `1234/abcdefghijklmnopqrstuvwxyz1234567890`| Treasure Data |
 | database | ユーザーIDを格納するテーブルが存在するデータベース名 | `sample_database` | Treasure Data |
 | table | ユーザーIDを格納するテーブル | `sample_table` | Treasure Data |
@@ -23,9 +22,9 @@ DACが開発・提供している「DialogOne」は、コミュニケーショ�
 
 # インストール (TD Toolbelt)  
 ### 1. アップロードするファイルを用意する
-Githubからファイルをダウンロード・解凍が完了したら、解凍したディレクトリ内にユーザーID取得用のクエリが記載されたSQLファイルを置いてください。
+Githubからファイルをダウンロード・解凍が完了したら、Treasure Data環境にアップロードします。
 
-Digdagファイル(.dig)の方をエディタで開き、 `td.apikey`、`private_key`、`private_key_id`**以外**の変数の値を用意したものに書き換えてください。
+Digdagファイル(.dig)の方をエディタで開き、`_export`部分の変数の値を用意したものに書き換えてください。
 
 なお、Digdagファイルは任意のプロジェクト名で変更可能ですが、Pythonファイル(.py)の方の名前は変更しないでください。
 
@@ -36,13 +35,17 @@ Digdagファイルを同じディレクトリに移動し、下記のコマン�
 
     $ td wf push [Digdag file name]
 ### 3. Secretを設定する
-[Secrets](https://docs.treasuredata.com/display/public/PD/About+Workflow+Secret+Management)の値を設定してください。
-`private_key`は値が長いのでテキストファイルに保存して下記のようにアップロードをする事をおすすめします。  (そのテキストファイルはアップロードしないように！)
+- td.apikey
+- api_key (provided by DAC)
+- acid (provided by DAC)
+- service_id (provided by DAC)
+
+これらの値を[Secrets](https://docs.treasuredata.com/display/public/PD/About+Workflow+Secret+Management)として設定してください。
 
     $ td wf secrets --project [Digdag file name] --set td.apikey
-    $ td wf secrets --project [Digdag file name] --set private_key=@private_key.txt
-    $ td wf secrets --project [Digdag file name] --set private_key_id
-
+    $ td wf secrets --project [Digdag file name] --set api_key
+    $ td wf secrets --project [Digdag file name] --set acid
+    $ td wf secrets --project [Digdag file name] --set service_id
 
 # その他参考
 - TD Toolbelt
