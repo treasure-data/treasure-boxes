@@ -8,9 +8,8 @@ And this workflow helps you to post the segment users' list to DialogOne for mes
 | Variable | Description | Example | provided by |
 | -------- | ----------- | -------- | -------- |
 | acid | Account identifier. | `abcdef123456789a`| DAC |
-| sa_email | Email address for service account. | `example@test-project.iam.gserviceaccount.com`| DAC |
-| private_key | Private key for service account. | `-----BEGIN PRIVATE KEY-----\nABCDEFGHIJKLMNOPQRSTUVWXYZ......abcdefghijklmnopqrstuvwxyz+1234567890=\n-----END PRIVATE KEY-----\n`| DAC |
-| private_key_id | Private key ID for service account. | `abcdef123456789abcdef123456789abcdef1234`| DAC |
+| api_key | API key | `a1b2c3d4-5ef6-777a-888b-9abc12ed345f`| DAC |
+| service_id | Service ID. | `4`| DAC |
 | td.apikey | **Master** API Key. [link](https://docs.treasuredata.com/display/public/PD/Getting+Your+API+Keys) | `1234/abcdefghijklmnopqrstuvwxyz1234567890`| Treasure Data |
 | database | Name of database has a table for LINE UserIDs. | `sample_database` | Treasure Data |
 | table | Name of table for LINE UserIDs. | `sample_table` | Treasure Data |
@@ -22,23 +21,27 @@ A file uploaded / updated expires in 30 days.
 
 # Installation (TD Toolbelt)  
 ### 1. Prepare the files to upload.
-After downloading and decompressing the file, place a SQL file contains query to retrieve user IDs in the directory.
+After downloading and decompressing the file, upload them to Treasure Data.
 You can change the name of the Digdag file (.dig) that will be workflow project name if you want. But don't rename the Python file (.py)
 
-Open the Digdag file and update the values of the variables except `td.apikey`, `private_key` and `private_key_id`.
+Open the Digdag file and update the values of the variables for `_export` part.
 
 ### 2. Upload files to Treasure Data.
 Move to the directory includes the Digdag file and excute the command below.
 
     $ td wf push [Digdag file name]
 ### 3. Set Secrets.
-Set the values of [Secrets](https://docs.treasuredata.com/display/public/PD/About+Workflow+Secret+Management).
-`private_key` is too long value to set and we recommend you to make it a text file then set it like below. (Be careful not to upload the key file!)
+- td.apikey
+- api_key (provided by DAC)
+- acid (provided by DAC)
+- service_id (provided by DAC)
+
+Set these values as [Secrets](https://docs.treasuredata.com/display/public/PD/About+Workflow+Secret+Management) by excuting the command below.
 
     $ td wf secrets --project [Digdag file name] --set td.apikey
-    $ td wf secrets --project [Digdag file name] --set private_key=@private_key.txt
-    $ td wf secrets --project [Digdag file name] --set private_key_id
-
+    $ td wf secrets --project [Digdag file name] --set api_key
+    $ td wf secrets --project [Digdag file name] --set acid
+    $ td wf secrets --project [Digdag file name] --set service_id
 
 # Further Reading
 - TD Toolbelt
