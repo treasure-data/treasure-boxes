@@ -1,0 +1,9 @@
+_export:
+  td:
+    database: sample_datasets
+
+# See: https://docs.digdag.io/workflow_definition.html#include-another-file
++send_email:
+  mail>: body.txt
+  subject: Test Subject
+  !include : 'variables.yml'
