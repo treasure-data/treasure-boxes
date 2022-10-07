@@ -9,6 +9,6 @@ _export:
   result_connection: your_connections_name
   result_settings:
     mode: insert
-    index: index
-    index_type: index_type
+    index: your_index
+    index_type: your_index_type
 

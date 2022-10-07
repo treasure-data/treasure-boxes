@@ -2,7 +2,7 @@ timezone: UTC
 
 _export:
   td:
-    database: database_name
+    database: sample_datasets
  
 +s3v2_export:
   td>: queries/sample.sql

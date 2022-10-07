@@ -1,6 +1,6 @@
 timezone: UTC
 
-+td-result-output-ftp
++td-result-output-ftp:
   td>: queries/sample.sql
   database: sample_datasets
   result_connection: your_connections_name

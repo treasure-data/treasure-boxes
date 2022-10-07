@@ -1,8 +1,11 @@
 timezone: UTC
 
+_export:
+  td:
+    database: sample_datasets
+
 +td-result-output-sfmc:
   td>: queries/sample.sql
-  database: tmp
   result_connection: your_connection_name
   result_settings:
     path_prefix: import/list_from_TD_${moment(session_time).format("YYYY-MM-DD")}.csv

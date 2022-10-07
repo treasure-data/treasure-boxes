@@ -1,6 +1,6 @@
-# Workflow: Result Output to DoubleClick Bid Manager
+# Workflow: Result Output to Google Display and Video 360 (DoubleClick Bid Manager)
 
-This example workflow ingests data using [Writing Job Results into Google DoubleClick Bid Manager on the DoubleClick Data Platform](https://docs.treasuredata.com/display/public/INT/Google+DoubleClick+Bid+Manager+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
+This example workflow ingests data using [Google Display and Video 360 Export Integration](https://docs.treasuredata.com/display/public/INT/Google+Display+and+Video+360+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
 

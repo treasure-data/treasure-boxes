@@ -6,10 +6,10 @@ timezone: UTC
   database: sample_datasets
   result_connection: box_authentications
   result_settings:
-    folder_id : 0
-    file_ext  : .csv
-    file_name : demo_filename
-    mode      : new_file
-    formatter :
+    folder_id: 0
+    file_ext: .csv
+    file_name: demo_filename
+    mode: new_file
+    formatter:
       type: csv
       header_line: true

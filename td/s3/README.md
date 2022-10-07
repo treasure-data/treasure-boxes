@@ -1,5 +1,7 @@
 # Workflow: td example (Result Output to s3)
 
+**Note: We suggest [S3 v2 integration](https://docs.treasuredata.com/display/public/INT/Amazon+S3+Export+Integration+v2) instead of this integration (S3 v1).**
+
 This example workflow ingests data in daily basis, using [Treasure Data's Writing Job Results into AWS S3](https://docs.treasuredata.com/display/public/INT/Amazon+S3+Export+Integration) with [td](https://docs.digdag.io/operators/td.html) operator.
 
 # Prerequisites
