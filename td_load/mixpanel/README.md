@@ -26,6 +26,14 @@ Now, you can trigger the session manually.
     # Run
     $ td wf start td_load_example daily_load --session now
     
+# Required Keys
+
+| Keys       | Description |
+| ---------- | ----------- |
+| api_secret | API secret for Mixpanel. |
+| timezone   | Project timezone. |
+| columns    | Schema settings. |
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

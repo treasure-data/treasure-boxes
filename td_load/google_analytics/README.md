@@ -37,6 +37,13 @@ Now, you can trigger the session manually.
     # Run
     $ td wf start td_load_example daily_load --session now
     
+# Required Keys
+
+| Keys        | Description |
+| ----------- | ----------- |
+| view_id     | View ID for target data. |
+| time_series | Only `ga:dateHour` or `ga:date`. |
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

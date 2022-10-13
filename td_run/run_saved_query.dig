@@ -11,5 +11,5 @@ sla:
     to: [me@example.com]
 
 +task1:
-  td_run>: 12345
+  td_run>: 12345 # Replace with saved query ID or saved query name on Treasure Data.
   database: sample_datasets

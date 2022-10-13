@@ -36,6 +36,15 @@ Now, you can trigger the session manually.
     # Run
     $ td wf start td_load_example daily_load --session now
     
+# Required Keys
+
+| Keys     | Description |
+| -------- | ----------- |
+| host | Host name. |
+| port | Port number. |
+| user | User name. |
+| path_prefix | Prefix of output paths. |
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

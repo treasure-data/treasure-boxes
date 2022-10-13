@@ -28,6 +28,16 @@ Now, you can trigger the session manually.
     # Run
     $ td wf start td_load_example daily_load --session now
     
+# Required Keys
+
+| Keys     | Description |
+| -------- | ----------- |
+| target   | Target object e.g. Customer, Invoice, etc. That should accept search operation. |
+| email    | Email address. |
+| password | Password. |
+| account  | Account ID. |
+| columns  | Schema settings. |
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

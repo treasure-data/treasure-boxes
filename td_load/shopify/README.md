@@ -27,6 +27,17 @@ Now, you can trigger the session manually.
     # Run
     $ td wf start td_load_example daily_load --session now
     
+# Required Keys
+
+| Keys       | Description |
+| ---------- | ----------- |
+| apikey     | Shopify provided API Key. |
+| password   | Shopify provided password. |
+| store_name | Shopify store name for which data needs to be fetched. |
+| target     | Shopify object for which data needs to be fetched from store. `customers`, `orders`, `products` and `transactions` are available. |
+| from_date  | Parameter which fetch records from the date specified for specified target Shopify object. |
+
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

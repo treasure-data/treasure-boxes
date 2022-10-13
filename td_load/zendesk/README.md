@@ -27,6 +27,21 @@ Now, you can trigger the session manually.
     # Run
     $ td wf start td_load_example daily_load --session now
     
+# Required Keys
+
+| Keys     | Description |
+| -------- | ----------- |
+| login_url | Login URL for Zendesk. |
+| auth_method | Auth method. `basic`, `token` and `oauth` are available. |
+| target | Zendesk source such as `tickets`, `users`, and etc. |
+| columns | Schema Settings. |
+
+Depending on `auth_method`, other required the following keys exist:
+
+- If `basic` is set, `username` (email address) and `password` are required.
+- If `token` is set, `username` (email address) and `token` value are required.
+- If `oauth` is set, `access_token` is required.
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.

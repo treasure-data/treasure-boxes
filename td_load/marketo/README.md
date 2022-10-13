@@ -33,6 +33,31 @@ Now, you can trigger the session manually.
 
 Before you trigger, confirm whether there is a target database and tables.
     
+# Required Keys
+
+| Keys          | Description |
+| ------------- | ----------- |
+| account_id    | Marketo Munchkin ID. |
+| client_id     | Marketo client ID. |
+| client_secret | Marketo client sectet. |
+| target        | Marketo import source. |
+
+Required values exists depending on `target` value:
+
+| target | Required keys |
+| ------ | -------- |
+| lead     | from_date |
+| activity | from_date |
+| campaign | |
+| all_lead_with_list_id | |
+| all_lead_with_program_id | |
+| program | tag_type, tag_value, earliest_updated_at, latest_updated_at, filter_values |
+| custom_object | custom_object_api_name, custom_object_filter_type, custom_object_filter_from_value, custom_object_filter_values |
+| program_members | |
+
+Note that `custom_object_filter_from_value` and `custom_object_filter_values` affect `custom_object_filter_as_text` option that specifies input filter values as text (comma separated).
+The former option recognizes `custom_object_filter_as_text` as `false`, but the later regards the option as `true`.
+
 # Next Step
 
 If you have any questions, please contact support@treasure-data.com.
