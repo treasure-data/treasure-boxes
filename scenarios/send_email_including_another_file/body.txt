@@ -1,0 +1,3 @@
+Hi there,
+
+This is a email content for `email>:` operator.

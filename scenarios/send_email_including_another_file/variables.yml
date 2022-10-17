@@ -1,0 +1,4 @@
+# This is a vairble for `mail>:` operator.
+to:
+  - mail@example.com
+  - me@example.com
