@@ -22,6 +22,7 @@ First, upload the project.
     $ td wf push kill_wf_attempt
 
 Second, register the api key as a workflow secret.
+Pleaes note, you should add `TD1` before your apikey. So, http.authorization should be `TD1 your_api_key`
 
     # Set secrets
     $ td wf secrets --project kill_wf_attempt --set http.authorization
