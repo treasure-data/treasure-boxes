@@ -15,4 +15,4 @@ _export:
     batch_size: 100000
     maximum_retries: 5
     initial_retry_interval_millis: 500
-    maximum_retry_interval_millis: 300000 
+    maximum_retry_interval_millis: 300000

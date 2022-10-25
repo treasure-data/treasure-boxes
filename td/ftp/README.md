@@ -33,7 +33,7 @@ You can trigger the session manually.
 
     # Run
     $ td wf start td_ftp td_ftp --session now
-    
+
 # Supplemental
 
 Available parameters for `result_settings` are here.

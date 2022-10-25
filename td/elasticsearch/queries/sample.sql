@@ -1,4 +1,4 @@
-SELECT 
+SELECT
   TD_TIME_FORMAT(time,'yyyy-MM-dd HH:mm:ss') as datetime,
   symbol,
   open,
@@ -6,7 +6,7 @@ SELECT
   high,
   low,
   close
-FROM 
+FROM
   nasdaq
 WHERE
   TD_TIME_RANGE(time, '2014-01-01','2014-01-05')

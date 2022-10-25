@@ -46,8 +46,8 @@ Available parameters for `result_settings` are here.
 - mode : output mode. Supported values: append or replace (string, optional, default: append)
 - membership_lifespan : Number of days users' contact info stays on the user list (int, optional, default: 10000)
 - batch_size : Number of records to upload in each batch (int, optional, default: 100000)
-- maximum_retries : Number of retries before system gives up. (int, optional, default: 5) 
-- initial_retry_interval_millis : Initial retry time wait in milliseconds. (int, optional, default: 500) 
+- maximum_retries : Number of retries before system gives up. (int, optional, default: 5)
+- initial_retry_interval_millis : Initial retry time wait in milliseconds. (int, optional, default: 500)
 - maximum_retry_interval_millis : Max retry wait in milliseconds. (int, optional, default: 300000)
 
 

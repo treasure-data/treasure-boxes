@@ -1,6 +1,6 @@
 _export:
   td:
-    database: example_database
+    database: sample_datasets
 
 +send_tailorerd_aud:
   td>: queries/load_users.sql

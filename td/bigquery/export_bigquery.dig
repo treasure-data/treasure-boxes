@@ -2,8 +2,8 @@ timezone: UTC
 
 +td-result-output-bigquery:
   td>:
-  query: SELECT id, account,purchase, comment, CAST(TD_TIME_FORMAT(time, 'yyyy-MM-dd HH:mm:ss', 'UTC') AS TIMESTAMP) as time FROM table
-  database: test_db
+  query: SELECT symbol,volume,high,low,CAST(TD_TIME_FORMAT(time, 'yyyy-MM-dd HH:mm:ss', 'UTC') AS TIMESTAMP) as time FROM nasdaq LIMIT 100
+  database: sample_datasets
   result_connection: YOUR_BQ_CONNECTION_NAME
   result_settings:
     project: BQ_PROJECT_ID
@@ -14,4 +14,4 @@ timezone: UTC
     max_bad_records: 0
     ignore_unknown_values: false
     allow_quoted_newlines: false
-    schema_file: '[{"name":"id","type":"INTEGER"},{"name":"account","type":"STRING"},{"name":"purchase","type":"STRING"},{"name":"comment","type":"STRING","mode":"REQUIRED"},{"name":"time","type":"TIMESTAMP","mode": "REQUIRED"}]'
+    schema_file: '[{"name":"symbol","type":"STRING","mode":"REQUIRED"},{"name":"volume","type":"INTEGER"},{"name":"high","type":"NUMERIC"},{"name":"comment","type":"STRING"},{"name":"time","type":"TIMESTAMP","mode": "REQUIRED"}]'

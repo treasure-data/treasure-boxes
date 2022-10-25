@@ -12,15 +12,22 @@ sla:
 
 _export:
   td:
-    database: sample_db
+    database: sample_datasets
+    new_db: sample_db
     engine: presto
+
++prepare:
+  td_ddl>:
+  create_databases: ['${td.new_db}']
 
 +task1:
   td>: queries/daily_open.sql
+  database: ${td.new_db}
   create_table: daily_open
 
 +task2:
   td>: queries/monthly_open.sql
+  database: ${td.new_db}
   create_table: monthly_open
 
 +my_group_task:
