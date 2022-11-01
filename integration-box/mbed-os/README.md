@@ -100,4 +100,3 @@ Besides Postback API, there are alternative ways to ingest data from Mbed OS to 
 
 - [Fluentd](https://github.com/BlackstoneEngineering/mbed-os-example-fluentlogger)
 - [Fluent Bit](https://docs.treasuredata.com/pages/releaseview.action?pageId=329063)
-- [MQTT Broker](../mqtt)
