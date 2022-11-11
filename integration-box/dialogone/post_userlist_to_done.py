@@ -62,7 +62,7 @@ def retrive_user_id_csv(database, table, column):
     if td_endpoint is None:
         td_endpoint = 'api.treasuredata.com'
 
-    client = pytd.Client(apikey=os.getenv("TD_API_KEY"), database=database)
+    client = pytd.Client(apikey=os.getenv("TD_API_KEY"), database=database, endpoint=td_endpoint)
     sql = get_sql(database, table, column)
 
     res = client.query(sql)
