@@ -24,7 +24,7 @@
 
       // 動作を切り替えるためのCookie読み出し関数
       function readCookie(key) {
-        return ((';' + document.cookie + ';').match(';' + key + '=([^\S;]*)') || [])[1];
+        return (('; ' + document.cookie + ';').match('; ' + key + '=([^\S;]*)') || [])[1];
       };
 
       // Cookieに関する告知が読まれていない場合=「_td_checked」Cookieに1が無い場合に説明文を表示する

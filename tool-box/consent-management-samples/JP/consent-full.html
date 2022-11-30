@@ -21,7 +21,7 @@
 
       // Cookie読み出し関数
       function readCookie(key) {
-        return ((';' + document.cookie + ';').match(';' + key + '=([^\S;]*)') || [])[1];
+        return (('; ' + document.cookie + ';').match('; ' + key + '=([^\S;]*)') || [])[1];
       };
 
       // オプトアウトボタンがクリックされたら、 _td_optout Cookieに1をセットする（オプトアウトフラグを立てる）
