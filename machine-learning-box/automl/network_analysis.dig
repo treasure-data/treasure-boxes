@@ -1,0 +1,10 @@
++load_datasets:
+  ipynb>:
+    notebook: ml_datasets
+    output_database: ml_datasets
+    datasets: transition_matrix
+
++network_analysis:
+  ipynb>:
+    notebook: network_analysis
+    input_table: ml_datasets.transition_matrix
