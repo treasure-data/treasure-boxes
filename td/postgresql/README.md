@@ -50,6 +50,7 @@ Available parameters for `result_settings` are here.
 - method: (string(copy|insert), default copy)
 - schema: (string, optional)
 - fdw: (string(None|cstore), default None)
+- set_role: (string, default None)
 
 For more details, please see [Treasure Data documentation](https://docs.treasuredata.com/display/public/INT/PostgreSQL+Export+Integration#result-output-url-format)
 
