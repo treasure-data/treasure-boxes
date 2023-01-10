@@ -6,7 +6,6 @@ in:
     client_secret:  ${secret:gsheet.client_secret}
     refresh_token:  ${secret:gsheet.refresh_token}
 
-    
     spreadsheets_url: https://docs.google.com/spreadsheets/d/**********************/edit#gid=0
 
     worksheet_title: sheet_name_here
@@ -16,12 +15,20 @@ in:
     datetime_render_option: FORMATTED_STRING
     key: spreadsheet_key_here
     # https://docs.treasuredata.com/display/public/INT/Google+Sheets+Export+Integration#Find-the-Spreadsheet-Key
-    
+
     null_string: '\N'
     default_typecast: strict
     columns:
-        - {name: test_name, type: string}
-        - {name: test_index, type: string}
+      - name: id
+        type: long
+      - name: name
+        type: string
+      - name: index
+        type: string
+      - name: average_revenue
+        type: double
+      - name: created_at
+        type: timestamp
 
 out: {}
 exec: {}
