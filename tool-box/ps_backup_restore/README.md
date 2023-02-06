@@ -1,6 +1,6 @@
-To Backup an existing Parent Segment configuration and restore the backup config taken previously is not a feature that is available in TD currently. However, some customers may require to have a backup of their Parent Segment periodically and may be at scenarios when a PS is deleted unintentionally or if a segment or folder got deleted by some users, customer would like to have it restored without re-doing the entire configuration again. 
+This workflow enables backup and restoration of a parent segment configuration, and that of underlying entities like segments and folders, without having to reconfigure from scratch. Useful in the event of accidental deletion of a segment by a user, for example.
 
-With this solution customer will be able to:
+With this solution, users can:
 
 1. Take a Full Backup of the Parent Segment Configuration
 
@@ -35,7 +35,7 @@ For the initial version we have set the backup to be saved on both TD tables and
 
 AWS S3 Authentication must be setup under Integration Hub, so that it can be used in the Backup solution to export the results to the mentioned s3 bucket.
 
-The end user does not need to have any of SQL or digdag or Python expertise as customer should be only changing the configuration YML files w.r.t backup and just follow steps provided below. 
+The end user does not need to have any of SQL or digdag or Python expertise as users need only change the configuration YML files w.r.t backup and just follow steps provided below. 
 
 ## Steps to setup Parent Segment Backup:
 
@@ -71,7 +71,7 @@ Restoring Parent Segment from an existing backup has 3 parts to it.
 
 - Now restore Folder configuration along with Segments from the existing backup
 
-**Please note** for some customer accounts Audience Studio V5 is not enabled by default and so we will have to request our Operations Team to enable ***v5_endpoint*** flag for the corresponding Parent Segment that you restored in Data Workbench under ‘Master Segments’ 
+**Please note** for some TD accounts Audience Studio V5 is not enabled by default and so we will have to request our Operations Team to enable ***v5_endpoint*** flag for the corresponding Parent Segment that you restored in Data Workbench under ‘Master Segments’ 
 
 ### Requisites for Restore:
 
@@ -124,8 +124,6 @@ Restoring Parent Segment from an existing backup has 3 parts to it.
 2. Run main_wf.dig workflow now to restore folders and segments under the new root folder
 
 ### Project Details:
-
-Can find the solution in +psdemo account under ***Project*** → ps_backup_restore 
 
 - **main_wf.dig** - Parent workflow that triggers corresponding Backup or Restore workflows based on the config/input_params.yml setting
 - **master_seg_backup.dig** - Workflow that captures full backup of Parent Segment configuration along with Folder & Segment configuration
