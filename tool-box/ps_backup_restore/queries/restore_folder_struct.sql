@@ -1,5 +1,5 @@
 WITH records AS (
-  select CAST(json_extract(_col0, '$.data') as ARRAY<JSON>) records from pse_folder_stg_restore
+  select CAST(json_extract(_col0, '$.data') as ARRAY<JSON>) records from ${restore.folder_stg_tbl}
 ),
 data_f as (
 SELECT CAST(json_extract(record, '$.relationships.parentFolder.data.id') as int) parent_node_id,
