@@ -11,14 +11,10 @@ With this solution customer will be able to:
     - Restore all Folders and all Segments as it is in the backup configuration in Audience Studio V5
 
 TD Secrets that are common to backup and restore:
-
-endpoint - For US region it should be `https://api.treasuredata.com`, Europe → `api.eu01.treasuredata.com` and JP region → `api.treasuredata.co.jp` 
-
-s3.access_key_id - AWS access key id to connect to s3
-
-s3.secret_access_key - Secret access key to connect to s3
-
-td.apikey - Master/Write-only API Key of the user
+- endpoint - For US region it should be `https://api.treasuredata.com`, Europe → `api.eu01.treasuredata.com` and JP region → `api.treasuredata.co.jp` 
+- s3.access_key_id - AWS access key ID to connect to s3
+- s3.secret_access_key - Secret access key to connect to s3
+- td.apikey - Master/Write-only API Key of the user
 
 ## Backup Parent Segment Configuration:
 
@@ -28,10 +24,10 @@ As an output of the Backup solution there will be three .json files each for the
 
 ![](images/aws-bucket-ex.png)
 
-**Note** : The 3 configuration files will be stored under a directory that is created based on the run date, that will have format like YYYMMDD. And similarly all 3 files are created in json format with session time appended to their names like ms_config_hhmmss.json . This will help to identify at which date and time these backups are taken. For example, from the above screenshot the directory that the files are created is 20220510/ and the files with utc timestamp appended are:
-Parent Segment configuration backup file → ms_config_061627.json 
-Folder and Hierarchy information backup file → folder_config_061627.json 
-Backup of all the segments combined in one backup file → all_segments_config_061627.json
+**Note**: The 3 configuration files will be stored under a directory that is created based on the run date, that will have format like YYYMMDD. Similarly, all 3 files are created in json format with session time appended to their names like ms_config_hhmmss.json . This will help to identify at which date and time these backups are taken. For example, from the above screenshot the directory that the files are created is 20220510/ and the files with utc timestamp appended are:
+- Parent Segment configuration backup file → ms_config_061627.json 
+- Folder and Hierarchy information backup file → folder_config_061627.json 
+- Backup of all the segments combined in one backup file → all_segments_config_061627.json
 
 ### Requisites for Backup: 
 
@@ -47,9 +43,21 @@ The end user does not need to have any of SQL or digdag or Python expertise as c
 
 2. config/database.yml - Database name where all the below config tables resides. Update parameter database
 
-3. config/backup_parent_seg.yml **Parameters** :src_ms_id - Audience id of the Parent Segment. Should be able to find this from url of the Parent Segment at Data Workbench → Master Segments → Respective Parent Segmentroot_folder_id - Folder ID of the root at Audience Studio V5. As in below screenshot, open Audience Studio V5, go to respect parent segment and identify the root folder id from the url. Here 390702 is the root folder id for pse_restore_0419 Root
-![](images/root-folder-ex.png)
-stg_ms_config_tbl - (Table Name here) Table where the Parent Segment Configuration will be backed up in TD.stg_folder_curr_config_tbl - Temporary table that holds current Folder Configurationstg_folder_extract_tbl - Table where the folder configurations are persisted from every run of the backup workflowstg_seg_curr_config_tbl - Temporary table holds current Segment Configurationstg_seg_config_tbl - Table where the segment configurations are persisted from every run of the backup workflows3.connection_name - Name of AWS S3 Authentication, configured at Integration Hubs3.bucket - AWS bucket where all the three configurations will be persisted
+3. config/backup_parent_seg.yml
+
+	**Parameters**:
+	- src_ms_id - Audience ID of the Parent Segment. Should be able to find this from url of the Parent Segment at Data Workbench → Master Segments → Respective Parent Segment.
+	- root_folder_id - Folder ID of the root at Audience Studio V5. As in below screenshot, open Audience Studio V5, go to respect parent segment and identify the root folder ID from the url. In this example screenshot, 390702 is the root folder ID for parent segment pse_restore_0419.
+	
+	![](images/root-folder-ex.png)
+
+	- stg_ms_config_tbl - Table where the Parent Segment Configuration will be backed up in TD.
+	- stg_folder_curr_config_tbl - Temporary table that holds current Folder Configuration.
+	- stg_folder_extract_tbl - Table where the folder configurations are persisted from every run of the backup workflow.
+	- stg_seg_curr_config_tbl - Temporary table holds current Segment Configuration.
+	- stg_seg_config_tbl - Table where the segment configurations are persisted from every run of the backup workflow.
+	- s3.connection_name - Name of AWS S3 Authentication, configured at Integration Hub.
+	- s3.bucket - AWS bucket where all the three configurations will be persisted.
 
 4. Run main_wf.dig now to take a complete backup of all three configurations
 
@@ -71,7 +79,7 @@ Restoring Parent Segment from an existing backup has 3 parts to it.
 
 - As mentioned above Restore is a 3 step process, so after just restoring Parent Segment configuration into Data Workbench → Master Segments with parameter restore_ps_config_v4: yes, **run the Parent Segment once**. After it completes, enable parameter restore_folders_and_segments: yes and rerun the **main_wf.dig** again for restore.
 
-- The end user does not need to have any of SQL or digdag or Python expertise as customer should be only changing the configuration YML files w.r.t restore and just follow steps provided below. 
+- The end user does not need to have any of SQL or digdag or Python expertise as they only need to change the restortation YML configuration files and just follow steps provided below. 
 
 ## Steps to setup Parent Segment Restore:
 
@@ -79,18 +87,18 @@ Restoring Parent Segment from an existing backup has 3 parts to it.
 
 1. config/input_params.yml - This config file has two parameters that determines if you would like to perform Backup or Restore **Parameters**: enable_backup and enable_restoreTo perform restore, set enable_backup: no and enable_restore: yes
 
-2. config/database.yml - Database name where all the below config tables resides. Update parameter database
+2. config/database.yml - Database name where all the below config tables resides. Update parameter database.
 
-    - config/restore_parent_seg.yml - It is the main configuration file that needs to be set for restore process and this will require following **parameters**:
-        ms_name - New name for the Parent Segment
-        ms_table_restore - Table Name to write results from Parent Segment configuration json file
-        folder_stg_tbl - Table Name to write results from Folder configuration json file
-        root_folder_id - Not required to be set for Part 1
-        aws_bucket_name - AWS s3 bucket name
-        aws_ms_config_path - Path prefix of the parent segment config json file
-        aws_folder_config_path - Path prefix of the folder configuration json file
-        restore_ps_config_v4 - Set to ‘yes’ for Part 1 where we only restore the Parent Segment config
-        restore_folders_and_segments_v5 - Set to ‘no’ for Part 1, as restoring folder and segment entities require Part 2 to be completed.
+    - config/restore_parent_seg.yml - It is the main configuration file that needs to be set for restore process and this will require the following **parameters**:
+		- ms_name - New name for the Parent Segment
+		- ms_table_restore - Table Name to write results from Parent Segment configuration json file
+		- folder_stg_tbl - Table Name to write results from Folder configuration json file
+		- root_folder_id - Not required to be set for Part 1
+		- aws_bucket_name - AWS s3 bucket name
+		- aws_ms_config_path - Path prefix of the parent segment config json file
+		- aws_folder_config_path - Path prefix of the folder configuration json file
+		- restore_ps_config_v4 - Set to ‘yes’ for Part 1 where we only restore the Parent Segment config
+		- restore_folders_and_segments_v5 - Set to ‘no’ for Part 1, as restoring folder and segment entities require Part 2 to be completed.
 
 3. Run the main_wf.dig workflow now to restore Parent Segment configuration in Data Workbench
 
@@ -108,7 +116,10 @@ Restoring Parent Segment from an existing backup has 3 parts to it.
 
 ### Part 3 - Restore Folder and Segment Entities
 
-1. All the configurations are same as Part 1, except the below 3 parameters:root_folder_id - Grab the folder id after the Parent Segment run as mentioned in Part 2restore_ps_config_v4 - Set to ‘no’  restore_folders_and_segments_v5 - Set to ‘yes’. This will enable folder and segment entities to be restored in Audience Studio V5
+1. All the configurations are same as Part 1, except the below 3 parameters:
+	- root_folder_id - Grab the folder ID after the Parent Segment run as mentioned in Part 2.
+	- restore_ps_config_v4 - Set to ‘no’.
+	- restore_folders_and_segments_v5 - Set to ‘yes’. This will enable folder and segment entities to be restored in Audience Studio V5
 
 2. Run main_wf.dig workflow now to restore folders and segments under the new root folder
 
@@ -116,13 +127,10 @@ Restoring Parent Segment from an existing backup has 3 parts to it.
 
 Can find the solution in +psdemo account under ***Project*** → ps_backup_restore 
 
-main_wf.dig - Parent workflow that triggers corresponding Backup or Restore workflows based on the config/input_params.yml setting
-
-master_seg_backup.dig - Workflow that captures full backup of Parent Segment configuration along with Folder & Segment configuration
-
-master_seg_restore.dig - Workflow that restores Parent Segment configuration and Folder & Segment configuration separately
-
-python_script/restore_main.py - Python script that is triggered from master_seg_restore.dig workflow and is responsible for restoring Folder and Segment Entities
+- **main_wf.dig** - Parent workflow that triggers corresponding Backup or Restore workflows based on the config/input_params.yml setting
+- **master_seg_backup.dig** - Workflow that captures full backup of Parent Segment configuration along with Folder & Segment configuration
+- **master_seg_restore.dig** - Workflow that restores Parent Segment configuration and Folder & Segment configuration separately
+- **python_script/restore_main.py** - Python script that is triggered from master_seg_restore.dig workflow and is responsible for restoring Folder and Segment Entities
 
 ### Limitations/Possibilities:
 
