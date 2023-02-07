@@ -29,4 +29,5 @@ _export:
     target_column: number_of_airline_passengers
     forecast_length: 30
     output_table: ml_test.ts_airline_predicted
+    time_limit: 10 * 60 # 10 min by the default
 
