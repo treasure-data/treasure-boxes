@@ -39,10 +39,10 @@ _export:
         database: ${td.database}
         table: ${restore.folder_stg_tbl}
 
-    +extract_folder_config:
-        td>: queries/restore_folder_struct.sql
-        database: ${td.database}
-        store_last_results: true
+#    +extract_folder_config:
+#        td>: queries/restore_folder_struct.sql
+#        database: ${td.database}
+#        store_last_results: true
     
     +call_restore_script:
         docker:
@@ -57,7 +57,7 @@ _export:
             AWS_PATH_PREFIX: ${restore.aws_folder_config_path}
             AWS_ACCESS_KEY_ID: ${secret:s3.access_key_id}
             AWS_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}
-
+            table: ${restore.folder_stg_tbl}
 #    +iterate_folders:
 #        +create_folders_segments:
 #    'https://api.treasuredata.com'
