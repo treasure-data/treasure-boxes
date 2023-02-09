@@ -11,6 +11,8 @@ _export:
 
 +gluon_train:
   ml_train>:
+    docker:
+      task_mem: 128g # 64g/128g/256g/384g/512g
     notebook: gluon_train
     model_name: gluon_model_${session_id}
     input_table: ${input_database}.${train_data_table}
@@ -18,9 +20,6 @@ _export:
     time_limit: ${fit_time_limit}
     export_leaderboard: ${output_database}.leaderboard_${train_data_table}
     export_feature_importance: ${output_database}.feature_importance_${train_data_table}
-
-+print_train_result:
-  echo>: "Executed training and built gluon_model_${session_id}: ${automl.last_executed_notebook}.ipynb"
 
 +track_experiment:
   td>: queries/track_experiment.sql
@@ -35,10 +34,9 @@ _export:
 
 +gluon_predict:
   ml_predict>:
+    docker:
+      task_mem: 64g # 64g/128g/256g/384g/512g
     notebook: gluon_predict
     model_name: gluon_model_${session_id}
     input_table: ${input_database}.${test_data_table}
     output_table: ${output_database}.predicted_${test_data_table}_${session_id}
-
-+print_predict_result:
-  echo>: "Run prediction and resulted to ${output_database}.predicted_${test_data_table}_${session_id}: ${automl.last_executed_notebook}.ipynb"

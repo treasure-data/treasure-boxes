@@ -1,0 +1,19 @@
+timezone: Asia/Tokyo
+#timezone: PST
+
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: ${output_database}
+  
++run_ml_experiment_demo:
+  call>: ml_experiment_demo.dig
+
++explain_predictions_by_shap:
+  ipynb>:
+    docker:
+      task_mem: 128g # 64g/128g/256g/384g/512g
+    notebook: shapley
+    model_name: gluon_model_${session_id}     # model used for prediction
+    input_table: ${input_database}.gluon_test # test data used for prediction
