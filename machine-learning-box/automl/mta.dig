@@ -1,0 +1,40 @@
+#timezone: Asia/Tokyo
+#timezone: PST
+
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: sample_datasets # dummy to avoid error on create_databases
+  output_db: ml_test
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: ["ml_datasets", "${output_db}"]
+
++load_datasets:
+  ipynb>:
+    docker:
+      task_mem: 64g
+    notebook: ml_datasets
+    output_database: ml_datasets
+    datasets: mta
+
++run_mta:
+  ipynb>:
+    branch: ATML-18_mta
+    docker:
+      task_mem: 128g # 64g/128g/256g/384g/512g
+    notebook: MTA
+    # required param
+    input_table: ml_datasets.mta
+    # optional param
+    tstamp_column: tstamp
+    user_column: user
+    channel_column: channel
+    conversion_column: conversion
+    ignore_channels: Facebook
+    overwrite_channel: Direct
+    export_channel_interactions: ${output_db}.channel_interactions
+    export_shapley_attributions: ${output_db}.shapley_attributions
+    export_attributed_conversions: ${output_db}.attributed_conversions
