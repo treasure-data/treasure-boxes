@@ -1,0 +1,11 @@
+td:
+  database: basic_monitoring
+  tables:
+    jobs: jobs
+    connections: connections
+    connections_history: connections_history
+    schedules: schedules
+    schedules_history: schedules_history
+  api_endpoint: api.treasuredata.com
+
+
