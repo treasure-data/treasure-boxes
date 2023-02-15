@@ -1,0 +1,15 @@
+_export:
+    !include : common/settings.yaml
+
++ingest_journey_statistics:
+    py>: scripts.ingest_journey_statistics.run
+    session_unixtime: ${session_unixtime}
+    dest_db: ${td.database}
+    dest_table: ${td.journey_statistics}
+    journey_ids: 838,930,923,921
+    api_endpoint: ${td.api_endpoint}
+    cdp_api_endpoint: ${td.cdp_api_endpoint}
+    docker:
+        image: "digdag/digdag-python:3.9"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}
