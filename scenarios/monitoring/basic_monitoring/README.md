@@ -23,7 +23,7 @@ Second, you register td.apikey as a secret.
   # Run
   $td wf start backup_and_delete --session now
 
-# relationships of Table and REST API
+# Relationships of Table and REST API
 
 | table | REST API|
 | ----- | --------|
