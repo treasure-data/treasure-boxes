@@ -31,8 +31,8 @@ Second, you register td.apikey as a secret.
 | connections | [Get connections](https://api-docs.treasuredata.com/pages/td-api/tag/Connections/#tag/Connections/operation/getConnections) |
 | schedules | [Get schedules](https://api-docs.treasuredata.com/pages/td-api/tag/Schedules/#tag/Schedules/operation/getSchedules) |
 
-connections and schedules table is replaced daily by incremental_ingest.dig.
-jobs table is imported incrementally.
+**connections** and **schedules** table is replaced daily by incremental_ingest.dig.
+**jobs** table is imported incrementally.
 
 # Next Step
 If you have any questions, please contact to support@treasuredata.com.
