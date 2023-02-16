@@ -22,7 +22,6 @@ _export:
 
 +run_mta:
   ipynb>:
-    branch: ATML-18_mta
     docker:
       task_mem: 128g # 64g/128g/256g/384g/512g
     notebook: MTA
@@ -33,6 +32,8 @@ _export:
     user_column: user
     channel_column: channel
     conversion_column: conversion
+    # optional columns (usually not needed)
+    analyze_topk_channels: 50
     ignore_channels: Facebook
     overwrite_channel: Direct
     export_channel_interactions: ${output_db}.channel_interactions
