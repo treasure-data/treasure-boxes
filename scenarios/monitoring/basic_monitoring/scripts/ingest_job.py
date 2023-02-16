@@ -1,4 +1,5 @@
-
+# https://api-docs.treasuredata.com/pages/td-api/tag/Jobs/#tag/Jobs/operation/getJobs
+# https://docs.treasuredata.com/display/public/PD/Treasure+Data+Job+APIs#job-list
 import requests
 import pandas as pd
 import pytd
