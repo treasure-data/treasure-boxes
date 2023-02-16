@@ -21,7 +21,7 @@ Second, you register td.apikey as a secret.
   $td wf secrets --project basic_monitoring --set td.apikey=1234/abcdefg...
 
 ## Run
-  $td wf start backup_and_delete --session now
+  $td wf start basic_monitoring initial_ingest --session now
 
 ## Caution
   You should set lower_job_id option (initial_ingest_jobs task of initial_ingest workflow) properly.
