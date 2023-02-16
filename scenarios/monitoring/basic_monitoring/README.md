@@ -12,16 +12,20 @@ The purpose of this scenario is to import Job/Schedule/Connection metadata from 
 
 First, please upload the workflow.
 
-  # Upload
+## Upload
   $td wf push basic_monitoring
 
 Second, you register td.apikey as a secret.
 
-  # Register
+## Register
   $td wf secrets --project basic_monitoring --set td.apikey=1234/abcdefg...
 
-  # Run
+## Run
   $td wf start backup_and_delete --session now
+
+## Caution
+  You should set lower_job_id option (initial_ingest_jobs task of initial_ingest workflow) properly.
+  If you set lower id, initial_ingest workflow may take longer or cause a timeout error.
 
 # Relationships of Table and REST API
 
