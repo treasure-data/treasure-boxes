@@ -7,15 +7,6 @@ import pytd
 import os
 import json
 
-# def get_all_folders_per_ps(base_url, headers, ps_id):
-#     url = base_url + '/audiences/' + str(ps_id) + '/folders' 
-#     print(url)
-#     res = requests.get(url=url, headers=headers)
-#     if res.status_code != requests.codes.ok:
-#         res.raise_for_status()
-#     data = res.json()
-#     return data
-
 def get_all_entities_per_folder(base_url, headers, folder_id):
     url = base_url + '/entities/by-folder/' + str(folder_id)
     print(url)
