@@ -1,5 +1,4 @@
 # https://github.com/treasure-data/digdag/blob/master/digdag-server/src/main/java/io/digdag/server/rs/AttemptResource.java#L100
-# 100件/1ページがmaxなので毎回洗い替えというような実装は無理
 
 import requests
 import pandas as pd
