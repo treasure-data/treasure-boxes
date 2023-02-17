@@ -47,6 +47,8 @@ Then, you can obtain the td authetication id from the access URL, as follows:
 
 Finally, you can write td_authentication_id to daily_load_with_existing_authentication.yaml.
 
+- [config/daily_load_with_existing_authentication.yml](config/daily_load_with_existing_authentication.yml)
+
     # Run
     $ td wf start td_load_example daily_load_with_existing_authentication --session now
 
