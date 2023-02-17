@@ -1,0 +1,31 @@
+in:
+    type: google_sheets
+    td_authentication_id: 288292
+
+    spreadsheets_url: https://docs.google.com/spreadsheets/d/**********************/edit#gid=0
+
+    worksheet_title: sheet_name_here
+    start_row: 1
+    major_dimension: ROWS
+    value_render_option: FORMATTED_VALUE
+    datetime_render_option: FORMATTED_STRING
+    key: spreadsheet_key_here
+    # https://docs.treasuredata.com/display/public/INT/Google+Sheets+Export+Integration#Find-the-Spreadsheet-Key
+
+    null_string: '\N'
+    default_typecast: strict
+    columns:
+      - name: id
+        type: long
+      - name: name
+        type: string
+      - name: index
+        type: string
+      - name: average_revenue
+        type: double
+      - name: created_at
+        type: timestamp
+
+out: {}
+exec: {}
+filters: []
