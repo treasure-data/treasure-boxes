@@ -24,7 +24,7 @@ As an output of the Backup solution there will be three .json files each for the
 
 ![](images/aws-bucket-ex.png)
 
-**Note**: The 3 configuration files will be stored under a directory that is created based on the run date, that will have format like YYYMMDD. Similarly, all 3 files are created in json format with session time appended to their names like ms_config_hhmmss.json . This will help to identify at which date and time these backups are taken. For example, from the above screenshot the directory that the files are created is 20220510/ and the files with utc timestamp appended are:
+**Note**: The 3 configuration files will be stored under a directory that is created based on the run date, that will have format like YYYMMDD. Similarly, all 3 files are created in json format with session time appended to their names like ms_config_hhmmss.json. This will help to identify at which date and time these backups are taken. For example, from the above screenshot the directory that the files are created is 20220510/ and the files with utc timestamp appended are:
 - Parent Segment configuration backup file → ms_config_061627.json 
 - Folder and Hierarchy information backup file → folder_config_061627.json 
 - Backup of all the segments combined in one backup file → all_segments_config_061627.json
@@ -39,7 +39,11 @@ The end user does not need to have any of SQL or digdag or Python expertise as u
 
 ## Steps to setup Parent Segment Backup:
 
-1. config/input_params.yml - This config file has two parameters that determines if you would like to perform Backup or Restore **Parameters** : enable_backup and enable_restoreTo perform backup, set enable_backup: yes and enable_restore: no
+1. config/input_params.yml - This config file has two parameters that determines if you would like to perform Backup or Restore.
+
+	**Parameters** : enable_backup and enable_restore
+
+	To perform backup, set enable_backup: yes and enable_restore: no
 
 2. config/database.yml - Database name where all the below config tables resides. Update parameter database
 

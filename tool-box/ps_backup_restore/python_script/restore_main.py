@@ -8,6 +8,7 @@ from requests.auth import HTTPBasicAuth
 import pytd
 import pandas as pd
 from boto3 import client
+
 # restore folder structure into Audience Studio V5
 # get folder configs from s3/td table load into dataframe
 # iterate from parent folder to child folders and segments
@@ -15,12 +16,15 @@ from boto3 import client
 td_api_key = os.environ['TD_API_KEY']
 td_endpoint = os.environ['TD_API_SERVER']
 database = os.environ['database']
+table = os.environ['table']
 
+# NB. Queries built using string formatting due to Presto Python client underlying pyTD not supporting query parameters. Deemed safe in this instance as sole input is YAML config.
 
 # create dataframe for all entities
-fd = open('queries/restore_entity_sql.sql','r')
-sqlFile = fd.read()
-fd.close()
+sqlFile = f'''WITH records AS ( select CAST(json_extract(_col0, \'$.data\') as ARRAY<JSON>) records from {table} ),data_f as (SELECT CAST(json_extract(record, \'$.relationships.parentFolder.data.id\') as int) parent_node_id, CAST(json_extract(record, \'$.relationships.parentFolder.data.type\') as VARCHAR) parent_node_type, CAST(json_extract(record, \'$.id\') AS INT) current_node_id, CAST(json_extract(record, \'$.type\') AS VARCHAR) current_node_type, CAST(json_extract(record, \'$.attributes.name\') AS VARCHAR) current_node_name, CAST(json_extract(record, \'$.attributes.description\') AS VARCHAR) current_node_desc FROM records CROSS JOIN UNNEST(records) AS t(record) ) select * from data_f where current_node_type!=\'folder-segment\' order by current_node_id'''
+
+#create dataframe for folder struct
+sqlFileFolder = f'''WITH records AS ( select CAST(json_extract(_col0, \'$.data\') as ARRAY<JSON>) records from {table} ),data_f as (SELECT CAST(json_extract(record, \'$.relationships.parentFolder.data.id\') as int) parent_node_id, CAST(json_extract(record, \'$.relationships.parentFolder.data.type\') as VARCHAR) parent_node_type, CAST(json_extract(record, \'$.id\') AS INT) current_node_id, CAST(json_extract(record, \'$.type\') AS VARCHAR) current_node_type, CAST(json_extract(record, \'$.attributes.name\') AS VARCHAR) current_node_name, CAST(json_extract(record, \'$.attributes.description\') AS VARCHAR) current_node_desc FROM records CROSS JOIN UNNEST(records) AS t(record) ) select * from data_f where current_node_type=\'folder-segment\' order by parent_node_id asc, current_node_id'''
 
 client_td = pytd.Client(apikey=td_api_key, endpoint=td_endpoint, database=database)
 results = client_td.query(sqlFile)
@@ -28,12 +32,6 @@ df = pd.DataFrame(**results)
 
 df['parent_node_id'] = df['parent_node_id'].fillna(0)
 df['parent_node_id'] = df['parent_node_id'].astype(int)
-
-#create dataframe for folder struct
-fdf = open('queries/restore_folder_struct.sql','r')
-sqlFileFolder = fdf.read()
-fdf.close()
-
 
 results_f = client_td.query(sqlFileFolder)
 df_fol = pd.DataFrame(**results_f)
