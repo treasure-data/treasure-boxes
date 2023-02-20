@@ -49,6 +49,8 @@ Finally, you can write td_authentication_id to daily_load_with_existing_authenti
 
 - [config/daily_load_with_existing_authentication.yml](config/daily_load_with_existing_authentication.yml)
 
+And you can run the workflow like the following..
+
     # Run
     $ td wf start td_load_example daily_load_with_existing_authentication --session now
 
