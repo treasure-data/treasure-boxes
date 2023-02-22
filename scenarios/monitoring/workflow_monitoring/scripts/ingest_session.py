@@ -1,4 +1,5 @@
 # https://github.com/treasure-data/digdag/blob/master/digdag-server/src/main/java/io/digdag/server/rs/SessionResource.java#L78
+# 100件/1ページがmaxなので毎回洗い替えというような実装は無理
 
 import requests
 import pandas as pd

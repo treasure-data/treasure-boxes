@@ -56,6 +56,10 @@ schedule:
     _env:
       TD_API_KEY: ${secret:td.apikey}
 
+# incremental ingest attempt
+# 0. statusがrunningになっているものをアップデート(実行は最大24hだから、適当にtimeで切ってよし)
+# 1. 既存attemptsテーブルから最大idを取得
+# 2. 1で取得したidより大きいattemptのみingest
 +ingest_incremental_attempt:
   +update_old_attempt:
     +check_old_attempt_with_runnnig:
@@ -95,6 +99,12 @@ schedule:
     _env:
       TD_API_KEY: ${secret:td.apikey}
   
+
+# incremental ingest session
+# 1. 既存sessionsテーブルから最大idを取得
+# 2. 1で取得したidより大きいsessionのみingest
+# 3. 前回実行時から今回実行までで増えたattemptからindexが1でないもの => つまりretryの行を取得
+# 4. 3で洗い出したsession idのデータをdelete & 新規insert
 +ingest_incremental_session:
   +check_max_session_id:
     td>:
