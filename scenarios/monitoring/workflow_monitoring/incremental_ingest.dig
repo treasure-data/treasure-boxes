@@ -1,0 +1,137 @@
+_export:
+  !include : common/settings.yaml
+
+timezone: UTC
+schedule:
+  daily>: 00:00:00
+
++incremental_ingest_project:
+  +append_project_history:
+    td>:
+    query: select * from ${td.tables.projects}
+    database: ${td.database}
+    insert_into: ${td.tables.projects_history}
+
+  +ingest_project:
+    py>: scripts.ingest_workflow_project.run
+    session_unixtime: ${session_unixtime}
+    dest_db: ${td.database}
+    dest_table: ${td.tables.projects}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+
++incremental_ingest_workflow:
+  +append_workflow_history:
+    td>:
+    query: select * from ${td.tables.workflows}
+    database: ${td.database}
+    insert_into: ${td.tables.workflows_history}
+
+  +ingest_workflow:
+    py>: scripts.ingest_workflow.run
+    session_unixtime: ${session_unixtime}
+    dest_db: ${td.database}
+    dest_table: ${td.tables.workflows}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+
++incremental_ingest_schedule:
+  +append_schedule_history:
+    td>:
+    query: select * from ${td.tables.schedules}
+    database: ${td.database}
+    insert_into: ${td.tables.schedules_history}
+
+  +ingest_schedule:
+    py>: scripts.ingest_schedule.run
+    session_unixtime: ${session_unixtime}
+    dest_db: ${td.database}
+    dest_table: ${td.tables.schedules}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+
++ingest_incremental_attempt:
+  +update_old_attempt:
+    +check_old_attempt_with_runnnig:
+      td>:
+      query: select ARRAY_JOIN(ARRAY_AGG(id), ',') as ids from ${td.tables.attempts} where status = 'running' and TD_TIME_RANGE(time, '${moment(session_date).add(-2).format("YYYY-MM-DD")}', NULL) group by status
+      store_last_results: true
+      database: ${td.database}
+    +update_attempt:
+      py>: scripts.update_attempt.run
+      session_unixtime: ${session_unixtime}
+      dest_db: ${td.database}
+      dest_table: ${td.tables.attempts}
+      ids: ${td.last_results.ids}
+      api_endpoint: ${td.api_endpoint}
+      workflow_endpoint: ${td.workflow_endpoint}
+      docker:
+        image: "digdag/digdag-python:3.9"
+      _env:
+        TD_API_KEY: ${secret:td.apikey}
+  +check_max_attempt_id:
+    td>: 
+    query: select max(cast(id as INTEGER)) as max_id from attempts
+    store_last_results: true
+    database: workflow_management
+  +ingest_incremetal_attempt:
+    py>: scripts.ingest_attempt.run
+    session_unixtime: ${session_unixtime}
+    dest_db: ${td.database}
+    dest_table: ${td.tables.attempts}
+    api_endpoint: ${td.api_endpoint}
+    workflow_endpoint: ${td.workflow_endpoint}
+    count: 100
+    lower_limit_attempt_id: ${td.last_results.max_id}
+    if_exists: "append"
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+  
++ingest_incremental_session:
+  +check_max_session_id:
+    td>:
+    query: select max(cast(id as INTEGER)) as max_id, max(time) as last_datetime from ${td.tables.sessions}
+    store_last_results: true
+    database: ${td.database}
+
+  +ingest_incremental_session:
+    py>: scripts.ingest_session.run
+    session_unixtime: ${session_unixtime}
+    dest_db: ${td.database}
+    dest_table: ${td.tables.sessions}
+    api_endpoint: ${td.api_endpoint}
+    workflow_endpoint: ${td.workflow_endpoint}
+    count: 100
+    lower_limit_session_id: ${td.last_results.max_id}
+    if_exists: "append"
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      
+  +check_update_old_session:
+    td>:
+    query: select ARRAY_JOIN(ARRAY_AGG(sessionid), ',') as ids from (select sessionid from ${td.tables.attempts} where TD_TIME_RANGE(time, '${td.last_results.last_datetime+1}', NULL) and index != 1 group by 1)
+    store_last_results: true
+    database: ${td.database}
+
+  +update_retry_session:
+    py>: scripts.update_session.run
+    session_unixtime: ${session_unixtime}
+    dest_db: ${td.database}
+    dest_table: ${td.tables.sessions}
+    ids: ${td.last_results.ids}
+    api_endpoint: ${td.api_endpoint}
+    workflow_endpoint: ${td.workflow_endpoint}
+    docker:
+      image: "digdag/digdag-python:3.9"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}

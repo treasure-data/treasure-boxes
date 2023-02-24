@@ -1,0 +1,12 @@
+td:
+  database: cdp_monitoring
+  tables:
+    parent_segments: parent_segments
+    parent_segments_history: parent_segments_history
+    entities: entities
+    entities_history: entities_history
+    journey_statistics: journey_statistics
+    journey_statistics_history: journey_statistics_history
+  api_endpoint: api.treasuredata.com
+  cdp_api_endpoint: api-cdp.treasuredata.com
+
