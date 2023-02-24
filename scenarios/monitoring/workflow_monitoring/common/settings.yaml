@@ -1,0 +1,14 @@
+td:
+  database: workflow_monitoring
+  tables:
+    projects: projects
+    projects_history: projects_history
+    workflows: workflows
+    workflows_history: workflows_history
+    schedules: schedules
+    schedules_history: schedules_history
+    sessions: sessions
+    attempts: attempts
+    tasks: tasks
+  api_endpoint: api.treasuredata.com
+  workflow_endpoint: api-workflow.treasuredata.com

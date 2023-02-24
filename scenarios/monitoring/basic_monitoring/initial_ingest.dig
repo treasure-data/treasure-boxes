@@ -1,0 +1,41 @@
+_export:
+  !include : common/settings.yaml
+
++initial_database_and_tables:
+    +create_db:
+        td_ddl>: 
+        create_databases: [ "${td.database}" ]
+
++ingest_connection:
+    py>: scripts.ingest_connection.run
+    dest_db: ${td.database}
+    dest_table: ${td.tables.connections}
+    api_endpoint: ${td.api_endpoint}
+    docker:
+        image: "digdag/digdag-python:3.9"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}
+
++ingest_schedule:
+    py>: scripts.ingest_schedule.run
+    dest_db: ${td.database}
+    dest_table: ${td.tables.schedules}
+    api_endpoint: ${td.api_endpoint}
+    docker:
+        image: "digdag/digdag-python:3.9"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}
+
++initial_inget_jobs:
+  py>: scripts.ingest_job.run
+  session_unixtime: ${session_unixtime}
+  dest_db: ${td.database}
+  dest_table: ${td.tables.jobs}
+  page_size: 1000
+  lower_job_id: 1675368283
+  api_endpoint: ${td.api_endpoint}
+  if_exists: 'overwrite'
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
