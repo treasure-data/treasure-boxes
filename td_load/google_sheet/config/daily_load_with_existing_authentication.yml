@@ -1,6 +1,6 @@
 in:
     type: google_sheets
-    td_authentication_id: 288292
+    td_authentication_id: xxxxxx
 
     spreadsheets_url: https://docs.google.com/spreadsheets/d/**********************/edit#gid=0
 

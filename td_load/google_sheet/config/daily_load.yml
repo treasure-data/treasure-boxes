@@ -1,4 +1,3 @@
-
 in:
     type: google_sheets
     auth_method: authorized_user
