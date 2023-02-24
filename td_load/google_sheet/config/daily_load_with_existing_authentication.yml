@@ -1,9 +1,6 @@
 in:
     type: google_sheets
-    auth_method: authorized_user
-    client_id:  ${secret:gsheet.client_id}
-    client_secret:  ${secret:gsheet.client_secret}
-    refresh_token:  ${secret:gsheet.refresh_token}
+    td_authentication_id: xxxxxx
 
     spreadsheets_url: https://docs.google.com/spreadsheets/d/**********************/edit#gid=0
 
