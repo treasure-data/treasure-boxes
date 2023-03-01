@@ -17,7 +17,7 @@ td_api_key = os.environ['TD_API_KEY']
 td_endpoint = os.environ['TD_API_SERVER']
 database = os.environ['database']
 table = os.environ['table']
-
+restore_all = os.environ['RS_ALL']
 # NB. Queries built using string formatting due to Presto Python client underlying pyTD not supporting query parameters. Deemed safe in this instance as sole input is YAML config.
 
 # create dataframe for all entities
@@ -68,6 +68,15 @@ headers = {"Authorization": "TD1 "+td_api_key,
 "Content-Type": "application/json"}
 #auth = HTTPBasicAuth('Authorization', "TD1 " + td_api_key)
 
+URL = 'https://api-cdp.treasuredata.com/entities/by-folder/{0}?depth=10'.format(root_id)
+r = requests.get(URL,headers=headers)
+resp = r.json()
+df_folder_curr = pd.json_normalize(resp['data'],max_level=1)
+df_segment_curr = df_folder_curr.loc[df_folder_curr['type'] == 'segment-batch', ['id','type','attributes.name']]
+df_segment_curr.rename(columns={'attributes.name': 'name'}, inplace=True)
+df_folder_curr = df_folder_curr.loc[df_folder_curr['type'] == 'folder-segment', ['id','type','attributes.name']]
+df_folder_curr.rename(columns={'attributes.name': 'name'}, inplace=True)
+
 def create_folder(p_id, c_id):
     for f in folders['data']:
         if int(f['id']) == c_id:
@@ -92,6 +101,10 @@ def create_folder_struct(p_id, c_id):
                 if "data" in resp:
                     folder_dict[row.current_node_id] = resp["data"]["id"]
                     create_folder_struct(int(resp["data"]["id"]),row.current_node_id)
+                else:
+                    for folder_seg in df_folder_curr.itertuples():
+                        if row.current_node_name == folder_seg.name:
+                            folder_dict[row.current_node_id] = folder_seg.id
     print(folder_dict)
 
 def create_entity(c_id):
@@ -114,7 +127,6 @@ def create_entity(c_id):
     for f in folders['data']:
         if int(df_2['current_node_id'].values[0]) == int(f['id']):
             if df_2['current_node_type'].values[0] == 'predictive-segment':
-                print(f["attributes"]["segmentId"])
                 s_id = create_entity(int(f["attributes"]["segmentId"]))
                 f['attributes']['segmentId'] = str(s_id)
                 f['relationships']['parentFolder']['data']['id'] = str(p_id)
@@ -123,22 +135,38 @@ def create_entity(c_id):
                 if "data" in resp:
                     segment_dict[int(df_2['current_node_id'].values[0])] = resp["data"]["id"]
                     return str(resp["data"]["id"])
+                else:
+                    for segment_batch in df_segment_curr.itertuples():
+                        if segment_batch.name == f['attributes']['name']:
+                            return segment_batch.id
+                    return
             elif df_2['current_node_type'].values[0] == 'segment-batch':
-                for condition in f['attributes']['rule']['conditions'][0]['conditions']:
-                    if "type" in condition:
-                        if condition['type'] == "Reference" or condition['type'] == "PredictiveScoreReference":
-                            ref_id = create_entity(int(condition['id']))
-                            condition['id'] = str(ref_id)
+                for condition_p in f['attributes']['rule']['conditions']:
+                    for condition in condition_p['conditions']:
+                        if "type" in condition:
+                            if condition['type'] == "Reference" or condition['type'] == "PredictiveScoreReference":
+                                ref_id = create_entity(int(condition['id']))
+                                condition['id'] = str(ref_id)
                 f['relationships']['parentFolder']['data']['id'] = str(p_id)
                 r = requests.post("https://api-cdp.treasuredata.com/entities/segments",headers=headers,data=json.dumps(f))
                 resp = r.json()
                 if "data" in resp:
                     segment_dict[int(df_2['current_node_id'].values[0])] = resp["data"]["id"]
                     return str(resp["data"]["id"])
+                else:
+                    for segment_batch in df_segment_curr.itertuples():
+                        if segment_batch.name == f['attributes']['name']:
+                            return segment_batch.id
+                    return
 
-def main():
+def main(restore_segs: str):
+  rr = str(restore_segs).replace('[','').replace(']','').replace('\'','')
+  rr = rr.split(',')
   folder_dict[p.values[0]] = str(root_id)
   create_folder_struct(int(root_id),p.values[0])
-  #create_entity(113531)
-  for ind in range(len(df)):
-       create_entity(df.loc[ind, ["current_node_id"]].values[0])
+  if restore_all == 'yes':
+    for ind in range(len(df)):
+      create_entity(df.loc[ind, ["current_node_id"]].values[0])
+  else:
+    for seg in rr:
+      create_entity(int(seg))
