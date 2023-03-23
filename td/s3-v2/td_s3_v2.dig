@@ -3,7 +3,7 @@ timezone: UTC
 _export:
   td:
     database: sample_datasets
- 
+
 +s3v2_export:
   td>: queries/sample.sql
   database: ${td.database}
@@ -13,7 +13,7 @@ _export:
     path: /path/to/results_${moment(session_time).format("YYYYMMDD")}.csv
     sse_type: sse-s3
     format: csv
-    compression: none
+    compression: gz
     header: true
     delimiter: default
     null_value:  empty
