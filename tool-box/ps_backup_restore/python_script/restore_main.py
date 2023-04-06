@@ -88,6 +88,12 @@ def create_folder(p_id, c_id):
             
     return
 
+def check_entity_exists(seg_name):
+    for segment_batch in df_segment_curr.itertuples():
+                        if segment_batch.name == str(seg_name):
+                            return segment_batch.id
+    return
+
 def create_folder_struct(p_id, c_id):
     folder_df = df_fol.loc[df_fol['parent_node_id'] == c_id, ['current_node_id','current_node_name','current_node_type','current_node_desc']]
     if folder_df.empty:
@@ -127,10 +133,11 @@ def create_entity(c_id):
     for f in folders['data']:
         if int(df_2['current_node_id'].values[0]) == int(f['id']):
             if df_2['current_node_type'].values[0] == 'predictive-segment':
+                s = f
                 s_id = create_entity(int(f["attributes"]["segmentId"]))
-                f['attributes']['segmentId'] = str(s_id)
-                f['relationships']['parentFolder']['data']['id'] = str(p_id)
-                r = requests.post("https://api-cdp.treasuredata.com/entities/predictive_segments",headers=headers,data=json.dumps(f))
+                s['attributes']['segmentId'] = str(s_id)
+                s['relationships']['parentFolder']['data']['id'] = str(p_id)
+                r = requests.post("https://api-cdp.treasuredata.com/entities/predictive_segments",headers=headers,data=json.dumps(s))
                 resp = r.json()
                 if "data" in resp:
                     segment_dict[int(df_2['current_node_id'].values[0])] = resp["data"]["id"]
@@ -140,7 +147,7 @@ def create_entity(c_id):
                         if segment_batch.name == f['attributes']['name']:
                             return segment_batch.id
                     return
-            elif df_2['current_node_type'].values[0] == 'segment-batch':
+            elif df_2['current_node_type'].values[0] == 'segment-batch' and bool(f['attributes']['rule']):
                 for condition_p in f['attributes']['rule']['conditions']:
                     for condition in condition_p['conditions']:
                         if "type" in condition:
