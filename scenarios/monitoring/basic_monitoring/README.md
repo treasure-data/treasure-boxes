@@ -22,6 +22,7 @@ Second, you register td.apikey as a secret.
 
 ## Run
   $td wf start basic_monitoring initial_ingest --session now
+  
   $td wf start basic_monitoring initial_ingest_policy --session now
 
 ## Caution
