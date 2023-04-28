@@ -43,8 +43,7 @@ schedule:
         query: select ARRAY_JOIN(ARRAY_AGG(job_id), ',') as ids from ${td.tables.jobs} where status = 'running' and TD_TIME_RANGE(time, '${moment(session_date).add(-3).format("YYYY-MM-DD")}', NULL) group by status
         store_last_results: true
         database: ${td.database}
-    +debug1:
-        echo>: ${td.last_results}
+        
     +update_old_running_job:
         py>: scripts.update_job.run
         session_unixtime: ${session_unixtime}
@@ -61,8 +60,7 @@ schedule:
         query: select max(cast(job_id as INTEGER)) as max_id from ${td.tables.jobs}
         store_last_results: true
         database: ${td.database}
-    +debug2:
-        echo>: ${td.last_results}
+
     +ingest_incremental_jobs:
         py>: scripts.ingest_job.run
         session_unixtime: ${session_unixtime}

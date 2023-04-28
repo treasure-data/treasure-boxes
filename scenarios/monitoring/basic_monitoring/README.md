@@ -22,6 +22,7 @@ Second, you register td.apikey as a secret.
 
 ## Run
   $td wf start basic_monitoring initial_ingest --session now
+  $td wf start basic_monitoring initial_ingest_policy --session now
 
 ## Caution
   You should set lower_job_id option (initial_ingest_jobs task of initial_ingest workflow) properly.
@@ -34,6 +35,9 @@ Second, you register td.apikey as a secret.
 | jobs  | [Get Jobs](https://api-docs.treasuredata.com/pages/td-api/tag/Jobs/#tag/Jobs/operation/getJobs) |
 | connections | [Get connections](https://api-docs.treasuredata.com/pages/td-api/tag/Connections/#tag/Connections/operation/getConnections) |
 | schedules | [Get schedules](https://api-docs.treasuredata.com/pages/td-api/tag/Schedules/#tag/Schedules/operation/getSchedules) |
+| users | [GET /user/list](https://docs.treasuredata.com/display/public/PD/Treasure+Data+User+API) <br>[Get Access Control User](https://api-docs.treasuredata.com/pages/td-api/tag/Access-Control-Users/#tag/Access-Control-Users/operation/getAccessControlUserById) |
+| databases | [GET database/list](https://docs.treasuredata.com/display/public/PD/Treasure+Data+Database+API#GET-database/list) <br> [GET database/show/:database_name](https://docs.treasuredata.com/display/public/PD/Treasure+Data+Database+API#GET-database/show/:database_name)|
+| policies | [get Access Control Policies](https://api-docs.treasuredata.com/pages/td-api/tag/Access-Control-Policies/#tag/Access-Control-Policies/operation/getAccessControlPolicies) <br> [Show Policy Permissions](https://api-docs.treasuredata.com/pages/td-api/tag/Access-Control-Permissions/#tag/Access-Control-Permissions/operation/gerPermissionByPolicyId) <br> [Show Column Permissions](https://api-docs.treasuredata.com/pages/td-api/tag/Access-Control-Permissions/#tag/Access-Control-Permissions/operation/getColumnPermissionByPolicyId) <br> [Get Policy users](https://api-docs.treasuredata.com/pages/td-api/tag/Access-Control-Users/#tag/Access-Control-Users/operation/getAccessControlPolicyUsers) |
 
 **connections** and **schedules** table is replaced daily by incremental_ingest.dig.
 **jobs** table is imported incrementally.

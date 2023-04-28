@@ -1,0 +1,42 @@
+_export:
+    !include : common/settings.yaml
+
++initial_database_and_tables:
+    +create_db:
+        td_ddl>: 
+        create_databases: [ "${td.database}" ]
+
++ingest_users:
+    py>: scripts.ingest_users.run
+    dest_db: ${td.database}
+    dest_table: ${td.tables.users}
+    user_assign_policies_table: ${td.tables.user_assign_policies}
+    api_endpoint: ${td.api_endpoint}
+    docker:
+        image: "digdag/digdag-python:3.9"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}
+
++ingest_database:
+    py>: scripts.ingest_database.run
+    dest_db: ${td.database}
+    dest_table: ${td.tables.databases}
+    api_endpoint: ${td.api_endpoint}
+    docker:
+        image: "digdag/digdag-python:3.9"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}
+
++ingest_policy:
+    py>: scripts.ingest_policy.run
+    dest_db: ${td.database}
+    policy_table: ${td.tables.policies}
+    policy_detail_table: ${td.tables.policies_detail}
+    policy_detail_column_permission_table: ${td.tables.policies_detail_column}
+    policy_assign_users_table: ${td.tables.policies_assign_users}
+    api_endpoint: ${td.api_endpoint}
+    docker:
+        image: "digdag/digdag-python:3.9"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}
+
