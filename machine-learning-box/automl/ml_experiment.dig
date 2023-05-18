@@ -47,7 +47,7 @@ _export:
 +evaluation:
   td>: queries/auc.sql
   table: ${output_database}.predicted_${test_data_table}_${session_id}
-  target_column: y
+  target_column: ${target_column}
   store_last_results: true
 
 +record_evaluation:
