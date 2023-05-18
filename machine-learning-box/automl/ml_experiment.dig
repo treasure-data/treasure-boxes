@@ -9,7 +9,7 @@ _export:
   create_databases: ["${output_database}"]
   create_tables: ["${expr_tracking_table}"]
 
-+gluon_train:
++train:
   ml_train>:
     docker:
       task_mem: 128g # 64g/128g/256g/384g/512g
@@ -34,7 +34,8 @@ _export:
   session_time: ${session_local_time}
   engine: presto
 
-+gluon_predict:
+# Note: If input_table contains target labels, ml_predict shows evaluation results
++predict:
   ml_predict>:
     docker:
       task_mem: 64g # 64g/128g/256g/384g/512g
@@ -42,3 +43,17 @@ _export:
     model_name: gluon_model_${session_id}
     input_table: ${input_database}.${test_data_table}
     output_table: ${output_database}.predicted_${test_data_table}_${session_id}
+
++evaluation:
+  td>: queries/auc.sql
+  table: ${output_database}.predicted_${test_data_table}_${session_id}
+  target_column: y
+  store_last_results: true
+
++record_evaluation:
+  td>: queries/auc.sql
+  insert_into: ${output_database}.automl_eval_results
+  engine: presto
+  model_name: gluon_model_${session_id}
+  session_time: ${session_local_time}
+  auc: ${td.last_results.auc}
