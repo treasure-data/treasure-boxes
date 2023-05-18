@@ -7,7 +7,7 @@ _export:
 +create_db_tbl_if_not_exists:
   td_ddl>:
   create_databases: ["${output_database}"]
-  create_tables: ["${expr_tracking_table}"]
+  create_tables: ["automl_experiments", "automl_eval_results"]
 
 +train:
   ml_train>:
@@ -49,9 +49,10 @@ _export:
   table: ${output_database}.predicted_${test_data_table}_${session_id}
   target_column: ${target_column}
   store_last_results: true
+  engine: hive
 
 +record_evaluation:
-  td>: queries/auc.sql
+  td>: queries/record_evaluation.sql
   insert_into: ${output_database}.automl_eval_results
   engine: presto
   model_name: gluon_model_${session_id}
