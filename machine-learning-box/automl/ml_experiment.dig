@@ -18,6 +18,7 @@ _export:
     input_table: ${input_database}.${train_data_table}
     target_column: ${target_column}
     time_limit: ${fit_time_limit}
+    share_model: true
     export_leaderboard: ${output_database}.leaderboard_${train_data_table}
     export_feature_importance: ${output_database}.feature_importance_${train_data_table}
 
@@ -28,6 +29,7 @@ _export:
   user_id: ${automl.last_executed_user_id}
   user_email: ${automl.last_executed_user_email}
   model_name: gluon_model_${session_id}
+  shared_mdoel: ${automl.shared_model}
   task_attempt_id: ${attempt_id}
   session_time: ${session_local_time}
   engine: presto
