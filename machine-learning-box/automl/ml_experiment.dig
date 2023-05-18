@@ -48,6 +48,7 @@ _export:
   td>: queries/auc.sql
   table: ${output_database}.predicted_${test_data_table}_${session_id}
   target_column: ${target_column}
+  positive_class: ' >50K'
   store_last_results: true
   engine: hive
 
