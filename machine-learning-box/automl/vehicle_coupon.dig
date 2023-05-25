@@ -1,0 +1,66 @@
+_export:
+  output_database: ml_test
+  audience_name: "vehicle coupon test"
+  foreign_key: userid
+  td:
+    engine: presto
+    database: ${output_database}
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: ["ml_test"]
+
++load_datasets:
+  ipynb>:
+    docker:
+      task_mem: 64g # 64g/128g/256g/384g/512g
+    notebook: ml_datasets
+    output_database: ml_datasets
+    datasets: vehicle_coupon
+
++train:
+  ml_train>:
+    docker:
+      task_mem: 256g # 64g/128g/256g/384g/512g
+    notebook: gluon_train
+    model_name: gluon_model_${session_id}
+    input_table: ml_datasets.vehicle_coupon_train
+    target_column: y
+    time_limit: 3 * 60 # 3 min
+
++prepare_input:
+  td>: queries/assign_rowid.sql
+  table: ml_datasets.vehicle_coupon_test
+  rowid_column: userid
+  create_table: ml_datasets.vehicle_coupon_test_with_rowid
+  engine: hive
+
++predict:
+  ml_predict>:
+    docker:
+      task_mem: 128g # 64g/128g/256g/384g/512g
+    notebook: gluon_predict
+    model_name: gluon_model_${session_id}
+    input_table: ml_datasets.vehicle_coupon_test_with_rowid
+    output_table: ${output_database}.predicted__${session_id}
+
++add_attribute:
+  py>: scripts.audience.add_attribute
+  audience:
+    name: ${audience_name} # segment name or segment id
+    # id: 1111
+    foreign_key: ${foreign_key}
+    ### optional
+    rerun: true
+  attribute:
+    table: ${output_database}.predicted__${session_id}
+    attr_column: "predicted_proba"
+    join_key: "userid"
+    ### optional
+    attr_group: "AutoML"
+    replace_if_exists: true
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: "api.treasuredata.com"
