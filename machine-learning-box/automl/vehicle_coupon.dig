@@ -66,9 +66,11 @@ _export:
     rerun: true
   attribute:
     table: ${output_database}.predicted_${session_id}
-    attr_column: "predicted_proba"
+    attr_columns: "predicted_proba, y"
+    # attr_column: predicted_proba
     join_key: "userid"
     ### optional
+    attr_aliases: "predicted_proba, y2"
     attr_group: "AutoML"
     replace_if_exists: true
   docker:
