@@ -18,7 +18,6 @@ _export:
 
 +train:
   ml_train>:
-    branch: ATML-109_attr
     docker:
       task_mem: 256g # 64g/128g/256g/384g/512g
     notebook: gluon_train
@@ -34,6 +33,15 @@ _export:
   create_table: ml_datasets.vehicle_coupon_test_with_rowid
   engine: hive
 
++predict:
+  ml_predict>:
+    docker:
+      task_mem: 128g # 64g/128g/256g/384g/512g
+    notebook: gluon_predict
+    model_name: gluon_model_${session_id}
+    input_table: ml_datasets.vehicle_coupon_test_with_rowid
+    output_table: ${output_database}.predicted_${session_id}
+
 +create_master_segment:
   py>: scripts.audience.create_master_segment
   name: vehicle_coupon_${session_id}
@@ -48,15 +56,25 @@ _export:
     TD_API_KEY: ${secret:td.apikey}
     TD_API_SERVER: "api.treasuredata.com"
 
-+predict:
-  ml_predict>:
-    branch: ATML-109_attr
-    docker:
-      task_mem: 128g # 64g/128g/256g/384g/512g
-    notebook: gluon_predict
-    model_name: gluon_model_${session_id}
-    input_table: ml_datasets.vehicle_coupon_test_with_rowid
-    rowid_column: userid
-    output_table: ${output_database}.predicted_${session_id}
-    audience_name: vehicle_coupon_${session_id}
++add_attribute:
+  py>: scripts.audience.add_attribute
+  audience:
+    name: vehicle_coupon_${session_id}
+    # id: 1111
     foreign_key: userid
+    ### optional
+    rerun: true
+  attribute:
+    table: ${output_database}.predicted_${session_id}
+    attr_columns: predicted_proba, y
+    # attr_column: predicted_proba
+    join_key: "userid"
+    ### optional
+    attr_aliases: predicted_proba, y2
+    attr_group: "AutoML"
+    replace_if_exists: true
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: "api.treasuredata.com"
