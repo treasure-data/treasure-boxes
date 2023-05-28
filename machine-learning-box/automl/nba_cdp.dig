@@ -1,0 +1,59 @@
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: ${output_database}
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: ["${output_database}"]
+
++load_datasets:
+  ipynb>:
+    notebook: ml_datasets
+    output_database: ml_datasets
+    datasets: nba
+
++create_master_segment:
+  py>: scripts.audience.create_master_segment
+  name: nba_${session_id}
+  description: NBA test audience
+  master:
+    database: ml_datasets
+    table: nba_test
+  run: false
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: "api.treasuredata.com"
+
++nba_with_eval:
+  ipynb>:
+    branch: ATML-109_attr
+    notebook: NBA
+    train_table: ml_datasets.nba_train
+    test_table: ml_datasets.nba_test
+    budget: 10000
+    value_per_cv: 100
+    # optional
+    audience_name: nba_${session_id}
+    # export_q_table: ${output_database}.rl_qtable_${session_id}
+    export_channel_ratio: ${output_database}.rl_channel_ratio_${session_id}
+    export_predictions: ${output_database}.rl_predictions_${session_id}
+    export_model_performance: ${output_database}.rl_model_performance_${session_id}
+    ignore_actions: client_domain_organic_visit, organic_search
+    action_cost: |
+     {
+       "display": 2,
+       "social-social": 1.4,
+       "social": 2,
+       "social-paid": 5,
+       "organic_search": 1,
+       "emai": 3.2,
+       "cpc": 3,
+       "referral": 2,
+       "linkedin": 3,
+       "search-paid": 2,
+       "twitter": 1
+     }
