@@ -18,7 +18,6 @@ _export:
 
 +train:
   ml_train>:
-    branch: ATML-109_attr
     docker:
       task_mem: 256g # 64g/128g/256g/384g/512g
     notebook: gluon_train
@@ -50,7 +49,6 @@ _export:
 
 +predict:
   ml_predict>:
-    branch: ATML-109_attr
     docker:
       task_mem: 128g # 64g/128g/256g/384g/512g
     notebook: gluon_predict

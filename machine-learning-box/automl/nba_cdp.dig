@@ -30,7 +30,6 @@ _export:
 
 +nba_with_eval:
   ipynb>:
-    branch: ATML-109_attr
     notebook: NBA
     train_table: ml_datasets.nba_train
     test_table: ml_datasets.nba_test
