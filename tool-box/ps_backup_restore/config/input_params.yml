@@ -1,2 +1,2 @@
-enable_backup: no
-enable_restore: yes
+enable_backup: yes
+enable_restore: no
