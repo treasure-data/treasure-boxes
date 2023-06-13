@@ -59,7 +59,7 @@ client = client('s3',
 res_fol = client.get_object(Bucket=BUCKET,Key=FOLDER_FILE_TO_READ)
 folders = res_fol["Body"]
 folders = json.load(folders)
-folders = json.loads(folders['_col0'])
+folders = folders['_col0']
 
 folder_dict = {}
 segment_dict = {}
