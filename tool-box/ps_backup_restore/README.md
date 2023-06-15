@@ -55,14 +55,14 @@ The end user does not need to have any of SQL or digdag or Python expertise as u
 	- root_folder_id - Folder ID of the root at Audience Studio V5. As in below screenshot, open Audience Studio V5, go to respect parent segment and identify the root folder ID from the url. In this example screenshot, 390702 is the root folder ID for parent segment pse_restore_0419.
 	
 	![](images/root-folder-ex.png)
-  - td_backup_endpoint - The endpoint of the backup server, for US region it should be `https://api.treasuredata.com`, Europe → `https://api.eu01.treasuredata.com` and JP region → `https://api.treasuredata.co.jp`
-  - td_backup_cdp_endpoint: The cdp endpoint of the backup server, for US region it should be `https://api-cdp.treasuredata.com`, Europe → `https://api-cdp.eu01.treasuredata.com` and JP region → `https://api-cdp.treasuredata.co.jp`
+    - td_backup_endpoint - The endpoint of the backup server, for US region it should be `https://api.treasuredata.com`, Europe → `https://api.eu01.treasuredata.com` and JP region → `https://api.treasuredata.co.jp`
+    - td_backup_cdp_endpoint: The cdp endpoint of the backup server, for US region it should be `https://api-cdp.treasuredata.com`, Europe → `https://api-cdp.eu01.treasuredata.com` and JP region → `https://api-cdp.treasuredata.co.jp`
 	- stg_ms_config_tbl - Table where the Parent Segment Configuration will be backed up in TD.
 	- stg_folder_curr_config_tbl - Temporary table that holds current Folder Configuration.
 	- stg_folder_extract_tbl - Table where the folder configurations are persisted from every run of the backup workflow.
 	- stg_seg_curr_config_tbl - Temporary table holds current Segment Configuration.
 	- stg_seg_config_tbl - Table where the segment configurations are persisted from every run of the backup workflow.
-  - stg_s3_json_files: The table that contains the S3 file paths of the Parent Segment, Folder configuration, and all Segments for each run of the backup workflow.
+    - stg_s3_json_files: The table that contains the S3 file paths of the Parent Segment, Folder configuration, and all Segments for each run of the backup workflow.
 	- s3.bucket - AWS bucket where all the three configurations will be persisted.
 
 4. Run main_wf.dig now to take a complete backup of all three configurations
@@ -97,8 +97,8 @@ Restoring Parent Segment from an existing backup has 3 parts to it.
 
     - config/restore_parent_seg.yml - It is the main configuration file that needs to be set for restore process and this will require the following **parameters**:
 		- ms_name - New name for the Parent Segment
-    - td_restore_endpoint: The endpoint of the restore server, for US region it should be `https://api.treasuredata.com`, Europe → `https://api.eu01.treasuredata.com` and JP region → `https://api.treasuredata.co.jp`
-    - td_restore_cdp_endpoint: The cdp endpoint of the restore server, for US region it should be `https://api-cdp.treasuredata.com`, Europe → `https://api-cdp.eu01.treasuredata.com` and JP region → `https://api-cdp.treasuredata.co.jp`
+        - td_restore_endpoint: The endpoint of the restore server, for US region it should be `https://api.treasuredata.com`, Europe → `https://api.eu01.treasuredata.com` and JP region → `https://api.treasuredata.co.jp`
+        - td_restore_cdp_endpoint: The cdp endpoint of the restore server, for US region it should be `https://api-cdp.treasuredata.com`, Europe → `https://api-cdp.eu01.treasuredata.com` and JP region → `https://api-cdp.treasuredata.co.jp`
 		- ms_table_restore - Table Name to write results from Parent Segment configuration json file
 		- folder_stg_tbl - Table Name to write results from Folder configuration json file
 		- root_folder_id - Not required to be set for Part 1
