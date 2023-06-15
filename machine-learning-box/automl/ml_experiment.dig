@@ -29,7 +29,7 @@ _export:
   user_id: ${automl.last_executed_user_id}
   user_email: ${automl.last_executed_user_email}
   model_name: gluon_model_${session_id}
-  shared_mdoel: ${automl.shared_model}
+  shared_model: ${automl.shared_model}
   task_attempt_id: ${attempt_id}
   session_time: ${session_local_time}
   engine: presto
