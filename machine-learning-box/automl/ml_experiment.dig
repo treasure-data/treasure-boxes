@@ -57,6 +57,6 @@ _export:
   insert_into: ${output_database}.automl_eval_results
   engine: presto
   model_name: gluon_model_${session_id}
-  test_table: ${output_database}.predicted_${test_data_table}_${session_id}
+  test_table: ${input_database}.${test_data_table}
   session_time: ${session_local_time}
   auc: ${td.last_results.auc}
