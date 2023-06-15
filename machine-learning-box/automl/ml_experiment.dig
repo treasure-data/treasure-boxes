@@ -52,6 +52,15 @@ _export:
   store_last_results: true
   engine: hive
 
++alert_if_drift_detected:
+  if>: ${td.last_results.auc < drift_auc_threshold}
+  _do:
+    mail>:
+      data: Detect drift in model performance. AUC was ${td.last_results.auc}.
+    subject: Drift detected
+    to: [me+alerts@example.com]
+    # bcc: [foo@example.com,bar@example.com]
+
 +record_evaluation:
   td>: queries/record_evaluation.sql
   insert_into: ${output_database}.automl_eval_results

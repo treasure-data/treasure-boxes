@@ -6,3 +6,5 @@ target_column: class
 test_data_table: gluon_test
 
 fit_time_limit: 60 * 3   # fit timeout in sec. 3 min just for demo. Default: 60 * 60 (1hr).
+
+drift_auc_threshold: 0.93
