@@ -5,6 +5,6 @@ select
    '${user_id}' as user_id,
    '${user_email}' as user_email,
    '${model_name}' as model_name,
-   '${shared_mdoel}' as shared_mdoel,
+   '${shared_model}' as shared_model,
    '${last_executed_notebook}' as notebook_url
  
