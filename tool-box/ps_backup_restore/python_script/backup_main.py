@@ -8,6 +8,7 @@ import python_script.S3 as s3
 
 td_api_key = os.environ['TD_API_KEY']
 td_endpoint_base = os.environ['TD_API_SERVER']
+td_api_cdp = os.environ['TD_API_CDP']
 td_home = os.environ['TD_HOME']
 
 def uploadDataToTD(data, td_write_db, td_write_table):
@@ -132,20 +133,22 @@ def writeAllSegmentstoTD(data, db_name, table):
       raise Exception(f'Write all Segments data to TD failed {ex}')
 
 
-def main(url,s3_object_key,bk_type,db_name, table):
+def main(url,s3_object_key,bk_type,db_name, table, s3_table):
   print("********************************CALL TD API***********************************")
+  url = f'{td_api_cdp}/{url}'
   data = exportSegmentData(url)
   local_file_path = saveDatatoLocal(data)
   print("********************************WRITE RESULT TO S3***********************************")
-  s3.uploadFiletoS3(s3_object_key,local_file_path)
+  s3.uploadFiletoS3(s3_object_key,local_file_path, db_name, s3_table)
   print("********************************WRITE RESULT TO TD***********************************")
   if bk_type == 'folder_config':
     writeFolderConfigtoTD(data, db_name, table)
   elif bk_type == 'master_segment':
     writeMasterSegmenttoTD(data,db_name,table)
 
-def main_all_segments(url,s3_object_key,db_name, read_table, write_table):
+def main_all_segments(url,s3_object_key,db_name, read_table, write_table, s3_table):
   print("********************************CALL TD API***********************************")
+  url = f'{td_api_cdp}/{url}'
   segments = getListSegmentsfromTD(db_name, read_table)
   list_segments = list(segments.split(","))
   data = []
@@ -159,4 +162,4 @@ def main_all_segments(url,s3_object_key,db_name, read_table, write_table):
   print("********************************WRITE RESULT TO TD***********************************")
   writeAllSegmentstoTD(data_json, db_name, write_table)
   print("********************************WRITE RESULT TO S3***********************************")
-  s3.uploadFiletoS3(s3_object_key,local_file_path)
+  s3.uploadFiletoS3(s3_object_key,local_file_path,db_name,s3_table)

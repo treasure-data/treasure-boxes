@@ -23,10 +23,10 @@ _export:
     
     
     +call_restore:
-        http>: https://api-cdp.treasuredata.com/audiences
+        http>: ${restore.td_restore_cdp_endpoint}/audiences
         method: POST
         headers:
-            - Authorization: "TD1 ${secret:td.apikey}"
+            - Authorization: "TD1 ${secret:td.restore_apikey}"
         content_type: application/json
         content: 
             '${td.last_results._col0}'
@@ -51,8 +51,9 @@ _export:
             image: "digdag/digdag-python:3.9"
         py>: python_script.restore_main.main
         _env:
-            TD_API_KEY: ${secret:td.apikey}
-            TD_API_SERVER: ${secret:endpoint}
+            TD_API_KEY: ${secret:td.restore_apikey}
+            TD_API_SERVER: ${restore.td_restore_endpoint}
+            TD_API_CDP: ${restore.td_restore_cdp_endpoint}
             database: ${td.database}
             ROOT_FOLDER_ID: ${restore.root_folder_id}
             AWS_BUCKET: ${restore.aws_bucket_name}

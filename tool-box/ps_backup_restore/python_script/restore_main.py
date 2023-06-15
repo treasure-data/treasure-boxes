@@ -18,6 +18,7 @@ td_endpoint = os.environ['TD_API_SERVER']
 database = os.environ['database']
 table = os.environ['table']
 restore_all = os.environ['RS_ALL']
+td_cdp_endpoint = os.environ['TD_API_CDP']
 # NB. Queries built using string formatting due to Presto Python client underlying pyTD not supporting query parameters. Deemed safe in this instance as sole input is YAML config.
 
 # create dataframe for all entities
@@ -68,8 +69,9 @@ headers = {"Authorization": "TD1 "+td_api_key,
 "Content-Type": "application/json"}
 #auth = HTTPBasicAuth('Authorization', "TD1 " + td_api_key)
 
-URL = 'https://api-cdp.treasuredata.com/entities/by-folder/{0}?depth=10'.format(root_id)
+URL = f'{td_cdp_endpoint}/entities/by-folder/{root_id}?depth=10'
 r = requests.get(URL,headers=headers)
+r.raise_for_status()
 resp = r.json()
 df_folder_curr = pd.json_normalize(resp['data'],max_level=1)
 df_segment_curr = df_folder_curr.loc[df_folder_curr['type'] == 'segment-batch', ['id','type','attributes.name']]
@@ -81,7 +83,8 @@ def create_folder(p_id, c_id):
     for f in folders['data']:
         if int(f['id']) == c_id:
             f['relationships']['parentFolder']['data']['id'] = str(p_id)
-            r = requests.post("https://api-cdp.treasuredata.com/entities/folders",headers=headers,data=json.dumps(f))
+            r = requests.post(f"{td_cdp_endpoint}/entities/folders",headers=headers,data=json.dumps(f))
+            r.raise_for_status()
             resp = r.json()
             if "data" in resp:
                 return resp["data"]["id"]
@@ -102,7 +105,8 @@ def create_folder_struct(p_id, c_id):
         for f in folders['data']:
             if row.current_node_id == int(f['id']):
                 f['relationships']['parentFolder']['data']['id'] = str(p_id)
-                r = requests.post("https://api-cdp.treasuredata.com/entities/folders",headers=headers,data=json.dumps(f))
+                r = requests.post(f"{td_cdp_endpoint}/entities/folders",headers=headers,data=json.dumps(f))
+                r.raise_for_status()
                 resp = r.json()
                 if "data" in resp:
                     folder_dict[row.current_node_id] = resp["data"]["id"]
@@ -137,7 +141,8 @@ def create_entity(c_id):
                 s_id = create_entity(int(f["attributes"]["segmentId"]))
                 s['attributes']['segmentId'] = str(s_id)
                 s['relationships']['parentFolder']['data']['id'] = str(p_id)
-                r = requests.post("https://api-cdp.treasuredata.com/entities/predictive_segments",headers=headers,data=json.dumps(s))
+                r = requests.post(f"{td_cdp_endpoint}/entities/predictive_segments",headers=headers,data=json.dumps(s))
+                r.raise_for_status()
                 resp = r.json()
                 if "data" in resp:
                     segment_dict[int(df_2['current_node_id'].values[0])] = resp["data"]["id"]
@@ -155,7 +160,8 @@ def create_entity(c_id):
                                 ref_id = create_entity(int(condition['id']))
                                 condition['id'] = str(ref_id)
                 f['relationships']['parentFolder']['data']['id'] = str(p_id)
-                r = requests.post("https://api-cdp.treasuredata.com/entities/segments",headers=headers,data=json.dumps(f))
+                r = requests.post(f"{td_cdp_endpoint}/entities/segments",headers=headers,data=json.dumps(f))
+                r.raise_for_status()
                 resp = r.json()
                 if "data" in resp:
                     segment_dict[int(df_2['current_node_id'].values[0])] = resp["data"]["id"]

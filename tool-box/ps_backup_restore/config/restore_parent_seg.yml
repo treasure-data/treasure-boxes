@@ -1,5 +1,8 @@
 ms_name: pse_restore_0509
 
+td_restore_endpoint: https://api.treasuredata.com
+td_restore_cdp_endpoint: https://api-cdp.treasuredata.com
+
 ms_table_restore: pse_restore_ms
 folder_stg_tbl: pse_folder_stg_restore
 

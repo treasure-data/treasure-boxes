@@ -1,3 +1,5 @@
+td_backup_endpoint: https://api.treasuredata.com
+td_backup_cdp_endpoint: https://api-cdp.treasuredata.com
 src_ms_id: 164596
 root_folder_id: 179205
 stg_ms_config_tbl: audience_164596_ms
@@ -6,5 +8,4 @@ stg_folder_extract_tbl: audience_164596_folder_ext
 stg_seg_curr_config_tbl: audience_164596_sc
 stg_seg_config_tbl: audience_164596_seg_extract
 s3:
-  connection_name: ganesh_ms_backup
   bucket: ganesh-demo-mar

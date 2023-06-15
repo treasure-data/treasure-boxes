@@ -7,7 +7,7 @@ _export:
 +create_config_bckup_table:
     +create:
         td_ddl>: 
-        create_tables: ["${backup.stg_ms_config_tbl}","${backup.stg_folder_extract_tbl}","${backup.stg_seg_config_tbl}"]
+        create_tables: ["${backup.stg_ms_config_tbl}","${backup.stg_folder_extract_tbl}","${backup.stg_seg_config_tbl}", "${backup.stg_s3_json_files}"]
         database: ${td.database}
     
     +create_tmp_tables:
@@ -21,14 +21,16 @@ _export:
       docker:
           image: "digdag/digdag-python:3.9"
       py>: python_script.backup_main.main
-      url: https://api-cdp.treasuredata.com/audiences/${backup.src_ms_id}
+      url: audiences/${backup.src_ms_id}
       s3_object_key: ${moment(session_time).format("YYYYMMDD")}/ms_config_${moment(session_time).format("HHmmss")}.json
       bk_type: master_segment
       db_name: ${td.database}
       table: ${backup.stg_ms_config_tbl} 
+      s3_table: ${backup.stg_s3_json_files} 
       _env:
-          TD_API_KEY: ${secret:td.apikey}
-          TD_API_SERVER: ${secret:endpoint}
+          TD_API_KEY: ${secret:td.backup_apikey}
+          TD_API_SERVER: ${backup.td_backup_endpoint}
+          TD_API_CDP: ${backup.td_backup_cdp_endpoint}
           AWS_BUCKET: ${backup.s3.bucket}
           AWS_ACCESS_KEY_ID: ${secret:s3.access_key_id}
           AWS_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}
@@ -40,14 +42,16 @@ _export:
       docker:
           image: "digdag/digdag-python:3.9"
       py>: python_script.backup_main.main
-      url: https://api-cdp.treasuredata.com/entities/by-folder/${backup.root_folder_id}?depth=10
+      url: entities/by-folder/${backup.root_folder_id}?depth=10
       s3_object_key: ${moment(session_time).format("YYYYMMDD")}/folder_config_${moment(session_time).format("HHmmss")}.json
       bk_type: folder_config
       db_name: ${td.database}
       table: ${backup.stg_folder_curr_config_tbl} 
+      s3_table: ${backup.stg_s3_json_files} 
       _env:
-          TD_API_KEY: ${secret:td.apikey}
-          TD_API_SERVER: ${secret:endpoint}
+          TD_API_KEY: ${secret:td.backup_apikey}
+          TD_API_SERVER: ${backup.td_backup_endpoint}
+          TD_API_CDP: ${backup.td_backup_cdp_endpoint}
           AWS_BUCKET: ${backup.s3.bucket}
           AWS_ACCESS_KEY_ID: ${secret:s3.access_key_id}
           AWS_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}
@@ -63,14 +67,16 @@ _export:
       docker:
           image: "digdag/digdag-python:3.9"
       py>: python_script.backup_main.main_all_segments
-      url: https://api-cdp.treasuredata.com/entities/segments
+      url: entities/segments
       s3_object_key: ${moment(session_time).format("YYYYMMDD")}/all_segments_config_${moment(session_time).format("HHmmss")}.json
       db_name: ${td.database}
       read_table: ${backup.stg_folder_extract_tbl} 
       write_table: ${backup.stg_seg_config_tbl}
+      s3_table: ${backup.stg_s3_json_files} 
       _env:
-          TD_API_KEY: ${secret:td.apikey}
-          TD_API_SERVER: ${secret:endpoint}
+          TD_API_KEY: ${secret:td.backup_apikey}
+          TD_API_SERVER: ${backup.td_backup_endpoint}
+          TD_API_CDP: ${backup.td_backup_cdp_endpoint}
           AWS_BUCKET: ${backup.s3.bucket}
           AWS_ACCESS_KEY_ID: ${secret:s3.access_key_id}
           AWS_SECRET_ACCESS_KEY: ${secret:s3.secret_access_key}
