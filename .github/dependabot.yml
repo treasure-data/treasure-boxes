@@ -1,0 +1,8 @@
+---
+version: 2
+updates:
+  # Enable workflow version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
