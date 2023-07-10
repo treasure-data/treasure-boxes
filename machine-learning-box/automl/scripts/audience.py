@@ -8,7 +8,7 @@ import re
 import faulthandler
 import warnings
 
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from requests.models import Response
 from requests.packages.urllib3.util.retry import Retry
@@ -121,7 +121,7 @@ class CdpAudience:
         TD_API_KEY = os.environ["TD_API_KEY"]
         TD_ENDPOINT = os.environ["TD_API_SERVER"]
 
-        CDP_ENDPOINT = TD_ENDPOINT.replace('api', 'api-cdp')
+        CDP_ENDPOINT = TD_ENDPOINT.replace('.treasuredata', '-cdp.treasuredata')
         HEADERRS = {'Authorization': f'TD1 {TD_API_KEY}', 'Content-Type': 'application/json'}
         self.cdp_api = CdpApiClient(endpoint=CDP_ENDPOINT, headers=HEADERRS)
         self.td_api = pytd.Client(retry_post_requests=True).api_client
@@ -146,6 +146,9 @@ class CdpAudience:
             res = self.cdp_api.post(f"/audiences/{audience_id}/run")
             print(f"ⓘ Run Master Segment {name}", file=sys.stderr)
 
+        TD_ENDPOINT = os.environ["TD_API_SERVER"]
+        ms_url = f"https://{TD_ENDPOINT.replace('api', 'console')}/app/ms/{audience_id}"
+        print(f"💎 Created a Master Segment: {ms_url}", file=sys.stderr)
         return audience_id
 
     def add_attribute(
@@ -207,7 +210,7 @@ class CdpAudience:
             print(f"ⓘ Successfully added an attribute table '{attr_table}' to master segment {audience_id}", file=sys.stderr) 
         else:
             try:
-                'not unique' in res.json()['base'][0]
+                assert 'not unique' in res.json()['base'][0]
                 print(f"⚠ Attribute '{attr_column}' already exists in Parent Segment and thus skip adding an attribue.", file=sys.stderr)
                 return
             except:
@@ -247,6 +250,120 @@ class CdpAudience:
                 return audience['id']
 
         raise ValueError(f"Cannot find parent segment: {name}")
+
+
+    def create_folder(self, name: str, audience_id: str) -> str:
+        folder = self.cdp_api.post(f'/audiences/{audience_id}/folders', json={
+            'name': name,
+            'description': 'AutoML Segments'
+        })
+
+        if folder.ok:
+            return folder.json()['id']
+        else:
+            res = self.cdp_api.get(f'/audiences/{audience_id}/folders')
+            if not res.ok:
+                raise ApiRequestError(res, f"{res.status_code} error on GET /audiences/{audience_id}/folders: {res.json()}")
+
+            folders = res.json()
+            for f in folders:
+                if f.get('name') == name:
+                    print(f"Reuse folder `{name}` already existing in audience `{audience_id}`")
+                    return f['id']
+
+            raise ApiRequestError(folder, f"{folder.status_code} error on POST /audiences/{audience_id}/folders: {folder.json()}")
+
+
+    def create_segments(self, *, column_name: str, column_values: List[str], folder: Optional[str]="AutoML", audience_id: Optional[str]=None, audience_name: Optional[str]=None, rerun_master_segment: Optional[bool]=False):
+        assert len(column_values) >= 1, "At least 1 column_values are required."
+        if audience_id is None:
+            assert audience_name is not None, "Either audience_id or audience_name argument is required"
+            audience_id = self.get_parent_segment_id(audience_name)
+
+        res = self.cdp_api.get(f"/entities/parent_segments/{audience_id}")
+        use_v4_api = False
+        if res.ok:
+            print(f"ⓘ Successfully retrieved the audience", file=sys.stderr)
+            folder_id = res.json()['data']['relationships']['parentFolder']['data']['id']
+        else:
+            try:
+                assert res.json()['errors'].split(':')[0] == 'v5 endpoints flag should be enabled for audience'
+                print("v5 API is not enabled. Fall back to v4 API")
+                use_v4_api = True
+            except:
+                raise ApiRequestError(res, f"{res.status_code} error on GET /entities/parent_segments/{audience_id}: {res.json()}")
+
+        if folder:
+            folder_id = self.create_folder(folder, audience_id)
+
+        for value in column_values:
+            attribute_name = column_name.replace('_', ' ').title() + ' = ' + str(value).title()
+            rule = {
+                'type': 'And',
+                'conditions': [{
+                    'conditions': [{
+                        'type': 'Value',
+                        'leftValue': {'name': column_name, 'visibility': 'clear'},
+                        'operator': {'not': False, 'rightValue': value, 'type': 'Equal'},
+                        'arrayMatching': None,
+                        'exclude': False
+                    }],
+                    'type': 'And',
+                }],
+                'expr': '',
+            }
+
+            if use_v4_api:
+                segment = {
+                    'name': attribute_name,
+                    'kind': 0, # batch,
+                    'description': f'{column_name} = {value}',
+                    'countPopulation': True,
+                    'rule': rule,
+                }
+                if folder:
+                    segment['segmentFolderId'] = folder_id
+                res = self.cdp_api.post(f"/audiences/{audience_id}/segments", json=segment)
+                if res.ok:
+                    print(f"ⓘ Successfully created a segment '{attribute_name}' to master segment {audience_id}", file=sys.stderr)
+                else:
+                    try:
+                        assert res.json()['errors']['name'][0] == 'has already been taken'
+                        print(f"Segment `{attribute_name}` already exists")
+                    except:
+                        raise ApiRequestError(res, f"{res.status_code} error on POST /entities/segments: {res.json()}")
+            else: # v5 API
+                segment = {
+                    'attributes': {
+                        'name': attribute_name,
+                        'description': f'{column_name} = {value}',
+                        'rule': rule,
+                    },
+                    'relationships': {'parentFolder': {'data': {'id': folder_id, 'type': 'folder-segment'}}}
+                }
+                res = self.cdp_api.post("/entities/segments", json=segment)
+                if res.ok:
+                    print(f"ⓘ Successfully created a segment '{attribute_name}' to master segment {audience_id}", file=sys.stderr)
+                else:
+                    try:
+                        assert res.json()['errors']['name'][0] == 'has already been taken'
+                        print(f"Segment `{attribute_name}` already exists")
+                    except:
+                        raise ApiRequestError(res, f"{res.status_code} error on POST /entities/segments: {res.json()}")
+
+        if rerun_master_segment:
+            res = self.cdp_api.post(f"/audiences/{audience_id}/run")
+            if res.ok:
+                print(f"ⓘ Successfully triggered rerun of Master Segment: {audience_id}", file=sys.stderr)
+            else:
+                raise ApiRequestError(res, f"{res.status_code} error on POST /audiences/{audience_id}/run: {res.json()}")
+
+        TD_ENDPOINT = os.environ["TD_API_SERVER"]
+        if use_v4_api:
+            s_url = f"https://{TD_ENDPOINT.replace('api', 'console')}/app/ms/{audience_id}/se"
+        else:
+            s_url = f"https://{TD_ENDPOINT.replace('api', 'console').replace('.treasuredata', '-next.treasuredata')}/app/ps/{audience_id}"
+        print(f"💎 Created new segments: {s_url}", file=sys.stderr)
 
 
 def add_attribute(**kwargs):
@@ -347,6 +464,46 @@ def create_master_segment(**kwargs):
 
         import digdag
         digdag.env.store({'audience_id': audience_id})
+    finally:
+        # force flush
+        sys.stdout.flush()
+        sys.stderr.flush()
+
+
+def create_segments(**kwargs):
+    faulthandler.enable()
+
+    def parse_arguments(kwargs: dict) -> dict:
+        assert os.environ.get('TD_API_KEY') is not None, "TD_API_KEY ENV variable is required"
+        assert os.environ.get('TD_API_SERVER') is not None, "TD_API_SERVER ENV variable is required"
+
+        ret = {}
+
+        column_name = kwargs.pop('column_name', None)
+        assert column_name is not None, "column_name argument is required"
+        ret['column_name'] = column_name
+
+        column_values = kwargs.pop('column_values', None)
+        assert column_values is not None, "column_values argument is required"
+        ret['column_values'] = [s.strip() for s in column_values.split(',')]
+
+        folder = kwargs.pop('folder', None)
+        if folder is not None: ret['folder'] = folder
+
+        audience = kwargs.pop('audience', None)
+        assert audience is not None, "audience argument is required"
+        audience_id = audience.pop('id', None)
+        if audience_id is not None: ret['audience_id'] = audience_id
+        audience_name = audience.pop('name', None)
+        if audience_name is not None: ret['audience_name'] = audience_name
+        ret['rerun_master_segment'] = to_boolean(audience.pop('rerun', 'False'))
+
+        return ret
+
+    try:
+        params = parse_arguments(kwargs)
+        cdp = CdpAudience()
+        cdp.create_segments(**params)
     finally:
         # force flush
         sys.stdout.flush()
