@@ -1,0 +1,82 @@
+_export:
+    !include : common/settings.yaml
+
+timezone: UTC
+schedule:
+  daily>: 00:00:00
+
++increment_ingest_user:
+    +append_user_history:
+        td>:
+        query: select * from ${td.tables.users}
+        database: ${td.database}
+        insert_into: ${td.tables.users_history}
+    +append_user_assign_policies:
+        td>:
+        query: select * from ${td.tables.user_assign_policies}
+        insert_into: ${td.tables.user_assign_policies_history}
+
+    +ingest_user:
+        py>: scripts.ingest_users.run
+        dest_db: ${td.database}
+        dest_table: ${td.tables.users}
+        user_assign_policies_table: ${td.tables.user_assign_policies}
+        api_endpoint: ${td.api_endpoint}
+        docker:
+            image: "digdag/digdag-python:3.9"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+
++increment_ingest_database:
+    +append_databae_history:
+        td>:
+        query: select * from ${td.tables.databases}
+        database: ${td.database}
+        insert_into: ${td.tables.databases_history}
+    +ingest_database:
+        py>: scripts.ingest_database.run
+        dest_db: ${td.database}
+        dest_table: ${td.tables.databases}
+        api_endpoint: ${td.api_endpoint}
+        docker:
+            image: "digdag/digdag-python:3.9"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+
++increment_ingest_policy:
+    +append_policies_history:
+        td>:
+        query: select * from ${td.tables.policies}
+        database: ${td.database}
+        insert_into: ${td.tables.policies_history}
+
+    +append_policies_detail_history:
+        td>:
+        query: select * from ${td.tables.policies_detail}
+        database: ${td.database}
+        insert_into: ${td.tables.policies_detail_history}
+
+    +append_policies_detail_column_history:
+        td>:
+        query: select * from ${td.tables.policies_detail_column}
+        database: ${td.database}
+        insert_into: ${td.tables.policies_detail_column_history}
+    
+    +append_policies_assign_users_history:
+        td>:
+        query: select * from ${td.tables.policies_assign_users}
+        database: ${td.database}
+        insert_into: ${td.tables.policies_assign_users_history}
+
+    +ingest_policy:
+        py>: scripts.ingest_policy.run
+        dest_db: ${td.database}
+        policy_table: ${td.tables.policies}
+        policy_detail_table: ${td.tables.policies_detail}
+        policy_detail_column_permission_table: ${td.tables.policies_detail_column}
+        policy_assign_users_table: ${td.tables.policies_assign_users}
+        api_endpoint: ${td.api_endpoint}
+        docker:
+            image: "digdag/digdag-python:3.9"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
