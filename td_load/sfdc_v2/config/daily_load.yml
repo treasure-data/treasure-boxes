@@ -4,7 +4,7 @@ in:
   td_authentication_id: xxxxxx
   target: Lead
   soql: select aaaa, bbbb from Lead
-  where: aaaa > '2023-01-01'
+  where: bbbb = 'xxxxxxx'
   columns: [{name: aaaa, type: timestamp}, {name: bbbb, type: string}]
   include_deleted_records: true
   use_rest: false
