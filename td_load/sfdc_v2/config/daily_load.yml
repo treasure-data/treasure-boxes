@@ -1,0 +1,17 @@
+---
+in:
+  type: sfdc_v2
+  td_authentication_id: xxxxxx
+  target: Lead
+  soql: select aaaa, bbbb from Lead
+  where: bbbb = 'xxxxxxx'
+  columns: [{name: aaaa, type: timestamp}, {name: bbbb, type: string}]
+  include_deleted_records: true
+  use_rest: false
+filters:
+- type: add_time
+  to_column:
+    name: time
+    type: timestamp
+  from_value:
+    mode: upload_time
