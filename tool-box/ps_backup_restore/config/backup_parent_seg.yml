@@ -7,5 +7,6 @@ stg_folder_curr_config_tbl: audience_164596_fc
 stg_folder_extract_tbl: audience_164596_folder_ext
 stg_seg_curr_config_tbl: audience_164596_sc
 stg_seg_config_tbl: audience_164596_seg_extract
+stg_s3_json_files: s3_backup_json_files
 s3:
   bucket: ganesh-demo-mar
