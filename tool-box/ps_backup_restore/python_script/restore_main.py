@@ -106,7 +106,7 @@ def create_folder_struct(p_id, c_id):
             if row.current_node_id == int(f['id']):
                 f['relationships']['parentFolder']['data']['id'] = str(p_id)
                 r = requests.post(f"{td_cdp_endpoint}/entities/folders",headers=headers,data=json.dumps(f))
-                r.raise_for_status()
+                # r.raise_for_status()
                 resp = r.json()
                 if "data" in resp:
                     folder_dict[row.current_node_id] = resp["data"]["id"]
@@ -161,7 +161,7 @@ def create_entity(c_id):
                                 condition['id'] = str(ref_id)
                 f['relationships']['parentFolder']['data']['id'] = str(p_id)
                 r = requests.post(f"{td_cdp_endpoint}/entities/segments",headers=headers,data=json.dumps(f))
-                r.raise_for_status()
+                # r.raise_for_status()
                 resp = r.json()
                 if "data" in resp:
                     segment_dict[int(df_2['current_node_id'].values[0])] = resp["data"]["id"]
