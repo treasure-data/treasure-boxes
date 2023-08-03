@@ -14,26 +14,7 @@ _export:
      output_database: ${input_database}
      datasets: cosmetics_store
 
-+create_users_table:
-  td>:
-  query: "select distinct user_id from ${input_database}.cosmetics_store"
-  create_table: cosmetics_users
-
-+create_master_segment:
-  py>: scripts.audience.create_master_segment
-  name: cosmetics_${session_id}
-  description: Cosmetics store audience
-  master:
-    database: ${output_database}
-    table: cosmetics_users
-  run: false
-  docker:
-    image: "digdag/digdag-python:3.9"
-  _env:
-    TD_API_KEY: ${secret:td.apikey}
-    TD_API_SERVER: "api.treasuredata.com"
-
-+rfm_orders:
++run_rfm:
   ipynb>:
     notebook: RFM
     input_table: ${input_database}.cosmetics_store
@@ -43,4 +24,3 @@ _export:
     # tstamp_column: tstamp
     amount_column: price
     audience_name: cosmetics_${session_id}
-
