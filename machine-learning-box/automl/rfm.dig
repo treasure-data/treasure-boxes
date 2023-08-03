@@ -1,0 +1,46 @@
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: ${output_database}
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: ["${output_database}"]
+
++load_datasets:
+   ipynb>:
+     notebook: ml_datasets
+     output_database: ${input_database}
+     datasets: cosmetics_store
+
++create_users_table:
+  td>:
+  query: "select distinct user_id from ${input_database}.cosmetics_store"
+  create_table: cosmetics_users
+
++create_master_segment:
+  py>: scripts.audience.create_master_segment
+  name: cosmetics_${session_id}
+  description: Cosmetics store audience
+  master:
+    database: ${output_database}
+    table: cosmetics_users
+  run: false
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: "api.treasuredata.com"
+
++rfm_orders:
+  ipynb>:
+    notebook: RFM
+    input_table: ${input_database}.cosmetics_store
+    output_table: ${output_database}.rfm_output_cosmetics_store
+    user_column: user_id
+    # tstamp_column: event_time
+    # tstamp_column: tstamp
+    amount_column: price
+    audience_name: cosmetics_${session_id}
+

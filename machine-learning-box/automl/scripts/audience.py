@@ -169,16 +169,31 @@ class CdpAudience:
             assert audience_name is not None, "Either audience_id or audience_name argument is required"
             audience_id = self.get_parent_segment_id(audience_name)
 
-        # table = self.td_api.table(attr_db, attr_table)
-        # attr_type = resolve_type(table, "predicted_proba")
-
         res = self.cdp_api.put(f"/audiences/{audience_id}")
         if not res.ok:
             raise ApiRequestError(res)
         audience = res.json()
 
-        attributes = audience['attributes'] if 'attributes' in audience else []
+        if 'attributes' in audience:
+            attributes = audience['attributes']
+        else:
+            attributes = []
+            audience['attributes'] = attributes
+
         existing_attr_names = [attr['name'] for attr in attributes]
+
+        # Workaround for attribute column does not exists in the attribute table
+        if len(attributes) >= 1:
+            table = self.td_api.table(attr_db, attr_table)
+            existing_column_names = [col[2] if len(col) == 3 else col[0] for col in table.schema]
+
+            def remove_attribute(attr) -> bool:
+                if attr['parentDatabaseName'] == attr_db and attr['parentTableName'] == attr_table:
+                    if attr['parentColumn'] not in existing_column_names:
+                        print(f"⚠ Remove an attribute column '{attr['name']}' in Master Segment {audience_id} because '{attr['parentColumn']}' column does not exists in the Atrribute table '{attr_db}.{attr_table}'", file=sys.stderr)
+                        return True
+                return False
+            audience['attributes'] = [attr for attr in attributes if not remove_attribute(attr)]
 
         for i, attr_column in enumerate(attr_columns):
             attr_alias = attr_aliases[i]
@@ -198,19 +213,19 @@ class CdpAudience:
             if attr_alias in existing_attr_names:
                 if replace_attr_if_exists:
                     attributes[existing_attr_names.index(attr_alias)] = new_attr
-                    print(f"⚠ Replace an attribute column '{attr_alias}' in Master Segment {audience_id}", file=sys.stderr)
+                    print(f"⚠ Replace an existing attribute column '{attr_alias}' in Master Segment {audience_id}", file=sys.stderr)
                 else:
                     print(f"⚠ Skip adding an attribute because the attribute column '{attr_alias}' already exists", file=sys.stderr)
             else:
                 attributes.append(new_attr)
 
-        # from IPython.core.debugger import Pdb; Pdb().set_trace()
         res = self.cdp_api.put(f"/audiences/{audience_id}", json=audience)
         if res.ok:
             print(f"ⓘ Successfully added an attribute table '{attr_table}' to master segment {audience_id}", file=sys.stderr) 
         else:
             try:
-                assert 'not unique' in res.json()['base'][0]
+                res_value = res.json()['base'][0]
+                assert 'not unique' in res_value, f"Unexpected error: {res_value}"
                 print(f"⚠ Attribute '{attr_column}' already exists in Parent Segment and thus skip adding an attribue.", file=sys.stderr)
                 return
             except:
@@ -274,7 +289,9 @@ class CdpAudience:
             raise ApiRequestError(folder, f"{folder.status_code} error on POST /audiences/{audience_id}/folders: {folder.json()}")
 
 
-    def create_segments(self, *, column_name: str, column_values: List[str], folder: Optional[str]="AutoML", audience_id: Optional[str]=None, audience_name: Optional[str]=None, rerun_master_segment: Optional[bool]=False):
+    def create_segments(self, *, column_name: str, column_values: List[str], folder: Optional[str]="AutoML",
+                        audience_id: Optional[str]=None, audience_name: Optional[str]=None, rerun_master_segment: Optional[bool]=False
+    ):
         assert len(column_values) >= 1, "At least 1 column_values are required."
         if audience_id is None:
             assert audience_name is not None, "Either audience_id or audience_name argument is required"
