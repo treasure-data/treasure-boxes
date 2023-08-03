@@ -1,0 +1,30 @@
+in:
+  type: one_drive
+  
+  td_authentication_id: 1234567890
+
+  account_type: personal
+  is_shared_folder: false
+  folder_path: xxxxxx
+  name_match_pattern: .*csv$
+  
+  parser:
+    type: csv
+    escape: "\""
+    delimiter: ","
+    skip_header_lines: 1
+    quote: "\""
+    stop_on_invalid_record: false
+    columns:
+    - name: id
+      type: long
+    - name: text
+      type: string
+  
+filters:
+- type: add_time
+  to_column:
+    name: time
+    type: timestamp
+  from_value:
+    mode: upload_time
