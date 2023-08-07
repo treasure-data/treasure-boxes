@@ -1,0 +1,35 @@
+in:
+  type: google_drive
+
+  td_authentication_id: 1234567890
+  # client_id: xxxxxx
+  # client_secret: xxxxxx
+  # refresh_token: xxxxxx
+
+  target: file
+  id: xxxxx
+  last_modified_time: 2023-02-01 00:00:00
+  maximum_retries: 3
+  initial_retry_interval_millis: 2000
+  maximum_retry_interval_millis: 240000
+
+  parser:
+    type: csv
+    escape: "\""
+    delimiter: ","
+    skip_header_lines: 1
+    quote: "\""
+    stop_on_invalid_record: false
+    columns:
+    - name: id
+      type: long
+    - name: text
+      type: string
+  
+filters:
+- type: add_time
+  to_column:
+    name: time
+    type: timestamp
+  from_value:
+    mode: upload_time
