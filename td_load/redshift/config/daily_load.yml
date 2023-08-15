@@ -1,0 +1,16 @@
+in:
+  type: redshift
+  
+  td_authentication_id: 1234567890
+
+  database: dev
+  schema: public
+  query: select * from xxxxx
+  
+filters:
+- type: add_time
+  to_column:
+    name: time
+    type: timestamp
+  from_value:
+    mode: upload_time
