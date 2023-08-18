@@ -1,0 +1,24 @@
+in:
+  type: facebook_leads
+  
+  td_authentication_id: 1234567890
+
+  ad_account_id: xxxxxxxx
+  enable_guess_schema: false
+  form_fields: 
+  - name: form_name
+    type: string
+  skip_invalid_records: false
+  columns: 
+  - name: id
+    type: string
+  - name: created_time
+    type: string
+
+filters:
+- type: add_time
+  to_column:
+    name: time
+    type: timestamp
+  from_value:
+    mode: upload_time
