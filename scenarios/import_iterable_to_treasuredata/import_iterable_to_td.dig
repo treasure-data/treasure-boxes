@@ -1,0 +1,9 @@
++process:
+  py>: tasks.process
+  destination_db: <database_name>
+  destination_tbl: <table_name>
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    ITERABLE_API_KEY: ${secret:iterable.apikey}
+  docker:
+    image: "digdag/digdag-python:3.9"
