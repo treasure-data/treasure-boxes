@@ -2,7 +2,7 @@ _export:
   !include : config.yml
 
 +get_activations:
-  if>: ${reports.activations_list}
+  if>: ${reports_to_run.activations_list}
   _do:
     +get_activations:
       py>: activations.get_list

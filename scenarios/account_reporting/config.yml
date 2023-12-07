@@ -7,4 +7,4 @@ target:
     activations_list: activations
 
 reports_to_run:
-    activations_list: true
+  activations_list: true
