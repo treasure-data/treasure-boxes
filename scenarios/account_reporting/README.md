@@ -4,8 +4,8 @@ This scenario shows how you can ingest account data from Treasure Data API's for
 
 # How to Run
 
-1. Update the values in `config.yml`.
-- `td_api_endpoint` and `cdp_api_endpoint` - The API base urls for your region can be found here: https://api-docs.treasuredata.com/en/overview/aboutendpoints/#treasure-data-api-baseurls
+1. Update the values in `config.yml`:
+- `td_api_baseurl` and `cdp_api_baseurl` - The API base urls for your region can be found here: https://api-docs.treasuredata.com/en/overview/aboutendpoints/#treasure-data-api-baseurls
 - `reporting_database` - Sets the database the data will be ingested to. This database must exist prior to running the workflow.
 
 2. Upload the workflow with TD CLI.
