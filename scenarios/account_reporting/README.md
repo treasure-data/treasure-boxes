@@ -15,7 +15,7 @@ This scenario shows how you can ingest account data from Treasure Data API's for
 3. Set the Treasure Data API Key as a workflow secret using the `td wf secrets` command.
 ```
     # Set Treasure Data API Key workflow secret
-    $ td wf secrets --project import_iterable_to_td --set td.apikey=<treasuredata_master_api_key>
+    $ td wf secrets --project account_reporting --set td.apikey=<treasuredata_master_api_key>
 ```
 Finally, you can trigger the session manually.
 ```
