@@ -1,16 +1,13 @@
 _export:
   !include : config.yml
-  reports:
-    database: ${reporting_database}
-    activations_list: true
 
 +get_activations:
   if>: ${reports.activations_list}
   _do:
     +get_activations:
       py>: activations.get_list
-      destination_db: ${reports.database}
-      destination_tbl: activations_list
+      destination_db: ${target.database}
+      destination_tbl: ${target.tables.activations_list}
       _env:
         TD_API_KEY: ${secret:td.apikey}
         TD_API_BASEURL: ${td_api_baseurl}

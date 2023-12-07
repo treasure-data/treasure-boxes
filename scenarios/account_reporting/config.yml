@@ -1,3 +1,10 @@
 td_api_baseurl: https://api.treasuredata.com
 cdp_api_baseurl: https://api-cdp.treasuredata.com
-reporting_database: database_name
+
+target:
+  database: account_reporting
+  tables:
+    activations_list: activations
+
+reports_to_run:
+    activations_list: true
