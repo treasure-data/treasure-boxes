@@ -1,0 +1,43 @@
+timezone: UTC
+
+schedule:
+  daily>: 03:00:00
+
+_export:
+  td:
+    database: treaure-data-logs
+  api_endpoint: https://api.treasuredata.com
+  dla_host: dla1.treasuredata-co.jp 
+  user_id: abcdefg012345
+  site: aws
+  account_id: 1
+  query_logs_table: query_logs
+  workflow_logs_table: workflow_logs
+  users_table: users
+
++create_databases:
+  td_ddl>:
+  create_databases: [${td.database}]
+
++create_table:
+  td_ddl>:
+  create_tables: [${query_logs_table}, ${workflow_logs_table}, ${users_table}]
+
++import:
+  +query_logs:
+    td_load>: config/query_log.yml
+    table: ${query_logs_table}
+
+  +workflow_logs:
+    td_load>: config/workflow_log.yml 
+    table: ${workflow_logs_table}
+
+  +users:
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+    py>: script.import_td_users.import_users
+    database: ${td.database}
+    table: ${users_table}
+    api_endpoint: ${api_endpoint}
+    docker:
+      image: "digdag/digdag-python:3.9"
