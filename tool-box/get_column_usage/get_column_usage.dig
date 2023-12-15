@@ -1,0 +1,20 @@
+timezone: Asia/Tokyo
+
+schedule:
+    daily>: 00:00:00
+
+_export:
+    docker:
+        image: digdag/digdag-python:3.9
+    td:
+        database: YOUR_DATABASE
+
++exec:
+    py>: pyscript.segment_analysis.main
+    database: ${td.database}
+    parent_segment_id_list:
+    - YOUR_PARENT_SEGMENT_ID
+    _env:
+        TD_API_KEY: ${secret:td.apikey}
+        TD_ENDPOINT: "api.treasuredata.com"
+        SESSION_TIME: ${session_unixtime}
