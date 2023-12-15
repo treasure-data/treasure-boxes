@@ -18,7 +18,7 @@ Change the contents of the dig file to match your Treasure Data environment.
 | _export | docker:<br>image | Docker image used within the workflow. ||
 |  | td:<br>database | Database where output tables are to be stored. | Yes
 | +exec<br>　py>: | database |  No need to change as it has already been set up above. ||
-|  | parent_segment_id_list | ID of the target parent segment.<br>Multiple IDs can be set up as shown below.<br>![enter image description here](https://drive.google.com/file/d/1iGJCGCounNTpHqdateALFRUk6hZD54Qm/view)| Yes |
+|  | parent_segment_id_list | ID of the target parent segment.<br>Multiple IDs can be set up as shown below.<br>![idlist_example](https://drive.google.com/uc?export=view&id=1iGJCGCounNTpHqdateALFRUk6hZD54Qm)| Yes |
 | | _env:<br>TD_API_KEY | When you are not authorized to create tables for the database specified above, you  need to register the appropriate user's Master API key as `td.apikey` in [secrets](https://docs.treasuredata.com/display/public/PD/Setting+Workflow+Secrets+from+TD+Console).||
 | | _env:<br>TD_ENDPOINT | When your Treasure Data region is not US, you need to change to an API endpoint in the [appropriate region](https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints).||
 | | _env:<br>SESSION_TIME | Execution time of the workflow.<br>This value is stored in `time` column of the output tables.||
