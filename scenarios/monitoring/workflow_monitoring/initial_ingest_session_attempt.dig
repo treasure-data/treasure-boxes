@@ -1,0 +1,65 @@
+_export:
+  !include : common/settings.yaml
+
++initial_database_and_tables:
+  +create_database:
+    td_ddl>: 
+    create_databases: ["${td.database}"]
+
++initial_ingest_project:
+  py>: scripts.ingest_workflow_project.run
+  session_unixtime: ${session_unixtime}
+  dest_db: ${td.database}
+  dest_table: ${td.tables.projects}
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+
++initial_ingest_workflow:
+  py>: scripts.ingest_workflow.run
+  session_unixtime: ${session_unixtime}
+  dest_db: ${td.database}
+  dest_table: ${td.tables.workflows}
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+
++initial_ingest_schedule:
+  py>: scripts.ingest_schedule.run
+  session_unixtime: ${session_unixtime}
+  dest_db: ${td.database}
+  dest_table: ${td.tables.schedules}
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+
++initial_ingest_session:
+  py>: scripts.ingest_session.run
+  dest_db: ${td.database}
+  dest_table: ${td.tables.sessions}
+  api_endpoint: ${td.api_endpoint}
+  workflow_endpoint: ${td.workflow_endpoint}
+  count: 100
+  lower_limit_session_id: '113468608'
+  if_exists: "overwrite"
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+
++initial_ingest_attempt:
+  py>: scripts.ingest_attempt.run
+  dest_db: ${td.database}
+  dest_table: ${td.tables.attempts}
+  api_endpoint: ${td.api_endpoint}
+  workflow_endpoint: ${td.workflow_endpoint}
+  count: 100
+  if_exists: "overwrite"
+  lower_limit_attempt_id: '592849652'
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}

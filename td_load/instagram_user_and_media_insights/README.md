@@ -4,7 +4,9 @@ This is example workflow ingests insights, using [Treasure Data's Data Connector
 
 ## Prerequisites
 
-### How to Run
+### daily_load.dig
+
+#### How to Run
 
 First, upload the workflow. `ig_insights` is the project name.
 
@@ -30,6 +32,26 @@ You can trigger the session manually like:
   # Run
   $ td wf start ig_insights daily_load --session now
   ```
+
+### daily_load_with_ existing_authentication.dig
+
+#### How to Run
+
+First, you need to create a authetication via TD console. see details -> https://docs.treasuredata.com/display/public/INT/Instagram+User+and+Media+Insights+Import+Integration#InstagramUserandMediaInsightsImportIntegration-UsetheTDConsoletoCreateYourConnection
+
+Then, you can obtain the td autheitcation id from the access URL, as follows
+
+![](screenshot1.png)
+
+Finally, you can write td_authentication_id to daily_load_with_existing_authentication.yaml.
+
+- [config/daily_load_with_existing_authentication.yml](config/daily_load_with_existing_authentication.yml)
+
+And you can run the workflow like the following.
+
+    # Run
+    $ td wf start td_load_example daily_load_with_existing_authentication --session now
+
 
 ## Supplemental
 

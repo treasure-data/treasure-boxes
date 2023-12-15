@@ -1,0 +1,13 @@
+in:
+  type: google_analytics
+  td_authentication_id: xxxxxxx
+  time_series: "ga:dateHour"
+
+  dimensions:
+    - "ga:browser"
+  metrics:
+    - "ga:visits"
+    - "ga:pageviews"
+filters: []
+out: {}
+exec: {}

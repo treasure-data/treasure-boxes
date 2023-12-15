@@ -27,6 +27,15 @@ def get_options():
 
     return parser.parse_args()
 
+def get_columns():
+    return [
+        'source_type',
+        'name', 
+        'filepath',
+        'next_schedule',
+        'line_no',
+        'usage_content'
+    ] 
 
 def grep_from_queries(keyword):
     ret = []
@@ -49,10 +58,15 @@ def grep_from_queries(keyword):
                 i += 1
                 continue
 
+            next_schedule = d['Next schedule']
+            if next_schedule is None:
+                next_schedule = ''
+
             ret.append({
                 'source_type': 'queries',
                 'name': d['Name'],
                 'filepath': '',
+                'next_schedule': next_schedule.replace(' +0900', ''),
                 'line_no': str(i),
                 'usage_content': line
             })
@@ -66,8 +80,8 @@ def grep_from_workflow(keyword):
     logger.info("Searching workflows... (This task may take a few minutes.)")
 
     with futures.ThreadPoolExecutor(max_workers=4) as executor:
-        for project in get_all_projects():
-            future = executor.submit(grep_from_project, project, keyword)
+        for project, next_schedule in get_all_projects().items():
+            future = executor.submit(grep_from_project, project, next_schedule, keyword)
             future_list.append(future)
 
         for future in futures.as_completed(future_list):
@@ -80,15 +94,22 @@ def get_all_projects():
     command = 'td wf schedules'
     cp = subprocess.run(shlex.split(command), capture_output=True, text=True)
 
+    key = ''
     projects = {}
     for line in cp.stdout.splitlines():
         m = re.search(r'project: (.+)$', line)
         if m:
-            projects[m.group(1)] = ''
+            key = m.group(1)
+            projects[key] = ''
 
-    return list(projects.keys())
+        n = re.search(r'next scheduled to run at: (.+) \+0900', line)
+        if n:
+            projects[key] = n.group(1)
 
-def grep_from_project(project, keyword):
+
+    return projects
+
+def grep_from_project(project, next_schedule, keyword):
     # td toolbelt
     command = f'td wf download {project}'
     devnull = open('/dev/null', 'w')
@@ -113,6 +134,7 @@ def grep_from_project(project, keyword):
                 ret.append({
                     'source_type': 'workflow',
                     'name': project,
+                    'next_schedule': next_schedule,
                     'filepath': file,
                     'line_no': str(i),
                     'usage_content': line
@@ -145,8 +167,15 @@ def file_out(data, filename):
 
 
 def parse_result(data):
+    if len(data) == 0 :
+        print('There was no section where this word was used.')
+        return
+
+    print(','.join(get_columns()))
     for d in data:
         print(','.join(d.values()))
+
+    return
 
 
 if __name__ == '__main__':

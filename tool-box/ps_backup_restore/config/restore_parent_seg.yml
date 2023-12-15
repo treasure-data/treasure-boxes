@@ -1,5 +1,8 @@
 ms_name: pse_restore_0509
 
+td_restore_endpoint: https://api.treasuredata.com
+td_restore_cdp_endpoint: https://api-cdp.treasuredata.com
+
 ms_table_restore: pse_restore_ms
 folder_stg_tbl: pse_folder_stg_restore
 
@@ -10,3 +13,8 @@ root_folder_id: 399619
 aws_bucket_name: ganesh-demo-mar
 aws_folder_config_path: 20220510/folder_config_061627.json
 aws_ms_config_path: 20220510/ms_config_061627.json
+
+restore_all_segments: yes
+restore_only_segments:
+  segment_ids:
+    - 113531

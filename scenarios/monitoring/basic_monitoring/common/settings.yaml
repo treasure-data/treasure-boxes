@@ -1,0 +1,26 @@
+td:
+  database: basic_monitoring
+  tables:
+    jobs: jobs
+    connections: connections
+    connections_history: connections_history
+    schedules: schedules
+    schedules_history: schedules_history
+    users: users
+    users_history: users_history
+    user_assign_policies: user_assign_policies
+    user_assign_policies_history: user_assign_policies_history
+    users_assign_policies: users_assign_policies
+    databases: databases
+    databases_history: databases_history
+    policies: policies
+    policies_history: policies_history
+    policies_detail: policies_detail
+    policies_detail_history: policies_detail_history
+    policies_detail_column: policies_detail_column
+    policies_detail_column_history: policies_detail_column_history
+    policies_assign_users: policies_assign_users
+    policies_assign_users_history: policies_assign_users_history
+  api_endpoint: api.treasuredata.com
+
+
