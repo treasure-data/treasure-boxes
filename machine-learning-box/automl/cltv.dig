@@ -10,14 +10,12 @@ _export:
 
 +load_datasets:
    ipynb>:
-     branch: ATML-174-cltv
      notebook: ml_datasets
      output_database: ${input_database}
      datasets: online_retail
 
 +run_cltv:
   ipynb>:
-    branch: ATML-174-cltv
     notebook: CLTV
     input_table: ${input_database}.online_retail_txn
     output_table: ${output_database}.online_retail_cltv_result
