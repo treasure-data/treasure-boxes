@@ -26,8 +26,8 @@ TD_ENDPOINT = os.environ['TD_ENDPOINT']
 ENDPOINT_MAP = {
     'api.treasuredata.com': 'api-cdp.treasuredata.com',
     'api.treasuredata.co.jp': 'api-cdp.treasuredata.co.jp',
-    'api.ap02.treasuredata.com': 'api-cdp.ap02.treasuredata.co.jp',
-    'api.ap03.treasuredata.com': 'api-cdp.ap03.treasuredata.co.jp',
+    'api.ap02.treasuredata.com': 'api-cdp.ap02.treasuredata.com',
+    'api.ap03.treasuredata.com': 'api-cdp.ap03.treasuredata.com',
     'api.eu01.treasuredata.com': 'api-cdp.eu01.treasuredata.com'
 }
 CDP_ENDPOINT = ENDPOINT_MAP[TD_ENDPOINT]
