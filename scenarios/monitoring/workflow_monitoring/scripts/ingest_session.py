@@ -5,9 +5,13 @@ import pandas as pd
 import pytd
 import os
 from datetime import datetime as dt
+import json
 
 def convert(session_time):
     return int(dt.strptime(session_time, '%Y-%m-%dT%H:%M:%S%z').timestamp())
+
+def convert_to_json(s):
+  return json.dumps(s)
 
 def get_sessions1(url, headers):
     print(url)
@@ -40,6 +44,9 @@ def run(session_unixtime, dest_db, dest_table, api_endpoint='api.treasuredata.co
     df = pd.DataFrame(ses_list)
     df['time'] = df['sessionTime'].apply(convert)
     df['id'] = df['id'].astype('int')
+    df['project'] = df['project'].apply(convert_to_json)
+    df['workflow'] = df['workflow'].apply(convert_to_json)
+    df['lastAttempt'] = df['lastattempt'].apply(convert_to_json)
     df = df[df['id'] > int(lower_limit_session_id)]
     client = pytd.Client(apikey=os.environ['TD_API_KEY'], endpoint='https://%s' % api_endpoint, database=dest_db)
     client.load_table_from_dataframe(df, dest_table, if_exists=if_exists, fmt='msgpack')

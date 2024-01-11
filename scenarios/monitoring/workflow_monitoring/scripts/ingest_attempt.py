@@ -5,9 +5,13 @@ import pandas as pd
 import pytd
 import os
 from datetime import datetime as dt
+import json
 
 def convert(s):
   return int(dt.strptime(s, '%Y-%m-%dT%H:%M:%SZ').timestamp())
+
+def convert_to_json(s):
+  return json.dumps(s)
 
 def get_attempt1(url, headers):
     print(url)
@@ -41,6 +45,9 @@ def run(session_unixtime, dest_db, dest_table, api_endpoint='api.treasuredata.co
     df = pd.DataFrame(atmp_list)
     df['time'] = df['createdAt'].apply(convert)
     df['id'] = df['id'].astype('int')
+    df['project'] = df['project'].apply(convert_to_json)
+    df['workflow'] = df['workflow'].apply(convert_to_json)
+    df['params'] = df['params'].apply(convert_to_json)
     df = df[df['id'] > int(lower_limit_attempt_id)]
     client = pytd.Client(apikey=os.environ['TD_API_KEY'], endpoint='https://%s' % api_endpoint, database=dest_db)
     client.load_table_from_dataframe(df, dest_table, if_exists=if_exists, fmt='msgpack')
