@@ -22,9 +22,9 @@ def get_all_policy_with_permission(api_endpoint, headers, policyid_list):
         if res.status_code != requests.codes.ok:
             res.raise_for_status()
         permissions = res.json()
-        permissions['id'] = i
-
-        l.append(permissions)
+        if len(permissions) != 0:
+            data = {'id':i , 'permissions': json.dumps(permissions)}
+            l.append(data)
     return l
 
 def get_all_policy_with_column_permission(api_endpoint, headers, policyid_list):

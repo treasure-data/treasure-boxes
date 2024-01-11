@@ -26,6 +26,16 @@ _export:
     _env:
         TD_API_KEY: ${secret:td.apikey}
 
++ingest_source:
+    py>: scripts.ingest_sources.run
+    dest_db: ${td.database}
+    dest_table: ${td.tables.sources}
+    api_endpoint: ${td.api_endpoint}
+    docker:
+        image: "digdag/digdag-python:3.9"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}
+
 +initial_inget_jobs:
   py>: scripts.ingest_job.run
   session_unixtime: ${session_unixtime}

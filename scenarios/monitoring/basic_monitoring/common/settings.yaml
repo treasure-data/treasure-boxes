@@ -6,6 +6,8 @@ td:
     connections_history: connections_history
     schedules: schedules
     schedules_history: schedules_history
+    sources: sources
+    sources_history: sources_history
     users: users
     users_history: users_history
     user_assign_policies: user_assign_policies
