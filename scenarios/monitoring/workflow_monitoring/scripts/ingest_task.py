@@ -2,6 +2,10 @@ import requests
 import os
 import pytd
 import pandas as pd
+import json
+
+def convert_to_json(s):
+  return json.dumps(s)
 
 def get_task_info(base_url, headers, ids):
   l = []
@@ -20,6 +24,11 @@ def get_task_info(base_url, headers, ids):
 def insert_task_info(import_unixtime, endpoint, apikey, dest_db, dest_table, tasks):
     df = pd.DataFrame(tasks)
     df['time'] = int(import_unixtime)
+    df['config'] = df['config'].apply(convert_to_json)
+    df['upstreams'] = df['upstreams'].apply(convert_to_json)
+    df['exportparams'] = df['exportparams'].apply(convert_to_json)
+    df['storeparams'] = df['storeparams'].apply(convert_to_json)
+    df['error'] = df['error'].apply(convert_to_json)
     client = pytd.Client(apikey=apikey, endpoint=endpoint, database=dest_db)
     client.load_table_from_dataframe(df, dest_table, if_exists='append', fmt='msgpack')
 

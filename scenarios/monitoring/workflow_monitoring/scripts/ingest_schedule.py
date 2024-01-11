@@ -4,6 +4,10 @@ import requests
 import pandas as pd
 import pytd
 import os
+import json
+
+def convert_to_json(s):
+  return json.dumps(s)
 
 def get_schedules1(url, headers):
     print(url)
@@ -33,5 +37,7 @@ def run(session_unixtime, dest_db, dest_table, api_endpoint='api.treasuredata.co
     sches_list = get_all_schedule(workflow_url, headers)
     df = pd.DataFrame(sches_list)
     df['time'] = int(session_unixtime)
+    df['project'] = df['project'].apply(convert_to_json)
+    df['workflow'] = df['workflow'].apply(convert_to_json)
     client = pytd.Client(apikey=os.environ['TD_API_KEY'], endpoint='https://%s' % api_endpoint, database=dest_db)
     client.load_table_from_dataframe(df, dest_table, if_exists='overwrite', fmt='msgpack')

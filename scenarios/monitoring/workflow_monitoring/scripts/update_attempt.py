@@ -4,6 +4,10 @@ import pandas as pd
 import pytd
 import os
 from datetime import datetime as dt
+import json
+
+def convert_to_json(s):
+  return json.dumps(s)
 
 def convert(s):
   return int(dt.strptime(s, '%Y-%m-%dT%H:%M:%SZ').timestamp())
@@ -31,6 +35,11 @@ def get_attempt_info(base_url, headers, ids):
 def insert_attempt_info(import_unixtime, endpoint, apikey, dest_db, dest_table, attempts):
   df = pd.DataFrame(attempts)
   df['time'] = df['createdAt'].apply(convert)
+  df['id'] = df['id'].astype('int')
+  df['project'] = df['project'].apply(convert_to_json)
+  df['workflow'] = df['workflow'].apply(convert_to_json)
+  df['params'] = df['params'].apply(convert_to_json)
+
   client = pytd.Client(apikey=apikey, endpoint=endpoint, database=dest_db)
   client.load_table_from_dataframe(df, dest_table, if_exists='append', fmt='msgpack')
 

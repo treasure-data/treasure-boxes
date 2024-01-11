@@ -37,6 +37,23 @@ schedule:
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
++increment_ingest_source:
+    +append_sources_history:
+        td>: 
+        query: select * from ${td.tables.sources}
+        database: ${td.database}
+        insert_into: ${td.tables.sources_history}
+    +ingest_schedule:
+        py>: scripts.ingest_sources.run
+        dest_db: ${td.database}
+        dest_table: ${td.tables.sources}
+        api_endpoint: ${td.api_endpoint}
+        docker:
+            image: "digdag/digdag-python:3.9"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+
+
 +increment_ingest_jobs:
     +check_old_running_jobs:
         td>: 

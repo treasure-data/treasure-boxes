@@ -43,7 +43,7 @@ _export:
   api_endpoint: ${td.api_endpoint}
   workflow_endpoint: ${td.workflow_endpoint}
   count: 100
-  lower_limit_session_id: '113468608'
+  lower_limit_session_id: '180059011'
   if_exists: "overwrite"
   docker:
     image: "digdag/digdag-python:3.9"
@@ -58,7 +58,7 @@ _export:
   workflow_endpoint: ${td.workflow_endpoint}
   count: 100
   if_exists: "overwrite"
-  lower_limit_attempt_id: '592849652'
+  lower_limit_attempt_id: '1040926253'
   docker:
     image: "digdag/digdag-python:3.9"
   _env:
