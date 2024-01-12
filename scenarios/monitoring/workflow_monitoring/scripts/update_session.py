@@ -37,7 +37,7 @@ def insert_session_info(endpoint, apikey, dest_db, dest_table, sessions, import_
   df['id'] = df['id'].astype('int')
   df['project'] = df['project'].apply(convert_to_json)
   df['workflow'] = df['workflow'].apply(convert_to_json)
-  df['lastattempt'] = df['lastattempt'].apply(convert_to_json)
+  df['lastAttempt'] = df['lastAttempt'].apply(convert_to_json)
   client = pytd.Client(apikey=apikey, endpoint=endpoint, database=dest_db)
   client.load_table_from_dataframe(df, dest_table, if_exists='append', fmt='msgpack')
 
