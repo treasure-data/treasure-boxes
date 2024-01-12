@@ -79,7 +79,7 @@ schedule:
     td>: 
     query: select max(cast(id as INTEGER)) as max_id from attempts
     store_last_results: true
-    database: workflow_management
+    database: ${td.database}
   +ingest_incremetal_attempt:
     py>: scripts.ingest_attempt.run
     session_unixtime: ${session_unixtime}
