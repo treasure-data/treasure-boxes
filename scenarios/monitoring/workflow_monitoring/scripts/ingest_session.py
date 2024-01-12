@@ -46,7 +46,7 @@ def run(session_unixtime, dest_db, dest_table, api_endpoint='api.treasuredata.co
     df['id'] = df['id'].astype('int')
     df['project'] = df['project'].apply(convert_to_json)
     df['workflow'] = df['workflow'].apply(convert_to_json)
-    df['lastAttempt'] = df['lastattempt'].apply(convert_to_json)
+    df['lastAttempt'] = df['lastAttempt'].apply(convert_to_json)
     df = df[df['id'] > int(lower_limit_session_id)]
     client = pytd.Client(apikey=os.environ['TD_API_KEY'], endpoint='https://%s' % api_endpoint, database=dest_db)
     client.load_table_from_dataframe(df, dest_table, if_exists=if_exists, fmt='msgpack')
