@@ -3,6 +3,9 @@ _export:
   attempt_ids:
     - 605508773
     - 605506079
+  project_ids:
+    - 627610
+    - 686558
 
 +manual_ingest_attempt_task:
   py>: scripts.ingest_task.run
@@ -10,6 +13,17 @@ _export:
   dest_db: ${td.database}
   dest_table: ${td.tables.tasks}
   attempt_ids: ${attempt_ids}
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+
++manual_ingest_project_revision:
+  py>: scripts.ingest_revision.run
+  session_unixtime: ${session_unixtime}
+  dest_db: ${td.database}
+  dest_table: ${td.tables.revisions}
+  project_ids: ${project_ids}
   docker:
     image: "digdag/digdag-python:3.9"
   _env:
