@@ -40,6 +40,26 @@ _export:
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
++initial_ingest_activations:
+    +get_current_parent_segment_list:
+        td>:
+        query: select ARRAY_AGG(id) as ids from ${td.tables.parent_segments}
+        store_last_results: true
+        database: ${td.database}
+    +ingest_activations:
+        py>: scripts.ingest_activation.run
+        session_unixtime: ${session_unixtime}
+        dest_db: ${td.database}
+        dest_table: ${td.tables.activations}
+        ids: ${td.last_results.ids}
+        api_endpoint: ${td.api_endpoint}
+        cdp_api_endpoint: ${td.cdp_api_endpoint}
+        docker: 
+            image: "digdag/digdag-python:3.9"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+
+
 +initial_ingest_journey_statistics:
     +get_current_journey_list:
         td>:

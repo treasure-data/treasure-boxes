@@ -7,6 +7,8 @@ td:
     entities_history: entities_history
     journey_statistics: journey_statistics
     journey_statistics_history: journey_statistics_history
+    activations: activations
+    activations_history: activations_history
   api_endpoint: api.treasuredata.com
   cdp_api_endpoint: api-cdp.treasuredata.com
 
