@@ -43,7 +43,7 @@ _export:
 +initial_ingest_activations:
     +get_current_parent_segment_list:
         td>:
-        query: select ARRAY_AGG(id) as ids from ${td.tables.parent_segments}
+        query: select ARRAY_JOIN(ARRAY_AGG(id), ',') as ids from ${td.tables.parent_segments}
         store_last_results: true
         database: ${td.database}
     +ingest_activations:
@@ -72,6 +72,46 @@ _export:
         session_unixtime: ${session_unixtime}
         dest_db: ${td.database}
         dest_table: ${td.tables.journey_statistics}
+        journey_ids: ${td.last_results.ids}
+        api_endpoint: ${td.api_endpoint}
+        cdp_api_endpoint: ${td.cdp_api_endpoint}
+        docker:
+            image: "digdag/digdag-python:3.9"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+
++initial_ingest_journey_summary:
+    +get_current_journey_list:
+        td>:
+        query: select ARRAY_JOIN(array_agg(id), ',') as ids from ${td.tables.entities} where type = 'journey'
+        store_last_results: true
+        database: ${td.database}
+
+    +ingest_journey_summary:
+        py>: scripts.ingest_journey_summary.run
+        session_unixtime: ${session_unixtime}
+        dest_db: ${td.database}
+        dest_table: ${td.tables.journey_summary}
+        journey_ids: ${td.last_results.ids}
+        api_endpoint: ${td.api_endpoint}
+        cdp_api_endpoint: ${td.cdp_api_endpoint}
+        docker:
+            image: "digdag/digdag-python:3.9"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+
++initial_ingest_journey_activation:
+    +get_current_journey_list:
+        td>:
+        query: select ARRAY_JOIN(array_agg(id), ',') as ids from ${td.tables.entities} where type = 'journey'
+        store_last_results: true
+        database: ${td.database}
+
+    +ingest_journey_activation:
+        py>: scripts.ingest_journey_activation.run
+        session_unixtime: ${session_unixtime}
+        dest_db: ${td.database}
+        dest_table: ${td.tables.journey_activation}
         journey_ids: ${td.last_results.ids}
         api_endpoint: ${td.api_endpoint}
         cdp_api_endpoint: ${td.cdp_api_endpoint}
