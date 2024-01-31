@@ -19,7 +19,7 @@ schedule:
         api_endpoint: ${td.api_endpoint}
         cdp_api_endpoint: ${td.cdp_api_endpoint}
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
@@ -44,7 +44,32 @@ schedule:
         api_endpoint: ${td.api_endpoint}
         cdp_api_endpoint: ${td.cdp_api_endpoint}
         docker: 
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+
++incremental_ingest_activations:
+    +append_activations_history:
+        td>:
+        query: select * from ${td.tables.activations}
+        insert_into: ${td.tables.activations_history}
+
+    +get_current_parent_segment_list:
+        td>:
+        query: select ARRAY_JOIN(ARRAY_AGG(id), ',') as ids from ${td.tables.parent_segments}
+        store_last_results: true
+        database: ${td.database}
+
+    +ingest_activations:
+        py>: scripts.ingest_activation.run
+        session_unixtime: ${session_unixtime}
+        dest_db: ${td.database}
+        dest_table: ${td.tables.activations}
+        ids: ${td.last_results.ids}
+        api_endpoint: ${td.api_endpoint}
+        cdp_api_endpoint: ${td.cdp_api_endpoint}
+        docker: 
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
@@ -70,6 +95,59 @@ schedule:
         api_endpoint: ${td.api_endpoint}
         cdp_api_endpoint: ${td.cdp_api_endpoint}
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+
+
++incremental_ingest_journey_summary:
+    +append_journey_summary_history:
+        td>:
+        query: select * from ${td.tables.journey_summary}
+        insert_into: ${td.tables.journey_summary_history}
+        database: ${td.database}
+    
+    +get_current_journey_list:
+        td>:
+        query: select ARRAY_JOIN(array_agg(id), ',') as ids from ${td.tables.entities} where type = 'journey'
+        store_last_results: true
+        database: ${td.database}
+
+    +ingest_journey_summary:
+        py>: scripts.ingest_journey_summary.run
+        session_unixtime: ${session_unixtime}
+        dest_db: ${td.database}
+        dest_table: ${td.tables.journey_summary}
+        journey_ids: ${td.last_results.ids}
+        api_endpoint: ${td.api_endpoint}
+        cdp_api_endpoint: ${td.cdp_api_endpoint}
+        docker:
+            image: "digdag/digdag-python:3.10.1"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+
++incremental_ingest_journey_activation:
+    +append_journey_activation_history:
+        td>:
+        query: select * from ${td.tables.journey_activation}
+        insert_into: ${td.tables.journey_activation_history}
+        database: ${td.database}
+    
+    +get_current_journey_list:
+        td>:
+        query: select ARRAY_JOIN(array_agg(id), ',') as ids from ${td.tables.entities} where type = 'journey'
+        store_last_results: true
+        database: ${td.database}
+
+    +ingest_journey_activation:
+        py>: scripts.ingest_journey_activation.run
+        session_unixtime: ${session_unixtime}
+        dest_db: ${td.database}
+        dest_table: ${td.tables.journey_activation}
+        journey_ids: ${td.last_results.ids}
+        api_endpoint: ${td.api_endpoint}
+        cdp_api_endpoint: ${td.cdp_api_endpoint}
+        docker:
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}

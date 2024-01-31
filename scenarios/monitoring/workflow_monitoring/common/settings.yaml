@@ -10,5 +10,6 @@ td:
     sessions: sessions
     attempts: attempts
     tasks: tasks
+    revisions: revisions
   api_endpoint: api.treasuredata.com
   workflow_endpoint: api-workflow.treasuredata.com
