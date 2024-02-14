@@ -47,7 +47,7 @@ td:
         daily_mta_conversion_journeys: daily_mta_conversion_journeys
         tmp_daily_mta_conversion_journeys: tmp_daily_mta_conversion_journeys
 
-        query_store: query_store
+        query_store: tmp_query_store
 
     monitoring:
         db:
