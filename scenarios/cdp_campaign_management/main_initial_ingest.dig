@@ -1,6 +1,6 @@
 _export:
     !include : common/system_settings.yaml
-    !include : common/user_settings_sample.yaml
+    !include : common/user_settings.yaml
     !include : common/gsheet_settings.yaml
 
 # +check_settings:

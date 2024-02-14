@@ -65,6 +65,6 @@ td:
         session_model:
             allowable_time_to_cv: 24*10
 
-    utm_names:
-        utm_cv: utm_term
+    # utm_names:
+    #     utm_cv: utm_term
 
