@@ -1,0 +1,10 @@
++check_settings:
+    py>: py_scripts.check_settings.run
+    user_id: ${td.user_id}
+    clicks_tables: ${td.clicks_tables}
+    conversions_tables: ${td.conversions_tables}
+    mta_settings: ${td.mta}
+    docker:
+        image: "digdag/digdag-python:3.9"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}

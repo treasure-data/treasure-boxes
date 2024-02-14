@@ -1,0 +1,17 @@
+# timezone:
+td:
+    user_id: #required
+
+    ps: #required
+
+    activations_tables: #required
+
+    clicks_tables: #required
+
+    conversions_tables: #required
+
+    master_campaigns_tables: #optional
+
+    mta: #required
+        session_model:
+            allowable_time_to_cv: 24*10

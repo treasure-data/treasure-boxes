@@ -1,0 +1,77 @@
+parallel: true
+td:
+    base_db_name: cdp_campaigns
+    tables:
+        activation_log: activation_log
+        existing_campaigns: existing_campaigns
+
+        master_campaigns: master_campaigns
+        tmp_master_campaigns: tmp_master_campaigns
+
+        journeys: journeys
+        tmp_journeys: tmp_journeys
+
+        master_activations: master_activations
+        tmp_master_activations: tmp_master_activations
+
+        daily_activations_info: daily_activations_info
+        tmp_daily_activations_info: tmp_daily_activations_info
+
+        activations: activations
+        tmp_activations: tmp_activations
+
+        clicks: clicks
+        tmp_clicks: tmp_clicks
+
+        conversions: conversions
+        tmp_conversions: tmp_conversions
+
+        conversion_journeys: conversion_journeys
+        tmp_conversion_journeys: tmp_conversion_journeys
+
+        mta_conversion_journeys: mta_conversion_journeys
+        tmp_mta_conversion_journeys: tmp_mta_conversion_journeys
+
+        daily_activations: daily_activations
+        tmp_daily_activations: tmp_daily_activations
+
+        daily_clicks: daily_clicks
+        tmp_daily_clicks: tmp_daily_clicks
+
+        daily_conversions: daily_conversions
+        tmp_daily_conversions: tmp_daily_conversions
+
+        daily_conversion_journeys: daily_conversion_journeys
+        tmp_daily_conversion_journeys: tmp_daily_conversion_journeys
+
+        daily_mta_conversion_journeys: daily_mta_conversion_journeys
+        tmp_daily_mta_conversion_journeys: tmp_daily_mta_conversion_journeys
+
+        query_store: query_store
+
+    monitoring:
+        db:
+            cdp_monitoring: cdp_monitoring
+            basic_monitoring: basic_monitoring
+            wf_monitoring: wf_monitoring
+        tables:
+            entities: entities
+            activations: activations
+            activations_history: activations_history
+            jobs: jobs
+            journey_activation: journey_activation
+            journey_summary: journey_summary
+            connections_details: connections_details
+            connections: connections
+
+    utm_names:
+        utm_id: utm_id
+        utm_source: utm_source
+        utm_medium: utm_medium
+        utm_campaign: utm_campaign
+        utm_content: utm_content
+        utm_cv: utm_cv
+        utm_term: utm_term
+        utm_connector: utm_connector
+
+    api_endpoint: api.treasuredata.com

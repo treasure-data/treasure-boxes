@@ -1,0 +1,85 @@
++parallel:
+    _parallel: true
+    +export_journeys:
+        td>:
+        query: SELECT id,name,state,created_at,updated_at,launched_at,allow_reentry,paused,num_stages FROM ${td.tables.journeys} ORDER BY id
+        result_connection: ${gsheet.result_connection}
+        result_settings:
+            spreadsheet_folder: ${gsheet.sheet_folder}
+            spreadsheet_title: ${gsheet.spreadsheet_title}_${ps_id}
+            sheet_title: ${td.tables.journeys}
+            mode: truncate
+            rows_threshold: 1000000
+            set_nil_for_double_nan: true
+            range: A1
+            value_input_option: USER_ENTERED
+
+    +export_master_activations:
+        td>:
+        query: SELECT * FROM ${td.tables.master_activations} ORDER BY journey_id,activation_step_id
+        result_connection: ${gsheet.result_connection}
+        result_settings:
+            spreadsheet_folder: ${gsheet.sheet_folder}
+            spreadsheet_title: ${gsheet.spreadsheet_title}_${ps_id}
+            sheet_title: ${td.tables.master_activations}
+            mode: truncate
+            rows_threshold: 1000000
+            set_nil_for_double_nan: true
+            range: A1
+            value_input_option: USER_ENTERED
+
+    +export_daily_conversions:
+        td>:
+        query: SELECT * FROM ${td.tables.daily_conversions} ORDER BY time DESC
+        result_connection: ${gsheet.result_connection}
+        result_settings:
+            spreadsheet_folder: ${gsheet.sheet_folder}
+            spreadsheet_title: ${gsheet.spreadsheet_title}_${ps_id}
+            sheet_title: ${td.tables.daily_conversions}
+            mode: truncate
+            rows_threshold: 1000000
+            set_nil_for_double_nan: true
+            range: A1
+            value_input_option: USER_ENTERED
+
+    +export_existing_campaigns:
+        td>:
+        query: SELECT * FROM ${td.tables.existing_campaigns} ORDER BY time, cv_name, utm_campaign, utm_source, utm_medium
+        result_connection: ${gsheet.result_connection}
+        result_settings:
+            spreadsheet_folder: ${gsheet.sheet_folder}
+            spreadsheet_title: ${gsheet.spreadsheet_title}_${ps_id}
+            sheet_title: ${td.tables.existing_campaigns}
+            mode: truncate
+            rows_threshold: 1000000
+            set_nil_for_double_nan: true
+            range: A1
+            value_input_option: USER_ENTERED
+
+    +export_mta:
+        td>:
+        query: SELECT TD_TIME_STRING(time,'d!','${timezone}') AS date,* FROM ${td.tables.mta_conversion_journeys} ORDER BY cv_name, ${td.user_id}, cv_id, position LIMIT 1000
+        result_connection: ${gsheet.result_connection}
+        result_settings:
+            spreadsheet_folder: ${gsheet.sheet_folder}
+            spreadsheet_title: ${gsheet.spreadsheet_title}_${ps_id}
+            sheet_title: ${td.tables.mta_conversion_journeys}
+            mode: truncate
+            rows_threshold: 1000000
+            set_nil_for_double_nan: true
+            range: A1
+            value_input_option: USER_ENTERED
+
+    +export_daily_mta:
+        td>:
+        query: SELECT * FROM ${td.tables.daily_mta_conversion_journeys} ORDER BY cv_name, time DESC, activation_step_id
+        result_connection: ${gsheet.result_connection}
+        result_settings:
+            spreadsheet_folder: ${gsheet.sheet_folder}
+            spreadsheet_title: ${gsheet.spreadsheet_title}_${ps_id}
+            sheet_title: ${td.tables.daily_mta_conversion_journeys}
+            mode: truncate
+            rows_threshold: 1000000
+            set_nil_for_double_nan: true
+            range: A1
+            value_input_option: USER_ENTERED

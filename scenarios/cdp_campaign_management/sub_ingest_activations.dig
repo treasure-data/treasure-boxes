@@ -1,0 +1,36 @@
++create_query_store:
+    td>: queries/create_query_store.sql
+    dest_db: ${td.database}
+    dest_table: ${td.tables.query_store}
+
++ingest_activations_query:
+    py>: py_scripts.ingest_activations_queries.run
+    session_unixtime: ${session_unixtime}
+    time_from: ${time_from}
+    time_to: ${time_to}
+    user_id: ${td.user_id}
+    input_db: ${td.database}
+    input_table_master_activations: ${td.tables.master_activations}
+    input_table_daily_activations_info: ${td.tables.daily_activations_info}
+    cdp_audience_db: cdp_audience_${ps_id}
+    input_table_customers: customers
+    input_table_clicks: ${td.tables.clicks}
+    dest_db: ${td.database}
+    dest_table: ${td.tables.tmp_activations}
+    query_store_table: ${td.tables.query_store}
+    api_endpoint: ${td.api_endpoint}
+    docker:
+        image: "digdag/digdag-python:3.9"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}
+
++load_queries_and_run:
+    _parallel: ${parallel}
+    td_for_each>: queries/generate_queries.sql
+    input_db: ${td.database}
+    input_table: ${td.tables.query_store}
+    target_table: ${td.tables.tmp_activations}
+    _do:
+        td>:
+        query: ${td.each.query}
+        insert_into: ${td.each.db_name}.${td.each.table_name}

@@ -1,0 +1,70 @@
+timezone: JST
+td:
+    user_id: td_client_id # One of the user identifiers defined in the Parent Segment
+    ps:
+        - 507568
+    activations_tables:
+        507568:
+            scan_journey_tables: true
+    clicks_tables:
+        507568:
+            -
+                is_audience_table: false
+                db: treasurebikes
+                table: behv_website
+                url_col: td_url
+                time_col: time
+                filter: td_url IS NOT NULL
+                use_distinct: false
+            -
+                is_audience_table: true
+                # db:
+                table: behavior_behv_orders
+                url_col: td_url
+                # time_col: timestamp
+                # filter:
+                # use_distinct: false
+    conversions_tables:
+        507568:
+            -
+                is_audience_table: false
+                db: treasurebikes
+                table: behv_website
+                filter: td_subscription = 'true'
+                cv_name: SUBSCRIBE
+                time_col: time
+                val_col: 1
+                acquired_revenue_per_person: 20000
+                use_distinct: true
+            -
+                is_audience_table: true
+                table: behavior_behv_website
+                filter: td_app IN ('Android', 'iOS')
+                cv_name: DOWNLOAD
+                # time_col: timestamp
+                val_col: 1
+                acquired_revenue_per_person: 20000
+                use_distinct: false
+            -
+                is_audience_table: true
+                table: behavior_behv_orders
+                filter: checkout_event = 'true'
+                cv_name: PURCHASE
+                # time_col: timestamp
+                val_col: total_order
+                acquired_revenue_per_person: 1
+                # use_distinct: false
+
+    master_campaigns_tables:
+        # 507568:
+        #     -
+        #         db: taka
+        #         table: master_campaigns_507568
+
+    mta:
+        session_model:
+            allowable_time_to_cv: 24*10
+
+    utm_names:
+        utm_cv: utm_term
+

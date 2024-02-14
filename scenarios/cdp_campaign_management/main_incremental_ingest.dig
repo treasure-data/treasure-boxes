@@ -1,0 +1,33 @@
+timezone: Asia/Tokyo
+schedule:
+    daily>: 06:00:00
+
+_export:
+    !include : common/system_settings.yaml
+    !include : common/user_settings_sample.yaml
+    !include : common/gsheet_settings.yaml
+
+# +check_settings:
+#     call>: check_settings.dig
+
++repeat_each_ps:
+
+    for_each>:
+        ps_id: ${td.ps}
+    _do:
+        _export:
+            td:
+                database: ${td.base_db_name}_${ps_id}
+
+        +prepare_dbs:
+            td_ddl>:
+            create_databases:
+            - ${td.database}
+
+        +incremental_ingest:
+            call>: incremental_ingest.dig
+
+        +write_to_gsheet:
+            if>: ${typeof gsheet === 'undefined' || gsheet == null || typeof gsheet.result_connection === 'undefined'}
+            _else_do:
+                call>: write_to_gsheet.dig

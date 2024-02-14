@@ -1,0 +1,388 @@
+_export:
+    time_from: 0
+    time_to: ${session_unixtime}
+
++ingest_journeys:
+    +ingest:
+        td>: queries/ingest_journeys.sql
+        create_table: ${td.tables.tmp_journeys}
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_journeys}
+        create_table: ${td.database}.${td.tables.journeys}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.journeys}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_journeys.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.journeys}
+
+
++ingest_master_activations:
+    +ingest:
+        td>: queries/ingest_master_activations.sql
+        create_table: ${td.tables.tmp_master_activations}
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_master_activations}
+        create_table: ${td.database}.${td.tables.master_activations}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.master_activations}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_master_activations.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.master_activations}
+
++ingest_daily_activations_info:
+    +ingest_to_tmp_table:
+        td>: queries/ingest_daily_activations_info.sql
+        create_table: ${td.tables.tmp_daily_activations_info}
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_daily_activations_info}
+        create_table: ${td.database}.${td.tables.daily_activations_info}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.daily_activations_info}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_daily_activations_info.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.daily_activations_info}
+
++ingest_clicks:
+    +prepare_table:
+        td_ddl>:
+        drop_tables:
+        - ${td.tables.tmp_clicks}
+        create_tables:
+        - ${td.tables.tmp_clicks}
+
+    +prepare_master_campaings:
+        +ingest_master_campaigns:
+            if>: ${typeof td.master_campaigns_tables === 'undefined' || td.master_campaigns_tables == null}
+            _do:
+                +create_table:
+                    td>: queries/create_master_campaigns.sql
+                    dest_db: ${td.database}
+                    dest_table: ${td.tables.master_campaigns}
+            _else_do:
+                +create_table:
+                    td_ddl>:
+                    drop_tables:
+                    - ${td.tables.tmp_master_campaigns}
+                    create_tables:
+                    - ${td.tables.tmp_master_campaigns}
+                +ingest_to_tmp_table:
+                    _parallel: ${parallel}
+                    for_each>:
+                        tbl_info: ${td.master_campaigns_tables[ps_id]}
+                    _do:
+                        td>:
+                        query: SELECT * FROM ${tbl_info.db}.${tbl_info.table}
+                        insert_into: ${td.database}.${td.tables.tmp_master_campaigns}
+
+                +de_duplication:
+                    td>: queries/de_duplicate_master_campaings.sql
+                    create_table: ${td.database}.${td.tables.master_campaigns}
+
+
+    +ingest_to_tmp_table:
+        _parallel: ${parallel}
+        for_each>:
+            tbl_info: ${td.clicks_tables[ps_id]}
+        _do:
+            _export:
+                url_column: ${tbl_info.url_col}
+                input_table: ${tbl_info.table}
+                campaign_db: ${td.database}
+                filter: ${(typeof tbl_info.filter === 'undefined') || tbl_info.filter}
+                master_campaigns_table: ${td.tables.master_campaigns}
+
+                time_column: "${tbl_info.is_audience_table ? 'timestamp' : tbl_info.time_col}"
+                input_db: "${tbl_info.is_audience_table ? 'cdp_audience_' + ps_id : tbl_info.db}"
+                user_column: "${tbl_info.is_audience_table ? 't2.' + td.user_id : 't1.' + td.user_id}"
+                user_column_inner: "${tbl_info.is_audience_table ? 'cdp_customer_id' : td.user_id}"
+                join_part: "${tbl_info.is_audience_table ? 'JOIN cdp_audience_' + ps_id + '.customers t2 ON t1.cdp_customer_id = t2.cdp_customer_id' : ''}"
+                distinct: "${typeof tbl_info.use_distinct === 'undefined' || !tbl_info.use_distinct ? '' : 'DISTINCT'}"
+
+            td>: queries/ingest_clicks.sql
+            insert_into: ${td.database}.${td.tables.tmp_clicks}
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_clicks}
+        create_table: ${td.database}.${td.tables.clicks}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.clicks}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_clicks.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.clicks}
+
++ingest_daily_clicks:
+    +ingest_to_tmp_table:
+        td>: queries/ingest_daily_clicks.sql
+        create_table: ${td.database}.${td.tables.tmp_daily_clicks}
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_daily_clicks}
+        create_table: ${td.database}.${td.tables.daily_clicks}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.daily_clicks}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_daily_clicks.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.daily_clicks}
+
++ingest_activations:
+    +prepare_table:
+        td_ddl>:
+        drop_tables:
+        - ${td.tables.tmp_activations}
+        create_tables:
+        - ${td.tables.tmp_activations}
+
+    +ingest_to_tmp_table:
+        if>: ${typeof td.activations_tables === 'undefined' || td.activations_tables == null || td.activations_tables[ps_id] == null || !td.activations_tables[ps_id].scan_journey_tables}
+        _do:
+            _export:
+                cdp_audience_db: cdp_audience_${ps_id}
+
+            td>: queries/ingest_activations.sql
+            create_table: ${td.database}.${td.tables.tmp_activations}
+
+        _else_do:
+            call>: sub_ingest_activations.dig
+
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_activations}
+        create_table: ${td.database}.${td.tables.activations}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.activations}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_activations.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.activations}
+
++ingest_daily_activations:
+    +ingest_to_tmp_table:
+        td>: queries/ingest_daily_activations.sql
+        create_table: ${td.database}.${td.tables.tmp_daily_activations}
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_daily_activations}
+        create_table: ${td.database}.${td.tables.daily_activations}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.daily_activations}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_daily_activations.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.daily_activations}
+
+
++ingest_conversions:
+    +prepare_table:
+        td_ddl>:
+        drop_tables:
+        - ${td.tables.tmp_conversions}
+        create_tables:
+        - ${td.tables.tmp_conversions}
+
+    +ingest_to_tmp_table:
+        _parallel: ${parallel}
+        for_each>:
+            tbl_info: ${td.conversions_tables[ps_id]}
+        _do:
+            _export:
+                input_table: ${tbl_info.table}
+                filter: ${(typeof tbl_info.filter === 'undefined') || tbl_info.filter}
+                cv_name: ${tbl_info.cv_name}
+                val_col: ${tbl_info.val_col}
+                acquired_revenue_per_person: ${tbl_info.acquired_revenue_per_person}
+
+                time_column: "${tbl_info.is_audience_table ? 'timestamp' : tbl_info.time_col}"
+                user_column: "${tbl_info.is_audience_table ? 't2.' + td.user_id : 't1.' + td.user_id}"
+                inner_user_column: "${tbl_info.is_audience_table ? 'cdp_customer_id' : td.user_id}"
+                input_db: "${tbl_info.is_audience_table ? 'cdp_audience_' + ps_id : tbl_info.db}"
+                join_part: "${tbl_info.is_audience_table ? 'JOIN cdp_audience_' + ps_id + '.customers t2 ON t1.cdp_customer_id = t2.cdp_customer_id' : ''}"
+                distinct: "${typeof tbl_info.use_distinct === 'undefined' || !tbl_info.use_distinct ? '' : 'DISTINCT'}"
+
+            td>: queries/ingest_conversions.sql
+            insert_into: ${td.database}.${td.tables.tmp_conversions}
+
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_conversions}
+        create_table: ${td.database}.${td.tables.conversions}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.conversions}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_conversions.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.conversions}
+
++ingest_daily_conversions:
+    +ingest_to_tmp_table:
+        td>: queries/ingest_daily_conversions.sql
+        create_table: ${td.database}.${td.tables.tmp_daily_conversions}
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_daily_conversions}
+        create_table: ${td.database}.${td.tables.daily_conversions}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.daily_conversions}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_daily_conversions.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.daily_conversions}
+
++ingest_conversion_journeys:
+    +prepare_table:
+        td_ddl>:
+        drop_tables:
+        - ${td.tables.tmp_conversion_journeys}
+        create_tables:
+        - ${td.tables.tmp_conversion_journeys}
+
+    +ingest_to_tmp_table:
+        _parallel: ${parallel}
+        for_each>:
+            tbl_info: ${td.conversions_tables[ps_id]}
+        _do:
+            _export:
+                cv_name: ${tbl_info.cv_name}
+                user_id: ${td.user_id}
+                input_db: ${td.database}
+                input_table_activations: ${td.tables.activations}
+                input_table_clicks: ${td.tables.clicks}
+                input_table_conversions: ${td.tables.conversions}
+
+            td>: queries/ingest_conversion_journeys.sql
+            insert_into: ${td.database}.${td.tables.tmp_conversion_journeys}
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_conversion_journeys}
+        create_table: ${td.database}.${td.tables.conversion_journeys}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.conversion_journeys}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_conversion_journeys.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.conversion_journeys}
+
++ingest_mta_conversion_journeys:
+    +ingest_to_tmp_table:
+        td>: queries/ingest_mta_conversion_journeys.sql
+        create_table: ${td.tables.tmp_mta_conversion_journeys}
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_mta_conversion_journeys}
+        create_table: ${td.database}.${td.tables.mta_conversion_journeys}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.mta_conversion_journeys}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_mta_conversion_journeys.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.mta_conversion_journeys}
+
++ingest_daily_mta_conversion_journeys:
+    +ingest_to_tmp_table:
+        td>: queries/ingest_daily_mta_conversion_journeys.sql
+        create_table: ${td.tables.tmp_daily_mta_conversion_journeys}
+
+    +write_tmp_to_dest_table:
+        td>:
+        query: SELECT * FROM ${td.database}.${td.tables.tmp_daily_mta_conversion_journeys}
+        create_table: ${td.database}.${td.tables.daily_mta_conversion_journeys}
+
+    +check_record_num:
+        td>:
+        query: SELECT COUNT(*) AS cnt FROM ${td.database}.${td.tables.daily_mta_conversion_journeys}
+        store_last_results: true
+
+    +create_table_if_0_record:
+        if>: ${td.last_results.cnt == 0}
+        _do:
+            td>: queries/create_daily_mta_conversion_journeys.sql
+            dest_db: ${td.database}
+            dest_table: ${td.tables.daily_mta_conversion_journeys}
+
++ingest_existing_campaigns:
+    td>: queries/ingest_existing_campaigns.sql
+    create_table: ${td.tables.existing_campaigns}
