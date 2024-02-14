@@ -27,7 +27,12 @@ def run(
 
     client = pytd.Client(apikey=os.environ['TD_API_KEY'], endpoint='https://%s' % api_endpoint, database=dest_db)
 
-    tables_obj = client.list_tables(cdp_audience_db)
+    try:
+        tables_obj = client.list_tables(cdp_audience_db)
+    except Exception as e:
+        print(e)
+        return
+
     input_tables = []
     for tbl in tables_obj:
         input_tables.append(tbl.name)
