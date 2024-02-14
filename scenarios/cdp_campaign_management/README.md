@@ -253,11 +253,13 @@ td:
 #### timezone
 
 (optional)
+
 Specify a timezone here if you wish to base the timezone other than the one defined in the WF schedule. This timezone mainly affects the time range for the daily summary.
 
 #### user_id
 
 (required)
+
 This is a common user identifier for all activations, clicks, and conversions tables. Essentially, this is a user identifier that exists in the master table.
 
 If this user_id is an e-mail address, it may be a `NULL` value in some records. In that case, it will not be measured correctly, and the user_id should be specified for which all records have a value, such as member_id.
@@ -312,6 +314,8 @@ Specify the access log of the incoming site when the campaign link is clicked.
 Assuming that the utm parameter is set for the campaign link, each campaign link must be one-to-one with each activation of the journey.
 
 ##### is_audience_table
+
+(required)
 
 `is_audience_table` specifies whether the specified table is in the Parent Segment (i.e. in the `cdp_audience_${ps_id}` database).
 
@@ -377,6 +381,8 @@ Specify a conversion table in which actions that can be regarded as conversions,
 
 ##### is_audience_table
 
+(required)
+
 `is_audience_table` specifies whether the specified table is in the Parent Segment (i.e. in the `cdp_audience_${ps_id}` database).
 
 - If `true`, it must be a `behavior_*` table in `cdp_audience_${ps_id}`.
@@ -409,6 +415,7 @@ Required options depend on the value of `is_audience_table`.
 | use_distinct |  | false | If there are duplicates in a record, deduplication by DISTINCT can be performed, but is basically not specified because of heavy processing. |
 
 #### master_campaigns_tables
+
 (optional)
 
 ```yml
@@ -504,6 +511,7 @@ Specify N for "within N hours retroactively from the conversion." The unit is sp
 #### utm_names
 
 (optional)
+
 Specify the parameter names to be extracted from the url column of the clicks table. By default, the parameter is extracted with the same parameter name as the option name, as shown below.
 
 ```yml
@@ -528,12 +536,15 @@ On the other hand, if logging is done by a parameter name different from the opt
 #### api_endpoint
 
 (optional)
+
 If `scan_journey_tables: true` is specified, the tables are accessed through python. In this case, you need to specify the API endpoint. The default is `api.treasuredata.com`, so if you need to specify other endpoints, specify them here.
 
 - [Endpoint List](https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints) (Refer to the value of the "API" item)
 
 
 ### gsheet_settings.yaml
+
+(optional)
 
 ```yml
 gsheet:
