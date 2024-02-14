@@ -89,8 +89,7 @@ This table is the conversion history. This table is output in the process of eff
 
 ### conversion_journeys
 
-We can union activations and clicks and conversions to create a conversion journey.
-
+We can union `activations` and `clicks` and `conversions` to create a conversion journey.
 
 | table_name |  |  |  |  |  |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -98,8 +97,8 @@ We can union activations and clicks and conversions to create a conversion journ
 | clicks | time | user_id | cv_name | activation_step_id | utm_campaign | utm_medium | utm_source | utm_content | utm_connector | utm_term |
 | conversions | time | user_id | cv_name |  |  |  |  |  |  |  |
 
-- activations and clicks table are unioned by `user_id` and `activation_step_id`.
-- clicks and conversions table are unioned by `user_id` and `cv_name`.
+- `activations` and `clicks` table are unioned by `user_id` and `activation_step_id`.
+- `clicks` and `conversions` table are unioned by `user_id` and `cv_name`.
 
 Hence, we can create an `activation -> click -> conversion` journey for each user and each conversion.
 
@@ -121,6 +120,7 @@ Hence, we can create an `activation -> click -> conversion` journey for each use
 This table is the result of the calculation of acquired revenue per campaign by Multi Touch Attribution.
 
 #### table example
+
 | time | date | cv_time | *td_client_id | cv_id | position | time_hour_to_cv | time_hour_to_next | time_hour_from_activation | type | click_type | activation_step_id | utm_source | utm_medium | utm_campaign | utm_content | utm_connector | cv_name | size_journey | size_cv_session | size_middle_click | is_within_cv_session | revenue | acquired_person_last_click_model | acquired_revenue_last_click_model | acquired_person_first_click_model | acquired_revenue_first_click_model | acquired_person_session_model | acquired_revenue_session_model |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1700606147 | 2023-11-22 | 1702167880 | 007a5c3d-1355-4352-af1d-440f2d803f90 | 02a0ca2ff7412557b1a617d5855de2a1 | 1 | 433 | 337 |  | Click | First Click | 1928 | pushcode | push | td_14947 |  |  | DOWNLOAD | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 1 | 20000 | 0 | 0 |
@@ -143,15 +143,17 @@ This table is the result of the calculation of acquired revenue per campaign by 
 
 ### daily_mta_conversion_journeys
 
-This is the main output table on which the indicator calculation is based.
+> [!NOTE]
+> This is the main output table on which the indicator calculation is based.
 
 #### table example
+
 | time | date | activation_step_id | is_internal_campaign_click | type | utm_source | utm_medium | utm_campaign | utm_content | utm_connector | cv_name | cnt_activations | cnt_clicks | cnt_clicks_related_conversion | acquired_person_last_click_model | acquired_person_first_click_model | acquired_person_session_model | acquired_revenue_last_click_model | acquired_revenue_first_click_model | acquired_revenue_session_model | size_journey | cnt_cv_id |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1701788400 | 2023-12-06 | 51397 | internal | Click | treasuredatajp | email | td_newsletter20200327 |  |  | DOWNLOAD | 366 | 1636 | 740 | 289 | 199 | 345.1166667 | 5780000 | 3980000 | 6902333.333 | 2161 | 740 |
 | 1701788400 | 2023-12-06 | 51418 | internal | Click | diamondrm | email | td_plazma15 |  |  | DOWNLOAD | 0 | 1597 | 723 | 150 | 404 | 336.95 | 3000000 | 8080000 | 6739000 | 2076 | 723 |
 
-From the result, for example, if the Last Click Model is applied, the metrics for each campaign in a given time period can be easily calculated as follows.
+From the result, for example, if the "Last Click Model" is applied, the metrics for each campaign in a given time period can be easily calculated as follows.
 
 | No. | metrics | how to calculation | example value |
 | --- | --- |  --- | --- |
@@ -171,6 +173,30 @@ In addition, if costs per campaign are defined, ROI and other performance metric
 | (9) | return | (4) - (8) | ¥800,000 |
 | (10) | ROI | (9) / (8) | 4x |
 | (11) | Return on Campaign Spend | (4) / (8) | 5x |
+
+
+### existing_campaigns
+
+This table extracts all utm parameters present in the `clicks` table. It lists unique campaigns with the following 5 values, but since `cv_name`, `activation_step_id` often do not contain values, it is effectively a combination of 3.
+
+- utm_source
+- utm_medium
+- utm_campaign
+- cv_name
+- activation_step_id
+
+#### table example
+
+| time | exists_in_daily_activations | utm_source | utm_medium | utm_campaign | cv_name | activation_step_id | utm_content | utm_connector | utm_term | date_first_appeared | date_last_appeared | cnt |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1702771200 | 0 | treasuredatajp | email | td_dac-webinar-thx | COST_REDUCTION | 1926 |  |  | COST_REDUCTION | 2023-12-17 | 2023-12-17 | 1 |
+| 1703635200 | 1 | treasuredatajp | email | td_plazma2022summerinv_03 | SUBSCRIBE | 57189 |  |  | SUBSCRIBE | 2023-12-27 | 2023-12-27 | 1 |
+| 1589500800 | 0 | google | cpc | company_summer_sale_2019 |  |  |  |  |  | 2020-05-15 | 2020-05-15 | 1 |
+
+`exists_in_daily_activations` is 1 if the `activation_step_id` is from an activation within this parent segment, 0 otherwise or with no value, meaning it is an external campaign.
+
+By editing/adding and uploading the value of each utm parameter in this table, the retrofitted parameter values can be used when measuring effectiveness. Refer to [master_campaigns_tables](#master_campaigns_tables) for how to do this.
+
 
 ## Setup for Execution
 
@@ -247,7 +273,7 @@ td:
     utm_names:
         utm_id: activation_id
 
-    api_endpoint: api.treasuredata.com
+    api_endpoint: api.treasuredata.co.jp
 ```
 
 #### timezone
@@ -260,9 +286,9 @@ Specify a timezone here if you wish to base the timezone other than the one defi
 
 (required)
 
-This is a common user identifier for all activations, clicks, and conversions tables. Essentially, this is a user identifier that exists in the master table.
+This is a common user identifier for all `activations`, `clicks`, and `conversions` tables. Essentially, this is a user identifier that exists in the master table.
 
-If this user_id is an e-mail address, it may be a `NULL` value in some records. In that case, it will not be measured correctly, and the user_id should be specified for which all records have a value, such as member_id.
+If this user_id is an e-mail address, it may be a `NULL` value in some records. In that case, it will not be measured correctly, and the `user_id` should be specified for which all records have a value, such as member_id.
 
 #### ps
 
@@ -273,7 +299,7 @@ If this user_id is an e-mail address, it may be a `NULL` value in some records. 
         - 489726
 ```
 
-Specify the parent segment ID (ps_id). Multiple parent segments can be specified, so this is specified as an array. Effectiveness measurement is performed for each parent segment.
+Specify the Parent Segment ID (ps_id). Multiple parent segments can be specified, so this is specified as an array. Effectiveness measurement is performed for each parent segment.
 
 #### activations_tables
 
@@ -285,7 +311,7 @@ Specify the parent segment ID (ps_id). Multiple parent segments can be specified
             scan_journey_tables: true
 ```
 
-If activation_log feature is enabled, you do not need to set anything. If not, scan `journey_table` to get activation history of each profile. In that case, specify `scan_journey_tables: true` for each ps_id.
+If activation_log feature is enabled, you do not need to set anything. If not, scan `journey_table` to get activation history of each profile. In that case, specify `scan_journey_tables: true` for each `ps_id`.
 
 Since activations tables are derived almost automatically based on `ps_id`, there is no other setting item.
 
@@ -409,7 +435,7 @@ Required options depend on the value of `is_audience_table`.
 | table | Y |  | Specify the table name. |
 | cv_name | Y |  | Specify a conversion name. A conversion name should be the same as the value of `custom_event_type` defined [here](https://developers.facebook.com/docs/meta-pixel/reference/) for clarity . If you define a new one, specify it in the same format. |
 | val_col | Y |  | Specify the column containing the value obtained by the conversion. For conversions aimed at purchasing, the column should contain the amount of the purchase, and for conversions aimed at acquiring, the column should be set to `1`. |
-| acquired_revenue_per_person | Y |  | The acquired revenue per conversion is to be calculated as `val_col * acquired_revenue_per_person`. For conversions aiming at purchase, the acquired revenue is already in `val_col`, so `1` is used, and for conversions aiming at acquisition, this option specifies the value of "future revenue assumed from the acquisition of one person".|
+| acquired_revenue_per_person | Y |  | The acquired revenue per conversion is to be calculated as `val_col * acquired_revenue_per_person`. For conversions aiming at purchase, the acquired revenue is already in `val_col`, so `1` is used, and for conversions aiming at acquisition, this) option specifies the value of "future revenue assumed from the acquisition of one person".|
 | time_col | Y |  | Specify the time column in the table. (If it is a `time` column, which is often the case, specify it explicitly) |
 | filter |  | (no filter) | The WHERE clause can be used to narrow down the search. Fill in the conditions after WHERE. |
 | use_distinct |  | false | If there are duplicates in a record, deduplication by DISTINCT can be performed, but is basically not specified because of heavy processing. |
@@ -434,15 +460,15 @@ The motivation for setting up this table is when you want to retrofit the utm pa
 - Assign `cv_name` to campaigns outside of TD so that they can be measured for effectiveness as well
 - Organize utm parameters for past campaigns so that they can be measured for effectiveness
 
-The master_campaigns table will be based on the `existing_campaigns` output from this WF, with the utm parameter values of the campaigns you wish to edit or add edited.
+The master_campaigns table will be based on the [existing_campaigns](#existing_campaigns) output from this WF, with the utm parameter values of the campaigns you wish to edit or add edited.
 
-However, since the following 3 parameter values are used to match records in the original clicks table, it is not possible to link records in the original clicks table that do not have these 3 values set:
+However, since the following 3 parameter values are used to match records in the original `clicks` table, it is not possible to link records in the original `clicks` table that do not have these 3 values set:
 
 - utm_source
 - utm_medium
 - utm_campaign
 
-Basically, the aim of having master_campaign table can be considered to have utm parameters other than these 3 (cv_name, activation_step_id, etc...)  later. And the value of the utm parameter set here takes precedence over the value of the utm parameter in the original clicks table.
+Basically, the aim of having master_campaign table can be considered to have utm parameters other than these 3 (`cv_name`, `activation_step_id`, etc...)  later. And the value of the utm parameter set here takes precedence over the value of the utm parameter in the original `clicks` table.
 
 ##### Required columns for table
 
@@ -512,7 +538,7 @@ Specify N for "within N hours retroactively from the conversion." The unit is sp
 
 (optional)
 
-Specify the parameter names to be extracted from the url column of the clicks table. By default, the parameter is extracted with the same parameter name as the option name, as shown below.
+Specify the parameter names to be extracted from the url column of the `clicks` table. By default, the parameter is extracted with the same parameter name as the option name, as shown below.
 
 ```yml
     utm_names:
