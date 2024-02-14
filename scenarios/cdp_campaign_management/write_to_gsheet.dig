@@ -1,5 +1,4 @@
-+parallel:
-    _parallel: true
++initial:
     +export_journeys:
         td>:
         query: SELECT id,name,state,created_at,updated_at,launched_at,allow_reentry,paused,num_stages FROM ${td.tables.journeys} ORDER BY id
@@ -14,6 +13,8 @@
             range: A1
             value_input_option: USER_ENTERED
 
++parallel:
+    _parallel: true
     +export_master_activations:
         td>:
         query: SELECT * FROM ${td.tables.master_activations} ORDER BY journey_id,activation_step_id
