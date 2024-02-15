@@ -174,6 +174,11 @@ In addition, if costs per campaign are defined, ROI and other performance metric
 | (10) | ROI | (9) / (8) | 4x |
 | (11) | Return on Campaign Spend | (4) / (8) | 5x |
 
+#### Demo Dashboard
+
+![internal_campaign_dashboard](docs/images/internal_campaign_dashboard.png)
+
+It is effective to visualize the above indicators on a dashboard. The above dashboard was created with Google Looker Studio by reading data from GSheet.
 
 ### existing_campaigns
 
@@ -197,7 +202,6 @@ This table extracts all utm parameters present in the `clicks` table. It lists u
 
 By editing/adding and uploading the value of each utm parameter in this table, the retrofitted parameter values can be used when measuring effectiveness. Refer to [master_campaigns_tables](#master_campaigns_tables) for how to do this.
 
-
 ## Setup for Execution
 
 ### user_settings.yaml
@@ -207,10 +211,11 @@ This file must be edited for execution. The following sample is an example to il
 ```yaml
 timezone: JST
 td:
-    user_id: td_client_id
-
     ps:
         - 489726
+
+    user_id:
+        489726: td_client_id
 
     activations_tables:
         489726:
@@ -268,7 +273,7 @@ td:
 
     mta:
         session_model:
-            allowable_time_to_cv: 24*10
+            allowable_time_to_cv: 24*7
 
     utm_names:
         utm_id: activation_id
@@ -282,14 +287,6 @@ td:
 
 Specify a timezone here if you wish to base the timezone other than the one defined in the WF schedule. This timezone mainly affects the time range for the daily summary.
 
-#### user_id
-
-(required)
-
-This is a common user identifier for all `activations`, `clicks`, and `conversions` tables. Essentially, this is a user identifier that exists in the master table.
-
-If this user_id is an e-mail address, it may be a `NULL` value in some records. In that case, it will not be measured correctly, and the `user_id` should be specified for which all records have a value, such as member_id.
-
 #### ps
 
 (required)
@@ -300,6 +297,19 @@ If this user_id is an e-mail address, it may be a `NULL` value in some records. 
 ```
 
 Specify the Parent Segment ID (ps_id). Multiple parent segments can be specified, so this is specified as an array. Effectiveness measurement is performed for each parent segment.
+
+#### user_id
+
+(required)
+
+```yml
+    user_id:
+        489726: td_client_id
+```
+
+This is a common user identifier for all `activations`, `clicks`, and `conversions` tables. Essentially, this is a user identifier that exists in the master table.
+
+If this user_id is an e-mail address, it may be a `NULL` value in some records. In that case, it will not be measured correctly, and the `user_id` should be specified for which all records have a value, such as member_id.
 
 #### activations_tables
 
@@ -435,7 +445,7 @@ Required options depend on the value of `is_audience_table`.
 | table | Y |  | Specify the table name. |
 | cv_name | Y |  | Specify a conversion name. A conversion name should be the same as the value of `custom_event_type` defined [here](https://developers.facebook.com/docs/meta-pixel/reference/) for clarity . If you define a new one, specify it in the same format. |
 | val_col | Y |  | Specify the column containing the value obtained by the conversion. For conversions aimed at purchasing, the column should contain the amount of the purchase, and for conversions aimed at acquiring, the column should be set to `1`. |
-| acquired_revenue_per_person | Y |  | The acquired revenue per conversion is to be calculated as `val_col * acquired_revenue_per_person`. For conversions aiming at purchase, the acquired revenue is already in `val_col`, so `1` is used, and for conversions aiming at acquisition, this) option specifies the value of "future revenue assumed from the acquisition of one person".|
+| acquired_revenue_per_person | Y |  | The acquired revenue per conversion is to be calculated as `val_col * acquired_revenue_per_person`. For conversions aiming at purchase, the acquired revenue is already in `val_col`, so `1` is used, and for conversions aiming at acquisition, this option specifies the value of "future revenue assumed from the acquisition of one person".|
 | time_col | Y |  | Specify the time column in the table. (If it is a `time` column, which is often the case, specify it explicitly) |
 | filter |  | (no filter) | The WHERE clause can be used to narrow down the search. Fill in the conditions after WHERE. |
 | use_distinct |  | false | If there are duplicates in a record, deduplication by DISTINCT can be performed, but is basically not specified because of heavy processing. |
@@ -513,12 +523,13 @@ The required table columns for the master_campaigns table are as follows. It mus
 
 #### mta
 
-(required)
+(optional)
+- default: `allowable_time_to_cv: 24*10` (240hours, 10days)
 
 ```yml
     mta:
         session_model:
-            allowable_time_to_cv: 24*10
+            allowable_time_to_cv: 24*7
 ```
 
 Set parameters for each model in Multi Touch Attribution. Currently, the following models are available, and of which only `session_model` can be parameterized.
@@ -532,7 +543,7 @@ Set parameters for each model in Multi Touch Attribution. Currently, the followi
 
 ##### session_model: allowable_time_to_cv
 
-Specify N for "within N hours retroactively from the conversion." The unit is specified in hours. The above example specifies 240 hours (10 days).
+Specify N for "within N hours retroactively from the conversion." The unit is specified in hours. The above example specifies 24\*7 hours (7 days). The default is 24*10 hours (240 hours, 10days)
 
 #### utm_names
 
@@ -601,5 +612,174 @@ $td wf secrets --project basic_monitoring --set td.apikey=1234/abcdefg...
 
 ### Execute
 
-- Let's execute `main_initial_ingest.dig` for the first time. 
+- Let's execute `main_initial_ingest.dig` for the first time.
 - After that, set up a schedule for `main_incremental_ingest.dig` and execute this one on a daily schedule.
+
+## Easy Start
+
+- If activation from Journey Orchestration has not been done,
+- But there are already many past utm parameters and they can be retrieved in the `clicks` table,
+
+it is possible to find the ROI and other indicators. Here we explain how to do this.
+
+### Step1. Let's create a configuration file
+
+Even if a non-existent Parent Segment ID (e.g., `0`) is specified, the process can proceed even if journeys and activation-related table records are all 0.
+
+```yml
+timezone: JST
+td:
+    ps:
+        - 0
+
+    user_id:
+        0: td_client_id
+
+    activations_tables:
+        0:
+            scan_journey_tables: true
+
+    clicks_tables:
+        0:
+            -
+                is_audience_table: false
+                db: td_abm_l2_datamart
+                table: trs_contents_brightcove
+                url_col: td_url
+                time_col: time
+                use_distinct: false
+            -
+                is_audience_table: false
+                db: td_abm_l2_datamart
+                table: trs_web_plazmared
+                url_col: td_url
+                time_col: time
+                use_distinct: false
+
+    conversions_tables:
+        0:
+            -
+                is_audience_table: false
+                db: td_abm_l2_datamart
+                table: trs_web_plazmared
+                filter: td_path = '/thank-you-applying-seminar/'
+                cv_name: SUBSCRIBE
+                time_col: time
+                val_col: 1
+                acquired_revenue_per_person: 100000
+                use_distinct: false
+
+
+    # master_campaigns_tables:
+    #     0:
+    #         -
+    #             db: taka
+    #             table: master_campaigns_0
+```
+
+#### user_id
+
+Specify a `user_id` that commonly exists in the `clicks` and `conversions` tables.
+
+#### activations_tables
+
+```yml
+    activations_tables:
+        0:
+            scan_journey_tables: true
+```
+
+Be sure to specify `scan_journey_tables: true`. Otherwise, an error will occur when trying to access an `activation_log` that does not exist. In this case, zero records are returned even if the journey_table does not exist.
+
+### clicks_tables
+
+```yml
+    clicks_tables:
+        0:
+            -
+                is_audience_table: false
+                db: td_abm_l2_datamart
+                table: trs_contents_brightcove
+                url_col: td_url
+                time_col: time
+                use_distinct: false
+```
+
+Set `is_audience_table: false` and describe the source table information. Check to see if the table contains the `user_id` identifier.
+
+### conversions_tables
+
+```yml
+    conversions_tables:
+        0:
+            -
+                is_audience_table: false
+                db: td_abm_l2_datamart
+                table: trs_web_plazmared
+                filter: td_path = '/thank-you-applying-seminar/'
+                cv_name: SUBSCRIBE
+                time_col: time
+                val_col: 1
+                acquired_revenue_per_person: 100000
+                use_distinct: false
+```
+
+Set `is_audience_table: false` and describe the source table information. Check to see if the table contains the `user_id` identifier.
+
+### gsheet_settings.yaml
+
+Let's not forget the settings for exporting to GoogleSheet.
+
+```yml
+gsheet:
+    result_connection: ******
+    sheet_folder: ******
+    spreadsheet_title: cdp_campaign_management
+```
+
+### Step2. 1st execution
+
+Let's execute `main_initial_ingest.dig`.
+
+### Step3. Check existing_campaigns table
+
+After the execution is completed, check the `existing_campaigns` table written out to GSheet.
+
+You can reflect the value of `cv_name` in the utm_parameter by filling in the `cv_name` of each campaign record that is currently null and uploading it as the `master_campaigns_0` table and re-running the WF.
+
+This will create a `clicks -> conversions` journey. This allows us to calculate the acquired revenue for each campaign.
+
+#### example of existing_campaigns table
+
+ | utm_source | utm_medium | utm_campaign | cv_name | activation_step_id | utm_content | utm_connector | utm_term | date_first_appeared | date_last_appeared | cnt | time |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| treasuredatajp | email | newsletter20220112 |  |  | plazmaarticle | marketo |  | 2022-01-11 | 2023-04-27 | 118 | 1641859200 |
+| treasuredatajp | email | nurture_general |  |  | awareness_em4 | marketo |  | 2022-01-11 | 2023-12-05 | 85 | 1641859200 |
+| google | search-paid | download |  |  | sitelink | marketo |  | 2022-01-11 | 2024-01-09 | 263 | 1641859200 |
+| treasuredatajp | email | newsletter20211119 |  |  | plazmaarticle | marketo |  | 2022-01-11 | 2022-06-26 | 82 | 1641859200 |
+
+#### example of master_campaigns_0 table
+
+ | utm_source | utm_medium | utm_campaign | cv_name | activation_step_id | utm_content | utm_connector | utm_term |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| treasuredatajp | email | newsletter20220112 | SUBSCRIBE |  | plazmaarticle | marketo |  |
+| treasuredatajp | email | nurture_general | SUBSCRIBE |  | awareness_em4 | marketo |  |2024-01-09 | 263 | 1641859200 |
+| treasuredatajp | email | newsletter20211119 | SUBSCRIBE |  | plazmaarticle | marketo |  |
+
+### Step4. 2nd execution
+
+```yml
+    master_campaigns_tables:
+        0:
+            -
+                db: taka
+                table: master_campaigns_0
+```
+
+Add the `master_campaign_tables` option to reflect the utm parameter of the master_campaign table we just created. This will run the effectiveness measurement (using `clicks` and `conversions`) of the campaign for each `cv_name`.
+
+### Demo Dashboard
+
+![ixternal_campaign_dashboard](docs/images/external_campaign_dashboard.png)
+
+This is an example of a dashboard visualization. You cannot see the red boxed area (activations-related indicators), but you can see indicators such as Acquired Revenue and ROI.

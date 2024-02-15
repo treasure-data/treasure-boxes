@@ -9,6 +9,7 @@ td:
     activations_tables:
         507568:
             scan_journey_tables: true
+
     clicks_tables:
         507568:
             -
@@ -27,6 +28,7 @@ td:
                 # time_col: timestamp
                 # filter:
                 # use_distinct: false
+
     conversions_tables:
         507568:
             -
@@ -63,10 +65,6 @@ td:
         #     -
         #         db: taka
         #         table: master_campaigns_507568
-
-    mta:
-        session_model:
-            allowable_time_to_cv: 24*10
 
     utm_names:
         utm_cv: utm_term

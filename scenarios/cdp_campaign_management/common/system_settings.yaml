@@ -1,5 +1,9 @@
 parallel: true
 td:
+    mta:
+        session_model:
+            allowable_time_to_cv: 24*10
+
     base_db_name: cdp_campaigns
     tables:
         activation_log: activation_log
