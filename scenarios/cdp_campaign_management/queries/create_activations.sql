@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS ${dest_db}.${dest_table};
 CREATE TABLE IF NOT EXISTS ${dest_db}.${dest_table} (
     time bigint
-    ,${td.user_id} varchar
+    ,${user_id} varchar
     ,activation_step_id varchar
     ,syndication_id varchar
     ,activation_type varchar

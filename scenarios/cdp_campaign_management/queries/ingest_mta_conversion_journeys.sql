@@ -1,6 +1,6 @@
 WITH tbl_cv_history AS
 (
-    SELECT time, cv_name, ${td.user_id}, ROW_NUMBER()OVER(ORDER BY time) AS cv_id
+    SELECT time, cv_name, ${user_id}, ROW_NUMBER()OVER(ORDER BY time) AS cv_id
     FROM ${td.tables.conversion_journeys}
     WHERE cv_flg = 1
     AND TD_TIME_RANGE(time, ${time_from}, ${time_to})
@@ -11,16 +11,16 @@ WITH tbl_cv_history AS
     (
         SELECT
             cv_id
-            ,ROW_NUMBER()OVER(PARTITION BY raw_data.cv_name, raw_data.${td.user_id}, raw_data.time, activation_step_id, type ORDER BY cv_id) AS cv_order
+            ,ROW_NUMBER()OVER(PARTITION BY raw_data.cv_name, raw_data.${user_id}, raw_data.time, activation_step_id, type ORDER BY cv_id) AS cv_order
             ,cv_history.time AS cv_time
             ,(cv_history.time - raw_data.time)/3600 AS time_hour_to_cv
             , raw_data.*
         FROM ${td.tables.conversion_journeys} raw_data
         JOIN tbl_cv_history cv_history
-        ON raw_data.${td.user_id} = cv_history.${td.user_id}
+        ON raw_data.${user_id} = cv_history.${user_id}
         AND raw_data.cv_name = cv_history.cv_name
         WHERE raw_data.time <= cv_history.time
-        AND raw_data.${td.user_id} <= cv_history.${td.user_id}
+        AND raw_data.${user_id} <= cv_history.${user_id}
         AND type <> 'Activation'
     )
     WHERE cv_order = 1
@@ -54,7 +54,7 @@ WITH tbl_cv_history AS
             ELSE 'Middle Click'
         END AS click_type
         ,type
-        ,${td.user_id}
+        ,${user_id}
         ,activation_step_id
         ,utm_source
         ,utm_medium
@@ -72,8 +72,8 @@ WITH tbl_cv_history AS
 SELECT
     time
     ,cv_time
-    ,${td.user_id}
-    ,TD_MD5( CONCAT(cv_name, CAST(cv_id AS VARCHAR),CAST(cv_time AS VARCHAR),${td.user_id}) ) AS cv_id
+    ,${user_id}
+    ,TD_MD5( CONCAT(cv_name, CAST(cv_id AS VARCHAR),CAST(cv_time AS VARCHAR),${user_id}) ) AS cv_id
     ,position
     ,time_hour_to_cv
     ,time_hour_to_next
@@ -120,4 +120,4 @@ SELECT
 
 FROM tbl_mta_base
 WHERE size_journey > 0
--- ORDER BY ${td.user_id}, cv_id, position
+-- ORDER BY ${user_id}, cv_id, position

@@ -9,16 +9,20 @@ def run(
         mta_settings):
 
     error_counter = 0
-    if user_id == "" or user_id == None:
-        print("user_id is not set.")
+
+    user_ids = json.loads(user_id)
+    print(user_ids)
+    if len(user_ids) == 0:
+        print("⚠ error: `user_id` is not set.")
         error_counter += 1
-    else:
-        print(f"ⓘ {user_id} is used as the conversion journey identifier.")
+    for ps_id in user_ids:
+        print(f"ⓘ {user_ids[ps_id]} is used in {ps_id} as the conversion journey identifier.")
 
 
     click_tables = json.loads(clicks_tables)
     for ps_id in click_tables:
         idx = 0
+
         for table_setting in click_tables[ps_id]:
             idx += 1
             for key in ('table','url_col','is_audience_table'):

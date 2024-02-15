@@ -1,6 +1,6 @@
 +check_settings:
     py>: py_scripts.check_settings.run
-    user_id: ${td.user_id}
+    user_id: ${user_id}
     clicks_tables: ${td.clicks_tables}
     conversions_tables: ${td.conversions_tables}
     mta_settings: ${td.mta}

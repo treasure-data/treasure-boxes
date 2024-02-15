@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS ${dest_db}.${dest_table} (
     ,time_s varchar
     ,db_name varchar
     ,table_name varchar
-    ,${td.user_id} varchar
+    ,${user_id} varchar
     ,activation_step_id varchar
     ,cv_name varchar
     ,utm_campaign varchar

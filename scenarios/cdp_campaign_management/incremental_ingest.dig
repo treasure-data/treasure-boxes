@@ -85,8 +85,8 @@ _export:
 
                 time_column: "${tbl_info.is_audience_table ? 'timestamp' : tbl_info.time_col}"
                 input_db: "${tbl_info.is_audience_table ? 'cdp_audience_' + ps_id : tbl_info.db}"
-                user_column: "${tbl_info.is_audience_table ? 't2.' + td.user_id : 't1.' + td.user_id}"
-                user_column_inner: "${tbl_info.is_audience_table ? 'cdp_customer_id' : td.user_id}"
+                user_column: "${tbl_info.is_audience_table ? 't2.' + user_id : 't1.' + user_id}"
+                user_column_inner: "${tbl_info.is_audience_table ? 'cdp_customer_id' : user_id}"
                 join_part: "${tbl_info.is_audience_table ? 'JOIN cdp_audience_' + ps_id + '.customers t2 ON t1.cdp_customer_id = t2.cdp_customer_id' : ''}"
                 distinct: "${typeof tbl_info.use_distinct === 'undefined' || !tbl_info.use_distinct ? '' : 'DISTINCT'}"
 
@@ -167,8 +167,8 @@ _export:
                 acquired_revenue_per_person: ${tbl_info.acquired_revenue_per_person}
 
                 time_column: "${tbl_info.is_audience_table ? 'timestamp' : tbl_info.time_col}"
-                user_column: "${tbl_info.is_audience_table ? 't2.' + td.user_id : 't1.' + td.user_id}"
-                inner_user_column: "${tbl_info.is_audience_table ? 'cdp_customer_id' : td.user_id}"
+                user_column: "${tbl_info.is_audience_table ? 't2.' + user_id : 't1.' + user_id}"
+                inner_user_column: "${tbl_info.is_audience_table ? 'cdp_customer_id' : user_id}"
                 input_db: "${tbl_info.is_audience_table ? 'cdp_audience_' + ps_id : tbl_info.db}"
                 join_part: "${tbl_info.is_audience_table ? 'JOIN cdp_audience_' + ps_id + '.customers t2 ON t1.cdp_customer_id = t2.cdp_customer_id' : ''}"
                 distinct: "${typeof tbl_info.use_distinct === 'undefined' || !tbl_info.use_distinct ? '' : 'DISTINCT'}"
@@ -209,7 +209,6 @@ _export:
         _do:
             _export:
                 cv_name: ${tbl_info.cv_name}
-                user_id: ${td.user_id}
                 input_db: ${td.database}
                 input_table_activations: ${td.tables.activations}
                 input_table_clicks: ${td.tables.clicks}

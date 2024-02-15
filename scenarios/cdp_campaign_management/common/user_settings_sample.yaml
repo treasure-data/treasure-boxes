@@ -1,8 +1,11 @@
 timezone: JST
 td:
-    user_id: td_client_id # One of the user identifiers defined in the Parent Segment
     ps:
         - 507568
+
+    user_id:
+        507568: td_client_id
+
     activations_tables:
         507568:
             scan_journey_tables: true
@@ -15,7 +18,7 @@ td:
                 url_col: td_url
                 time_col: time
                 filter: td_url IS NOT NULL
-                use_distinct: false
+                # use_distinct: false
             -
                 is_audience_table: true
                 # db:
@@ -35,7 +38,7 @@ td:
                 time_col: time
                 val_col: 1
                 acquired_revenue_per_person: 20000
-                use_distinct: true
+                # use_distinct: false
             -
                 is_audience_table: true
                 table: behavior_behv_website
@@ -44,7 +47,7 @@ td:
                 # time_col: timestamp
                 val_col: 1
                 acquired_revenue_per_person: 20000
-                use_distinct: false
+                # use_distinct: false
             -
                 is_audience_table: true
                 table: behavior_behv_orders
@@ -65,6 +68,6 @@ td:
         session_model:
             allowable_time_to_cv: 24*10
 
-    # utm_names:
-    #     utm_cv: utm_term
+    utm_names:
+        utm_cv: utm_term
 

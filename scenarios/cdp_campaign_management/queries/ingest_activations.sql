@@ -2,7 +2,7 @@ WITH tbl_base_activations AS
 (
     SELECT
         t1.time
-        ,${td.user_id}
+        ,${user_id}
         ,cdp_customer_id
         ,t1.syndication_id
         ,COALESCE(type,'segment') AS activation_type
@@ -16,7 +16,7 @@ WITH tbl_base_activations AS
     (
         SELECT
             time
-            ,identifier AS ${td.user_id}
+            ,identifier AS ${user_id}
             ,audience_id
             ,NULL AS cdp_customer_id
             ,CAST(activation_id AS VARCHAR) AS syndication_id
@@ -25,7 +25,7 @@ WITH tbl_base_activations AS
             ,activation_name
             ,integration_type AS connector_type
         FROM ${cdp_audience_db}.${td.tables.activation_log}
-        WHERE identifier_type = '${td.user_id}'
+        WHERE identifier_type = '${user_id}'
         AND CAST(audience_id AS VARCHAR) = '${ps_id}'
         AND TD_TIME_RANGE(time,${time_from},${time_to})
     ) t1
@@ -43,7 +43,7 @@ WITH tbl_base_activations AS
 
 SELECT
     time
-    ,${td.user_id}
+    ,${user_id}
     ,s1.activation_step_id
     ,syndication_id
     ,activation_type

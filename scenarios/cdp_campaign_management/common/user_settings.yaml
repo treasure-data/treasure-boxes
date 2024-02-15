@@ -1,8 +1,8 @@
 # timezone:
 td:
-    user_id: #required
-
     ps: #required
+
+    user_id: #required
 
     activations_tables: #required
 

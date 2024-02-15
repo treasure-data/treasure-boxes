@@ -8,7 +8,7 @@
     session_unixtime: ${session_unixtime}
     time_from: ${time_from}
     time_to: ${time_to}
-    user_id: ${td.user_id}
+    user_id: ${td.user_id[ps_id]}
     input_db: ${td.database}
     input_table_master_activations: ${td.tables.master_activations}
     input_table_daily_activations_info: ${td.tables.daily_activations_info}
