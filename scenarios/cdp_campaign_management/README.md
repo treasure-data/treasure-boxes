@@ -691,7 +691,7 @@ Specify a `user_id` that commonly exists in the `clicks` and `conversions` table
 
 Be sure to specify `scan_journey_tables: true`. Otherwise, an error will occur when trying to access an `activation_log` that does not exist. In this case, zero records are returned even if the journey_table does not exist.
 
-### clicks_tables
+#### clicks_tables
 
 ```yml
     clicks_tables:
@@ -707,7 +707,7 @@ Be sure to specify `scan_journey_tables: true`. Otherwise, an error will occur w
 
 Set `is_audience_table: false` and describe the source table information. Check to see if the table contains the `user_id` identifier.
 
-### conversions_tables
+#### conversions_tables
 
 ```yml
     conversions_tables:
@@ -726,7 +726,7 @@ Set `is_audience_table: false` and describe the source table information. Check 
 
 Set `is_audience_table: false` and describe the source table information. Check to see if the table contains the `user_id` identifier.
 
-### gsheet_settings.yaml
+#### gsheet_settings.yaml
 
 Let's not forget the settings for exporting to GoogleSheet.
 
