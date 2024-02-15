@@ -13,6 +13,7 @@ FROM (
         ,utm_source
         ,utm_content
         ,utm_connector
+        ,utm_term
         ,0 AS cv_flg
         ,0 AS val
         ,0 AS revenue
@@ -32,6 +33,7 @@ FROM (
         ,utm_source
         ,utm_content
         ,utm_connector
+        ,utm_term
         ,0 AS cv_flg
         ,0 AS val
         ,0 AS revenue
@@ -51,6 +53,7 @@ FROM (
         ,NULL AS utm_source
         ,NULL AS utm_content
         ,NULL AS utm_connector
+        ,NULL AS utm_term
         ,1 AS cv_flg
         ,val
         ,revenue

@@ -10,4 +10,10 @@ CREATE TABLE IF NOT EXISTS ${dest_db}.${dest_table} (
     ,val double
     ,revenue double
     ,time_hour_from_activation double
+    ,utm_campaign varchar
+    ,utm_medium varchar
+    ,utm_source varchar
+    ,utm_content varchar
+    ,utm_connector varchar
+    ,utm_term varchar
 )

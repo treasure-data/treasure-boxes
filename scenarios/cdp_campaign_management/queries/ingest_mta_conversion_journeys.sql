@@ -33,39 +33,39 @@ WITH tbl_cv_history AS
         ,GREATEST(MAX(position)OVER(PARTITION BY cv_id)-3,0) AS size_middle_click
     FROM
     (
-    SELECT
-        time
-        ,cv_time
-        ,cv_name
-        ,cv_id
-        ,ROW_NUMBER()OVER(PARTITION BY cv_id ORDER BY time, type) AS position --Ensure that 'Conversion' comes after 'Click' when time is the same.
-        ,time_hour_to_cv
-        ,CASE
-            WHEN type = 'Conversion' THEN 0
-            WHEN time_hour_to_cv <= ${td.mta.session_model.allowable_time_to_cv} THEN 1
-            ELSE 0
-        END AS is_within_cv_session
-        ,(LEAD(time)OVER(PARTITION BY cv_id ORDER BY time) - time)/3600 AS time_hour_to_next
-        ,time_hour_from_activation
-        ,CASE
-            WHEN type = 'Conversion' THEN type
-            WHEN LEAD(type)OVER(PARTITION BY cv_id ORDER BY time, type) = 'Conversion' THEN 'Last Click' --Ensure that 'Conversion' comes after 'Click' when time is the same.
-            WHEN LAG(type)OVER(PARTITION BY cv_id ORDER BY time, type) IS NULL THEN 'First Click' --Ensure that 'Conversion' comes after 'Click' when time is the same.
-            ELSE 'Middle Click'
-        END AS click_type
-        ,type
-        ,${user_id}
-        ,activation_step_id
-        ,utm_source
-        ,utm_medium
-        ,utm_campaign
-        ,utm_content
-        ,utm_connector
-        ,cv_flg
-        ,val
-        ,revenue
-        ,FIRST_VALUE(revenue)OVER(PARTITION BY cv_id ORDER BY time DESC, type DESC) AS base_revenue --Ensure that 'Conversion' comes before 'Click' when time is the same.
-    FROM tbl_join_with_cv_history
+        SELECT
+            time
+            ,cv_time
+            ,cv_name
+            ,cv_id
+            ,ROW_NUMBER()OVER(PARTITION BY cv_id ORDER BY time, type) AS position --Ensure that 'Conversion' comes after 'Click' when time is the same.
+            ,time_hour_to_cv
+            ,CASE
+                WHEN type = 'Conversion' THEN 0
+                WHEN time_hour_to_cv <= ${td.mta.session_model.allowable_time_to_cv} THEN 1
+                ELSE 0
+            END AS is_within_cv_session
+            ,(LEAD(time)OVER(PARTITION BY cv_id ORDER BY time) - time)/3600 AS time_hour_to_next
+            ,time_hour_from_activation
+            ,CASE
+                WHEN type = 'Conversion' THEN type
+                WHEN LEAD(type)OVER(PARTITION BY cv_id ORDER BY time, type) = 'Conversion' THEN 'Last Click' --Ensure that 'Conversion' comes after 'Click' when time is the same.
+                WHEN LAG(type)OVER(PARTITION BY cv_id ORDER BY time, type) IS NULL THEN 'First Click' --Ensure that 'Conversion' comes after 'Click' when time is the same.
+                ELSE 'Middle Click'
+            END AS click_type
+            ,type
+            ,${user_id}
+            ,activation_step_id
+            ,utm_source
+            ,utm_medium
+            ,utm_campaign
+            ,utm_content
+            ,utm_connector
+            ,cv_flg
+            ,val
+            ,revenue
+            ,FIRST_VALUE(revenue)OVER(PARTITION BY cv_id ORDER BY time DESC, type DESC) AS base_revenue --Ensure that 'Conversion' comes before 'Click' when time is the same.
+        FROM tbl_join_with_cv_history
     )
 )
 

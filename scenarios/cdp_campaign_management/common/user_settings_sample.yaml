@@ -61,11 +61,7 @@ td:
                 # use_distinct: false
 
     master_campaigns_tables:
-        # 507568:
-        #     -
-        #         db: taka
-        #         table: master_campaigns_507568
-
-    utm_names:
-        utm_cv: utm_term
-
+        507568:
+            -
+                db: cdp_audience_507568
+                table: master_campaigns

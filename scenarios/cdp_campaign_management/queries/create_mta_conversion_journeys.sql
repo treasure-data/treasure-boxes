@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS ${dest_db}.${dest_table};
 CREATE TABLE IF NOT EXISTS ${dest_db}.${dest_table} (
     time bigint
     ,cv_time bigint
+    ,${user_id} varchar
     ,cv_id varchar
     ,position bigint
     ,time_hour_to_cv double
