@@ -327,7 +327,7 @@ Since activations tables are derived almost automatically based on `ps_id`, ther
 
 #### clicks_tables
 
-(required)
+(optional)
 
 ```yml
     clicks_tables:
@@ -381,6 +381,8 @@ Required options depend on the value of `is_audience_table`.
 | use_distinct |  | FALSE | If there are duplicates in a record, deduplication by DISTINCT can be performed, but is basically not specified because of heavy processing. |
 
 #### conversions_tables
+
+(optional)
 
 ```yml
     conversions_tables:
