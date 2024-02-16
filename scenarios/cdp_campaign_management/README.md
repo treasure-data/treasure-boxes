@@ -31,25 +31,108 @@ activation_log is an option to record in the TD a history of who, when, and wher
 
 If this table is not available, you can still scan the journey table to create an activation history, but you will need Custom Scripts.
 
+## Easy Start (Retrieving activation info)
+
+- If you are already running activation from Journey Orchestration,
+
+you can try running this WF for the purpose of retrieving activation information from Journey.
+
+The only information required for this is the ID of the Parent Segment on which Journey Orchestration is running and `user_id`.
+
+### Case1. If you have `activation_log` feature
+
+```yaml
+td:
+    ps:
+        - 507568
+
+    user_id:
+        507568: member_id
+```
+
+For `user_id`, select a user identifier contained in the Master Table of the Parent Segment (it should not `NULL` for all profiles).
+
+### Case2. If you don't have `activation_log` feature
+
+```yaml
+td:
+    ps:
+        - 507568
+
+    user_id:
+        507568: member_id
+
+    activations_tables:
+        507568:
+            scan_journey_tables: true
+```
+
+If `activation_log` is not enabled, you will have to scan the journey_table to get the activation history. Add the following statement.
+
+```yml
+    activations_tables:
+        507568:
+            scan_journey_tables: true
+```
+
+### Run main_initial_ingest.dig
+
+After the run is complete, many tables other than those related to activation have 0 entries, but the following tables contain useful information.
+
+- journeys
+- master_activations
+- activations
+- daily_activations
+- daily_activations_info
+
+See the next chapter for details on each table.
+
 ## Main Output Tables
 
 The `cdp_campaigns_${ps_id}` is automatically created and the following tables are output.
 
 | Table | Utilized in AS? | Description |
 | --- | --- | --- |
-| activations | Y | Activation History |
-| clicks | Y | Click History |
-| conversions | Y | Conversion History |
-| conversion_journeys |  | activations+clicks+conversions |
-| mta_conversion_journeys |  | Acquired revenue calculation results per campaign by Multi Touch Attribution |
-| daily_activations |  |  |
-| daily_activations_info |  | Execution history information of activations in the Journey |
-| daily_clicks |  |  |
-| daily_conversions |  |  |
-| daily_mta_conversion_journeys |  |  |
-| existing_campaigns |  | All utm parameters present in the Click table |
-| journeys |  | Journey listings within parent segment |
-| master_activations |  | List of activations within a journey |
+| [activations](#activations) | Y | Activation History |
+| [clicks](#clicks) | Y | Click History |
+| [conversions](#conversions) | Y | Conversion History |
+| [conversion_journeys](#conversion_journeys) |  | `activations+clicks+conversions` |
+| [mta_conversion_journeys](#mta_conversion_journeys) |  | Acquired revenue calculation results per campaign by Multi Touch Attribution |
+| daily_activations |  | Table aggregated on a daily basis from the `activations` table |
+| [daily_activations_info](#daily_activations_info) |  | Execution history information of activations in the Journey |
+| daily_clicks |  | Table aggregated on a daily basis from the `clicks` table |
+| daily_conversions |  | Table aggregated on a daily basis from the `conversions` table |
+| [daily_mta_conversion_journeys](#daily_mta_conversion_journeys) |  | Table aggregated on a daily basis from the `mta_conversion_journeys` table |
+| [existing_campaigns](#existing_campaigns) |  | All utm parameters present in the `clicks` table |
+| [journeys](#journeys) |  | Journey listings within parent segment |
+| [master_activations](#master_activations) |  | List of activations within a journey |
+
+### journeys
+
+| time | audience_id | id | name | state | created_at | updated_at | launched_at | allow_reentry | paused | num_stages |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1701927703 | 507568 | 32805 | New Acquisition Journey | launched | 2023-12-07T05:41:43.283Z | 2023-12-07T15:18:23.687Z | 2023-12-07T06:41:24.215Z | FALSE | FALSE | 1 |
+| 1702364582 | 507568 | 33602 | TEST_202312 | draft | 2023-12-12T07:03:02.834Z | 2023-12-12T07:03:02.834Z |  | FALSE | FALSE | 1 |
+| 1702359822 | 507568 | 33589 | Purchase Journey | launched | 2023-12-12T05:43:42.225Z | 2023-12-12T15:18:55.322Z | 2023-12-12T05:48:57.281Z | FALSE | FALSE | 2 |
+
+### master_activations
+
+| time | journey_id | activation_step_id | syndication_id | activation_name | schedule_type | schedule_option | timezone | connection_id | all_columns | step_id | stage_name | stage_no | state | created_at | updated_at | journey_name | connector_type |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1701927703 | 32805 | 51925 | 240504 | Welcome Mail | daily | 1:00:00 | Asia/Tokyo | 301955 | FALSE | eaae03ce_fc23_4945_aa7a_4717c25ea9b4 | 1 | 0 | launched | 2023-12-07T05:41:43.283Z | 2023-12-07T15:18:23.687Z | Purchase Journey | Marketo |
+| 1701927703 | 32805 | 51926 | 240505 | Next Step Mail | daily | 1:00:00 | Asia/Tokyo | 301955 | FALSE | 2a83381f_f044_4da8_b65b_d87bd1c493c5 | 1 | 0 | launched | 2023-12-07T05:41:43.283Z | 2023-12-07T15:18:23.687Z | Purchase Journey | Marketo |
+
+### daily_activations_info
+
+This table contains information on the activation of journeys that are scheduled to be executed daily, when they were executed, and how many records (profiles) were activated.
+
+| time | time_finished | syndication_id | activation_name | workflow_id | workflow_session_id | workflow_attempt_id | created_at | finished_at | status | journey_id | num_records | connector_type |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1707926400 | 1707926792 | 240125 | S3_LINE_Message | 27390645 | 210216708 | 1082351997 | 2024-02-14T16:00:00Z | 2024-02-14T16:06:32Z | success | 32642 | 12 | Marketo |
+| 1707840000 | 1707840455 | 240125 | S3_LINE_Message | 27390645 | 210041715 | 1081652266 | 2024-02-13T16:00:00Z | 2024-02-13T16:07:35Z | success | 32642 | 8 | Marketo |
+| 1707753600 | 1707753971 | 240125 | S3_LINE_Message | 27390645 | 209865822 | 1080914819 | 2024-02-12T16:00:00Z | 2024-02-12T16:06:11Z | success | 32642 | 6 | Marketo |
+| 1707667201 | 1707667635 | 240125 | S3_LINE_Message | 27390645 | 209690122 | 1080215291 | 2024-02-11T16:00:01Z | 2024-02-11T16:07:15Z | success | 32642 | 15 | Marketo |
+
 
 ### activations
 
@@ -57,11 +140,11 @@ This table is the output of the activation history from Journey Orchestration. T
 
 #### table example
 
-| time | *td_client_id | activation_step_id | syndication_id | activation_type | activation_name | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_term | utm_connector |
+| time | *member_id | activation_step_id | syndication_id | activation_type | activation_name | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_term | utm_connector |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |--- |
 | 1701705887 | ffdae365-24b7-4d69-ae54-05340ee5c57f | 50659 | 237814 | journeyActivationStep | to_td | PURCHASE | td_plazma12 | email | treasuredatajp | control | | mailchimp |
 
-\* The user identifier set as `user_id` is used. Here it is set as td_client_id.
+\* The user identifier set as `user_id` is used. Here it is set as member_id.
 
 ### clicks
 
@@ -69,23 +152,23 @@ This table is the campaign click history. This table is output in the process of
 
 #### table example
 
-| time | db_name | table_name | *td_client_id | activation_step_id | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_term | utm_connector |
+| time | db_name | table_name | *member_id | activation_step_id | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_term | utm_connector |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1695535786 | cdp_audience_507568 | behavior_behv_website | e05c10e0-1943-4afe-b799-92ef9f24ed9f | 21 | SUBSCRIBE | td_plazma2022summerinv_link1 | email | nikkei_bpdmp | welcome_mail | nikkei | marketo |
 
-\* The user identifier set as `user_id` is used. Here it is set as td_client_id.
+\* The user identifier set as `user_id` is used. Here it is set as member_id.
 
 ### conversions
 
 This table is the conversion history. This table is output in the process of effectiveness measurement, but it can be set up and used as a behavior table in Audience Studio.
 
 #### table example
-| time | db_name | table_name | *td_client_id | val | revenue | cv_name |
+| time | db_name | table_name | *member_id | val | revenue | cv_name |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1701481555 | cdp_audience_507568 | behavior_behv_website | f80a229c-149a-4f0d-a0a3-9dbb09e3fa28 | 1 | 20000 | DOWNLOAD |
 | 1702531838 | cdp_audience_507568 | behavior_behv_orders | 5502ace7-2e4c-4c39-8f26-1f96b6a3ef4a | 8129 | 8129 | PURCHASE |
 
-\* The user identifier set as `user_id` is used. Here it is set as td_client_id.
+\* The user identifier set as `user_id` is used. Here it is set as member_id.
 
 ### conversion_journeys
 
@@ -103,7 +186,7 @@ We can union `activations` and `clicks` and `conversions` to create a conversion
 Hence, we can create an `activation -> click -> conversion` journey for each user and each conversion.
 
 #### table example
-| time | type | td_client_id | activation_step_id | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_connector | cv_flg | val | revenue | time_hour_from_activation |
+| time | type | member_id | activation_step_id | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_connector | cv_flg | val | revenue | time_hour_from_activation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1700605034 | Activation | 007a5c3d-1355-4352-af1d-440f2d803f90 | 1928 | DOWNLOAD | td_14947 | push | pushcode |  |  | 0 | 0 | 0 |  |
 | 1700606147 | Click | 007a5c3d-1355-4352-af1d-440f2d803f90 | 1928 | DOWNLOAD | td_14947 | push | pushcode |  |  | 0 | 0 | 0 | 46.3 |
@@ -121,14 +204,14 @@ This table is the result of the calculation of acquired revenue per campaign by 
 
 #### table example
 
-| time | date | cv_time | *td_client_id | cv_id | position | time_hour_to_cv | time_hour_to_next | time_hour_from_activation | type | click_type | activation_step_id | utm_source | utm_medium | utm_campaign | utm_content | utm_connector | cv_name | size_journey | size_cv_session | size_middle_click | is_within_cv_session | revenue | acquired_person_last_click_model | acquired_revenue_last_click_model | acquired_person_first_click_model | acquired_revenue_first_click_model | acquired_person_session_model | acquired_revenue_session_model |
+| time | date | cv_time | *member_id | cv_id | position | time_hour_to_cv | time_hour_to_next | time_hour_from_activation | type | click_type | activation_step_id | utm_source | utm_medium | utm_campaign | utm_content | utm_connector | cv_name | size_journey | size_cv_session | size_middle_click | is_within_cv_session | revenue | acquired_person_last_click_model | acquired_revenue_last_click_model | acquired_person_first_click_model | acquired_revenue_first_click_model | acquired_person_session_model | acquired_revenue_session_model |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1700606147 | 2023-11-22 | 1702167880 | 007a5c3d-1355-4352-af1d-440f2d803f90 | 02a0ca2ff7412557b1a617d5855de2a1 | 1 | 433 | 337 |  | Click | First Click | 1928 | pushcode | push | td_14947 |  |  | DOWNLOAD | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 1 | 20000 | 0 | 0 |
 | 1701822271 | 2023-12-06 | 1702167880 | 007a5c3d-1355-4352-af1d-440f2d803f90 | 02a0ca2ff7412557b1a617d5855de2a1 | 2 | 96 | 48 |  | Click | Middle Click | 51418 | diamondrm | email | td_plazma15 |  |  | DOWNLOAD | 3 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0.5 | 10000 |
 | 1701995634 | 2023-12-08 | 1702167880 | 007a5c3d-1355-4352-af1d-440f2d803f90 | 02a0ca2ff7412557b1a617d5855de2a1 | 3 | 47 | 47 |  | Click | Last Click | 51397 | treasuredatajp | email | td_newsletter20210330 |  |  | DOWNLOAD | 3 | 2 | 1 | 1 | 0 | 1 | 20000 | 0 | 0 | 0.5 | 10000 |
 | 1702167880 | 2023-12-10 | 1702167880 | 007a5c3d-1355-4352-af1d-440f2d803f90 | 02a0ca2ff7412557b1a617d5855de2a1 | 4 | 0 |  |  | Conversion | Conversion |  |  |  |  |  |  | DOWNLOAD | 3 | 2 | 1 | 0 | 20000 | 0 | 0 | 0 | 0 | 0 | 0 |
 
-\* The user identifier set as `user_id` is used. Here it is set as td_client_id.
+\* The user identifier set as `user_id` is used. Here it is set as member_id.
 
 ![example of mta conversion journeys](docs/images/ex_mta_conversion_journey.png)
 
@@ -202,11 +285,11 @@ This table extracts all utm parameters present in the `clicks` table. It lists u
 
 By editing/adding and uploading the value of each utm parameter in this table, the retrofitted parameter values can be used when measuring effectiveness. Refer to [master_campaigns_tables](#master_campaigns_tables) for how to do this.
 
-## Setup for Execution
+## Setup for Run
 
 ### user_settings.yaml
 
-This file must be edited for execution. The following sample is an example to illustrate the process.
+This file must be edited for run. The following sample is an example to illustrate the process.
 
 ```yaml
 timezone: JST
@@ -215,7 +298,7 @@ td:
         - 489726
 
     user_id:
-        489726: td_client_id
+        489726: member_id
 
     activations_tables:
         489726:
@@ -304,7 +387,7 @@ Specify the Parent Segment ID (ps_id). Multiple parent segments can be specified
 
 ```yml
     user_id:
-        489726: td_client_id
+        489726: member_id
 ```
 
 This is a common user identifier for all `activations`, `clicks`, and `conversions` tables. Essentially, this is a user identifier that exists in the master table.
@@ -578,7 +661,7 @@ On the other hand, if logging is done by a parameter name different from the opt
 
 If `scan_journey_tables: true` is specified, the tables are accessed through python. In this case, you need to specify the API endpoint. The default is `api.treasuredata.com`, so if you need to specify other endpoints, specify them here.
 
-- [Endpoint List](https://docs.treasuredata.com/display/public/PD/Sites+and+Endpoints) (Refer to the value of the "API" item)
+- [Endpoint List](https://api-docs.treasuredata.com/en/overview/aboutendpoints/)
 
 
 ### gsheet_settings.yaml
@@ -594,7 +677,7 @@ gsheet:
 
 If you want to export a group of major output tables to Google Sheet, please set up this file.
 
-## Execution
+## Run
 
 ### Upload
 
@@ -612,12 +695,12 @@ Second, you register td.apikey as a secret.
 $td wf secrets --project basic_monitoring --set td.apikey=1234/abcdefg...
 ```
 
-### Execute
+### Run digfile
 
-- Let's execute `main_initial_ingest.dig` for the first time.
-- After that, set up a schedule for `main_incremental_ingest.dig` and execute this one on a daily schedule.
+- Let's run `main_initial_ingest.dig` for the first time.
+- After that, set up a schedule for `main_incremental_ingest.dig` and run this one on a daily schedule.
 
-## Easy Start
+## Easy Start (Skip activation fetch phase)
 
 - If activation from Journey Orchestration has not been done,
 - But there are already many past utm parameters and they can be retrieved in the `clicks` table,
@@ -681,7 +764,7 @@ td:
 
 #### user_id
 
-Specify a `user_id` that commonly exists in the `clicks` and `conversions` tables.
+Specify a `user_id` that commonly exists in the `clicks` and `conversions` tables. For the purpose of running it for now, let's try it with td_client_id, which is commonly included in the access log.
 
 #### activations_tables
 
@@ -739,13 +822,13 @@ gsheet:
     spreadsheet_title: cdp_campaign_management
 ```
 
-### Step2. 1st execution
+### Step2. 1st run
 
-Let's execute `main_initial_ingest.dig`.
+Let's run `main_initial_ingest.dig`.
 
 ### Step3. Check existing_campaigns table
 
-After the execution is completed, check the `existing_campaigns` table written out to GSheet.
+After the run is completed, check the `existing_campaigns` table written out to GSheet.
 
 You can reflect the value of `cv_name` in the utm_parameter by filling in the `cv_name` of each campaign record that is currently null and uploading it as the `master_campaigns_0` table and re-running the WF.
 
@@ -768,7 +851,7 @@ This will create a `clicks -> conversions` journey. This allows us to calculate 
 | treasuredatajp | email | nurture_general | SUBSCRIBE |  | awareness_em4 | marketo |  |2024-01-09 | 263 | 1641859200 |
 | treasuredatajp | email | newsletter20211119 | SUBSCRIBE |  | plazmaarticle | marketo |  |
 
-### Step4. 2nd execution
+### Step4. 2nd run
 
 ```yml
     master_campaigns_tables:
