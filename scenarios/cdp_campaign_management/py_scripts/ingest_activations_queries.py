@@ -7,7 +7,7 @@ from dateutil import parser
 
 pd.set_option('display.max_columns', None)
 headers = {'Authorization': 'TD1 %s' % os.environ['TD_API_KEY']}
-MAX_UNIONS = 40
+MAX_UNIONS = 25
 
 def run(
         session_unixtime,
