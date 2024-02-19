@@ -549,21 +549,24 @@ Required options depend on the value of `is_audience_table`.
 
 Specify the source of the master_campaigns table that the user will be uploading. By setting this table, the utm parameter of the clicks table can be retrofitted.
 
-The motivation for setting up this table is when you want to retrofit the utm parameter, for example in the following cases:
-
-- Complement misconfigurations or omissions in the utm parameter of existing campaign links
-- Assign `cv_name` to campaigns outside of TD so that they can be measured for effectiveness as well
-- Organize utm parameters for past campaigns so that they can be measured for effectiveness
+> [!IMPORTANT]
+> The goal for setting up this table is when you want to retrofit the `cv_name` or `activation_step_id` ( or `utm_term`, `utm_content`, `utm_connector`). These values can be set for each combination of `utm_source`, `utm_medium`, and `utm_campaign`. SO you can't retrofit the `utm_source`, `utm_medium`, and `utm_campaign`.
 
 The master_campaigns table will be based on the [existing_campaigns](#existing_campaigns) output from this WF, with the utm parameter values of the campaigns you wish to edit or add edited.
 
-However, since the following 3 parameter values are used to match records in the original `clicks` table, it is not possible to link records in the original `clicks` table that do not have these 3 values set:
+If the `utm_id` of a record in the `clicks` table is not `NULL`, then
+it is joined using a combination of the following 4 parameters:
 
+- utm_id
 - utm_source
 - utm_medium
 - utm_campaign
 
-Basically, the aim of having master_campaign table can be considered to have utm parameters other than these 3 (`cv_name`, `activation_step_id`, etc...)  later. And the value of the utm parameter set here takes precedence over the value of the utm parameter in the original `clicks` table.
+Otherwise it is joined using a combination of the following 3 parameters:
+
+- utm_source
+- utm_medium
+- utm_campaign
 
 ##### Required columns for table
 
