@@ -49,8 +49,8 @@ def run(
     columns_q = ['time','db_name','table_name','query']
 
     for idx, row in df_1.iterrows():
-
-        journey_table = 'journey_%s' % (row['journey_id'])
+        journey_id = row['journey_id']
+        journey_table = 'journey_%s' % (journey_id)
         syndication_id = row['syndication_id']
         activation_step_id = row['activation_step_id']
         activation_name = row['activation_name']
@@ -104,6 +104,7 @@ def run(
                 f",s1.activation_step_id",
                 f",s1.syndication_id",
                 f",'journeyActivationStep' AS activation_type",
+                f",{journey_id} AS journey_id",
                 f",s1.activation_name",
                 f",cv_name",
                 f",utm_campaign",

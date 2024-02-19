@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS ${dest_db}.${dest_table} (
     ,${user_id} varchar
     ,activation_step_id varchar
     ,syndication_id varchar
+    ,journey_id varchar
     ,activation_type varchar
     ,activation_name varchar
     ,cv_name varchar

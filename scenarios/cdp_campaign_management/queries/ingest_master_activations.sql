@@ -26,21 +26,21 @@ WITH tbl_act AS (
         ,journey_name
     FROM
     (
-    SELECT
-        elm
-        ,idx-1 AS stage_no
-        ,TD_TIME_PARSE(
-            JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.createdAt')
-            ,'${timezone}'
-        ) AS time
-        ,JSON_EXTRACT_SCALAR(elm, '$.name') AS stage_name
-        ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.audienceId') AS ps_id
-        ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.state') AS state
-        ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.createdAt') AS created_at
-        ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.updatedAt') AS updated_at
-        ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.name') AS journey_name
-    FROM ${td.monitoring.db.cdp_monitoring}.${td.monitoring.tables.journey_summary}
-    CROSS JOIN UNNEST(CAST(JSON_EXTRACT(JSON_PARSE(attributes), '$.journeyStages') AS ARRAY(JSON))) WITH ORDINALITY AS t(elm, idx)
+        SELECT
+            elm
+            ,idx-1 AS stage_no
+            ,TD_TIME_PARSE(
+                JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.createdAt')
+                ,'${timezone}'
+            ) AS time
+            ,JSON_EXTRACT_SCALAR(elm, '$.name') AS stage_name
+            ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.audienceId') AS ps_id
+            ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.state') AS state
+            ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.createdAt') AS created_at
+            ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.updatedAt') AS updated_at
+            ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.name') AS journey_name
+        FROM ${td.monitoring.db.cdp_monitoring}.${td.monitoring.tables.journey_summary}
+        CROSS JOIN UNNEST(CAST(JSON_EXTRACT(JSON_PARSE(attributes), '$.journeyStages') AS ARRAY(JSON))) WITH ORDINALITY AS t(elm, idx)
     )
     CROSS JOIN UNNEST(
         MAP_KEYS(CAST(JSON_EXTRACT(elm, '$.steps') AS MAP(VARCHAR, JSON)))
