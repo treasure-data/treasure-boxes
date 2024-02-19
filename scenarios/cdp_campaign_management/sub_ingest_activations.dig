@@ -15,6 +15,7 @@
     cdp_audience_db: cdp_audience_${ps_id}
     input_table_customers: customers
     input_table_clicks: ${td.tables.clicks}
+    input_table_master_campaigns: ${td.tables.master_campaigns}
     dest_db: ${td.database}
     dest_table: ${td.tables.tmp_activations}
     query_store_table: ${td.tables.query_store}

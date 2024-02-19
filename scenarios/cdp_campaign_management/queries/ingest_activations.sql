@@ -69,7 +69,31 @@ LEFT OUTER JOIN (
         ,MAX_BY(utm_content,time) AS utm_content
         ,MAX_BY(utm_connector,time) AS utm_connector
         ,MAX_BY(utm_term,time) AS utm_term
-    FROM ${td.database}.${td.tables.clicks}
+    FROM (
+        SELECT
+            time
+            ,CAST(activation_step_id AS VARCHAR) AS activation_step_id
+            ,cv_name
+            ,utm_campaign
+            ,utm_medium
+            ,utm_source
+            ,utm_content
+            ,utm_connector
+            ,utm_term
+        FROM ${td.database}.${td.tables.clicks}
+        UNION ALL
+        SELECT
+            time
+            ,CAST(activation_step_id AS VARCHAR) AS activation_step_id
+            ,cv_name
+            ,utm_campaign
+            ,utm_medium
+            ,utm_source
+            ,utm_content
+            ,utm_connector
+            ,utm_term
+        FROM ${td.database}.${td.tables.master_campaigns}
+    )
     GROUP BY 1
 ) s2
 ON s1.activation_step_id = s2.activation_step_id

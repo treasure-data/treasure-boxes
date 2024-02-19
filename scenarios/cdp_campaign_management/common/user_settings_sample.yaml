@@ -19,7 +19,7 @@ td:
                 url_col: td_url
                 time_col: time
                 filter: td_url IS NOT NULL
-                # use_distinct: false
+                # use_distinct: true
             -
                 is_audience_table: true
                 # db:
@@ -27,7 +27,7 @@ td:
                 url_col: td_url
                 # time_col: timestamp
                 # filter:
-                # use_distinct: false
+                # use_distinct: true
 
     conversions_tables:
         507568:

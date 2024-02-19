@@ -36,7 +36,7 @@ FROM
 ${join_part}
 LEFT OUTER JOIN (
     SELECT
-        activation_step_id
+        CAST(activation_step_id AS VARCHAR) AS activation_step_id
         ,utm_source
         ,utm_medium
         ,utm_campaign
@@ -52,4 +52,6 @@ ON (
     t1.utm_campaign = t3.utm_campaign
     AND t1.utm_medium = t3.utm_medium
     AND t1.utm_source = t3.utm_source
+    AND t1.cv_name = t3.cv_name
+    AND t1.activation_step_id = t3.activation_step_id
 )
