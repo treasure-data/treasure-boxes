@@ -550,19 +550,19 @@ Required options depend on the value of `is_audience_table`.
 Specify the source of the master_campaigns table that the user will be uploading. By setting this table, the utm parameter of the clicks table can be retrofitted.
 
 > [!IMPORTANT]
-> The goal for setting up this table is when you want to retrofit the `cv_name` or `activation_step_id` ( or `utm_term`, `utm_content`, `utm_connector`). These values can be set for each combination of `utm_source`, `utm_medium`, and `utm_campaign`. SO you can't retrofit the `utm_source`, `utm_medium`, and `utm_campaign`.
+> The goal for setting up this table is when you want to retrofit the `cv_name` or `activation_step_id` ( or `utm_term`, `utm_content`, `utm_connector`). These values can be set for each combination of `utm_source`, `utm_medium`, and `utm_campaign`. So you can't retrofit the `utm_source`, `utm_medium`, and `utm_campaign`.
 
 The master_campaigns table will be based on the [existing_campaigns](#existing_campaigns) output from this WF, with the utm parameter values of the campaigns you wish to edit or add edited.
 
 If the `utm_id` of a record in the `clicks` table is not `NULL`, then
-it is joined using a combination of the following 4 parameters:
+the record is joined using a combination of the following 4 parameters:
 
 - utm_id
 - utm_source
 - utm_medium
 - utm_campaign
 
-Otherwise it is joined using a combination of the following 3 parameters:
+Otherwise the record is joined using a combination of the following 3 parameters:
 
 - utm_source
 - utm_medium
