@@ -651,12 +651,20 @@ Specify the parameter names to be extracted from the url column of the `clicks` 
         utm_connector: utm_connector
 ```
 
+By default, the following url will be stored.
+`https://treasuredata.com?utm_id=12345&utm_source=google&utm_medium=cpc&utm_campaign=td_plazma2022summerinv_link1&utm_content=td&utm_cv=DOWNLOAD&utm_term=td&utm_connector=mailchimp`
+
+
 On the other hand, if logging is done by a parameter name different from the option name, for example, if `utm_id` is used by other tools such as Google Analytics and therefore is logged with the parameter name `activation_id`, the default is overridden by writing the following.
 
 ```yml
     utm_names:
         utm_id: activation_id
 ```
+
+In this case, the following url will be stored.
+`https://treasuredata.com?activation_id=12345&utm_source=google&...`
+
 
 #### api_endpoint
 
