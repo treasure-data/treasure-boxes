@@ -1,0 +1,1 @@
+select id, name, email, created_at from users
