@@ -11,25 +11,39 @@ Please be sure to read the slide: [How to measure the effectiveness of TD campai
 
 ### Monitoring WFs
 
+(required)
 Before installing this WF, it is assumed that the Monitoring WFs has been installed. the Monitoring WF consists of the following 3 WF groups, all of which need to be installed.
 
 - [basic_monitoring](https://github.com/treasure-data/treasure-boxes/tree/master/scenarios/monitoring/basic_monitoring)
 - [cdp_monitoring](https://github.com/treasure-data/treasure-boxes/tree/master/scenarios/monitoring/cdp_monitoring)
 - [workflow_monitoring](https://github.com/treasure-data/treasure-boxes/tree/master/scenarios/monitoring/workflow_monitoring)
 
-### Required CDP Features
+### To get Activation History
+
+If you want to take advantage of activation history, you will need one of the following features.
 
 #### Journey Orchestration
 
-(required)
+(optional)
 Currently, only activations performed on Journey Orchestration are tracked. In other words, activations from segments are not tracked.
 
-#### activation_log
+### activation_log
 
 (optional)
 activation_log is an option to record in the TD a history of who, when, and where all activations were made. When this history is available, it will be easy to refer to the activation history for each user.
 
 If this table is not available, you can still scan the journey table to create an activation history, but you will need Custom Scripts.
+
+### To get Campaign Click History
+
+#### Access record with utm parameter
+
+(required)
+On the user side, the appropriate utm_parameter for each campaign must be embedded as a campaign link. The campaign link will then be clicked on and flow into the access logs, allowing us to see the response to the campaign tied to the activation.
+
+![UTM Parameters](docs/images/utm_parameters.png)
+
+Please be sure to read the slide: [How to measure the effectiveness of TD campaigns](https://docs.google.com/presentation/d/e/2PACX-1vRTQ2YhgXuEKQ7SDn-l-xAHCMW6L4NF2AhXHlP6ADz1vU7hRDPLwxk8hajFGObkq_t08WyMHLqNPgRk/embed).
 
 ## Easy Start (Retrieving activation info)
 
@@ -652,7 +666,10 @@ Specify the parameter names to be extracted from the url column of the `clicks` 
 ```
 
 By default, the following url will be stored.
-`https://treasuredata.com?utm_id=12345&utm_source=google&utm_medium=cpc&utm_campaign=td_plazma2022summerinv_link1&utm_content=td&utm_cv=DOWNLOAD&utm_term=td&utm_connector=mailchimp`
+
+```yaml
+https://treasuredata.com?utm_id=12345&utm_source=google&utm_medium=cpc&utm_campaign=td_plazma2022summerinv_link1&utm_content=td&utm_cv=DOWNLOAD&utm_term=td&utm_connector=mailchimp
+```
 
 
 On the other hand, if logging is done by a parameter name different from the option name, for example, if `utm_id` is used by other tools such as Google Analytics and therefore is logged with the parameter name `activation_id`, the default is overridden by writing the following.
@@ -663,7 +680,10 @@ On the other hand, if logging is done by a parameter name different from the opt
 ```
 
 In this case, the following url will be stored.
-`https://treasuredata.com?activation_id=12345&utm_source=google&...`
+
+```yaml
+https://treasuredata.com?activation_id=12345&utm_source=google&...
+```
 
 
 #### api_endpoint
