@@ -17,7 +17,30 @@ schedule:
         dest_table: ${td.tables.connections}
         api_endpoint: ${td.api_endpoint}
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
+
++increment_ingest_connection_details:
+    +append_connection_details_history:
+        td>:
+        query: select * from ${td.tables.connections_details}
+        database: ${td.database}
+        insert_into: ${td.tables.connections_details_history}
+        
+    +get_all_connection:
+        td>:
+        query: SELECT ARRAY_JOIN(ARRAY_AGG(name), ',') AS names FROM connections
+        store_last_results: true
+
+    +ingest_connection_details:
+        py>: scripts.ingest_connection_details.run
+        dest_db: ${td.database}
+        dest_table: ${td.tables.connections_details}
+        names: ${td.last_results.names}
+        api_endpoint: ${td.api_endpoint}
+        docker:
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
@@ -33,7 +56,7 @@ schedule:
         dest_table: ${td.tables.schedules}
         api_endpoint: ${td.api_endpoint}
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
@@ -49,7 +72,7 @@ schedule:
         dest_table: ${td.tables.sources}
         api_endpoint: ${td.api_endpoint}
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
@@ -69,7 +92,7 @@ schedule:
         ids: ${td.last_results.ids}
         api_endpoint: ${td.api_endpoint}
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
     +check_max_job_id:
@@ -88,6 +111,6 @@ schedule:
         api_endpoint: ${td.api_endpoint}
         if_exists: 'append'
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}

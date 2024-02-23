@@ -1,8 +1,4 @@
 # https://docs.treasuredata.com/display/public/PD/Treasure+Data+Database+API
-# <memo>
-# ドキュメント上は/v3/database/listでidが得られるが実際は取れない
-# /v3/database/show/:database_nameが必要 => こっちはdatatankというパラメータも取れる。
-# ただし、ドキュメントは未記載
 
 import requests
 import pandas as pd
