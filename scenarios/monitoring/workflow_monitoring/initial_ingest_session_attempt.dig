@@ -12,7 +12,7 @@ _export:
   dest_db: ${td.database}
   dest_table: ${td.tables.projects}
   docker:
-    image: "digdag/digdag-python:3.9"
+    image: "digdag/digdag-python:3.10.1"
   _env:
     TD_API_KEY: ${secret:td.apikey}
 
@@ -22,7 +22,7 @@ _export:
   dest_db: ${td.database}
   dest_table: ${td.tables.workflows}
   docker:
-    image: "digdag/digdag-python:3.9"
+    image: "digdag/digdag-python:3.10.1"
   _env:
     TD_API_KEY: ${secret:td.apikey}
 
@@ -32,7 +32,7 @@ _export:
   dest_db: ${td.database}
   dest_table: ${td.tables.schedules}
   docker:
-    image: "digdag/digdag-python:3.9"
+    image: "digdag/digdag-python:3.10.1"
   _env:
     TD_API_KEY: ${secret:td.apikey}
 
@@ -46,7 +46,7 @@ _export:
   lower_limit_session_id: '180059011'
   if_exists: "overwrite"
   docker:
-    image: "digdag/digdag-python:3.9"
+    image: "digdag/digdag-python:3.10.1"
   _env:
     TD_API_KEY: ${secret:td.apikey}
 
@@ -60,6 +60,6 @@ _export:
   if_exists: "overwrite"
   lower_limit_attempt_id: '1040926253'
   docker:
-    image: "digdag/digdag-python:3.9"
+    image: "digdag/digdag-python:3.10.1"
   _env:
     TD_API_KEY: ${secret:td.apikey}

@@ -18,7 +18,7 @@ schedule:
     dest_db: ${td.database}
     dest_table: ${td.tables.projects}
     docker:
-      image: "digdag/digdag-python:3.9"
+      image: "digdag/digdag-python:3.10.1"
     _env:
       TD_API_KEY: ${secret:td.apikey}
 
@@ -35,7 +35,7 @@ schedule:
     dest_db: ${td.database}
     dest_table: ${td.tables.workflows}
     docker:
-      image: "digdag/digdag-python:3.9"
+      image: "digdag/digdag-python:3.10.1"
     _env:
       TD_API_KEY: ${secret:td.apikey}
 
@@ -52,7 +52,7 @@ schedule:
     dest_db: ${td.database}
     dest_table: ${td.tables.schedules}
     docker:
-      image: "digdag/digdag-python:3.9"
+      image: "digdag/digdag-python:3.10.1"
     _env:
       TD_API_KEY: ${secret:td.apikey}
 
@@ -72,7 +72,7 @@ schedule:
       api_endpoint: ${td.api_endpoint}
       workflow_endpoint: ${td.workflow_endpoint}
       docker:
-        image: "digdag/digdag-python:3.9"
+        image: "digdag/digdag-python:3.10.1"
       _env:
         TD_API_KEY: ${secret:td.apikey}
   +check_max_attempt_id:
@@ -91,7 +91,7 @@ schedule:
     lower_limit_attempt_id: ${td.last_results.max_id}
     if_exists: "append"
     docker:
-      image: "digdag/digdag-python:3.9"
+      image: "digdag/digdag-python:3.10.1"
     _env:
       TD_API_KEY: ${secret:td.apikey}
   
@@ -113,7 +113,7 @@ schedule:
     lower_limit_session_id: ${td.last_results.max_id}
     if_exists: "append"
     docker:
-      image: "digdag/digdag-python:3.9"
+      image: "digdag/digdag-python:3.10.1"
     _env:
       TD_API_KEY: ${secret:td.apikey}
       
@@ -132,6 +132,6 @@ schedule:
     api_endpoint: ${td.api_endpoint}
     workflow_endpoint: ${td.workflow_endpoint}
     docker:
-      image: "digdag/digdag-python:3.9"
+      image: "digdag/digdag-python:3.10.1"
     _env:
       TD_API_KEY: ${secret:td.apikey}
