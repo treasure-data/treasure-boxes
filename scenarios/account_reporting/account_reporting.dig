@@ -5,12 +5,25 @@ _export:
   if>: ${reports_to_run.activations_list}
   _do:
     +get_activations:
-      py>: activations.get_list
+      py>: scripts.activations.get_list
       destination_db: ${target.database}
       destination_tbl: ${target.tables.activations_list}
       _env:
         TD_API_KEY: ${secret:td.apikey}
         TD_API_BASEURL: ${td_api_baseurl}
         CDP_API_BASEURL: ${cdp_api_baseurl}
+      docker:
+        image: "digdag/digdag-python:3.9"
+
++get_queries:
+  if>: ${reports_to_run.queries_list}
+  _do:
+    +get_activations:
+      py>: scripts.queries.get_list
+      destination_db: ${target.database}
+      destination_tbl: ${target.tables.queries_list}
+      _env:
+        TD_API_KEY: ${secret:td.apikey}
+        TD_API_BASEURL: ${td_api_baseurl}
       docker:
         image: "digdag/digdag-python:3.9"
