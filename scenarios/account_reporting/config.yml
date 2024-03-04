@@ -5,6 +5,8 @@ target:
   database: account_reporting
   tables:
     activations_list: activations
+    queries_list: queries
 
 reports_to_run:
   activations_list: true
+  queries_list: true

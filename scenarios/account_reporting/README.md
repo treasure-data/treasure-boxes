@@ -8,6 +8,7 @@ This scenario shows how you can ingest account data from Treasure Data API's for
 - The API base urls for your region can be found here: https://api-docs.treasuredata.com/en/overview/aboutendpoints/#treasure-data-api-baseurls
 - `target.database` - Sets the database the data will be ingested to. This database must exist prior to running the workflow.
 - `target.tables` - Sets the table names for each report.
+- `reports_to_run` - [true|false] Enable/disable the download of a report
 
 2. Upload the workflow with TD CLI.
 ```
