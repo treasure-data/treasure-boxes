@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS ${dest_db}.${dest_table};
 CREATE TABLE IF NOT EXISTS ${dest_db}.${dest_table} (
     time bigint
     ,date varchar
-    ,activation_step_id varchar varchar
+    ,activation_id varchar varchar
     ,is_internal_campaign_click varchar
     ,type varchar
     ,utm_source varchar

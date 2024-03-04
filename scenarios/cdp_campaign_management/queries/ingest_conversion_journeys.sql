@@ -1,12 +1,12 @@
 SELECT
     *
-    ,ROUND((time-LAG(time)OVER(PARTITION BY ${user_id}, activation_step_id ORDER BY time))/3600.0,1) AS time_hour_from_activation
+    ,ROUND((time-LAG(time)OVER(PARTITION BY ${user_id}, activation_id ORDER BY time))/3600.0,1) AS time_hour_from_activation
 FROM (
     SELECT
         time
         ,'Activation' AS type
         ,${user_id}
-        ,CAST(activation_step_id AS VARCHAR) AS activation_step_id
+        ,CAST(activation_id AS VARCHAR) AS activation_id
         ,cv_name
         ,utm_campaign
         ,utm_medium
@@ -26,7 +26,7 @@ FROM (
         time
         ,'Click' AS type
         ,${user_id}
-        ,CAST(activation_step_id AS VARCHAR) AS activation_step_id
+        ,CAST(activation_id AS VARCHAR) AS activation_id
         ,cv_name
         ,utm_campaign
         ,utm_medium
@@ -46,7 +46,7 @@ FROM (
         time
         ,'Conversion' AS type
         ,${user_id}
-        ,NULL AS activation_step_id
+        ,NULL AS activation_id
         ,cv_name
         ,NULL AS utm_campaign
         ,NULL AS utm_medium

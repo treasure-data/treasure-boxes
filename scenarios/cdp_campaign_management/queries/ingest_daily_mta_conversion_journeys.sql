@@ -4,9 +4,9 @@ FROM
     SELECT
         COALESCE(act.time,clk.time,mta.time) AS time
         ,COALESCE(act.date,clk.date,mta.date) AS date
-        ,COALESCE(act.activation_step_id,clk.activation_step_id,mta.activation_step_id) AS activation_step_id
+        ,COALESCE(act.activation_id,clk.activation_id,mta.activation_id) AS activation_id
         ,CASE
-            WHEN COALESCE(act.activation_step_id,clk.activation_step_id,mta.activation_step_id) IN (SELECT activation_step_id FROM ${td.tables.master_activations}) THEN 'internal'
+            WHEN COALESCE(act.activation_id,clk.activation_id,mta.activation_id) IN (SELECT activation_id FROM ${td.tables.master_activations}) THEN 'internal'
             WHEN mta.type='Conversion' THEN 'internal'
             ELSE 'external'
         END AS is_internal_campaign_click
@@ -32,12 +32,12 @@ FROM
         ,COALESCE(cnt_cv_id,0)   AS cnt_cv_id
     FROM ${td.tables.daily_activations} act
     FULL OUTER JOIN ${td.tables.daily_clicks} clk
-    ON act.time = clk.time AND act.activation_step_id = clk.activation_step_id
+    ON act.time = clk.time AND act.activation_id = clk.activation_id
     FULL OUTER JOIN (
         SELECT
-            TD_DATE_TRUNC('day',time, '${user_timezone}') AS time
-            ,TD_TIME_STRING(time, 'd!', '${user_timezone}') AS date
-            ,activation_step_id
+            TD_DATE_TRUNC('day',time, '${td.timezone}') AS time
+            ,TD_TIME_STRING(time, 'd!', '${td.timezone}') AS date
+            ,activation_id
             ,type
             ,utm_source
             ,utm_medium
@@ -58,9 +58,9 @@ FROM
             ,COUNT(DISTINCT cv_id) AS cnt_cv_id
         FROM ${td.tables.mta_conversion_journeys}
         GROUP BY 1,2,3,4,5,6,7,8,9,10
-        ORDER BY date, activation_step_id
+        ORDER BY date, activation_id
     ) mta
-    ON clk.time = mta.time AND clk.activation_step_id = mta.activation_step_id
+    ON clk.time = mta.time AND clk.activation_id = mta.activation_id
 )
 WHERE TD_TIME_RANGE(time, ${time_from}, ${time_to})
--- ORDER BY cv_name, time DESC, activation_step_id
+-- ORDER BY cv_name, time DESC, activation_id

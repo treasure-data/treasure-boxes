@@ -6,6 +6,10 @@ WITH tbl_base_activations AS
         ,cdp_customer_id
         ,t1.syndication_id
         ,COALESCE(type,'segment') AS activation_type
+        ,CASE type
+            WHEN 'journeyActivationStep' THEN activation_step_id
+            ELSE segment_id
+        END AS activation_id
         ,segment_id
         ,activation_step_id
         ,activation_name
@@ -44,6 +48,7 @@ WITH tbl_base_activations AS
 SELECT
     time
     ,${user_id}
+    ,s1.activation_id
     ,s1.activation_step_id
     ,syndication_id
     ,segment_id
@@ -61,7 +66,7 @@ SELECT
 FROM tbl_base_activations s1
 LEFT OUTER JOIN (
     SELECT
-        activation_step_id
+        activation_id
         ,MAX_BY(cv_name,time) AS cv_name
         ,MAX_BY(utm_campaign,time) AS utm_campaign
         ,MAX_BY(utm_medium,time) AS utm_medium
@@ -72,7 +77,7 @@ LEFT OUTER JOIN (
     FROM (
         SELECT
             time
-            ,CAST(activation_step_id AS VARCHAR) AS activation_step_id
+            ,CAST(activation_id AS VARCHAR) AS activation_id
             ,cv_name
             ,utm_campaign
             ,utm_medium
@@ -84,7 +89,7 @@ LEFT OUTER JOIN (
         UNION ALL
         SELECT
             time
-            ,CAST(activation_step_id AS VARCHAR) AS activation_step_id
+            ,CAST(activation_id AS VARCHAR) AS activation_id
             ,cv_name
             ,utm_campaign
             ,utm_medium
@@ -96,4 +101,4 @@ LEFT OUTER JOIN (
     )
     GROUP BY 1
 ) s2
-ON s1.activation_step_id = s2.activation_step_id
+ON s1.activation_id = s2.activation_id

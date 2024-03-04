@@ -1,5 +1,5 @@
 SELECT
-    activation_step_id
+    activation_id
     ,utm_campaign
     ,utm_medium
     ,utm_source

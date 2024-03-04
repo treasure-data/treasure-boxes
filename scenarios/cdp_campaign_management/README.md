@@ -131,7 +131,7 @@ The `cdp_campaigns_${ps_id}` is automatically created and the following tables a
 
 ### master_activations
 
-| time | journey_id | activation_step_id | syndication_id | activation_name | schedule_type | schedule_option | timezone | connection_id | all_columns | step_id | stage_name | stage_no | state | created_at | updated_at | journey_name | connector_type |
+| time | journey_id | activation_id | syndication_id | activation_name | schedule_type | schedule_option | timezone | connection_id | all_columns | step_id | stage_name | stage_no | state | created_at | updated_at | journey_name | connector_type |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1701927703 | 32805 | 51925 | 240504 | Welcome Mail | daily | 1:00:00 | Asia/Tokyo | 301955 | FALSE | eaae03ce_fc23_4945_aa7a_4717c25ea9b4 | 1 | 0 | launched | 2023-12-07T05:41:43.283Z | 2023-12-07T15:18:23.687Z | Purchase Journey | Marketo |
 | 1701927703 | 32805 | 51926 | 240505 | Next Step Mail | daily | 1:00:00 | Asia/Tokyo | 301955 | FALSE | 2a83381f_f044_4da8_b65b_d87bd1c493c5 | 1 | 0 | launched | 2023-12-07T05:41:43.283Z | 2023-12-07T15:18:23.687Z | Purchase Journey | Marketo |
@@ -154,7 +154,7 @@ This table is the output of the activation history from Journey Orchestration. T
 
 #### table example
 
-| time | *member_id | activation_step_id | syndication_id | activation_type | activation_name | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_term | utm_connector |
+| time | *member_id | activation_id | syndication_id | activation_type | activation_name | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_term | utm_connector |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |--- |
 | 1701705887 | ffdae365-24b7-4d69-ae54-05340ee5c57f | 50659 | 237814 | journeyActivationStep | to_td | PURCHASE | td_plazma12 | email | treasuredatajp | control | | mailchimp |
 
@@ -166,7 +166,7 @@ This table is the campaign click history. This table is output in the process of
 
 #### table example
 
-| time | db_name | table_name | *member_id | activation_step_id | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_term | utm_connector |
+| time | db_name | table_name | *member_id | activation_id | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_term | utm_connector |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1695535786 | cdp_audience_507568 | behavior_behv_website | e05c10e0-1943-4afe-b799-92ef9f24ed9f | 21 | SUBSCRIBE | td_plazma2022summerinv_link1 | email | nikkei_bpdmp | welcome_mail | nikkei | marketo |
 
@@ -190,17 +190,17 @@ We can union `activations` and `clicks` and `conversions` to create a conversion
 
 | table_name |  |  |  |  |  |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| activations | time | user_id |  | activation_step_id |  |  |  |  |  |  |
-| clicks | time | user_id | cv_name | activation_step_id | utm_campaign | utm_medium | utm_source | utm_content | utm_connector | utm_term |
+| activations | time | user_id |  | activation_id |  |  |  |  |  |  |
+| clicks | time | user_id | cv_name | activation_id | utm_campaign | utm_medium | utm_source | utm_content | utm_connector | utm_term |
 | conversions | time | user_id | cv_name |  |  |  |  |  |  |  |
 
-- `activations` and `clicks` table are unioned by `user_id` and `activation_step_id`.
+- `activations` and `clicks` table are unioned by `user_id` and `activation_id`.
 - `clicks` and `conversions` table are unioned by `user_id` and `cv_name`.
 
 Hence, we can create an `activation -> click -> conversion` journey for each user and each conversion.
 
 #### table example
-| time | type | member_id | activation_step_id | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_connector | cv_flg | val | revenue | time_hour_from_activation |
+| time | type | member_id | activation_id | cv_name | utm_campaign | utm_medium | utm_source | utm_content | utm_connector | cv_flg | val | revenue | time_hour_from_activation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1700605034 | Activation | 007a5c3d-1355-4352-af1d-440f2d803f90 | 1928 | DOWNLOAD | td_14947 | push | pushcode |  |  | 0 | 0 | 0 |  |
 | 1700606147 | Click | 007a5c3d-1355-4352-af1d-440f2d803f90 | 1928 | DOWNLOAD | td_14947 | push | pushcode |  |  | 0 | 0 | 0 | 46.3 |
@@ -218,7 +218,7 @@ This table is the result of the calculation of acquired revenue per campaign by 
 
 #### table example
 
-| time | date | cv_time | *member_id | cv_id | position | time_hour_to_cv | time_hour_to_next | time_hour_from_activation | type | click_type | activation_step_id | utm_source | utm_medium | utm_campaign | utm_content | utm_connector | cv_name | size_journey | size_cv_session | size_middle_click | is_within_cv_session | revenue | acquired_person_last_click_model | acquired_revenue_last_click_model | acquired_person_first_click_model | acquired_revenue_first_click_model | acquired_person_session_model | acquired_revenue_session_model |
+| time | date | cv_time | *member_id | cv_id | position | time_hour_to_cv | time_hour_to_next | time_hour_from_activation | type | click_type | activation_id | utm_source | utm_medium | utm_campaign | utm_content | utm_connector | cv_name | size_journey | size_cv_session | size_middle_click | is_within_cv_session | revenue | acquired_person_last_click_model | acquired_revenue_last_click_model | acquired_person_first_click_model | acquired_revenue_first_click_model | acquired_person_session_model | acquired_revenue_session_model |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1700606147 | 2023-11-22 | 1702167880 | 007a5c3d-1355-4352-af1d-440f2d803f90 | 02a0ca2ff7412557b1a617d5855de2a1 | 1 | 433 | 337 |  | Click | First Click | 1928 | pushcode | push | td_14947 |  |  | DOWNLOAD | 3 | 2 | 1 | 0 | 0 | 0 | 0 | 1 | 20000 | 0 | 0 |
 | 1701822271 | 2023-12-06 | 1702167880 | 007a5c3d-1355-4352-af1d-440f2d803f90 | 02a0ca2ff7412557b1a617d5855de2a1 | 2 | 96 | 48 |  | Click | Middle Click | 51418 | diamondrm | email | td_plazma15 |  |  | DOWNLOAD | 3 | 2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0.5 | 10000 |
@@ -245,7 +245,7 @@ This table is the result of the calculation of acquired revenue per campaign by 
 
 #### table example
 
-| time | date | activation_step_id | is_internal_campaign_click | type | utm_source | utm_medium | utm_campaign | utm_content | utm_connector | cv_name | cnt_activations | cnt_clicks | cnt_clicks_related_conversion | acquired_person_last_click_model | acquired_person_first_click_model | acquired_person_session_model | acquired_revenue_last_click_model | acquired_revenue_first_click_model | acquired_revenue_session_model | size_journey | cnt_cv_id |
+| time | date | activation_id | is_internal_campaign_click | type | utm_source | utm_medium | utm_campaign | utm_content | utm_connector | cv_name | cnt_activations | cnt_clicks | cnt_clicks_related_conversion | acquired_person_last_click_model | acquired_person_first_click_model | acquired_person_session_model | acquired_revenue_last_click_model | acquired_revenue_first_click_model | acquired_revenue_session_model | size_journey | cnt_cv_id |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1701788400 | 2023-12-06 | 51397 | internal | Click | treasuredatajp | email | td_newsletter20200327 |  |  | DOWNLOAD | 366 | 1636 | 740 | 289 | 199 | 345.1166667 | 5780000 | 3980000 | 6902333.333 | 2161 | 740 |
 | 1701788400 | 2023-12-06 | 51418 | internal | Click | diamondrm | email | td_plazma15 |  |  | DOWNLOAD | 0 | 1597 | 723 | 150 | 404 | 336.95 | 3000000 | 8080000 | 6739000 | 2076 | 723 |
@@ -279,23 +279,23 @@ It is effective to visualize the above indicators on a dashboard. The above dash
 
 ### existing_campaigns
 
-This table extracts all utm parameters present in the `clicks` table. It lists unique campaigns with the following 5 values, but since `cv_name`, `activation_step_id` often do not contain values, it is effectively a combination of 3.
+This table extracts all utm parameters present in the `clicks` table. It lists unique campaigns with the following 5 values, but since `cv_name`, `activation_id` often do not contain values, it is effectively a combination of 3.
 
 - utm_source
 - utm_medium
 - utm_campaign
 - cv_name
-- activation_step_id
+- activation_id
 
 #### table example
 
-| time | exists_in_daily_activations | utm_source | utm_medium | utm_campaign | cv_name | activation_step_id | utm_content | utm_connector | utm_term | date_first_appeared | date_last_appeared | cnt |
+| time | exists_in_daily_activations | utm_source | utm_medium | utm_campaign | cv_name | activation_id | utm_content | utm_connector | utm_term | date_first_appeared | date_last_appeared | cnt |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1702771200 | 0 | treasuredatajp | email | td_dac-webinar-thx | COST_REDUCTION | 1926 |  |  | COST_REDUCTION | 2023-12-17 | 2023-12-17 | 1 |
 | 1703635200 | 1 | treasuredatajp | email | td_plazma2022summerinv_03 | SUBSCRIBE | 57189 |  |  | SUBSCRIBE | 2023-12-27 | 2023-12-27 | 1 |
 | 1589500800 | 0 | google | cpc | company_summer_sale_2019 |  |  |  |  |  | 2020-05-15 | 2020-05-15 | 1 |
 
-`exists_in_daily_activations` is 1 if the `activation_step_id` is from an activation within this parent segment, 0 otherwise or with no value, meaning it is an external campaign.
+`exists_in_daily_activations` is 1 if the `activation_id` is from an activation within this parent segment, 0 otherwise or with no value, meaning it is an external campaign.
 
 By editing/adding and uploading the value of each utm parameter in this table, the retrofitted parameter values can be used when measuring effectiveness. Refer to [master_campaigns_tables](#master_campaigns_tables) for how to do this.
 
@@ -565,7 +565,7 @@ Required options depend on the value of `is_audience_table`.
 Specify the source of the master_campaigns table that the user will be uploading. By setting this table, the utm parameter of the clicks table can be retrofitted.
 
 > [!IMPORTANT]
-> The goal for setting up this table is when you want to retrofit the `cv_name` or `activation_step_id` ( or `utm_term`, `utm_content`, `utm_connector`). These values can be set for each combination of `utm_source`, `utm_medium`, and `utm_campaign`. So you can't retrofit the `utm_source`, `utm_medium`, and `utm_campaign`.
+> The goal for setting up this table is when you want to retrofit the `cv_name` or `activation_id` ( or `utm_term`, `utm_content`, `utm_connector`). These values can be set for each combination of `utm_source`, `utm_medium`, and `utm_campaign`. So you can't retrofit the `utm_source`, `utm_medium`, and `utm_campaign`.
 
 The master_campaigns table will be based on the [existing_campaigns](#existing_campaigns) output from this WF, with the utm parameter values of the campaigns you wish to edit or add edited.
 
@@ -593,7 +593,7 @@ The required table columns for the master_campaigns table are as follows. It mus
 | utm_medium | Y | The same value as the record in the original clicks table. |
 | utm_campaign | Y | The same value as the record in the original clicks table. |
 | cv_name | Y | Setting a value will be priority reflected when measuring effectiveness. Unless this value is set, it is not subject to effectiveness measurement. |
-| activation_step_id |  | Setting a value will be priority reflected when measuring effectiveness. Specify if the campaign link is tied to an activation. |
+| activation_id |  | Setting a value will be priority reflected when measuring effectiveness. Specify if the campaign link is tied to an activation. |
 | utm_content |  | Setting a value will be priority reflected when measuring effectiveness. |
 | utm_connector |  | Setting a value will be priority reflected when measuring effectiveness. |
 | utm_term |  | Setting a value will be priority reflected when measuring effectiveness. |
@@ -602,7 +602,7 @@ The required table columns for the master_campaigns table are as follows. It mus
 
 ###### Records in the original clicks table
 
-| utm_source | utm_medium | utm_campaign | cv_name | activation_step_id | utm_content | utm_connector |
+| utm_source | utm_medium | utm_campaign | cv_name | activation_id | utm_content | utm_connector |
 | --- | --- | --- | --- | --- | --- | --- |
 | google | cpc | company_summer_sale_2019 |  |  | A | td |
 | sfmc | email | mnt_helmet_abandoned_cart |  |  | A | td |
@@ -610,7 +610,7 @@ The required table columns for the master_campaigns table are as follows. It mus
 
 ###### Records in the master_campaigns table
 
-| utm_source | utm_medium | utm_campaign | cv_name | activation_step_id | utm_content | utm_connector |
+| utm_source | utm_medium | utm_campaign | cv_name | activation_id | utm_content | utm_connector |
 | --- | --- | --- | --- | --- | --- | --- |
 | google | cpc | company_summer_sale_2019 | PURCHASE | 1234 |  |  |
 | sfmc | email | mnt_helmet_abandoned_cart | DOWNLOAD | 5678 | B | marketo |
@@ -618,7 +618,7 @@ The required table columns for the master_campaigns table are as follows. It mus
 
 ###### Records in the clicks table after merge
 
-| utm_source | utm_medium | utm_campaign | cv_name | activation_step_id | utm_content | utm_connector |
+| utm_source | utm_medium | utm_campaign | cv_name | activation_id | utm_content | utm_connector |
 | --- | --- | --- | --- | --- | --- | --- |
 | google | cpc | company_summer_sale_2019 | PURCHASE | 1234 | A | td |
 | sfmc | email | mnt_helmet_abandoned_cart | DOWNLOAD | 5678 | B | marketo |
@@ -868,7 +868,7 @@ This will create a `clicks -> conversions` journey. This allows us to calculate 
 
 #### example of existing_campaigns table
 
- | utm_source | utm_medium | utm_campaign | cv_name | activation_step_id | utm_content | utm_connector | utm_term | date_first_appeared | date_last_appeared | cnt | time |
+ | utm_source | utm_medium | utm_campaign | cv_name | activation_id | utm_content | utm_connector | utm_term | date_first_appeared | date_last_appeared | cnt | time |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | treasuredatajp | email | newsletter20220112 |  |  | plazmaarticle | marketo |  | 2022-01-11 | 2023-04-27 | 118 | 1641859200 |
 | treasuredatajp | email | nurture_general |  |  | awareness_em4 | marketo |  | 2022-01-11 | 2023-12-05 | 85 | 1641859200 |
@@ -877,7 +877,7 @@ This will create a `clicks -> conversions` journey. This allows us to calculate 
 
 #### example of master_campaigns_0 table
 
- | utm_source | utm_medium | utm_campaign | cv_name | activation_step_id | utm_content | utm_connector | utm_term |
+ | utm_source | utm_medium | utm_campaign | cv_name | activation_id | utm_content | utm_connector | utm_term |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | treasuredatajp | email | newsletter20220112 | SUBSCRIBE |  | plazmaarticle | marketo |  |
 | treasuredatajp | email | nurture_general | SUBSCRIBE |  | awareness_em4 | marketo |  |2024-01-09 | 263 | 1641859200 |

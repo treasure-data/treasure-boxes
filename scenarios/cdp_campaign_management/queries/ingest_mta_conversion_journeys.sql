@@ -11,7 +11,7 @@ WITH tbl_cv_history AS
     (
         SELECT
             cv_id
-            ,ROW_NUMBER()OVER(PARTITION BY raw_data.cv_name, raw_data.${user_id}, raw_data.time, activation_step_id, type ORDER BY cv_id) AS cv_order
+            ,ROW_NUMBER()OVER(PARTITION BY raw_data.cv_name, raw_data.${user_id}, raw_data.time, activation_id, type ORDER BY cv_id) AS cv_order
             ,cv_history.time AS cv_time
             ,(cv_history.time - raw_data.time)/3600 AS time_hour_to_cv
             , raw_data.*
@@ -21,7 +21,7 @@ WITH tbl_cv_history AS
         AND raw_data.cv_name = cv_history.cv_name
         WHERE raw_data.time <= cv_history.time
         AND raw_data.${user_id} <= cv_history.${user_id}
-        AND type <> 'Activation'
+        AND type <> '${valuation_target=="activation" ? "Click" : "Activation"}'
     )
     WHERE cv_order = 1
 )
@@ -55,7 +55,7 @@ WITH tbl_cv_history AS
             END AS click_type
             ,type
             ,${user_id}
-            ,activation_step_id
+            ,activation_id
             ,utm_source
             ,utm_medium
             ,utm_campaign
@@ -80,7 +80,7 @@ SELECT
     ,time_hour_from_activation
     ,type
     ,click_type
-    ,activation_step_id
+    ,activation_id
     ,utm_source
     ,utm_medium
     ,utm_campaign

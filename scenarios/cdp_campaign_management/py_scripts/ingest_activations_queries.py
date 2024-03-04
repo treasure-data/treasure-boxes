@@ -39,7 +39,7 @@ def run(
         input_tables.append(tbl.name)
 
     res = client.query(
-        f'SELECT journey_id, syndication_id, activation_step_id, activation_name, stage_no, step_id FROM {input_db}.{input_table_master_activations} WHERE syndication_id is not NULL'
+        f'SELECT journey_id, syndication_id, activation_id, activation_name, stage_no, step_id FROM {input_db}.{input_table_master_activations} WHERE syndication_id is not NULL AND stage_no is not NULL'
     )
     df_1 = pd.DataFrame(**res)
     print(f"Searched {len(df_1)} activations. Create {math.ceil(len(df_1)/MAX_UNIONS)} queries in the process.")
@@ -52,7 +52,7 @@ def run(
         journey_id = row['journey_id']
         journey_table = 'journey_%s' % (journey_id)
         syndication_id = row['syndication_id']
-        activation_step_id = row['activation_step_id']
+        activation_id = row['activation_id']
         activation_name = row['activation_name']
         stage_no = row['stage_no']
         step_id = row['step_id']
@@ -65,7 +65,7 @@ def run(
             continue
 
         inner_qry = ' '.join([
-                f"SELECT \"{column_id}\" AS session_time, t2.{user_id}, t1.cdp_customer_id, '{syndication_id}' AS syndication_id, '{activation_step_id}' AS activation_step_id, '{activation_name}' AS activation_name",
+                f"SELECT \"{column_id}\" AS session_time, t2.{user_id}, t1.cdp_customer_id, '{syndication_id}' AS syndication_id, '{activation_id}' AS activation_id, '{activation_name}' AS activation_name",
                 f"FROM {cdp_audience_db}.{journey_table} t1",
                 f"LEFT OUTER JOIN {cdp_audience_db}.{input_table_customers} t2",
                 f"ON t1.cdp_customer_id = t2.cdp_customer_id",
@@ -77,7 +77,7 @@ def run(
         if not journey_reentry_history_table in input_tables:
             inner_qry += ' '.join([
                     f" UNION ALL",
-                    f"SELECT \"{column_id}\" AS session_time, t2.{user_id}, t1.cdp_customer_id, '{syndication_id}' AS syndication_id, '{activation_step_id}' AS activation_step_id, '{activation_name}' AS activation_name",
+                    f"SELECT \"{column_id}\" AS session_time, t2.{user_id}, t1.cdp_customer_id, '{syndication_id}' AS syndication_id, '{activation_id}' AS activation_id, '{activation_name}' AS activation_name",
                     f"FROM {cdp_audience_db}.{journey_reentry_history_table} t1",
                     f"LEFT OUTER JOIN {cdp_audience_db}.{input_table_customers} t2",
                     f"ON t1.cdp_customer_id = t2.cdp_customer_id",
@@ -89,7 +89,7 @@ def run(
         if journey_jump_history_table in input_tables:
             inner_qry += ' '.join([
                     f" UNION ALL",
-                    f"SELECT \"{column_id}\" AS session_time, t2.{user_id}, t1.cdp_customer_id, '{syndication_id}' AS syndication_id, '{activation_step_id}' AS activation_step_id, '{activation_name}' AS activation_name",
+                    f"SELECT \"{column_id}\" AS session_time, t2.{user_id}, t1.cdp_customer_id, '{syndication_id}' AS syndication_id, '{activation_id}' AS activation_id, '{activation_name}' AS activation_name",
                     f"FROM {cdp_audience_db}.{journey_jump_history_table} t1",
                     f"LEFT OUTER JOIN {cdp_audience_db}.{input_table_customers} t2",
                     f"ON t1.cdp_customer_id = t2.cdp_customer_id",
@@ -101,7 +101,7 @@ def run(
             f"SELECT",
                 f"s2.time_finished AS time",
                 f",s1.{user_id}",
-                f",s1.activation_step_id",
+                f",s1.activation_id",
                 f",s1.syndication_id",
                 f",'journeyActivationStep' AS activation_type",
                 f",{journey_id} AS journey_id",
@@ -120,7 +120,7 @@ def run(
             f"AND s1.syndication_id = s2.syndication_id",
             f"LEFT OUTER JOIN (",
                 f"SELECT",
-                    f"activation_step_id",
+                    f"activation_id",
                     f",MAX_BY(cv_name,time) AS cv_name",
                     f",MAX_BY(utm_campaign,time) AS utm_campaign",
                     f",MAX_BY(utm_medium,time) AS utm_medium",
@@ -131,7 +131,7 @@ def run(
                 f"FROM (",
                     f"SELECT",
                         f"time",
-                        f",CAST(activation_step_id AS VARCHAR) AS activation_step_id",
+                        f",CAST(activation_id AS VARCHAR) AS activation_id",
                         f",cv_name",
                         f",utm_campaign",
                         f",utm_medium",
@@ -143,7 +143,7 @@ def run(
                     f"UNION ALL",
                     f"SELECT",
                         f"time",
-                        f",CAST(activation_step_id AS VARCHAR) AS activation_step_id",
+                        f",CAST(activation_id AS VARCHAR) AS activation_id",
                         f",cv_name",
                         f",utm_campaign",
                         f",utm_medium",
@@ -155,7 +155,7 @@ def run(
                 f")",
                 f"GROUP BY 1",
             f") s3",
-            f"ON s1.activation_step_id = s3.activation_step_id",
+            f"ON s1.activation_id = s3.activation_id",
         ])
 
         if qry_union_all == '':

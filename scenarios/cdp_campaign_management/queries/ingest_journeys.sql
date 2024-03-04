@@ -1,5 +1,5 @@
 SELECT
-    TD_TIME_PARSE(JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.createdAt'),'${user_timezone}') AS time
+    TD_TIME_PARSE(JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.createdAt'),'${td.timezone}') AS time
     ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.audienceId') AS audience_id
     ,id
     ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.name') AS name
@@ -14,7 +14,7 @@ FROM ${td.monitoring.db.cdp_monitoring}.${td.monitoring.tables.entities}
 WHERE type = 'journey'
 AND JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.audienceId') = '${ps_id}'
 AND TD_TIME_RANGE(
-    TD_TIME_PARSE(JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.createdAt'),'${user_timezone}')
+    TD_TIME_PARSE(JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.createdAt'),'${td.timezone}')
     ,${time_from}
     ,${time_to}
 )

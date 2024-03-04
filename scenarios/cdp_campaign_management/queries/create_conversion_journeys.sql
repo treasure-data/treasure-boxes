@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS ${dest_db}.${dest_table} (
     ,time_s varchar
     ,type varchar
     ,${user_id} varchar
-    ,activation_step_id varchar
+    ,activation_id varchar
     ,cv_name varchar
     ,cv_flg int
     ,val double

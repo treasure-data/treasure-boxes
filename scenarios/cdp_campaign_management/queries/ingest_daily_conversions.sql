@@ -1,6 +1,6 @@
 SELECT
-    TD_DATE_TRUNC('day', time, '${user_timezone}') AS time
-    ,TD_TIME_STRING(time, 'd!', '${user_timezone}') AS date
+    TD_DATE_TRUNC('day', time, '${td.timezone}') AS time
+    ,TD_TIME_STRING(time, 'd!', '${td.timezone}') AS date
     ,cv_name
     ,COUNT(1) AS cnt
     ,SUM(val) AS val

@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS ${dest_db}.${dest_table} (
     ,db_name varchar
     ,table_name varchar
     ,${user_id} varchar
-    ,activation_step_id varchar
+    ,activation_id varchar
     ,cv_name varchar
     ,utm_campaign varchar
     ,utm_medium varchar

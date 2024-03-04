@@ -1,8 +1,8 @@
 SELECT
     IF(
-        COALESCE(activation_step_id IN (
+        COALESCE(activation_id IN (
             SELECT DISTINCT
-                activation_step_id
+                activation_id
             FROM daily_activations
         ),false)
     ,1,0) AS exists_in_daily_activations
@@ -10,7 +10,7 @@ SELECT
     ,utm_medium
     ,utm_campaign
     ,cv_name
-    ,activation_step_id
+    ,activation_id
     ,MAX_BY(utm_content,time) AS utm_content
     ,MAX_BY(utm_connector,time) AS utm_connector
     ,MAX_BY(utm_term,time) AS utm_term

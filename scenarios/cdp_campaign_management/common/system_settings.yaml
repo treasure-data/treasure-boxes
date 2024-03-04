@@ -1,5 +1,7 @@
 parallel: true
 td:
+    timezone: UTC
+    valuation_target: 'click'
     mta:
         session_model:
             allowable_time_to_cv: 24*10

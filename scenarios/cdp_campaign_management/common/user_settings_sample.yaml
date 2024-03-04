@@ -1,5 +1,6 @@
 td:
     timezone: JST
+    # valuation_target: 'activation'
     ps:
         - 507568
 
@@ -7,8 +8,8 @@ td:
         507568: td_client_id
 
     activations_tables:
-        # 507568:
-        #     scan_journey_tables: true
+        507568:
+            scan_journey_tables: true
 
     clicks_tables:
         507568:

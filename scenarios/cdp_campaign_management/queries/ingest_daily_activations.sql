@@ -1,7 +1,7 @@
 SELECT
-    TD_DATE_TRUNC('day', time, '${user_timezone}') AS time
-    ,TD_TIME_STRING(time, 'd!', '${user_timezone}') AS date
-    ,activation_step_id
+    TD_DATE_TRUNC('day', time, '${td.timezone}') AS time
+    ,TD_TIME_STRING(time, 'd!', '${td.timezone}') AS date
+    ,activation_id
     ,cv_name
     ,utm_source
     ,utm_medium

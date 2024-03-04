@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS ${dest_db}.${dest_table} (
     ,time_hour_from_activation double
     ,type varchar
     ,click_type varchar
-    ,activation_step_id varchar
+    ,activation_id varchar
     ,utm_source varchar
     ,utm_medium varchar
     ,utm_campaign varchar

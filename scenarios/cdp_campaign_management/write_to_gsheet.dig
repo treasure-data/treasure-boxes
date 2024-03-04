@@ -17,7 +17,7 @@
     _parallel: true
     +export_master_activations:
         td>:
-        query: SELECT * FROM ${td.tables.master_activations} ORDER BY journey_id,activation_step_id
+        query: SELECT * FROM ${td.tables.master_activations} ORDER BY journey_id,activation_id
         result_connection: ${gsheet.result_connection}
         result_settings:
             spreadsheet_folder: ${gsheet.sheet_folder}
@@ -59,7 +59,7 @@
 
     +export_mta:
         td>:
-        query: SELECT TD_TIME_STRING(time,'d!','${user_timezone}') AS date,* FROM ${td.tables.mta_conversion_journeys} ORDER BY cv_name, ${user_id}, cv_id, position LIMIT 1000
+        query: SELECT TD_TIME_STRING(time,'d!','${td.timezone}') AS date,* FROM ${td.tables.mta_conversion_journeys} ORDER BY cv_name, ${user_id}, cv_id, position LIMIT 1000
         result_connection: ${gsheet.result_connection}
         result_settings:
             spreadsheet_folder: ${gsheet.sheet_folder}
@@ -73,7 +73,7 @@
 
     +export_daily_mta:
         td>:
-        query: SELECT * FROM ${td.tables.daily_mta_conversion_journeys} ORDER BY cv_name, time DESC, activation_step_id
+        query: SELECT * FROM ${td.tables.daily_mta_conversion_journeys} ORDER BY cv_name, time DESC, activation_id
         result_connection: ${gsheet.result_connection}
         result_settings:
             spreadsheet_folder: ${gsheet.sheet_folder}

@@ -3,7 +3,7 @@ SELECT ${distinct}
     ,db_name
     ,table_name
     ,${user_column}
-    ,COALESCE(CAST(t3.activation_step_id AS VARCHAR), CAST(t1.activation_step_id AS VARCHAR)) AS activation_step_id
+    ,COALESCE(CAST(t3.activation_id AS VARCHAR), CAST(t1.activation_id AS VARCHAR)) AS activation_id
     ,COALESCE(t3.cv_name, t1.cv_name) AS cv_name
     ,COALESCE(t3.utm_campaign, t1.utm_campaign) AS utm_campaign
     ,COALESCE(t3.utm_medium, t1.utm_medium) AS utm_medium
@@ -18,7 +18,7 @@ FROM
         ,'${input_db}' AS db_name
         ,'${input_table}' AS table_name
         ,${user_column_inner}
-        ,url_extract_parameter(${url_column}, '${td.utm_names.utm_id}')        as activation_step_id
+        ,url_extract_parameter(${url_column}, '${td.utm_names.utm_id}')        as activation_id
         ,url_extract_parameter(${url_column}, '${td.utm_names.utm_campaign}')  as utm_campaign
         ,url_extract_parameter(${url_column}, '${td.utm_names.utm_medium}')    as utm_medium
         ,url_extract_parameter(${url_column}, '${td.utm_names.utm_source}')    as utm_source
@@ -40,7 +40,7 @@ LEFT OUTER JOIN (
         utm_source
         ,utm_medium
         ,utm_campaign
-        ,MAX_BY(CAST(activation_step_id AS VARCHAR), time) AS activation_step_id
+        ,MAX_BY(CAST(activation_id AS VARCHAR), time) AS activation_id
         ,MAX_BY(cv_name, time) AS cv_name
         ,MAX_BY(utm_connector, time) AS utm_connector
         ,MAX_BY(utm_content,time) AS utm_content
@@ -61,7 +61,7 @@ SELECT ${distinct}
     ,db_name
     ,table_name
     ,${user_column}
-    ,COALESCE(CAST(t3.activation_step_id AS VARCHAR), CAST(t1.activation_step_id AS VARCHAR)) AS activation_step_id
+    ,COALESCE(CAST(t3.activation_id AS VARCHAR), CAST(t1.activation_id AS VARCHAR)) AS activation_id
     ,COALESCE(t3.cv_name, t1.cv_name) AS cv_name
     ,COALESCE(t3.utm_campaign, t1.utm_campaign) AS utm_campaign
     ,COALESCE(t3.utm_medium, t1.utm_medium) AS utm_medium
@@ -76,7 +76,7 @@ FROM
         ,'${input_db}' AS db_name
         ,'${input_table}' AS table_name
         ,${user_column_inner}
-        ,url_extract_parameter(${url_column}, '${td.utm_names.utm_id}')        as activation_step_id
+        ,url_extract_parameter(${url_column}, '${td.utm_names.utm_id}')        as activation_id
         ,url_extract_parameter(${url_column}, '${td.utm_names.utm_campaign}')  as utm_campaign
         ,url_extract_parameter(${url_column}, '${td.utm_names.utm_medium}')    as utm_medium
         ,url_extract_parameter(${url_column}, '${td.utm_names.utm_source}')    as utm_source
@@ -98,7 +98,7 @@ LEFT OUTER JOIN (
         utm_source
         ,utm_medium
         ,utm_campaign
-        ,CAST(activation_step_id AS VARCHAR) AS activation_step_id
+        ,CAST(activation_id AS VARCHAR) AS activation_id
         ,MAX_BY(cv_name, time) AS cv_name
         ,MAX_BY(utm_connector, time) AS utm_connector
         ,MAX_BY(utm_content,time) AS utm_content
@@ -111,5 +111,5 @@ ON (
     t1.utm_campaign = t3.utm_campaign
     AND t1.utm_medium = t3.utm_medium
     AND t1.utm_source = t3.utm_source
-    AND t1.activation_step_id = t3.activation_step_id
+    AND t1.activation_id = t3.activation_id
 )
