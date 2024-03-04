@@ -1,7 +1,4 @@
 gsheet:
-    result_connection: gsheet_for_roi
-    sheet_folder: 1fLWGown_zelyAkSPKxwxxqnSgi6riAqp
-    spreadsheet_title: cdp_campaign_management2
-    # result_connection: ******
-    # sheet_folder: ******
-    # spreadsheet_title: cdp_campaign_management
+    result_connection: ******
+    sheet_folder: ******
+    spreadsheet_title: cdp_campaign_management
