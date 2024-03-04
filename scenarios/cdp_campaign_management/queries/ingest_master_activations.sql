@@ -31,7 +31,7 @@ WITH tbl_act AS (
             ,idx-1 AS stage_no
             ,TD_TIME_PARSE(
                 JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.createdAt')
-                ,'${timezone}'
+                ,'${user_timezone}'
             ) AS time
             ,JSON_EXTRACT_SCALAR(elm, '$.name') AS stage_name
             ,JSON_EXTRACT_SCALAR(JSON_PARSE(attributes), '$.audienceId') AS ps_id

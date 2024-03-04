@@ -16,9 +16,13 @@ _export:
         ps_id: ${td.ps}
     _do:
         _export:
+            user_timezone: "${typeof td.timezone === 'undefined' ? 'UTC' : td.timezone}"
             td:
                 database: ${td.base_db_name}_${ps_id}
             user_id: ${td.user_id[ps_id]}
+
+        +show_timezone:
+            echo>: "Timezone: ${user_timezone}"
 
         +prepare_dbs:
             td_ddl>:

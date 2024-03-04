@@ -35,8 +35,8 @@ FROM
     ON act.time = clk.time AND act.activation_step_id = clk.activation_step_id
     FULL OUTER JOIN (
         SELECT
-            TD_DATE_TRUNC('day',time, '${timezone}') AS time
-            ,TD_TIME_STRING(time, 'd!', '${timezone}') AS date
+            TD_DATE_TRUNC('day',time, '${user_timezone}') AS time
+            ,TD_TIME_STRING(time, 'd!', '${user_timezone}') AS date
             ,activation_step_id
             ,type
             ,utm_source

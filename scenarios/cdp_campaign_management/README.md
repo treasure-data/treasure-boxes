@@ -306,8 +306,9 @@ By editing/adding and uploading the value of each utm parameter in this table, t
 This file must be edited for run. The following sample is an example to illustrate the process.
 
 ```yaml
-timezone: JST
 td:
+    timezone: JST
+
     ps:
         - 489726
 

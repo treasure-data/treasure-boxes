@@ -11,8 +11,8 @@ WITH tbl_jobs AS
 ,tbl_act_hst AS
 (
     SELECT
-        TD_TIME_PARSE(JSON_EXTRACT_SCALAR(exe, '$.createdAt'), '${timezone}') AS time
-        ,TD_TIME_PARSE(JSON_EXTRACT_SCALAR(exe, '$.finishedAt'), '${timezone}') AS time_finished
+        TD_TIME_PARSE(JSON_EXTRACT_SCALAR(exe, '$.createdAt'), '${user_timezone}') AS time
+        ,TD_TIME_PARSE(JSON_EXTRACT_SCALAR(exe, '$.finishedAt'), '${user_timezone}') AS time_finished
         ,id AS syndication_id
         ,name AS activation_name
         ,JSON_EXTRACT_SCALAR(exe, '$.workflowId') AS workflow_id
@@ -25,7 +25,7 @@ WITH tbl_jobs AS
         ${td.monitoring.db.cdp_monitoring}.${td.monitoring.tables.activations}
     CROSS JOIN UNNEST(CAST(JSON_PARSE(executions) AS ARRAY(JSON))) AS t(exe)
     WHERE ps_id = '${ps_id}'
-    AND TD_TIME_RANGE(TD_TIME_PARSE(JSON_EXTRACT_SCALAR(exe, '$.createdAt'), '${timezone}'), ${time_from}, ${time_to})
+    AND TD_TIME_RANGE(TD_TIME_PARSE(JSON_EXTRACT_SCALAR(exe, '$.createdAt'), '${user_timezone}'), ${time_from}, ${time_to})
 )
 
 SELECT act_hst.*

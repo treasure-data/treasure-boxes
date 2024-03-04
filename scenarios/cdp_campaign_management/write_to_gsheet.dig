@@ -59,7 +59,7 @@
 
     +export_mta:
         td>:
-        query: SELECT TD_TIME_STRING(time,'d!','${timezone}') AS date,* FROM ${td.tables.mta_conversion_journeys} ORDER BY cv_name, ${user_id}, cv_id, position LIMIT 1000
+        query: SELECT TD_TIME_STRING(time,'d!','${user_timezone}') AS date,* FROM ${td.tables.mta_conversion_journeys} ORDER BY cv_name, ${user_id}, cv_id, position LIMIT 1000
         result_connection: ${gsheet.result_connection}
         result_settings:
             spreadsheet_folder: ${gsheet.sheet_folder}

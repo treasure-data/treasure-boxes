@@ -29,7 +29,7 @@ WITH tbl_base_activations AS
         AND CAST(audience_id AS VARCHAR) = '${ps_id}'
         AND TD_TIME_RANGE(time,${time_from},${time_to})
     ) t1
-    JOIN
+    LEFT OUTER JOIN
     (
         SELECT
             CAST(id AS VARCHAR) AS activation_step_id
@@ -46,10 +46,10 @@ SELECT
     ,${user_id}
     ,s1.activation_step_id
     ,syndication_id
+    ,segment_id
+    ,segment_name
     ,activation_type
     ,activation_name
-    -- ,segment_id
-    -- ,segment_name
     ,journey_id
     ,cv_name
     ,utm_source
