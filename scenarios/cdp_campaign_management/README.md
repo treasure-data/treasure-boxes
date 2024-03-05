@@ -22,17 +22,17 @@ Before installing this WF, it is assumed that the Monitoring WFs has been instal
 
 If you want to take advantage of activation history, you will need one of the following features.
 
-#### Journey Orchestration
-
-(optional)
-Currently, only activations performed on Journey Orchestration are tracked. In other words, activations from segments are not tracked.
-
-### activation_log
+#### activation_log
 
 (optional)
 activation_log is an option to record in the TD a history of who, when, and where all activations were made. When this history is available, it will be easy to refer to the activation history for each user.
 
-If this table is not available, you can still scan the journey table to create an activation history, but you will need Custom Scripts.
+If this table is not available, you can still scan the journey table to create an activation history, but you will need Custom Scripts and activation history from the segment can only be obtained from the activation_log.
+
+#### Journey Orchestration
+
+(optional)
+If you are running all activations from Journey Orchestration, you can get the activation history from `journey_table` without the activation_log. However, if you also have a activations from segments, you will need an activation_log to get the history of these.
 
 ### To get Campaign Click History
 
