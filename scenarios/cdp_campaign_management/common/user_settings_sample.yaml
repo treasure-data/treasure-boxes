@@ -2,16 +2,40 @@ td:
     timezone: JST
     # valuation_target: 'activation'
     ps:
+        - 244539
         - 507568
 
+
     user_id:
+        244539: td_client_id
         507568: td_client_id
+
+    valuation_target:
+        244539: activation
+        507568: click
 
     activations_tables:
         507568:
             scan_journey_tables: true
 
     clicks_tables:
+        244539:
+            -
+                is_audience_table: false
+                db: treasurebikes
+                table: behv_website
+                url_col: td_url
+                time_col: time
+                filter: td_url IS NOT NULL
+                # use_distinct: true
+            -
+                is_audience_table: true
+                # db:
+                table: behavior_behv_orders
+                url_col: td_url
+                # time_col: timestamp
+                # filter:
+                # use_distinct: true
         507568:
             -
                 is_audience_table: false
@@ -31,6 +55,35 @@ td:
                 # use_distinct: true
 
     conversions_tables:
+        244539:
+            -
+                is_audience_table: false
+                db: treasurebikes
+                table: behv_website
+                filter: td_subscription = 'true'
+                cv_name: SUBSCRIBE
+                time_col: time
+                val_col: 1
+                acquired_revenue_per_person: 20000
+                # use_distinct: false
+            -
+                is_audience_table: true
+                table: behavior_behv_website
+                filter: td_app IN ('Android', 'iOS')
+                cv_name: DOWNLOAD
+                # time_col: timestamp
+                val_col: 1
+                acquired_revenue_per_person: 20000
+                # use_distinct: false
+            -
+                is_audience_table: true
+                table: behavior_behv_orders
+                filter: checkout_event = 'true'
+                cv_name: PURCHASE
+                # time_col: timestamp
+                val_col: total_order
+                acquired_revenue_per_person: 1
+                # use_distinct: false
         507568:
             -
                 is_audience_table: false

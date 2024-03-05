@@ -21,7 +21,7 @@ WITH tbl_cv_history AS
         AND raw_data.cv_name = cv_history.cv_name
         WHERE raw_data.time <= cv_history.time
         AND raw_data.${user_id} <= cv_history.${user_id}
-        AND type <> '${valuation_target=="activation" ? "Click" : "Activation"}'
+        AND type <> '${valuation_target}'
     )
     WHERE cv_order = 1
 )

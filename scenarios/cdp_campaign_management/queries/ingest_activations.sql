@@ -19,8 +19,7 @@ WITH tbl_base_activations AS
     FROM
     (
         SELECT
-            time
-            ,identifier AS ${user_id}
+            identifier AS ${user_id}
             ,audience_id
             ,NULL AS cdp_customer_id
             ,CAST(activation_id AS VARCHAR) AS syndication_id
@@ -28,10 +27,12 @@ WITH tbl_base_activations AS
             ,segment_name
             ,activation_name
             ,integration_type AS connector_type
+            ,MIN(time) AS time
         FROM ${cdp_audience_db}.${td.tables.activation_log}
         WHERE identifier_type = '${user_id}'
         AND CAST(audience_id AS VARCHAR) = '${ps_id}'
         AND TD_TIME_RANGE(time,${time_from},${time_to})
+        GROUP BY 1,2,3,4,5,6,7,8
     ) t1
     LEFT OUTER JOIN
     (

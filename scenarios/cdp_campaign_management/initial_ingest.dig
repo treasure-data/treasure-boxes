@@ -345,6 +345,9 @@ _export:
             dest_table: ${td.tables.conversion_journeys}
 
 +ingest_mta_conversion_journeys:
+    _export:
+        valuation_target: "${td.valuation_target == null || td.valuation_target[ps_id] == null || td.valuation_target[ps_id] == 'click' ? 'Activation' : 'Click'}"
+
     +ingest_to_tmp_table:
         td>: queries/ingest_mta_conversion_journeys.sql
         create_table: ${td.tables.tmp_mta_conversion_journeys}
