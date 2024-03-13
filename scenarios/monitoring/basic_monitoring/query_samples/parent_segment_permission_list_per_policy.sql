@@ -23,7 +23,7 @@ with temp1 as (
   select
     t.id as policy_id, t.name as policy_name, t.description,
     t.parent_segment_operation,
-    CAST(p.id as INTEGER) as parent_segment_id,
+    CAST(p.id as BIGINT) as parent_segment_id,
     JSON_EXTRACT_SCALAR(p.attributes, '$.name') as parent_segment_name
   from temp4 t
   join cdp_monitoring.parent_segments p on t.parent_segments_id = p.id

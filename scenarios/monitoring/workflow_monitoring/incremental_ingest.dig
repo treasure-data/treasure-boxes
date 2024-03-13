@@ -77,7 +77,7 @@ schedule:
         TD_API_KEY: ${secret:td.apikey}
   +check_max_attempt_id:
     td>: 
-    query: select max(cast(id as INTEGER)) as max_id from attempts
+    query: select max(id) as max_id from attempts
     store_last_results: true
     database: ${td.database}
   +ingest_incremetal_attempt:
@@ -98,7 +98,7 @@ schedule:
 +ingest_incremental_session:
   +check_max_session_id:
     td>:
-    query: select max(cast(id as INTEGER)) as max_id, max(time) as last_datetime from ${td.tables.sessions}
+    query: select max(id) as max_id, max(time) as last_datetime from ${td.tables.sessions}
     store_last_results: true
     database: ${td.database}
 

@@ -97,7 +97,7 @@ schedule:
             TD_API_KEY: ${secret:td.apikey}
     +check_max_job_id:
         td>: 
-        query: select max(cast(job_id as INTEGER)) as max_id from ${td.tables.jobs}
+        query: select max(job_id) as max_id from ${td.tables.jobs}
         store_last_results: true
         database: ${td.database}
 

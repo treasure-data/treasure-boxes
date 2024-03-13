@@ -21,7 +21,7 @@ with temp1 as (
   from temp3
 ) 
 select 
-  t4.id as policy_id, t4.name as policy_name, t4.description as policy_description, t4.operation database_operation, cast(d.id as INTEGER) as database_id, d.name as database_name
+  t4.id as policy_id, t4.name as policy_name, t4.description as policy_description, t4.operation database_operation, cast(d.id as BIGINT) as database_id, d.name as database_name
 from temp4 t4
 join databases d on t4.target = d.id
 order by 1, 5, 4
