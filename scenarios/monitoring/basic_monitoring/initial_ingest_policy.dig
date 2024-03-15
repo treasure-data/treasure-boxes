@@ -13,7 +13,7 @@ _export:
     user_assign_policies_table: ${td.tables.user_assign_policies}
     api_endpoint: ${td.api_endpoint}
     docker:
-        image: "digdag/digdag-python:3.9"
+        image: "digdag/digdag-python:3.10.1"
     _env:
         TD_API_KEY: ${secret:td.apikey}
 
@@ -23,7 +23,7 @@ _export:
     dest_table: ${td.tables.databases}
     api_endpoint: ${td.api_endpoint}
     docker:
-        image: "digdag/digdag-python:3.9"
+        image: "digdag/digdag-python:3.10.1"
     _env:
         TD_API_KEY: ${secret:td.apikey}
 
@@ -36,7 +36,7 @@ _export:
     policy_assign_users_table: ${td.tables.policies_assign_users}
     api_endpoint: ${td.api_endpoint}
     docker:
-        image: "digdag/digdag-python:3.9"
+        image: "digdag/digdag-python:3.10.1"
     _env:
         TD_API_KEY: ${secret:td.apikey}
 

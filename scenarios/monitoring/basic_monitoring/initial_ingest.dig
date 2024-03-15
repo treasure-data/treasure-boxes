@@ -12,9 +12,26 @@ _export:
     dest_table: ${td.tables.connections}
     api_endpoint: ${td.api_endpoint}
     docker:
-        image: "digdag/digdag-python:3.9"
+        image: "digdag/digdag-python:3.10.1"
     _env:
         TD_API_KEY: ${secret:td.apikey}
+
++ingest_connection_details:
+    +get_all_connection:
+        td>:
+        query: SELECT ARRAY_JOIN(ARRAY_AGG(name), ',') AS names FROM connections
+        store_last_results: true
+
+    +ingest_connection_details:
+        py>: scripts.ingest_connection_details.run
+        dest_db: ${td.database}
+        dest_table: ${td.tables.connections_details}
+        names: ${td.last_results.names}
+        api_endpoint: ${td.api_endpoint}
+        docker:
+            image: "digdag/digdag-python:3.10.1"
+        _env:
+            TD_API_KEY: ${secret:td.apikey}
 
 +ingest_schedule:
     py>: scripts.ingest_schedule.run
@@ -22,7 +39,7 @@ _export:
     dest_table: ${td.tables.schedules}
     api_endpoint: ${td.api_endpoint}
     docker:
-        image: "digdag/digdag-python:3.9"
+        image: "digdag/digdag-python:3.10.1"
     _env:
         TD_API_KEY: ${secret:td.apikey}
 
@@ -32,7 +49,7 @@ _export:
     dest_table: ${td.tables.sources}
     api_endpoint: ${td.api_endpoint}
     docker:
-        image: "digdag/digdag-python:3.9"
+        image: "digdag/digdag-python:3.10.1"
     _env:
         TD_API_KEY: ${secret:td.apikey}
 
@@ -46,6 +63,6 @@ _export:
   api_endpoint: ${td.api_endpoint}
   if_exists: 'overwrite'
   docker:
-    image: "digdag/digdag-python:3.9"
+    image: "digdag/digdag-python:3.10.1"
   _env:
     TD_API_KEY: ${secret:td.apikey}

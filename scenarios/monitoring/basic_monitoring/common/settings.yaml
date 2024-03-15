@@ -4,6 +4,8 @@ td:
     jobs: jobs
     connections: connections
     connections_history: connections_history
+    connections_details: connections_details
+    connections_details_history: connections_details_history
     schedules: schedules
     schedules_history: schedules_history
     sources: sources
