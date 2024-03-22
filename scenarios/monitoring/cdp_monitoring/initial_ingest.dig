@@ -5,9 +5,9 @@ _export:
     +create_db:
         td_ddl>: 
         create_databases: [ "${td.database}" ]
-    +cerate_tables:
-        td>: 
-        query: create table ${td.tables.parent_segments} (id varchar)
+    +create_tables:
+        td_ddl>:
+        create_tables: ${Object.keys(td.tables)}
 
 +initial_ingest_ps:
     py>: scripts.ingest_ps.run
