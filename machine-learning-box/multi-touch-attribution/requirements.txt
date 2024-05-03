@@ -39,7 +39,7 @@ tensorboard-plugin-wit==1.7.0
 tensorflow==2.11.1
 tensorflow-estimator==2.3.0
 termcolor==1.1.0
-tqdm==4.48.2
+tqdm==4.66.3
 urllib3==1.24.3
 Werkzeug==2.2.3
 wrapt==1.12.1
