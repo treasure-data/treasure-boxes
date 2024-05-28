@@ -44,10 +44,10 @@ def insert_attempt_info(import_unixtime, endpoint, apikey, dest_db, dest_table, 
   client.load_table_from_dataframe(df, dest_table, if_exists='append', fmt='msgpack')
 
 def run(session_unixtime, dest_db, dest_table, ids, api_endpoint='api.treasuredata.com', workflow_endpoint='api-workflow.treasuredata.com'):
-  id_list = ids.split(',')
-  if len(id_list) == 0:
+  if len(ids) == 0:
     print('no update record')
     return
+  id_list = ids.split(',')
   delete_attempt_info(api_endpoint, os.environ['TD_API_KEY'], dest_db, dest_table, id_list)
 
   workflow_url = 'https://%s/api/attempts' % workflow_endpoint + '/%s'
