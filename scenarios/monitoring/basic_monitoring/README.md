@@ -1,4 +1,4 @@
-# Workflow: Scenario (Import Job/Schedule/Connection from REST API)
+# Workflow: Scenario (Import basic TD objects from REST API)
 
 ## Scenario
 
@@ -15,7 +15,7 @@ First, please upload the workflow.
 ## Upload
   $td wf push basic_monitoring
 
-Second, you register td.apikey as a secret.
+Second, you register td.apikey as a secret. (Owner of td.apikey must be admin and have all permission for TD functions.)
 
 ## Register
   $td wf secrets --project basic_monitoring --set td.apikey=1234/abcdefg...
@@ -24,6 +24,7 @@ Second, you register td.apikey as a secret.
   $td wf start basic_monitoring initial_ingest --session now
   
   $td wf start basic_monitoring initial_ingest_policy --session now
+  (Note: initial_ingest_policy workflow will not work in TD environments where Policy-Based Permission feature is not enabled.)
 
 ## Caution
   You should set lower_job_id option (initial_ingest_jobs task of initial_ingest workflow) properly.

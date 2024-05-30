@@ -1,4 +1,4 @@
-# Workflow: Scenario (Import session/attempt/project/workflow/schedule from REST API)
+# Workflow: Scenario (Import TD object of workflow from REST API)
 
 ## Scenario
 
@@ -15,7 +15,7 @@ First, please upload the workflow.
 ## Upload
   $td wf push workflow_monitoring
 
-Second, you register td.apikey as a secret.
+Second, you register td.apikey as a secret. (Owner of td.apikey must be admin and have all permission for TD functions.)
 
 ## Register
   $td wf secrets --project workflow_monitoring --set td.apikey=1234/abcdefg...
