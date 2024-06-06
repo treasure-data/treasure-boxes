@@ -3,7 +3,7 @@ _export:
 
 +initial_database_and_tables:
     +create_db:
-        td_ddl>: 
+        td_ddl>:
         create_databases: [ "${td.database}" ]
 
 +ingest_users:
@@ -27,6 +27,8 @@ _export:
     _env:
         TD_API_KEY: ${secret:td.apikey}
 
+# This task ingests policy history for Policy Based Permission.
+# If the feature is unavailable for your account, remove this task.
 +ingest_policy:
     py>: scripts.ingest_policy.run
     dest_db: ${td.database}
