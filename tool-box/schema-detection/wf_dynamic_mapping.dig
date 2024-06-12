@@ -1,0 +1,23 @@
+_export:
+  td:
+   database: demo_schema
+   table: change_status
+   from: "source email address"
+   
+#Pass apikey as a secret
++secrets2:
+  docker:
+    image: "digdag/digdag-python:3.7.3-stretch"
+  py>: runtime_linking.use_df
+  _env:
+     apikey : ${secret:apikey}
+     
+  
++task1:
+  if>: ${this.change_status} 
+  _do:
+    mail>: {data: "Hello, This is to notify you that the definition of the table you are about to insert has been changed"}
+    subject: Table definition has been changed
+    to: ["destination email address"]
+    
+    
