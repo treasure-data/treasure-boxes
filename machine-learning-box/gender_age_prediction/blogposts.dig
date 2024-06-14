@@ -1,0 +1,21 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${target_db}
+    engine: hive
+    priority: ${job_priority}
+
++tokenize:
+  td>: queries/blogposts/tokenize_en.sql
+  create_table: exploded
+
++vectorize:
+  td>: queries/blogposts/ftvec.sql
+  create_table: input
+  engine_version: experimental
+
++predict:
+  _parallel: true
+
+  +rf_predict:
+    call>: blogposts_rf_predict.dig
