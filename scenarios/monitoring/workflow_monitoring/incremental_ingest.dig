@@ -17,9 +17,9 @@ schedule:
     session_unixtime: ${session_unixtime}
     dest_db: ${td.database}
     dest_table: ${td.tables.projects}
-api_endpoint: ${td.api_endpoint}
+    api_endpoint: ${td.api_endpoint}
     workflow_endpoint: ${td.workflow_endpoint}
-        docker:
+    docker:
       image: "digdag/digdag-python:3.10.1"
     _env:
       TD_API_KEY: ${secret:td.apikey}
