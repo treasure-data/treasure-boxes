@@ -26,7 +26,7 @@ def insert_revision_info(import_unixtime, endpoint, apikey, dest_db, dest_table,
     client.load_table_from_dataframe(df, dest_table, if_exists='append', fmt='msgpack')
 
 def run(session_unixtime, dest_db, dest_table, project_ids, api_endpoint='api.treasuredata.com', workflow_endpoint='api-workflow.treasuredata.com'):
-    id_list = project_ids[1:-1].split(',')
+    id_list = project_ids.split(',')
     if len(id_list) == 0:
         print('no project id')
         return

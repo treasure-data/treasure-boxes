@@ -48,6 +48,9 @@ def run(session_unixtime, dest_db, dest_table, ids, api_endpoint='api.treasureda
     print('no update record')
     return
   id_list = ids.split(',')
+  if len(id_list) == 0:
+    print('no update record')
+    return
   delete_attempt_info(api_endpoint, os.environ['TD_API_KEY'], dest_db, dest_table, id_list)
 
   workflow_url = 'https://%s/api/attempts' % workflow_endpoint + '/%s'
