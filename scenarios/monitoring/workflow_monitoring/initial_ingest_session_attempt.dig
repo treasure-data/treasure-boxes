@@ -52,12 +52,12 @@ _export:
     dest_db: ${td.database}
     dest_table: ${td.tables.revisions}
     project_ids: ${td.last_results.project_ids}
-  api_endpoint: ${td.api_endpoint}
-  workflow_endpoint: ${td.workflow_endpoint}
-  docker:
-    image: "digdag/digdag-python:3.10.1"
-  _env:
-    TD_API_KEY: ${secret:td.apikey}
+    api_endpoint: ${td.api_endpoint}
+    workflow_endpoint: ${td.workflow_endpoint}
+    docker:
+      image: "digdag/digdag-python:3.10.1"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
 
 +initial_ingest_session:
   py>: scripts.ingest_session.run
