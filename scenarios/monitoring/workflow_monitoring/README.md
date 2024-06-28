@@ -35,8 +35,9 @@ You should set lower_limit_session_id option (initial_ingest_session task of ini
 | schedules | [/api/schedules](https://docs.digdag.io/api/) |
 | sessions | [/api/sessions](https://docs.digdag.io/api/) |
 | workflows | [/api/workflows](https://docs.digdag.io/api/) |
+| revisions | [/api/projects/{id}/revisions](https://docs.digdag.io/api/) |
 
-**projects** , **schedules** and **workflows** table is replaced daily by incremental_ingest.dig.
+**projects** , **schedules** , **workflows** and **revisions**table is replaced daily by incremental_ingest.dig.
 **attempts** and **sessions** table is imported incrementally.
 
 # Next Step

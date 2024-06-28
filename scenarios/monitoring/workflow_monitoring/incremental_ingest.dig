@@ -17,9 +17,9 @@ schedule:
     session_unixtime: ${session_unixtime}
     dest_db: ${td.database}
     dest_table: ${td.tables.projects}
-    api_endpoint: ${td.api_endpoint}
+api_endpoint: ${td.api_endpoint}
     workflow_endpoint: ${td.workflow_endpoint}
-    docker:
+        docker:
       image: "digdag/digdag-python:3.10.1"
     _env:
       TD_API_KEY: ${secret:td.apikey}
@@ -55,6 +55,31 @@ schedule:
     session_unixtime: ${session_unixtime}
     dest_db: ${td.database}
     dest_table: ${td.tables.schedules}
+    api_endpoint: ${td.api_endpoint}
+    workflow_endpoint: ${td.workflow_endpoint}
+    docker:
+      image: "digdag/digdag-python:3.10.1"
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+
++incremental_ingest_project_revision:
+  +append_project_revision_history:
+    td>:
+    query: select * from ${td.tables.revisions}
+    database: ${td.database}
+    insert_into: ${td.tables.revisions_history}
+
+  +get_all_project:
+    td>:
+    query: select ARRAY_JOIN(ARRAY_AGG(id), ',') as project_ids from (select id from projects group by id)
+    store_last_results: true
+    
+  +ingest_project_revision:
+    py>: scripts.ingest_revision.run
+    session_unixtime: ${session_unixtime}
+    dest_db: ${td.database}
+    dest_table: ${td.tables.revisions}
+    project_ids: ${td.last_results.project_ids}
     api_endpoint: ${td.api_endpoint}
     workflow_endpoint: ${td.workflow_endpoint}
     docker:
@@ -104,7 +129,7 @@ schedule:
 +ingest_incremental_session:
   +check_max_session_id:
     td>:
-    query: select max(id) as max_id, max(time) as last_datetime from ${td.tables.sessions}
+    query: select max(cast(id as INTEGER)) as max_id, max(time) as last_datetime from ${td.tables.sessions}
     store_last_results: true
     database: ${td.database}
 
