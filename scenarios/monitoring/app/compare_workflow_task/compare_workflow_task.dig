@@ -1,0 +1,41 @@
+_export:
+  td:
+    database: temporary_${session_id}
+    tables:
+      tasks: tasks
+    api_endpoint: api.treasuredata.com
+    workflow_endpoint: api-workflow.treasuredata.com
+  attempt_ids:
+    - 1201247649
+    - 1200176632
+    - 1199185996
+
++create_temporary_db:
+  td_ddl>: 
+  create_databases: ["${td.database}"]
+
++get_attempt_task:
+  py>: scripts.ingest_task.run
+  session_unixtime: ${session_unixtime}
+  dest_db: ${td.database}
+  dest_table: ${td.tables.tasks}
+  attempt_ids: ${attempt_ids.join(',')}
+  api_endpoint: ${td.api_endpoint}
+  workflow_endpoint: ${td.workflow_endpoint}
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+
++gen_query:
+  td>: queries/gen_query.sql
+  store_last_results: true
+
++compare_task:
+  td>: queries/compare_task.sql
+  
++delete_temporary_db:
+  td_ddl>:
+  drop_databases: ["${td.database}"]
+
+
