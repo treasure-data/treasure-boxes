@@ -1,6 +1,6 @@
 _export:
   td:
-    database: temporarly_${session_id}
+    database: temporary_${session_id}
     tables:
       tasks: tasks
     api_endpoint: api.treasuredata.com
