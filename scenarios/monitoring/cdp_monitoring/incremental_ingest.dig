@@ -37,7 +37,7 @@ schedule:
         api_endpoint: ${td.api_endpoint}
         cdp_api_endpoint: ${td.cdp_api_endpoint}
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
