@@ -1,0 +1,47 @@
+_export:
+  td:
+    database: '${activation_actions_db}'
+
+# tables:
+#   - 'previous_profiles': table that contains the profiles of the previous run
+#   - '${activation_actions_table}': table that contains the profiles of the current run
+#   - 'diff': table that contains the diff between the previous and the current run
+#   - 'diff_history': table that contains all the diffs from the beginning
+
++preparation:
+  td_ddl>:
+  create_tables: ["previous_profiles", "diff_history"]
+
++cleanup_intermindate_table:
+  td_ddl>:
+  empty_tables: ['diff']
+
+#
+# do the actual activation(s)
+#
+
++activation_for_added_profiles:
+  td>:
+  query: "SELECT * FROM ${activation_actions_table} WHERE profile_id in (SELECT profile_id FROM diff WHERE change = 'add')"
+  # result_connection: 'authentication-1'
+  # result_settings: 'authentication-1-setting-1'
+  # Enable above if you want to activate to the setting 1
+
++activation_for_deleted_profiles:
+  td>:
+  query: "SELECT * FROM previous_profiles WHERE profile_id in (SELECT profile_id FROM diff WHERE change = 'delete')"
+  # result_connection: 'authentication-2'
+  # result_settings: 'authentication-2-setting-1'
+  # Enable above if you want to activate to the setting 2
+
++insert_diff_into_history:
+  td>:
+  query: "INSERT INTO diff_history SELECT * FROM diff;"
+
++drop_diff:
+  td_ddl>:
+  drop_tables: ['diff', 'previous_profiles']
+
++insert_profiles_into_history:
+  td>:
+  query: "CREATE TABLE previous_profiles AS SELECT '${session_id}' as session_id, '${attempt_id}' as attempt_id, * FROM ${activation_actions_table} ;"
