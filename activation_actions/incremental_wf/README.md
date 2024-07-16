@@ -9,8 +9,8 @@ This example code considers `add` (new profiles) and `delete` (dropped profiles)
 ## How to use this workflow for Activation Actions
 
 1. Download this folder into your local.
-2. Upload the workflow `td wf push td_load_gcs` (Require td command installation)
-3. Set `incremental_wf.dig` as a custom workflow of the Activation Action in Audience Studio.
+2. Upload the workflow `td wf push incremental_wf` (Require td command installation)
+3. Set `incremental_wf` as a custom workflow of the Activation Action in Audience Studio.
 
 ## Available Parameters for Activation Actions
 
