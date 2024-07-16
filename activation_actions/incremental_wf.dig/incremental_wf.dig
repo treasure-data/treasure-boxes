@@ -16,6 +16,9 @@ _export:
   td_ddl>:
   empty_tables: ['diff']
 
++calc_diff:
+  td>: calc_diff.sql
+
 #
 # do the actual activation(s)
 #
@@ -44,4 +47,5 @@ _export:
 
 +insert_profiles_into_history:
   td>:
-  query: "CREATE TABLE previous_profiles AS SELECT '${session_id}' as session_id, '${attempt_id}' as attempt_id, * FROM ${activation_actions_table} ;"
+  query: "SELECT '${session_id}' as session_id, '${attempt_id}' as attempt_id, * FROM ${activation_actions_table} ;"
+  create_table: 'previous_profiles'

@@ -8,13 +8,10 @@ SELECT * FROM (
       ELSE '???' -- no change or modified
     END as change
     , coalesce(h.profile_id, a.profile_id) as profile_id
-    --, h.*
-    --, a.*
   FROM
     previous_profiles h
     FULL OUTER JOIN ${activation_actions_table} a
     ON h.profile_id = a.profile_id
 )
 WHERE
-  change <> '???'
-;
+  change != '???'
