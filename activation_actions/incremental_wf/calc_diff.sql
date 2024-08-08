@@ -3,15 +3,15 @@ SELECT * FROM (
     '${session_id}' as session_id,
     '${attempt_id}' as attempt_id,
     CASE
-      WHEN h.profile_id IS NULL THEN 'add'
-      WHEN a.profile_id IS NULL THEN 'delete'
-      ELSE '???' -- no change or modified
+      WHEN h.${key_column} IS NULL THEN 'add'
+      WHEN a.${key_column} IS NULL THEN 'delete'
+      ELSE 'modified' -- no change or modified
     END as change
-    , coalesce(h.profile_id, a.profile_id) as profile_id
+    , coalesce(h.${key_column}, a.${key_column}) as ${key_column}
   FROM
     previous_profiles h
     FULL OUTER JOIN ${activation_actions_table} a
-    ON h.profile_id = a.profile_id
+    ON h.${key_column} = a.${key_column}
 )
 WHERE
-  change != '???'
+  change != 'modified'

@@ -1,6 +1,7 @@
 _export:
   td:
     database: '${activation_actions_db}'
+  key_column: 'td_client_id' # Pleaes update your key id for diff
 
 # tables:
 #   - 'previous_profiles': table that contains the profiles of the previous run
@@ -16,6 +17,14 @@ _export:
   td_ddl>:
   empty_tables: ['diff']
 
++preparation_schema_previous_profiles:
+  td>:
+  query: "ALTER TABLE IF EXISTS previous_profiles ADD COLUMN IF NOT EXISTS ${key_column} varchar; ALTER TABLE IF EXISTS previous_profiles ADD COLUMN IF NOT EXISTS change varchar;"
+
++preparation_schema_diff:
+  td>:
+  query: "ALTER TABLE IF EXISTS diff ADD COLUMN IF NOT EXISTS ${key_column} varchar; ALTER TABLE IF EXISTS diff ADD COLUMN IF NOT EXISTS change varchar;"
+
 +calc_diff:
   td>: calc_diff.sql
 
@@ -25,14 +34,14 @@ _export:
 
 +activation_for_added_profiles:
   td>:
-  query: "SELECT * FROM ${activation_actions_table} WHERE profile_id in (SELECT profile_id FROM diff WHERE change = 'add')"
+  query: "SELECT * FROM ${activation_actions_table} WHERE ${key_column} in (SELECT ${key_column} FROM diff WHERE change = 'add')"
   # result_connection: 'authentication-1'
   # result_settings: 'authentication-1-setting-1'
   # Enable above if you want to activate to the setting 1
 
 +activation_for_deleted_profiles:
   td>:
-  query: "SELECT * FROM previous_profiles WHERE profile_id in (SELECT profile_id FROM diff WHERE change = 'delete')"
+  query: "SELECT * FROM previous_profiles WHERE ${key_column} in (SELECT ${key_column} FROM diff WHERE change = 'delete')"
   # result_connection: 'authentication-2'
   # result_settings: 'authentication-2-setting-1'
   # Enable above if you want to activate to the setting 2
@@ -47,5 +56,5 @@ _export:
 
 +insert_profiles_into_history:
   td>:
-  query: "SELECT '${session_id}' as session_id, '${attempt_id}' as attempt_id, * FROM ${activation_actions_table} ;"
+  query: "SELECT '${session_id}' as session_id, '${attempt_id}' as attempt_id, * FROM ${activation_actions_table};"
   create_table: 'previous_profiles'

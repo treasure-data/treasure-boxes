@@ -9,7 +9,7 @@ This sample code restricts the profiles output by using a filter in Custom Workf
 ### How to use
 
 1. Download this folder into your local.
-2. Upload the workflow `td wf push restrict_and_add_column` (Require td command installation)
+2. Upload the workflow `td wf push restrict_and_add_column` (Require td command installation). Default: Email is defined as exported field.
 3. Set `restrict_and_add_column` as a custom workflow of the Activation Action in Audience Studio.
 
 ## Available Parameters for Activation Actions

@@ -10,7 +10,8 @@ This example code considers `add` (new profiles) and `delete` (dropped profiles)
 
 1. Download this folder into your local.
 2. Upload the workflow `td wf push incremental_wf` (Require td command installation)
-3. Set `incremental_wf` as a custom workflow of the Activation Action in Audience Studio.
+3. Change key_column field in incremental_wf.dig depending on your required watermark. (Default: td_client_id)
+4. Set `incremental_wf` as a custom workflow of the Activation Action in Audience Studio.
 
 ## Available Parameters for Activation Actions
 
