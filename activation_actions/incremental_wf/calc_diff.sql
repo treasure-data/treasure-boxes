@@ -1,3 +1,4 @@
+INSERT INTO diff
 SELECT * FROM (
   SELECT DISTINCT
     '${session_id}' as session_id,
