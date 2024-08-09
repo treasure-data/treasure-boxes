@@ -1,0 +1,9 @@
+_export:
+  td:
+    database: '${activation_actions_db}'
+
++activation_for_added_profiles:
+  td>: activate_restricted.sql
+  result_connection: ${result_connection_name}
+  result_settings: ${result_connection_settings}
+  
