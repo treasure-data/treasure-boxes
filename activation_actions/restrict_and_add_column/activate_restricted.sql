@@ -1,0 +1,1 @@
+SELECT *, 'gmail' as domain FROM ${activation_actions_table} WHERE email like '%gmail%'
