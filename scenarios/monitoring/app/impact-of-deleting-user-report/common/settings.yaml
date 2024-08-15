@@ -1,0 +1,5 @@
+td:
+  database: monitoring
+  tables:
+    report_table: impact_of_deleting_user
+  email_to_check: weijing.chen@treasure-data.com
