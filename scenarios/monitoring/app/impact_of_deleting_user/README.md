@@ -48,3 +48,5 @@ $ td wf start impact_of_deleting_user impact_of_deleting_user --session now
 
 #### 6. View the report
 When the workflow session is completed, the report will be available in the database and table specified in Step 2.
+
+![](images/report.png)
