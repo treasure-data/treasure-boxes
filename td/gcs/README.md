@@ -50,7 +50,6 @@ Available parameters for `result_settings` are here.
 - compression: (string(None|gz|bzip2), default None)
 - header_line: (boolean(true|false), default true)
 - delimiter: (string(","|"\t"|"tab","|"), default ",")
-- quote_policy: (string(ALL|MINIMAL|NONE))
 - null_string: (string(""|"\N"|NULL|null), default "")
 - newline: (string(CRLF|CR|LF), default CRLF)
 - application_name: (string, Arbitrary client name associated with API requests)
