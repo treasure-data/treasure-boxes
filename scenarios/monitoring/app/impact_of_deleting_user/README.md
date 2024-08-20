@@ -13,7 +13,7 @@ Due to limitations in the API, this report cannot provide resource ownership inf
 - Treasure Insights Dashboards
 
 ### Prerequisites
-This report is dependent on the following monitoring workflows in this scenario:
+This report is dependent on the following monitoring workflows in this scenario. These workflows must run first.
 https://github.com/treasure-data/treasure-boxes/tree/master/scenarios/monitoring
 - basic_monitoring
 - cdp_monitoring
@@ -33,8 +33,8 @@ $ td wf push impact_of_deleting_user
   - `td.tables.report_table` - the table to write the report to
   - `td.email_to_check` - the user to check for resource ownership and impact upon deletion
 
-### 3. Uncomment data preparation task (if required)
-This workflow depends on the monitoring workflows listed in the Prerequisites to download resource data prior to generating the report. If the monitoring workflows have not been run yet, uncomment the `+prepare_data` task to run those workflows now.
+#### 3. Uncomment data preparation task (if required)
+This workflow depends on the monitoring workflows listed in the Prerequisites to download resource data prior to generating the report. If the monitoring workflows have not been run yet, uncomment the `+prepare_data` task to run those workflows first.
 
 #### 4. Register td.apikey as a workflow secret.
 ```
