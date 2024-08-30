@@ -1,0 +1,20 @@
+_export:
+    !include : common/settings.yaml
+
++initial_database_and_tables:
+    +create_db:
+        td_ddl>: 
+        create_databases: [ "${td.database}" ]
+    +create_tables:
+        td_ddl>:
+        create_tables: ${Object.keys(td.tables)}
+
++initial_ingest_datamodels:
+    py>: scripts.ingest_datamodels.run
+    dest_db: ${td.database}
+    dest_table: ${td.tables.datamodels}
+    api_endpoint: ${td.api_endpoint}
+    docker:
+        image: "digdag/digdag-python:3.9"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}

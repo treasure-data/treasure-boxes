@@ -1,0 +1,5 @@
+td:
+  database: insights_monitoring
+  tables:
+    datamodels: datamodels
+  api_endpoint: api.treasuredata.com

@@ -1,0 +1,25 @@
+_export:
+  !include : common/settings.yaml
+
+# +prepare_data:
+#   _parallel: true
+
+#   +run_basic_monitoring:
+#     require>: initial_ingest
+#     project_name: basic_monitoring
+
+#   +run_cdp_monitoring:
+#     require>: initial_ingest
+#     project_name: cdp_monitoring
+
+#   +run_workflow_monitoring:
+#     require>: initial_ingest_session_attempt
+#     project_name: workflow_monitoring
+
+#   +run_insights_monitoring:
+#     require>: ingest
+#     project_name: insights_monitoring
+
++execute_report:
+  td>: queries/generate_report.sql
+  create_table: ${td.tables.report_table}
