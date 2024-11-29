@@ -1,0 +1,25 @@
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: ${output_database}
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: ["${output_database}"]
+
++load_datasets:
+   ipynb>:
+     notebook: ml_datasets
+     output_database: ${input_database}
+     datasets: online_retail
+
++run_cltv:
+  ipynb>:
+    notebook: CLTV
+    input_table: ${input_database}.online_retail_txn
+    output_table: ${output_database}.online_retail_cltv_result
+    user_column: customerid
+    tstamp_column: invoicedate
+    amount_column: purchaseamount
+    audience_name: online_retail_cltv
