@@ -1,0 +1,58 @@
+name: ${td.unif_name}
+
+keys:
+  - name: td_client_id
+  - name: td_global_id
+
+tables:
+  - database: ${td.database}
+    table: ${td.tbl_aaa}
+    incremental_columns: [time]
+    key_columns:
+      - {column: td_client_id, key: td_client_id}
+      - {column: td_global_id, key: td_global_id}
+  - database: ${td.database}
+    table: ${td.tbl_xxx}
+    incremental_columns: [time]
+    key_columns:
+      - {column: td_client_id, key: td_client_id}
+      - {column: td_global_id, key: td_global_id}
+
+  - database: ${td.database}
+    table: ${td.tbl_yyy}
+    incremental_columns: [time]
+    key_columns:
+      - {column: td_client_id, key: td_client_id}
+      - {column: td_global_id, key: td_global_id}
+
+  - database: ${td.database}
+    table: ${td.tbl_zzz}
+    incremental_columns: [time]
+    key_columns:
+      - {column: td_client_id, key: td_client_id}
+      - {column: td_global_id, key: td_global_id}
+
+canonical_ids:
+  - name: unified_cookie_id
+    merge_by_keys: [td_client_id, td_global_id]
+    merge_iterations: 5
+    incremental_merge_iterations: 3
+
+master_tables:
+  - name: ${td.ms_name}
+    canonical_id: unified_cookie_id
+    attributes:
+      - name: td_client_id
+        array_elements: 5
+        source_columns:
+          - {table: '${td.tbl_aaa}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_xxx}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_yyy}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_zzz}', order: last, order_by: time, priority: 1}
+      - name: td_global_id
+        array_elements: 5
+        source_columns:
+          - {table: '${td.tbl_aaa}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_xxx}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_yyy}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_zzz}', order: last, order_by: time, priority: 1}

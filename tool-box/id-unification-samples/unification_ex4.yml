@@ -1,0 +1,37 @@
+name: ${td.unif_name}
+
+keys:
+  - name: member_id
+  - name: email
+
+tables:
+  - database: ${td.database}
+    table: ${td.tbl_aaa}
+    key_columns:
+      - {column: member_id, key: member_id}
+      - {column: email, key: email}
+
+canonical_ids:
+  - name: person_id
+    merge_by_keys: [member_id, email]
+    merge_iterations: 3
+    do_not_merge_key: member_id
+
+master_tables:
+  - name: ${td.ms_name}
+    canonical_id: person_id
+    attributes:
+      - name: member_id
+        source_columns:
+          - {table: '${td.tbl_aaa}', priority: 1}
+      - name: email
+        source_columns:
+          - {table: '${td.tbl_aaa}', priority: 1}
+      - name: tel
+        array_elements: 2
+        source_columns:
+          - {table: '${td.tbl_aaa}', priority: 1}
+      - name: name
+        array_elements: 2
+        source_columns:
+          - {table: '${td.tbl_aaa}', priority: 1}

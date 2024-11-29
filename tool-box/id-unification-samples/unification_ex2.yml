@@ -1,0 +1,72 @@
+name: ${td.unif_name}
+
+keys:
+  - name: td_client_id
+    invalid_texts: ['']
+
+  - name: td_global_id
+    valid_regexp: "3rd_*"
+    invalid_texts: ['']
+
+  - name: td_ssc_id
+    valid_regexp: "ssc_*"
+    invalid_texts: ['']
+
+  - name: email
+    valid_regexp: ".*@.*"
+    invalid_texts: ['']
+
+tables:
+  - database: ${td.database}
+    table: ${td.tbl_aaa}
+    key_columns:
+      - {column: td_client_id, key: td_client_id}
+      - {column: td_global_id, key: td_global_id}
+      - {column: td_ssc_id, key: td_ssc_id}
+
+  - database: ${td.database}
+    table: ${td.tbl_xxx}
+    key_columns:
+      - {column: td_ssc_id, key: td_ssc_id}
+      - {column: td_global_id, key: td_global_id}
+
+  - database: ${td.database}
+    table: ${td.tbl_yyy}
+    key_columns:
+      - {column: email, key: email}
+      - {column: td_ssc_id, key: td_ssc_id}
+
+  - database: ${td.database}
+    table: ${td.tbl_zzz}
+    key_columns:
+      - {column: td_client_id, key: td_client_id}
+      - {column: email, key: email}
+
+canonical_ids:
+  - name: person_id
+    merge_by_keys: [email, td_ssc_id, td_client_id, td_global_id]
+    merge_iterations: 5
+
+master_tables:
+  - name: ${td.ms_name}
+    canonical_id: person_id
+    attributes:
+      - name: email
+        source_columns:
+          - {table: '${td.tbl_yyy}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_zzz}', order: last, order_by: time, priority: 1}
+      - name: td_ssc_id
+        array_elements: 5
+        source_columns:
+          - {table: '${td.tbl_xxx}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_yyy}', order: last, order_by: time, priority: 2}
+      - name: td_client_id
+        array_elements: 5
+        source_columns:
+          - {table: '${td.tbl_aaa}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_zzz}', order: last, order_by: time, priority: 4}
+      - name: td_global_id
+        array_elements: 5
+        source_columns:
+          - {table: '${td.tbl_aaa}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_xxx}', order: last, order_by: time, priority: 2}

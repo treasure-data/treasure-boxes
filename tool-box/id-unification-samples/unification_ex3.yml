@@ -1,0 +1,77 @@
+name: ${td.unif_name}
+
+keys:
+  - name: td_client_id
+    invalid_texts: ['']
+
+  - name: td_global_id
+    valid_regexp: "3rd_*"
+    invalid_texts: ['']
+
+tables:
+  - database: ${td.database}
+    table: ${td.tbl_aaa}
+    key_columns:
+      - {column: td_client_id, key: td_client_id}
+      - {column: td_global_id, key: td_global_id}
+
+  - database: ${td.database}
+    table: ${td.tbl_xxx}
+    key_columns:
+      - {column: td_client_id, key: td_client_id}
+      - {column: td_global_id, key: td_global_id}
+
+  - database: ${td.database}
+    table: ${td.tbl_yyy}
+    key_columns:
+      - {column: td_client_id, key: td_client_id}
+      - {column: td_global_id, key: td_global_id}
+
+  - database: ${td.database}
+    table: ${td.tbl_zzz}
+    key_columns:
+      - {column: td_client_id, key: td_client_id}
+      - {column: td_global_id, key: td_global_id}
+
+canonical_ids:
+  - name: brand_id_ax
+    merge_by_keys: [td_client_id, td_global_id]
+    source_tables: ['${td.tbl_aaa}','${td.tbl_xxx}']
+    merge_iterations: 5
+
+  - name: brand_id_yz
+    merge_by_keys: [td_client_id, td_global_id]
+    source_tables: ['${td.tbl_yyy}','${td.tbl_zzz}']
+    merge_iterations: 5
+
+  - name: unified_brand_id
+    merge_by_keys: []
+    merge_by_canonical_ids: [brand_id_ax, brand_id_yz]
+    merge_iterations: 5
+
+master_tables:
+  - name: ${td.ms_name}
+    canonical_id: unified_brand_id
+
+    attributes:
+      - name: brand_id_ax
+        source_canonical_id: brand_id_ax
+
+      - name: brand_id_yz
+        source_canonical_id: brand_id_yz
+
+      - name: td_client_id
+        invalid_texts: ['']
+        source_columns:
+          - {table: '${td.tbl_aaa}', order: first, order_by: td_client_id, priority: 1}
+          - {table: '${td.tbl_xxx}', order: first, order_by: td_client_id, priority: 1}
+          - {table: '${td.tbl_yyy}', order: first, order_by: td_client_id, priority: 1}
+          - {table: '${td.tbl_zzz}', order: first, order_by: td_client_id, priority: 1}
+      - name: td_global_id
+        valid_regexp: "3rd_*"
+        invalid_texts: ['']
+        source_columns:
+          - {table: '${td.tbl_aaa}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_xxx}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_yyy}', order: last, order_by: time, priority: 1}
+          - {table: '${td.tbl_zzz}', order: last, order_by: time, priority: 1}
