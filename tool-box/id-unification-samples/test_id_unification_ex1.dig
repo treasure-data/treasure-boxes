@@ -1,0 +1,33 @@
+_export:
+  td:
+    database:  test_id_unification_ex1
+    unif_name: test_id_unification_ex1
+    ms_name: master_table_ex1
+  !include : config/params.yml
+
+##### Comment out all but the first execution.
++prepare_dbs:
+  td_ddl>:
+  create_databases: ["${td.database}"]
+
++generate_samples:
+  td>: queries/generate_samples_ex1.sql
+#####
+
++call_unification:
+  http_call>: https://api-cdp.treasuredata.com/unifications/workflow_call  
+  headers:
+    - authorization: ${secret:td.apikey}
+  method: POST
+  retry: true
+  content_format: json
+  content:
+    run_canonical_ids: true
+    run_enrichments: true
+    run_master_tables: true
+
+    full_refresh: true
+    keep_debug_tables: true
+
+    unification:
+      !include : unification_ex1.yml
