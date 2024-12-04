@@ -3,7 +3,7 @@ in:
   auth_method: json_key
   json_keyfile: { content: "${secret:gcp.json_key}" }
   bucket: "${gcs.bucket}"
-  path_prefix: "/filename_${session_date}.csv"
+  path_prefix: "filename_${session_date}.csv"
   decoders:
     - { type: gzip }
   parser:
