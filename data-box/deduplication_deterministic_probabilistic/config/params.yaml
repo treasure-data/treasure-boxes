@@ -1,0 +1,11 @@
+db: rotd_dm_pm
+source_tbl: customers
+clean_tbl: clean_sap_customer
+dm_tbl: dm_dedup
+pm_tbl: pm_dedup_eval
+api_endpoint: https://api.treasuredata.com
+positive_threshold: 80
+name_weight: 1
+address_weight: 1
+partition_cnt: 16
+process_cnt: 8

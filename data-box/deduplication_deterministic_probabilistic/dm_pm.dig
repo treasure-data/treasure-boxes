@@ -1,0 +1,50 @@
+timezone: Asia/Tokyo
+
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: ${db}
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: [ "${db}" ]
+  create_tables: [ "${pm_tbl}" ]
+  empty_tables: [ "${clean_tbl}", "${dm_tbl}", "${pm_tbl}" ]
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: [ "${db}" ]
+  create_tables: [ "${clean_tbl}", "${dm_tbl}", "${pm_tbl}" ]
+  empty_tables: [ "${clean_tbl}", "${dm_tbl}", "${pm_tbl}" ]
+
++cleansing:
+  td>: queries/cleanse.sql
+  create_table: ${clean_tbl}
+
+# Deterministic Matching at tier 4
++dm:
+  py>: scripts.dm.main
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_ENDPOINT: ${api_endpoint}
+  docker:
+    image: "digdag/digdag-python:3.10"
+    resource_level: "4"
+
+# Probabilistic Matching with multi-processing & multiple tasks at tier 4
++pm:
+  loop>: ${partition_cnt}
+  _parallel: false
+  _do:
+    +run_serial:
+      py>: scripts.pm.main
+      _env:
+        TD_API_KEY: ${secret:td.apikey}
+        TD_API_ENDPOINT: ${api_endpoint}
+        PROCESS_CNT: ${process_cnt}
+        PART: ${i}
+        PARTS: ${partition_cnt}
+      docker:
+        image: "digdag/digdag-python:3.10"
+        resource_level: "4"
