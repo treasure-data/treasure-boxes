@@ -1,0 +1,106 @@
+<script type="text/javascript">
+  // Inject TD JS SDK.
+  !function(t,e){if(void 0===e[t]){e[t]=function(){e[t].clients.push(this),this._init=[Array.prototype.slice.call(arguments)]},e[t].clients=[];for(var r=function(t){return function(){return this["_"+t]=this["_"+t]||[],this["_"+t].push(Array.prototype.slice.call(arguments)),this}},s=["addRecord","blockEvents","fetchServerCookie","fetchGlobalID","fetchUserSegments","resetUUID","ready","setSignedMode","setAnonymousMode","set","trackEvent","trackPageview","trackClicks","unblockEvents"],n=0;n<s.length;n++){var c=s[n];e[t].prototype[c]=r(c)}var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=("https:"===document.location.protocol?"https:":"http:")+"//cdn.treasuredata.com/sdk/4.1/td.min.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)}}("Treasure",this);
+  
+  // Create test datalayer.
+  window.testDataLayer = window.testDataLayer || [];
+  testDataLayer.push(
+    {
+      "test" : "testing"
+    });
+  console.log("DL ready");
+  console.log(testDataLayer);
+
+  // Initialize TD.
+  var td = new Treasure({
+    host: 'us01.records.in.treasuredata.com', // US RT endpoint
+    writeKey: 'xxx/yyyyy', // write-only TD API key
+    database: 'zzz', // TD database
+    // Send td_ip, td_user_agent, td_path, td_host, td_client_id and td_global_id from the beginning, if set. (Should ask for consent from website visitors first!)
+    startInSignedMode: true
+  });
+
+  // Send td_ip, td_user_agent, td_path, td_host, td_client_id and td_global_id, if set. (Should ask for consent from website visitors first!)
+  td.setSignedMode();
+  td.set('$global', 'td_global_id', 'td_global_id');
+  // Pass a value from testDataLayer.
+  td.set('pageviews', {login_status: testDataLayer[0]});
+  console.log(testDataLayer[0]);
+  // Track page view information to 'pageviews' table.
+  td.trackPageview('pageviews');
+  console.log("Pageviews sent");
+
+  // Initialize a data layer to store the segment ids and segment names in.
+  window.papiDataLayer = window.papiDataLayer || [];
+
+  // Initialize TD.
+  var fetchSegment = function(lookupKey, token) {
+    // Catch and process PAPI result from TD.
+    var successCallback = function(callbackResults) {
+      var papiData = JSON.parse(JSON.stringify(callbackResults[0])) // PAPI response (JSON).
+      var segmentIds = papiData["values"]; // Segment ID from PAPI response.
+      // Note: The below reverse lookup will be unnecessary once PAPI responds with segment names as well.
+      var servletUrl = 'aaa';
+      
+      // Reverse lookup segment id to obtain segment name (servlet calling TD's Audience API in the backend).
+      // Build the segment ids as query parameters.
+      if (segmentIds.length > 0) {
+        var segmentIdArr = "";
+        for (var j = 0; j < segmentIds.length; j++) {
+          if(segmentIds[j]) {
+            segmentIdArr = segmentIdArr + "segmentid=" + segmentIds[j] + "&";
+          }
+        };
+        segmentIdArr = segmentIdArr.slice(0, -1);
+        
+        // Call to servlet.
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4) {
+            var audienceData = JSON.parse(xhr.responseText); // JSON response from servlet.
+            // Add segment names and ids to data layer.
+            for (var i = 0; i < audienceData.length; i++) {
+              var dataToPush = {
+                "segment name" : audienceData[i]["name"], // TD Segment name
+                "segment id" : audienceData[i]["id"] // TD Segment id
+              }
+              papiDataLayer.push(dataToPush);
+            }
+          }
+        }
+        xhr.open('GET', servletUrl + segmentIdArr, true);
+        xhr.send(null);
+      }
+    }
+  
+    // PAPI error handling - output to browser console.
+    var errorCallback = function(error) {
+      console.log(error);
+    }
+    
+    // Fetch data from PAPI.
+    td.fetchUserSegments({
+      audienceToken: [token], // TD PAPI token
+      keys: {td_client_id: lookupKey} // td_client_id (first-party cookie)
+    }, successCallback, errorCallback);
+  }
+  
+  // Function to get td_client_id.
+  // Input: cookie name, e.g. "_td"
+  // Output: cookie value
+  function get_cookie(cookie_name) {
+  var result = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');
+  if(result)
+    return unescape(result[2]);
+  else
+    console.log("Error: Cookie not found.");
+  }
+
+  // Kick-off PAPI
+  setTimeout(function() {
+    var lookupKey = get_cookie("_td"); // td_client_id
+    var token = "aaa"; // TD PAPI token
+    fetchSegment(lookupKey, token);
+  }, 2500);
+  console.log("PAPI sent");
+</script>
