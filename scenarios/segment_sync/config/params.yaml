@@ -1,0 +1,7 @@
+mode: 0 # 0 - batch to rt, 1 - rt to batch
+aud_api_ep: https://api-cdp.treasuredata.com
+get_seg_list_path: /audiences/{audienceId}/folders/{folderId}/segments
+post_new_seg_path: /audiences/{audienceId}/segments
+audience: xxx
+batch_folder: yyy
+rt_folder: zzz
