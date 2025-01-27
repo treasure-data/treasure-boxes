@@ -1,0 +1,50 @@
+<html>
+  <body>
+    <head>
+      <style>
+        /* Reset styles */
+        body,
+        h1,
+        p {
+          margin: 0;
+          padding: 0;
+        }
+
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          background-color: #f9f9f9;
+          margin: 0;
+          padding: 0;
+        }
+        /* Footer styles */
+        .footer {
+          text-align: center;
+          padding: 20px 0;
+          background-color: #007bff;
+          color: #fff;
+        }
+
+        .footer p {
+          font-size: 14px;
+        }
+        /* Button styles */
+        .button {
+          display: inline-block;
+          background-color: #ffffff;
+          color: #fff;
+          text-decoration: none;
+          padding: 10px 20px;
+          border-radius: 5px;
+          font-weight: bold;
+          margin: 30px auto;
+        }
+      </style>
+    </head>
+      <h1>Treasure Data Activation ${td.last_results.act_id} has not syndicated a single record during its 3 previous runs.</h1>
+      <h2><a href="https://console-next.treasuredata.com/app/ps/${audience_id}/e/${segment_id}/sb/ac/${activation_id}/ea" class="button">Visit the Activation</a></h2>
+    <div class="footer">
+      <p>This email was sent automatically. Please do not reply.</p>
+    </div>
+  </body>
+</html>

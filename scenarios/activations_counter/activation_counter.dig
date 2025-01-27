@@ -1,0 +1,29 @@
+timezone: Asia/Tokyo
+
+_export: 
+  td:
+    database: activation_counter_db
+    table: activation_counter_tbl
+
++echo_activation_actions_parameters:
+  echo>: segment_id ==> ${segment_id}, segment_name ==> ${segment_name}, activation_id ==> ${activation_id}, audience_id ==> ${audience_id}
+
++register_count:
+  td>: queries/count_activated_records.sql
+  insert_into: ${td.table}
+  database: ${td.database}
+
++check_counts:
+  td>: queries/check_counts.sql
+  database: ${td.database}
+  store_last_results: true
+
++send_email:
+  if>: ${td.last_results.cnt == 3 && td.last_results.sum == 0}
+  _do:    
+    mail>: notifications/email.txt
+    subject: "Treasure Data Activation ${td.last_results.act_id} warning"
+    to: [roberto.szeiman@treasure-data.com]
+    html: true
++sent:
+  echo>: Email sent!
