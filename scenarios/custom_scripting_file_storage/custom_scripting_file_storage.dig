@@ -1,0 +1,18 @@
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: ${db}
+
++create_db_tbl_if_not_exist:
+  td_ddl>:
+  create_tables: [ "${out_tbl}" ]
+  empty_tables: [ "${out_tbl}" ]
+
++store:
+  py>: scripts.store.main
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_ENDPOINT: ${api_endpoint}
+  docker:
+    image: "digdag/digdag-python:3.10"

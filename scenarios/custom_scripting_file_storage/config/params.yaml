@@ -1,0 +1,4 @@
+db: some_db
+in_tbl: input_tbl
+out_tbl: output_tbl
+api_endpoint: https://api.treasuredata.com
