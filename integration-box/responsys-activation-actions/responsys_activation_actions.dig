@@ -1,0 +1,92 @@
+### About this workflow ###
+# (Note) This workflow only works with Activation Actions
+#
+# Plese refer to the document on Activation Actions below:
+# https://docs.treasuredata.com/articles/pd/activation-actions
+#
+timezone: Asia/Singapore
+
+# Global variables
+_export:
+  td:
+    engine: presto
+    ep: https://api.treasuredata.com/
+    wf: responsys_activation_actions
+    exec: Oracle Responsys
+  api:
+    pw: ${secret:api.pw}
+    prod: DEV # PROD or DEV
+  log:
+    database: activation_log
+    table: log_responsys
+    activation_log: log_summary
+    id: riid
+    campaign_col: campaign
+  backup:
+    flag: false
+    days: 3 # call another workflow
+
+## SLA & Error Notification ##
+
+!include : config/handling.dig
+
+## Data Check ##
++initial_data_check:
+  +data_counts:
+    td>: queries/aggregation.sql
+    database: ${activation_actions_db}
+    store_last_results: true
+  +count_logging:
+    td>: queries/logging.sql
+    database: ${log.database}
+    insert_into: ${log.database}.${log.activation_log}
+
+## Preparation & Logging ##
+
++data_preparation:
+  _export:
+    tmp_table: tmp_${activation_id}_${session_id}
+  +create_tmp_table_for_activation:
+    td>: queries/audience.sql
+    create_table: ${tmp_table}
+    database: ${log.database}
+
+## Data sync with Responsys
+# Oracle Responsys Documentation:
+# https://docs.oracle.com/en/cloud/saas/marketing/responsys-rest-api/index.html
+# Some limitations may apply. Please see the document for more information.
+
++send_data_to_responsys:
+  py>: scripts.send_data.main
+  _env:
+    PW: ${api.pw}
+    PROD: ${api.prod}
+    CAMP: ${td.last_results.campaign}
+    ACT_DB: cdp_audience_${audience_id}
+    ACT_TBL: cdp_syndication_${activation_id}
+    EP: ${td.ep}
+    ENGINE: ${td.engine}
+    API_KEY: ${secret:td.apikey}
+    WRITE_KEY: ${secret:td.writekey}
+  docker:
+    image: "digdag/digdag-python:3.10"
+
+## Data Clean up ##
+
++data_clean_up:
+  +activated_audience_log:
+    td>: queries/activation_log.sql
+    insert_into: ${log.table}
+    database: ${log.database}
+  +activated_to_other_destination:
+    if>: ${typeof result_connection_settings !== 'undefined'}
+    _do:
+      td>: queries/audience.sql
+      database: ${log.database}
+      result_connection: ${result_connection_name}
+      result_settings: ${result_connection_settings}
+      _retry: 5
+  +cleanup:
+    td_ddl>:
+    drop_tables: ["tmp_${activation_id}_${session_id}"]
+    database: ${log.database}

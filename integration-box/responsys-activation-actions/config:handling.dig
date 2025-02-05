@@ -1,0 +1,12 @@
+sla:
+  duration: 00:30:00
+  fail: true
+  +long_alert:
+    echo>: "#### Long Running Workflow !!!###"
+
+_error:
+  mail>:
+    data: Workflow Error occurred. Please check or run the command below. ${error.message}
+  subject: Workflow (${session_id}) Error
+  to: [<email>]
+  bcc: [<email>]

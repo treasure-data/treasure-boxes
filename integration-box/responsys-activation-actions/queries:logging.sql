@@ -1,0 +1,15 @@
+SELECT 
+  '${td.exec}' AS ma,
+  '${td.last_results.campaign}' AS campaign_name,
+  ${td.last_results.cnt} AS activated_profiles,
+  ${session_unixtime} AS sesseion_time,
+  '${session_local_time}' AS session_time_compact,
+  '${td.wf}' AS workflow_name,
+  '${segment_name}' AS segment_name,
+  '${segment_id}' AS audience_id,
+  '${activation_id}' AS syndication_id,
+  '${activation_actions_db}' AS activation_source_db,
+  '${activation_actions_table}' AS activation_source_tbl,
+  '${session_id}'AS session_id,
+  '${project_id}' AS project_id,
+  'Activation Actions' as activation_type
