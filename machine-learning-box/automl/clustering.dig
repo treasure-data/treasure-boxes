@@ -1,0 +1,23 @@
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: ${output_database}
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: ["${output_database}"]
+
++load_datasets:
+  ipynb>:
+    notebook: ml_datasets
+    output_database: ml_datasets
+    datasets: dermatology
+
++clustering_gluon_new_model:
+  ipynb>:
+    notebook: clustering
+    input_table: ml_datasets.dermatology
+    output_table: ${output_database}.dermatology_clusters_${session_id}
+    export_feature_importance: ${output_database}.feature_importance_${session_id}
+    export_shap_values: ${output_database}.shap_values_${session_id}
