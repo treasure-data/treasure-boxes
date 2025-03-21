@@ -31,14 +31,14 @@ def main(**kwargs):
     if batch_segs.status_code == 200 and rt_segs.status_code == 200:
       batch_segs_list = batch_segs.json()
       rt_segs_list = rt_segs.json()
-    elif batch_segs != 200 and rt_segs.status_code != 200:
+    elif batch_segs.status_code != 200 and rt_segs.status_code != 200:
       print(f"Failed to fetch batch segments. Status code: {batch_segs.status_code} - {batch_segs.reason} - {batch_segs.text}")
       print(f"Failed to fetch real-time segments. Status code: {rt_segs.status_code} - {rt_segs.reason} - {rt_segs.text}")
       exit()
-    elif batch_segs == 200 and rt_segs.status_code != 200:
+    elif batch_segs.status_code == 200 and rt_segs.status_code != 200:
       print(f"Failed to fetch real-time segments. Status code: {rt_segs.status_code} - {rt_segs.reason} - {rt_segs.text}")
       exit()
-    elif batch_segs != 200 and rt_segs.status_code == 200:
+    elif batch_segs.status_code != 200 and rt_segs.status_code == 200:
       print(f"Failed to fetch batch segments. Status code: {rt_segs.status_code} - {rt_segs.reason} - {rt_segs.text}")
       exit()
     else:

@@ -1,0 +1,11 @@
+timezone: Asia/Tokyo
+
+_export:
+  !include : config/params.yaml
+
++inter_replicate:
+  py>: scripts.seg_rep_inter_ms.main
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+  docker:
+    image: "digdag/digdag-python:3.10"

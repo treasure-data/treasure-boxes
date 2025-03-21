@@ -1,0 +1,10 @@
+# common
+aud_api_ep: https://api-cdp.treasuredata.com
+get_seg_list_path: /audiences/{audienceId}/folders/{folderId}/segments
+post_new_seg_path: /audiences/{audienceId}/segments
+
+# inter master segment segment replicator
+from_audience: 111111
+to_audience: 222222
+from_folder: 3333333
+to_folder: 4444444
