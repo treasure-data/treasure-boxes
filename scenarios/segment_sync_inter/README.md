@@ -3,7 +3,7 @@
 ----
 ## Overview
 
-This project provides a solution to replicating segments between master segments.
+This project provides a solution for replicating segments between master segments.
 
 ----
 ## Implementation
@@ -12,7 +12,7 @@ This project provides a solution to replicating segments between master segments
 ----
 ## Considerations
 
-This project doesn't cover "Segment Include/Exclude" segment rules.
+This project doesn't cover "Drag-on Rules - Including/Excluding Segment" conditions.
 
 ----
 ## Questions

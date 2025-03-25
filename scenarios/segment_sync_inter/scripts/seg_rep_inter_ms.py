@@ -1,5 +1,3 @@
-#TODO: edge case where segment rules have "existing segments", need to check if dependent segment exists beforehand
-
 import os
 import requests
 
@@ -55,7 +53,7 @@ def main(**kwargs):
       from_data_dict[from_segs_list[i]["name"]] = [from_segs_list[i]["id"], from_segs_list[i]["description"], from_segs_list[i]["rule"], from_segs_list[i]["kind"]]
       from_name_set.add(from_segs_list[i]["name"])
     for j in range(len(to_segs_list)):
-      to_data_dict[to_segs_list[j]["name"]]
+      #to_data_dict[to_segs_list[j]["name"]]
       to_name_set.add(to_segs_list[j]["name"])
 
   # Post new segment via Audience API
@@ -74,23 +72,48 @@ def main(**kwargs):
       seg_exists = True
     return seg_exists
 
+  # Segments that have existing segment reference
+  def detect_seg_ref(sn, rule):
+    seg_ref = False
+    for c in rule.get("conditions", []):
+      if "conditions" in c:
+        for sc in c["conditions"]:
+          if str(sc).find("'type': 'Reference'") > 0:
+            seg_ref = True
+    return seg_ref
+  
+  # Extract existing segments from segment rule
+  def extract_existing_segments(rule):
+    ref_list = []
+    for condition_group in rule["conditions"]:
+      for condition in condition_group.get("conditions", []):
+        if condition.get("type") == "Reference" and "id" in condition:
+            ref_list.append(condition["id"])
+    return ref_list
+
   # Compare segment lists and create diff
   def replicate_diff():
     for sn in from_name_set:
-      if not detect_existing(sn, to_name_set):
+      rule = from_data_dict[sn][2]
+      kind = from_data_dict[sn][3]
+      desc = from_data_dict[sn][1]
+      if not detect_existing(sn, to_name_set) and not detect_seg_ref(sn, rule):
         payload = {
           'audienceId': to_audience,
           'name': sn,
-          'kind': from_data_dict[sn][3],
-          'description': from_data_dict[sn][1],
+          'kind': kind,
+          'description': desc,
           'segmentFolderId': to_folder,
-          'rule': from_data_dict[sn][2]
+          'rule': rule
         }
         headers = {
           "Authorization": f"TD1 {td_api_key}",
           "Content-Type": "application/json"
         }
         post_seg(sn, headers, payload)
+      elif detect_seg_ref(sn, rule):
+        ref_seg_ids = extract_existing_segments(rule)
+        print(f"Skipping '{sn}'. Found referenced segment ids: '{ref_seg_ids}'.")
 
   from_segs_list, to_segs_list = get_segs()
   build_seg_lists()
