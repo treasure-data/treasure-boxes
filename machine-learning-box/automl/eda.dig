@@ -1,0 +1,27 @@
+timezone: Asia/Tokyo
+#timezone: PST
+
++load_datasets:
+  ipynb>:
+    notebook: ml_datasets
+    output_database: ml_datasets
+    datasets: all
+#   datasets: gluon, bank_marketing, vehicle_coupon, online_retail, telco_churn, boston_house
+
++datasets:
+  for_each>:
+    table: [gluon_train, bank_marketing_train, vehicle_coupon_train, online_retail_ltv_train, telco_churn_train, boston_house_train]
+  _parallel:
+    limit: 3
+  _do:
+    +run_eda:
+      ipynb>:
+        docker:
+          task_mem: 128g
+        notebook: EDA
+        input_table: ml_datasets.${table}
+        # The following options are optional ones
+        eda: all
+        # eda: pandas-profiling, sweetviz
+        # target_column: label
+        sampling_threshold: 1000000
