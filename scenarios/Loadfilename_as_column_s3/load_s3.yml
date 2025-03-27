@@ -1,0 +1,24 @@
+in:
+  type: s3
+  access_key_id: ${secret:s3.access_key_id}
+  secret_access_key: ${secret:s3.secret_access_key}
+  bucket: ${s3.bucket}
+  path_prefix: ${s3.upload_path_prefix}/${s3.datafile}
+  parser:
+    charset: UTF-8
+    newline: LF
+    type: csv
+    delimiter: ","
+    quote: "\""
+    escape: "\""
+    trim_if_not_quoted: false
+    skip_header_lines: 0
+    allow_extra_columns: false
+    allow_optional_columns: false
+    columns:
+    - {name: filename, type: string}
+    - {name: data, type: string}
+filters:
+- type: add_time
+  to_column: {name: time}
+  from_value: {mode: upload_time}
