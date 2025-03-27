@@ -1,0 +1,15 @@
+config:
+    type: s3
+    access_key_id: "your access_key_id"
+    secret_access_key: "your secret_access_key"
+    bucket: "your bucket name"
+    path_prefix: "your path_prefix"
+    path_match_pattern: .csv
+    incremental: false
+out:
+    type: td_internal
+    apikey: apikey
+    endpoint: api.treasuredata.com
+    database: "your database name"
+    table: "your table name"
+    mode: append
