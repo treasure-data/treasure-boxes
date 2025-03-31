@@ -1,4 +1,4 @@
-# Activations counter
+# Export TD tables to Azure Data Lake Parquet or Azure Blob Store
 
 ----
 ## Overview
