@@ -1,0 +1,14 @@
+#config/params.yaml
+# Common
+ms_id: 123456
+
+# Azure BLOB
+azure_blob_conn: <your connection to azure blob>
+container: <your container>
+path: <path/to/>
+
+# ADLS Parquet
+adls_parquet_conn: <your connection to adls parquet>
+account_name: <your account name>
+container_name: <your container name>
+file_path: <path/to/file.parquet>

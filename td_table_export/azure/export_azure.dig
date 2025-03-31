@@ -1,0 +1,41 @@
+#export_azure.dig
+timezone: Asia/Tokyo
+ 
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: cdp_audience_${ms_id}
+
++for_each_table:
+  td_for_each>: queries/tables.sql
+  _do:
+    # +to_azure_blob:
+    #   td>: queries/data.sql
+    #   result_connection: ${azure_blob_conn}
+    #   result_settings:
+    #     container: ${container}
+    #     path_prefix: ${path}${td.each.tbl}.csv
+    #     format: csv
+    #     blob_type: BLOCK_BLOB
+    +to_adls_parquet:
+      td>: queries/data.sql
+      result_connection: ${adls_parquet_conn}
+      result_settings:
+        authentication_mode: shared_access_signatures
+        account_name: ${account_name}
+        # Save the token in the workflow's secrets
+        sas_token: ${secret.sas_token}
+        proxy_type: none
+        container_name: ${container_name}
+        file_path: ${file_path}
+        overwrite_file: false
+        compression: snappy
+        row_group_size: 128
+        page_size: 1024
+        single_file: false
+        advanced_configuration: true
+        enable_bloom_filter: true
+        retry_limit: 5
+        retry_wait: 3
+        number_of_concurrent_threads: 4
