@@ -15,7 +15,7 @@ _export:
     #   result_connection: ${azure_blob_conn}
     #   result_settings:
     #     container: ${container}
-    #     path_prefix: ${path}${td.each.tbl}.csv
+    #     path_prefix: ${blob_path}${td.each.tbl}.csv
     #     format: csv
     #     blob_type: BLOCK_BLOB
     +to_adls_parquet:
@@ -28,7 +28,7 @@ _export:
         sas_token: ${secret.sas_token}
         proxy_type: none
         container_name: ${container_name}
-        file_path: ${file_path}
+        file_path: ${adls_path}${td.each.tbl}.parquet
         overwrite_file: false
         compression: snappy
         row_group_size: 128
