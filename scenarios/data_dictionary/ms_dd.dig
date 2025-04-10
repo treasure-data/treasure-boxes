@@ -1,0 +1,31 @@
+#ms_dd.dig
+timezone: Asia/Calcutta
+
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: ${temp_db}
+
++create_temp_db:
+  td_ddl>:
+  create_databases: [ "${temp_db}" ]
+
++run_py:
+  py>: scripts.ms_dd.main
+  _env:
+    TD_API_KEY: ${secret:ap.apikey} 
+  docker:
+    image: "digdag/digdag-python:3.10.1"
+
++for_each_table:
+  td_for_each>: queries/tables.sql
+  _do:
+    +to_gsheets:
+      td>: queries/cols.sql
+      result_connection: ${gsheets_conn}
+      result_settings:
+        spreadsheet_folder: ${folder_id}
+        spreadsheet_title: ap_master_segment_enriched_prd
+        sheet_title: ${td.each.db}.${td.each.tbl}
+        mode: replace

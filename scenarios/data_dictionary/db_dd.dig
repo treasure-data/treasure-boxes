@@ -1,0 +1,20 @@
+#db_dd.dig
+timezone: Asia/Tokyo
+
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: cdp_audience_${ms_id}
+
++for_each_table:
+  td_for_each>: queries/db_tables.sql
+  _do:
+    +to_gsheets:
+      td>: queries/db_cols.sql
+      result_connection: ${gsheets_conn}
+      result_settings:
+        spreadsheet_folder: ${folder_id}
+        spreadsheet_title: ${td.database}
+        sheet_title: ${td.each.dname}
+        mode: replace

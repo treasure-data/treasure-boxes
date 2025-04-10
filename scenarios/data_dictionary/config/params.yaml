@@ -1,0 +1,9 @@
+#config/params.yaml
+td_api_ep: https://api.treasuredata.co.jp
+ms_config_ep: https://api-cdp.treasuredata.co.jp/audiences/
+ms_id: <master segment id>
+temp_db: master_segment_data_dictionary_db_<master segment id>
+temp_schema_tbl: ms_schema
+temp_ms_conf_tbl: ms_conf
+folder_id: <folder id>
+gsheets_conn: <connection name>
