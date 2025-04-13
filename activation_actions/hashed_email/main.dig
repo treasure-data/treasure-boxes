@@ -1,0 +1,14 @@
+_export:
+  td:
+    database: '${activation_actions_db}'
+  hashed_email_column: 'hashed_email' # Pleaes set your hashed email column name
+  raw_email_db_table: 'support.profile_table' # Please set your "database.table" name where stores raw email column
+  raw_email_column: 'email' # Please set your raw email column name
+
+
++activation_for_added_profiles:
+  td>: activation.sql
+  # result_connection: ${result_connection_name}
+  # result_settings: ${result_connection_settings}
+
+
