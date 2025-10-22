@@ -342,6 +342,20 @@ def collect_additional_errors(data):
                                 'msg': f'references unknown key "{key_name}"',
                                 'input': cid
                             })
+                    
+                    # Check if all defined keys are used in merge_by_keys
+                    if key_names:  # Only check if there are defined keys
+                        used_keys = set(cid['merge_by_keys'])
+                        unused_keys = key_names - used_keys
+                        if unused_keys:
+                            cid_name = cid.get('name', f'canonical_id_{i}')
+                            unused_list = sorted(unused_keys)
+                            additional_errors.append({
+                                'type': 'value_error',
+                                'loc': ('canonical_ids', i),
+                                'msg': f'canonical_id "{cid_name}" merge_by_keys does not use all defined keys. Missing: {", ".join(unused_list)}. Consider if these keys should be included for complete unification.',
+                                'input': cid
+                            })
                 
                 # Check merge_by_canonical_ids references
                 if 'merge_by_canonical_ids' in cid:
@@ -377,6 +391,20 @@ def collect_additional_errors(data):
                                 'type': 'value_error',
                                 'loc': ('persistent_ids', i),
                                 'msg': f'references unknown key "{key_name}"',
+                                'input': pid
+                            })
+                    
+                    # Check if all defined keys are used in merge_by_keys (excluding 'time')
+                    if key_names:  # Only check if there are defined keys
+                        used_keys = set(pid['merge_by_keys']) - {'time'}  # Exclude 'time' as it's special
+                        unused_keys = key_names - used_keys
+                        if unused_keys:
+                            pid_name = pid.get('name', f'persistent_id_{i}')
+                            unused_list = sorted(unused_keys)
+                            additional_errors.append({
+                                'type': 'value_error',
+                                'loc': ('persistent_ids', i),
+                                'msg': f'persistent_id "{pid_name}" merge_by_keys does not use all defined keys. Missing: {", ".join(unused_list)}. Consider if these keys should be included for complete unification.',
                                 'input': pid
                             })
                 
@@ -452,7 +480,7 @@ def collect_additional_errors(data):
             if isinstance(mt, dict) and 'attributes' in mt:
                 attribute_names = []
                 seen_duplicates = set()  # Track which duplicates we've already reported
-                for attr in mt['attributes']:
+                for j, attr in enumerate(mt['attributes']):
                     if isinstance(attr, dict) and 'name' in attr:
                         name = attr['name']
                         if name in attribute_names and name not in seen_duplicates:
@@ -464,6 +492,26 @@ def collect_additional_errors(data):
                             })
                             seen_duplicates.add(name)  # Don't report the same duplicate again
                         attribute_names.append(name)
+                        
+                        # Check for multiple source_columns with missing priority
+                        if 'source_columns' in attr and isinstance(attr['source_columns'], list):
+                            source_columns = attr['source_columns']
+                            if len(source_columns) > 1:
+                                # Check if any source_column is missing priority
+                                missing_priority = []
+                                for k, sc in enumerate(source_columns):
+                                    if isinstance(sc, dict) and 'priority' not in sc:
+                                        table_name = sc.get('relation_table_as_name', sc.get('table', f'source_{k}'))
+                                        missing_priority.append(table_name)
+                                
+                                if missing_priority:
+                                    additional_errors.append({
+                                        'type': 'value_error',
+                                        'loc': ('master_tables', i, 'attributes', j),
+                                        'msg': f'attributes[{j}] (name: "{name}"): has {len(source_columns)} source_columns but priority is missing for: {", ".join(missing_priority)}. When multiple source_columns are defined, all should have priority to determine merge order.',
+                                        'input': attr
+                                    })
+                    
     
     return additional_errors
 
