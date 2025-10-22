@@ -1,0 +1,36 @@
+# Configuration for Reporting Agent Workflow
+td:
+  # Do not change the database name as it will be used by the reporting agent
+  database: engage_roi_reporting
+  # Tables used for report data
+  events_master_table: events_master
+  tmp_events_master_table: tmp_events_master
+  email_events_table: email_events
+  tmp_email_events_table: tmp_email_events
+  revenue_table: revenue_table
+  daily_summary_table: daily_summary
+  tmp_daily_summary_table: tmp_daily_summary
+
+  # Email domains for event collection
+  # List all domains that have email_events tables
+  email_domains:
+    - "example_com"
+    - "customer_com"
+    # Add more domains as needed
+
+  # API settings
+  api_server: "https://api.treasuredata.com"
+  presto_api: "https://api-presto.treasuredata.com"
+  plazma_api: "https://api-plazma.treasuredata.com"
+  cdp_api: "https://api-cdp.treasuredata.com"
+  engage_api: "https://engage-api.treasuredata.com"
+
+
+  # Revenue generation settings
+  revenue_generation:
+    generate_sample: true
+    sample_size: 500
+    days: 30
+    realistic: true
+    # If true, allows overwriting existing tables. Set to true for development.
+    overwrite: true

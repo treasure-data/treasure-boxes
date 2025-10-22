@@ -1,0 +1,31 @@
+# Revenue Generation Workflow
+# This workflow generates sample revenue data for ROI dashboard testing and demonstrations
+
+timezone: UTC
+
+_export:
+  !include : config.yaml
+
+# Schedule: Run manually or on-demand
+# No schedule defined - this is intended for manual execution
+
++setup:
+  echo>: "Starting revenue data generation workflow at ${session_time}"
+
+# Generate revenue data
++generate_revenue:
+  py>: scripts.reporting_agent.generate_revenue_data.generate_revenue_data_for_workflow
+  database: ${td.database}
+  sample_size: ${params.sample_size || td.revenue_generation.sample_size}
+  days: ${params.days || td.revenue_generation.days}
+  realistic: ${params.realistic || td.revenue_generation.realistic}
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: ${td.api_server}
+    TD_PRESTO_API: ${td.presto_api}
+    TD_PLAZMA_API: ${td.plazma_api}
+  docker:
+    image: digdag/digdag-python:3.10.1
+
++notify_completion:
+  echo>: "Revenue data generation workflow completed at ${session_time}"

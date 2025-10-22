@@ -1,0 +1,112 @@
+# Report Preparation Workflow
+# This workflow prepares data for ROI dashboards by:
+# 1. Updating Events Master from CDP APIs and Engage API
+# 2. Collecting Email Events data
+# 3. Updating Daily Summary reports
+
+timezone: UTC
+
+_export:
+  !include : config.yaml
+
+# Schedule: Run daily 
+schedule:
+  daily>: 02:00:00 # 2 AM UTC
+
++setup:
+  echo>: "Starting report preparation workflow at ${session_time}"
+
+# 1. Update Events Master
++update_events_master:
+  +create_tmp_events_master:
+    py>: scripts.reporting_agent.events_master.update_events_master
+    database: ${td.database}
+    events_master_table: ${td.tmp_events_master_table}
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      TD_API_SERVER: ${td.api_server}
+      TD_PRESTO_API: ${td.presto_api}
+      TD_PLAZMA_API: ${td.plazma_api}
+      CDP_API_BASE: ${td.cdp_api}
+      ENGAGE_API_BASE: ${td.engage_api}
+    docker:
+      image: digdag/digdag-python:3.10.1
+
+  # After creating tmp table, replace the main table with it
+  +replace_events_master:
+    td_ddl>:
+    database: ${td.database}
+    rename_tables:
+      - from: ${td.tmp_events_master_table}
+        to: ${td.events_master_table}
+
+# 2. Update Email Events
++update_email_events:
+  +process_domains:
+    for_each>:
+      domain: ${td.email_domains}
+    _do:
+      +extract_events:
+        td>: queries/email_events.sql
+        insert_into: ${td.tmp_email_events_table}
+        database: ${td.database}
+        engine: presto
+        domain: ${domain}
+        yesterday: ${moment(session_time).add(-1, 'days').format('YYYY-MM-DD')}
+
+  +deduplicate_and_finalize:
+    td>: queries/deduplicate_email_events.sql
+    insert_into: ${td.email_events_table}
+    database: ${td.database}
+    engine: presto
+
+  +cleanup:
+    td_ddl>:
+    database: ${td.database}
+    drop_tables: ["${td.tmp_email_events_table}"]
+
+# (optional) Generate revenue data if needed
++generate_revenue_data:
+  if>: ${td.revenue_generation.generate_sample}
+  _do:
+    py>: scripts.reporting_agent.generate_revenue_data.generate_revenue_data_for_workflow
+    database: ${td.database}
+    sample_size: ${td.revenue_generation.sample_size}
+    days: ${td.revenue_generation.days}
+    realistic: ${td.revenue_generation.realistic}
+    _env:
+      TD_API_KEY: ${secret:td.apikey}
+      TD_API_SERVER: ${td.api_server}
+      TD_PRESTO_API: ${td.presto_api}
+      TD_PLAZMA_API: ${td.plazma_api}
+    docker:
+      image: digdag/digdag-python:3.10.1
+
+# 3. Update Daily Summary
++update_daily_summary:
+  # Create temporary daily summary table for the day's data
+  +generate_daily_summary:
+    td>: queries/daily_summary.sql
+    insert_into: ${td.tmp_daily_summary_table}
+    database: ${td.database}
+    engine: presto
+    yesterday: ${moment(session_time).add(-1, 'days').format('YYYY-MM-DD')}
+    events_master_table: ${td.events_master_table}
+    email_events_table: ${td.email_events_table}
+    revenue_table: ${td.revenue_table}
+
+  # Merge with existing summary data, avoiding duplicates
+  +merge_with_existing:
+    td>: queries/merge_summary_data.sql
+    insert_into: ${td.daily_summary_table}
+    database: ${td.database}
+    engine: presto
+
+  # Clean up temporary table
+  +cleanup_tmp_table:
+    td_ddl>:
+    database: ${td.database}
+    drop_tables: ["${td.tmp_daily_summary_table}"]
+
++notify_completion:
+  echo>: "Report preparation workflow completed at ${session_time}"
