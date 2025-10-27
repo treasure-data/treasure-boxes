@@ -1,10 +1,10 @@
 # Unification Validator
 
-A Python tool for validating ID Unification YAML files using Pydantic models.
+A Python tool for validating ID Unification YAML files using Pydantic models, with optional table schema validation against Treasure Data APIs.
 
 ## Purpose
 
-This validator allows users to locally validate their unification YAML files before deployment.
+This validator allows users to locally validate their unification YAML files before deployment. It provides comprehensive validation of YAML structure, field constraints, cross-references, and optionally validates table schemas against actual Treasure Data tables.
 
 ## Installation
 
@@ -23,7 +23,31 @@ python validate.py unification.yml
 
 # Validate multiple files  
 python validate.py *.yml
+
+# Enable table schema validation (will prompt for API key)
+python validate.py --schema unification.yml
+
+# Use environment variable for API key
+export TD_API_KEY=your_api_key_here
+python validate.py --schema unification.yml
 ```
+
+### Table Schema Validation
+
+The `--schema` option enables validation of table schemas against the actual Treasure Data tables via API calls. This ensures that the columns referenced in your `key_columns` actually exist in the real table schemas.
+
+**API Key Setup:**
+- **Environment Variable (Recommended)**: Set `TD_API_KEY=your_api_key_here`
+- **Interactive Prompt**: Run with `--schema` and you'll be securely prompted for your API key
+
+**Getting Your API Key:**
+To obtain your Treasure Data Master API Key, follow the instructions at: https://docs.treasuredata.com/articles/#!pd/getting-your-api-keys
+
+**Schema Validation Features:**
+- Verifies table existence in specified databases
+- Checks that `key_columns` reference actual table columns
+- Provides clear error messages for missing tables or columns
+- Handles authentication and network errors gracefully
 
 ## Features
 
