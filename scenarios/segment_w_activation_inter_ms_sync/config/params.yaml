@@ -1,0 +1,3 @@
+#config/params.yaml
+aud_api_ep: https://api-cdp.treasuredata.com #US endpoint
+target_audience_ids: ["12344567", "7654321"]

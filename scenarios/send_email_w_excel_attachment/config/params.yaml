@@ -1,0 +1,4 @@
+#config/params.yaml
+td_api_ep: https://api.treasuredata.com # US endpoint
+sender_email: your_email@treasure-data.com
+sender_name: "your sender email display name"

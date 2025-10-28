@@ -1,0 +1,17 @@
+#segment_w_activation_inter_ms_sync.dig
+timezone: Asia/Tokyo
+
+_export:
+  !include : config/params.yaml
+
++echo_activation_actions_parameters:
+  echo>: segment_id ==> ${segment_id}, segment_name ==> ${segment_name}, activation_id ==> ${activation_id}, audience_id ==> ${audience_id}
++replicate:
+  py>: scripts.seg_act_rep_inter_ms.main
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    SEGMENT_ID: ${segment_id}
+    ACTIVATION_ID: ${activation_id}
+    AUDIENCE_ID: ${audience_id}
+  docker:
+    image: "digdag/digdag-python:3.10"

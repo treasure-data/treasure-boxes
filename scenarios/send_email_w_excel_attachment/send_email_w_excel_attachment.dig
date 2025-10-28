@@ -1,0 +1,25 @@
+#send_email_w_excel_attachment.dig
+timezone: Asia/Tokyo
+
+_export:
+  td:
+    engine: presto
+    database: ${activation_actions_db}
+  !include : config/params.yaml
+
++echo_activation_actions_parameters:
+  echo>: activation_actions_db ==> ${activation_actions_db}, activation_actions_table ==> ${activation_actions_table}
+
++send_email:
+  py>: scripts.send_email_w_excel_attachment.main
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_EP: ${td_api_ep}
+    GMAIL_APP_PW: ${secret:app.pw}
+    DATABASE: ${activation_actions_db}
+    SRC_TBL: ${activation_actions_table}
+    SENDER_EMAIL: ${sender_email}
+    SENDER_NAME: ${sender_name}
+  docker:
+    image: "digdag/digdag-python:3.10"
+
