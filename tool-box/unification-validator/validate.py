@@ -558,6 +558,25 @@ def collect_additional_errors(data):
                                         'msg': f'attributes[{j}] (name: "{name}"): has {len(source_columns)} source_columns but priority is missing for: {", ".join(missing_priority)}. When multiple source_columns are defined, all should have priority to determine merge order.',
                                         'input': attr
                                     })
+                                
+                                # Check for duplicate priorities within source_columns
+                                priorities = []
+                                duplicate_priorities = set()
+                                for k, sc in enumerate(source_columns):
+                                    if isinstance(sc, dict) and 'priority' in sc:
+                                        priority = sc['priority']
+                                        if priority in priorities:
+                                            duplicate_priorities.add(priority)
+                                        priorities.append(priority)
+                                
+                                if duplicate_priorities:
+                                    sorted_dups = sorted(duplicate_priorities)
+                                    additional_errors.append({
+                                        'type': 'value_error',
+                                        'loc': ('master_tables', i, 'attributes', j),
+                                        'msg': f'attributes[{j}] (name: "{name}"): duplicate priority values found: {sorted_dups}. Each source_column must have a unique priority to ensure deterministic merge behavior.',
+                                        'input': attr
+                                    })
                     
     
     return additional_errors
