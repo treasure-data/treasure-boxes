@@ -13,6 +13,7 @@ def main(**kwargs):
   get_segment_path = "/audiences/{audienceId}/segments/{segmentId}"
   get_activation_path = "/audiences/{audienceId}/segments/{segmentId}/syndications/{syndicationId}"
   get_folder_path = "/entities/folders/{folderId}"
+  get_list_of_folders = "/entities/by-folder/{folderId}"
   get_folder_list_path = "/audiences/{audienceId}/folders"
   get_segment_list_path = "/audiences/{audienceId}/folders/{folderId}/segments"
   post_folder_path = "/entities/folders"
@@ -125,14 +126,30 @@ def main(**kwargs):
     
     return target_master_segment_folders_json
 
+  # Get a list of folders under a given folder as json data
+  def get_folders_in_folder(target_segment_folder_id):
+    payload = {}
+    headers = {
+      "Authorization": f"TD1 {td_api_key}"
+    }
+    get_folders_in_folder_path = audience_api_ep + get_list_of_folders.replace("{folderId}", target_segment_folder_id)
+    folder_list = requests.request("GET", get_folders_in_folder_path, headers = headers, data = payload)
+
+    if folder_list.status_code == 200:
+      folder_list_json = folder_list.json()
+    else:
+      print(f"Failed to fetch folder list. Status code: {folder_list.status_code} - {folder_list.reason} - {folder_list.text}")
+      exit()
+
+    return folder_list_json
+
   # Post new folder
-  def post_target_folder(source_folder_json, segment_target_parent_folder_id):
-    folder_name = source_folder_json["data"]["attributes"]["name"]
+  def post_target_folder(source_folder_name, source_folder_description, segment_target_parent_folder_id):
     payload = {
       "type": "folder-segment",
       "attributes": {
-          "name": folder_name,
-          "description": source_folder_json["data"]["attributes"]["description"]
+          "name": source_folder_name,
+          "description": source_folder_description
       },
       "relationships": {
           "parentFolder": {
@@ -149,11 +166,11 @@ def main(**kwargs):
     }
     new_folder = requests.request("POST", audience_api_ep + post_folder_path, headers = headers, json = payload)
     if new_folder.status_code == 200:
-      print(f"'{folder_name}' folder was synced to '{target_audience_id}' successfully!")
+      print(f"'{source_folder_name}' folder was synced to '{target_audience_id}' successfully!")
       new_folder_response_json = new_folder.json()
       target_folder_id = new_folder_response_json["data"]["id"]
     else:
-      print(f"Failed to post folder: '{folder_name}' - Status code: {new_folder.status_code} - {new_folder.reason} - {new_folder.text}")
+      print(f"Failed to post folder: '{source_folder_name}' - Status code: {new_folder.status_code} - {new_folder.reason} - {new_folder.text}")
       exit()
     
     return target_folder_id
@@ -217,29 +234,38 @@ def main(**kwargs):
       print(f"Failed to post activation - Status code: {new_activation.status_code} - {new_activation.reason} - {new_activation.text}")
       exit()
 
+  # Build the source segment's folder path as a list of folder names (upward traversal)
+  def build_source_folder_structure(source_folder_json):
+    folder_path = []
+    if source_folder_json["data"]["relationships"]["parentFolder"]["data"] is not None:
+      folder_path.append([source_folder_json["data"]["attributes"]["name"], source_folder_json["data"]["attributes"]["description"]])
+      parent_folder_json = get_source_parent_folder(source_folder_json)
+      while parent_folder_json["data"]["relationships"]["parentFolder"]["data"] is not None:
+        folder_path.append([parent_folder_json["data"]["attributes"]["name"], parent_folder_json["data"]["attributes"]["description"]])
+        parent_folder_json = get_source_parent_folder(parent_folder_json)
+    
+    return folder_path
+
   # Sync segment with activation
-  def replicate(target_master_segment_folders_json, source_folder_json, source_segment_json):
-    target_master_segment_folders_names = [item["name"] for item in target_master_segment_folders_json]
-    target_master_segment_folders_ids_names = {item["name"]: item["id"] for item in target_master_segment_folders_json}
-    source_folder_name = source_folder_json["data"]["attributes"]["name"]
-    source_folder_type = source_folder_json["data"]["relationships"]["parentFolder"]["data"]
-    if source_folder_type is None:
-      source_parent_folder_type = "root"
+  def replicate(target_master_segment_folders_json, source_folder_json, source_segment_json):  
+    target_master_segment_root_folder = next((item for item in target_master_segment_folders_json if item["parentFolderId"] is None), None)
+    target_segment_folder_id = target_master_segment_root_folder["id"]
+    source_folder_path = build_source_folder_structure(source_folder_json)
+    # Check source segment is directly under the source master segment's root folder
+    if not source_folder_path:
+      post_target_segment(source_segment_json, target_segment_folder_id)
     else:
-      source_parent_folder_json = get_source_parent_folder(source_folder_json)
-      source_parent_folder_type = source_parent_folder_json["data"]["relationships"]["parentFolder"]["data"]
-    if source_folder_name in target_master_segment_folders_names: 
-      segment_target_folder_id = target_master_segment_folders_ids_names[source_folder_name]
-      post_target_segment(source_segment_json, segment_target_folder_id)
-    elif source_parent_folder_type is None:
-      segment_target_folder = next((item for item in target_master_segment_folders_json if item["parentFolderId"] is None), None)
-      post_target_segment(source_segment_json, post_target_folder(source_folder_json, segment_target_folder["id"]))
-    elif source_parent_folder_type == "root":
-      segment_target_folder = next((item for item in target_master_segment_folders_json if item["parentFolderId"] is None), None)
-      post_target_segment(source_segment_json, segment_target_folder["id"])
-    else:
-      print("Unexpected error")
-      exit()
+      # Traverse folder path
+      source_folder_path.reverse()
+      for source_folder_name, source_folder_desc in source_folder_path:
+        target_folder_list_json = get_folders_in_folder(target_segment_folder_id)
+        target_segment_folder = next((item["id"] for item in target_folder_list_json["data"] if item["attributes"].get("name") == source_folder_name and item["type"] == "folder-segment"), None)
+        # Check folder exist
+        if target_segment_folder is None:
+          target_segment_folder_id = post_target_folder(source_folder_name, source_folder_desc, target_segment_folder_id)
+        else:
+          target_segment_folder_id = target_segment_folder
+      post_target_segment(source_segment_json, target_segment_folder_id)
 
   # Replicate segment to each target audience
   for ta_id in target_audience_ids:
@@ -250,4 +276,3 @@ def main(**kwargs):
 # Main
 if __name__ == "__main__":
   main()
-
