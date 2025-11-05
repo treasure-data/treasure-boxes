@@ -19,17 +19,17 @@ pip install -r requirements.txt
 
 ```bash
 # Validate a single file
-python validate.py unification.yml
+python validate.py sample_unify.yml
 
-# Validate multiple files  
+# Validate multiple files
 python validate.py *.yml
 
 # Enable table schema validation (will prompt for API key)
-python validate.py --schema unification.yml
+python validate.py --schema sample_unify.yml
 
 # Use environment variable for API key
 export TD_API_KEY=your_api_key_here
-python validate.py --schema unification.yml
+python validate.py --schema sample_unify.yml
 ```
 
 ### Table Schema Validation

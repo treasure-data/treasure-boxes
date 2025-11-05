@@ -773,10 +773,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  %(prog)s unification.yml
+  %(prog)s sample_unify.yml
   %(prog)s --verbose my_config.yaml
-  %(prog)s --schema unification.yml  # Will prompt for API key
-  export TD_API_KEY=your_key && %(prog)s --schema unification.yml  # Use env var
+  %(prog)s --schema sample_unify.yml  # Will prompt for API key
+  export TD_API_KEY=your_key && %(prog)s --schema sample_unify.yml  # Use env var
   %(prog)s *.yml  # Validate multiple files
         """
     )

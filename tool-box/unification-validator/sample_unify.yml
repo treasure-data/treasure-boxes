@@ -10,12 +10,12 @@ keys:
     valid_regexp: ".*@.*"
  
 tables:
-  - database: prod #wei_js
+  - database: prod 
     table: pageviews
     incremental_columns: [updated_at, user_id]
     key_columns:
     - {column: td_client_id, key: td_client_id}
-  - database: prod2 # weichen
+  - database: prod2
     table: pageviews
     as: brand2_pageviews
     key_columns:
@@ -30,7 +30,7 @@ tables:
  
 canonical_ids:
   - name: browser_id
-    merge_by_keys: [td_client_id, td_global_id]
+    merge_by_keys: [td_client_id, td_global_id, email]
  
 master_tables:
   - name: marketing_master
@@ -42,7 +42,7 @@ master_tables:
           - {table: contacts, column: first_name, priority: 1}
           - {table: pageviews, column: first_name, priority: 2}
 
-      - name: first_name 
+      - name: last_name 
         source_columns:
           - {table: contacts, column: last_name}
 
