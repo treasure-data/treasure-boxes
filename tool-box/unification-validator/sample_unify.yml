@@ -1,0 +1,51 @@
+name: production
+keys:
+  - name: td_client_id
+    valid_regexp: "[0-9a-fA-F]{8}-..."
+    invalid_texts: ['']
+  - name: td_global_id
+    valid_regexp: "[0-9a-fA-F]{8}-..."
+    invalid_texts: ['', '0000000000-...']
+  - name: email
+    valid_regexp: ".*@.*"
+ 
+tables:
+  - database: prod #wei_js
+    table: pageviews
+    incremental_columns: [updated_at, user_id]
+    key_columns:
+    - {column: td_client_id, key: td_client_id}
+  - database: prod2 # weichen
+    table: pageviews
+    as: brand2_pageviews
+    key_columns:
+    - {column: td_client_id, key: td_client_id}
+    - {column: td_global_id, key: td_global_id}
+    - {column: email, key: email}
+  - database: wei_audience
+    table: users
+    as: contacts
+    key_columns:
+    - {column: email, key: email}
+ 
+canonical_ids:
+  - name: browser_id
+    merge_by_keys: [td_client_id, td_global_id]
+ 
+master_tables:
+  - name: marketing_master
+    canonical_id: browser_id
+
+    attributes:
+      - name: first_name
+        source_columns:
+          - {table: contacts, column: first_name, priority: 1}
+          - {table: pageviews, column: first_name, priority: 2}
+
+      - name: first_name 
+        source_columns:
+          - {table: contacts, column: last_name}
+
+      - name: email
+        source_columns:
+          - {table: contacts, column: email}

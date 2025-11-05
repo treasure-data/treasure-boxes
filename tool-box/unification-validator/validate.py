@@ -166,32 +166,34 @@ def validate_yaml_file(file_path: Path, td_api_key: str = None) -> tuple[bool, s
         
         # Even if Pydantic validation passes, check for additional issues
         additional_errors = collect_additional_errors(data)
-        
+
         # Perform API-based table schema validation if API key is provided
+        # This should run regardless of other validation errors
         api_errors = []
         if td_api_key:
             api_errors = validate_table_schemas_via_api(data, td_api_key)
-        
+
+        # Combine all errors
         all_errors = additional_errors + api_errors
         if all_errors:
-            # If there are additional errors, format them
+            # If there are any errors, format them
             error_msg = schema_tip + f"Validation failed for '{file_path}':\n"
             error_msg += "─" * 50 + "\n"
-            
+
             # Separate API errors from other errors
             non_api_errors = [e for e in all_errors if e.get('type', '').startswith(('value_', 'structure_'))]
             schema_errors = [e for e in all_errors if e.get('type', '').startswith(('schema_', 'api_', 'auth_', 'table_', 'network_', 'parse_', 'unexpected_'))]
-            
+
             if non_api_errors:
                 error_msg += "VALIDATION WARNINGS:\n"
                 error_msg += format_validation_errors(non_api_errors, data)
-                
+
             if schema_errors:
                 if non_api_errors:
                     error_msg += "\n" + "─" * 50 + "\n"
                 error_msg += "TABLE SCHEMA VALIDATION (via TD API):\n"
                 error_msg += format_validation_errors(schema_errors, data)
-            
+
             return False, error_msg
         
         success_msg = schema_tip + f"✅ Validation successful! File '{file_path}' is valid."
@@ -231,7 +233,7 @@ def validate_yaml_file(file_path: Path, td_api_key: str = None) -> tuple[bool, s
         # Try to collect additional validation errors
         try:
             partial_validation_errors = collect_additional_errors(data)
-            
+
             # Only add errors that aren't already in the list
             existing_error_sigs = set()
             for err in all_errors:
@@ -239,14 +241,14 @@ def validate_yaml_file(file_path: Path, td_api_key: str = None) -> tuple[bool, s
                 if msg.startswith("Value error, "):
                     msg = msg[13:]
                 existing_error_sigs.add((err['loc'], msg))
-            
+
             for new_error in partial_validation_errors:
                 error_sig = (new_error['loc'], new_error['msg'])
                 if error_sig not in existing_error_sigs:
                     # Categorize additional errors
                     loc = new_error['loc']
                     msg = new_error['msg']
-                    
+
                     if (len(loc) == 1 and loc[0] in ['name', 'keys', 'tables', 'canonical_ids']) or \
                        (len(loc) == 0 and "either canonical_ids or persistent_ids must have at least one item" in msg) or \
                        ("Table definitions may be missing" in msg):
@@ -255,16 +257,22 @@ def validate_yaml_file(file_path: Path, td_api_key: str = None) -> tuple[bool, s
                         detailed_errors.append(new_error)
         except Exception:
             pass
+
+        # Perform API-based table schema validation if API key is provided
+        # This should run even when there are Pydantic validation errors
+        api_errors = []
+        if td_api_key:
+            api_errors = validate_table_schemas_via_api(data, td_api_key)
         
         # Format the error message
         error_msg = schema_tip + f"Validation failed for '{file_path}':\n"
         error_msg += "─" * 50 + "\n"
-        
+
         # Show structural errors first
         if structural_errors:
             error_msg += "🔴 STRUCTURAL ISSUES (fix these first):\n"
             error_msg += format_validation_errors(structural_errors, data) + "\n"
-        
+
         # Show detailed errors with warning if structural issues exist
         if detailed_errors:
             if structural_errors:
@@ -273,7 +281,18 @@ def validate_yaml_file(file_path: Path, td_api_key: str = None) -> tuple[bool, s
             else:
                 error_msg += "VALIDATION ERRORS:\n"
             error_msg += format_validation_errors(detailed_errors, data)
-        
+
+        # Show API schema validation errors
+        if api_errors:
+            # Separate schema errors into their types
+            schema_errors = [e for e in api_errors if e.get('type', '').startswith(('schema_', 'api_', 'auth_', 'table_', 'network_', 'parse_', 'unexpected_'))]
+
+            if schema_errors:
+                if structural_errors or detailed_errors:
+                    error_msg += "\n" + "─" * 50 + "\n"
+                error_msg += "TABLE SCHEMA VALIDATION (via TD API):\n"
+                error_msg += format_validation_errors(schema_errors, data)
+
         return False, error_msg
     
     except Exception as e:
@@ -653,6 +672,19 @@ def validate_table_schemas_via_api(data: dict, api_key: str) -> list:
                                 'type': 'schema_error',
                                 'loc': ('tables', i),
                                 'msg': f'table "{database}.{table_name}" (as: {table_as}): column "{column_name}" not found in schema',
+                                'input': table
+                            })
+
+                # Check if incremental_columns exist in schema
+                incremental_columns = table.get('incremental_columns', [])
+                if incremental_columns:
+                    for inc_col in incremental_columns:
+                        if inc_col and inc_col not in schema_columns:
+                            table_as = table.get('as_name', table_name)
+                            api_errors.append({
+                                'type': 'schema_error',
+                                'loc': ('tables', i),
+                                'msg': f'table "{database}.{table_name}" (as: {table_as}): incremental_column "{inc_col}" not found in schema',
                                 'input': table
                             })
                             
