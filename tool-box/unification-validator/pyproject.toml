@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unification-validator"
+version = "1.0.0"
+description = "Python validator for ID Unification YAML files using Pydantic"
+authors = [{name = "Unification Validator Team"}]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "typing-extensions>=4.5.0"
+]
+
+[project.scripts]
+validate-unification = "unification_validator.cli:main"
