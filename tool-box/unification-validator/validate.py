@@ -604,136 +604,194 @@ def collect_additional_errors(data):
 def validate_table_schemas_via_api(data: dict, api_key: str) -> list:
     """
     Validate table schemas by making API calls to Treasure Data.
-    
+
     Returns:
         list: List of validation errors found via API calls
     """
     api_errors = []
-    
+
     if not api_key:
         return api_errors
-        
+
     if 'tables' not in data:
         return api_errors
-    
+
     auth_failed = False  # Track if we've already encountered auth failure
-    
+    table_schemas = {}  # Cache table schemas to avoid duplicate API calls
+
+    # Build mapping of table as_name to table definition
+    table_as_name_to_table = {}
+    for table in data['tables']:
+        if isinstance(table, dict):
+            as_name = table.get('as_name', table.get('table_name', ''))
+            table_as_name_to_table[as_name] = table
+
     for i, table in enumerate(data['tables']):
         if not isinstance(table, dict):
             continue
-            
+
         database = table.get('database_name')
         table_name = table.get('table_name')
         key_columns = table.get('key_columns', [])
-        
+
         if not database or not table_name:
             continue
-            
-        # Make API call to get table schema
-        try:
-            url = f"https://api.treasuredata.com/v3/table/show/{database}/{table_name}"
-            request = urllib.request.Request(url)
-            request.add_header('Authorization', f'TD1 {api_key}')
-            request.add_header('Accept', 'application/json')
-            
-            with urllib.request.urlopen(request, timeout=30) as response:
-                if response.status != 200:
+
+        # Create a unique key for this table
+        table_key = f"{database}.{table_name}"
+
+        # Skip if we've already fetched this table's schema
+        if table_key in table_schemas:
+            schema_columns = table_schemas[table_key]
+        else:
+            # Make API call to get table schema
+            try:
+                url = f"https://api.treasuredata.com/v3/table/show/{database}/{table_name}"
+                request = urllib.request.Request(url)
+                request.add_header('Authorization', f'TD1 {api_key}')
+                request.add_header('Accept', 'application/json')
+
+                with urllib.request.urlopen(request, timeout=30) as response:
+                    if response.status != 200:
+                        api_errors.append({
+                            'type': 'api_error',
+                            'loc': ('tables', i),
+                            'msg': f'API error: HTTP {response.status} when checking table "{database}.{table_name}"',
+                            'input': table
+                        })
+                        continue
+
+                    response_data = json.loads(response.read().decode('utf-8'))
+
+                    schema_raw = response_data.get('schema', '[]')
+
+                    # Parse the schema string as JSON
+                    try:
+                        schema = json.loads(schema_raw) if isinstance(schema_raw, str) else schema_raw
+                    except json.JSONDecodeError:
+                        schema = []
+
+                    # Extract column names from schema
+                    schema_columns = set()
+                    for column in schema:
+                        if isinstance(column, list) and len(column) >= 1:
+                            schema_columns.add(column[0])  # Column name is first element
+
+                    # Cache the schema
+                    table_schemas[table_key] = schema_columns
+
+            except urllib.error.HTTPError as e:
+                if e.code == 401:
+                    if not auth_failed:
+                        api_errors.append({
+                            'type': 'auth_error',
+                            'loc': ('auth',),
+                            'msg': '⚠️  Authentication failed when validating table schemas. Please check your TD API key.',
+                            'input': {}
+                        })
+                        auth_failed = True
+                    break  # Skip remaining tables since auth failed
+                elif e.code == 404:
                     api_errors.append({
-                        'type': 'api_error',
+                        'type': 'table_not_found',
                         'loc': ('tables', i),
-                        'msg': f'API error: HTTP {response.status} when checking table "{database}.{table_name}"',
+                        'msg': f'table "{database}.{table_name}" not found. Please check database and table names.',
                         'input': table
                     })
                     continue
-                    
-                response_data = json.loads(response.read().decode('utf-8'))
-                
-                schema_raw = response_data.get('schema', '[]')
-                
-                # Parse the schema string as JSON
-                try:
-                    schema = json.loads(schema_raw) if isinstance(schema_raw, str) else schema_raw
-                except json.JSONDecodeError:
-                    schema = []
-                
-                # Extract column names from schema
-                schema_columns = set()
-                for column in schema:
-                    if isinstance(column, list) and len(column) >= 1:
-                        schema_columns.add(column[0])  # Column name is first element
-                
-                # Check if key_columns exist in schema
-                for key_col in key_columns:
-                    if isinstance(key_col, dict):
-                        column_name = key_col.get('column')
-                        if column_name and column_name not in schema_columns:
-                            table_as = table.get('as_name', table_name)
-                            api_errors.append({
-                                'type': 'schema_error',
-                                'loc': ('tables', i),
-                                'msg': f'table "{database}.{table_name}" (as: {table_as}): column "{column_name}" not found in schema',
-                                'input': table
-                            })
-
-                # Check if incremental_columns exist in schema
-                incremental_columns = table.get('incremental_columns', [])
-                if incremental_columns:
-                    for inc_col in incremental_columns:
-                        if inc_col and inc_col not in schema_columns:
-                            table_as = table.get('as_name', table_name)
-                            api_errors.append({
-                                'type': 'schema_error',
-                                'loc': ('tables', i),
-                                'msg': f'table "{database}.{table_name}" (as: {table_as}): incremental_column "{inc_col}" not found in schema',
-                                'input': table
-                            })
-                            
-        except urllib.error.HTTPError as e:
-            if e.code == 401:
-                if not auth_failed:
+                else:
                     api_errors.append({
-                        'type': 'auth_error',
-                        'loc': ('auth',),
-                        'msg': '⚠️  Authentication failed when validating table schemas. Please check your TD API key.',
-                        'input': {}
+                        'type': 'api_error',
+                        'loc': ('tables', i),
+                        'msg': f'API error: HTTP {e.code} when checking table "{database}.{table_name}": {e.reason}',
+                        'input': table
                     })
-                    auth_failed = True
-                break  # Skip remaining tables since auth failed
-            elif e.code == 404:
+                    continue
+            except urllib.error.URLError as e:
                 api_errors.append({
-                    'type': 'table_not_found',
+                    'type': 'network_error',
                     'loc': ('tables', i),
-                    'msg': f'table "{database}.{table_name}" not found. Please check database and table names.',
+                    'msg': f'network error when checking table "{database}.{table_name}": {e.reason}',
                     'input': table
                 })
-            else:
+                continue
+            except json.JSONDecodeError as e:
                 api_errors.append({
-                    'type': 'api_error',
+                    'type': 'parse_error',
                     'loc': ('tables', i),
-                    'msg': f'API error: HTTP {e.code} when checking table "{database}.{table_name}": {e.reason}',
+                    'msg': f'failed to parse API response for table "{database}.{table_name}": {e}',
                     'input': table
                 })
-        except urllib.error.URLError as e:
-            api_errors.append({
-                'type': 'network_error',
-                'loc': ('tables', i),
-                'msg': f'network error when checking table "{database}.{table_name}": {e.reason}',
-                'input': table
-            })
-        except json.JSONDecodeError as e:
-            api_errors.append({
-                'type': 'parse_error',
-                'loc': ('tables', i),
-                'msg': f'failed to parse API response for table "{database}.{table_name}": {e}',
-                'input': table
-            })
-        except Exception as e:
-            api_errors.append({
-                'type': 'unexpected_error',
-                'loc': ('tables', i),
-                'msg': f'unexpected error when checking table "{database}.{table_name}": {e}',
-                'input': table
-            })
+                continue
+            except Exception as e:
+                api_errors.append({
+                    'type': 'unexpected_error',
+                    'loc': ('tables', i),
+                    'msg': f'unexpected error when checking table "{database}.{table_name}": {e}',
+                    'input': table
+                })
+                continue
+
+        # If we got here, we have schema_columns (either from cache or fresh API call)
+        if auth_failed:
+            break
+
+        # Check if key_columns exist in schema
+        for key_col in key_columns:
+            if isinstance(key_col, dict):
+                column_name = key_col.get('column')
+                if column_name and column_name not in schema_columns:
+                    table_as = table.get('as_name', table_name)
+                    api_errors.append({
+                        'type': 'schema_error',
+                        'loc': ('tables', i),
+                        'msg': f'table "{database}.{table_name}" (as: {table_as}): column "{column_name}" not found in schema',
+                        'input': table
+                    })
+
+        # Check if incremental_columns exist in schema
+        incremental_columns = table.get('incremental_columns', [])
+        if incremental_columns:
+            for inc_col in incremental_columns:
+                if inc_col and inc_col not in schema_columns:
+                    table_as = table.get('as_name', table_name)
+                    api_errors.append({
+                        'type': 'schema_error',
+                        'loc': ('tables', i),
+                        'msg': f'table "{database}.{table_name}" (as: {table_as}): incremental_column "{inc_col}" not found in schema',
+                        'input': table
+                    })
+
+    # Check master table attribute source columns against table schemas
+    if 'master_tables' in data and not auth_failed:
+        for mt_i, mt in enumerate(data['master_tables']):
+            if isinstance(mt, dict) and 'attributes' in mt:
+                for attr_i, attr in enumerate(mt['attributes']):
+                    if isinstance(attr, dict) and 'source_columns' in attr:
+                        for sc in attr['source_columns']:
+                            if isinstance(sc, dict):
+                                table_as_name = sc.get('relation_table_as_name', '')
+                                column_name = sc.get('column', '')
+
+                                if table_as_name and column_name:
+                                    # Find the table definition by as_name
+                                    table_def = table_as_name_to_table.get(table_as_name)
+                                    if table_def:
+                                        database = table_def.get('database_name')
+                                        table_name = table_def.get('table_name')
+                                        table_key = f"{database}.{table_name}"
+
+                                        # Check if we have schema for this table
+                                        if table_key in table_schemas:
+                                            schema_columns = table_schemas[table_key]
+                                            if column_name not in schema_columns:
+                                                attr_name = attr.get('name', f'attribute_{attr_i}')
+                                                api_errors.append({
+                                                    'type': 'schema_error',
+                                                    'loc': ('master_tables', mt_i, 'attributes', attr_i),
+                                                    'msg': f'attributes[{attr_i}] (name: "{attr_name}"): source_column references column "{column_name}" not found in table "{database}.{table_name}" (as: {table_as_name}) schema',
+                                                    'input': attr
+                                                })
     
     return api_errors
 
