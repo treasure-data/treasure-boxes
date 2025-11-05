@@ -22,7 +22,7 @@ tables:
     - {column: td_client_id, key: td_client_id}
     - {column: td_global_id, key: td_global_id}
     - {column: email, key: email}
-  - database: wei_audience
+  - database: prod3
     table: users
     as: contacts
     key_columns:
