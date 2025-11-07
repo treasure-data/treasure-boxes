@@ -12,7 +12,7 @@ This project provides a solution to replicating segments from one master segment
 ----
 ## Considerations
 
-This project doesn't handle "Segment Include/Exclude" segment rules.
+This project doesn't handle "Drag-on Rules: Segment Include/Exclude" segment rules where the target parent segment's structure is different from the source parent segment's in regards to the segment(s) referenced in such segment rules.
 
 ----
 ## Questions
