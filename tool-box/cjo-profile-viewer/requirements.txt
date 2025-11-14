@@ -1,0 +1,5 @@
+streamlit==1.28.1
+pandas==2.1.1
+numpy==1.24.3
+requests==2.31.0
+pytd==2.2.0
