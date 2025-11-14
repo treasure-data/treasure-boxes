@@ -215,16 +215,19 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         align-items: center;
         margin: 20px 0;
         justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
     .step-box {
         background-color: #f8eac5;
         color: #000000;
         padding: 15px 20px;
-        margin: 0 15px;
+        margin: 5px 0;
         border-radius: 8px;
         border: 1px solid rgba(0,0,0,0.1);
         min-width: 180px;
+        max-width: 220px;
         text-align: center;
         cursor: pointer;
         font-weight: 600;
@@ -233,6 +236,7 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         transition: all 0.3s ease;
         position: relative;
         font-family: "Source Sans Pro", sans-serif;
+        flex-shrink: 0;
     }
 
     .step-box:hover {
@@ -261,6 +265,8 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         font-weight: bold;
         margin: 0 5px;
         opacity: 0.8;
+        flex-shrink: 0;
+        align-self: center;
     }
 
     .step-tooltip {
@@ -635,9 +641,17 @@ def _get_step_profiles(generator: CJOFlowchartGenerator, step):
         step_column = f"intime_stage_{step.stage_index}_{step_uuid}"
 
     if step_column and step_column in generator.profile_data.columns:
-        profiles = generator.profile_data[
-            generator.profile_data[step_column].notna()
-        ]['cdp_customer_id'].tolist()
+        # Get the corresponding outtime column
+        outtime_column = step_column.replace('intime_', 'outtime_')
+
+        # Filter profiles that have entered (intime not null) but not exited (outtime is null)
+        condition = generator.profile_data[step_column].notna()
+
+        if outtime_column in generator.profile_data.columns:
+            # Exclude profiles that have exited (outtime is not null)
+            condition = condition & generator.profile_data[outtime_column].isna()
+
+        profiles = generator.profile_data[condition]['cdp_customer_id'].tolist()
         return profiles
 
     return []

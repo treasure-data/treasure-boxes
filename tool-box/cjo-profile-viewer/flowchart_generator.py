@@ -225,7 +225,7 @@ class CJOFlowchartGenerator:
             return step_data.get('name', step_type)
 
     def _get_step_profile_count(self, step_id: str, stage_idx: int, step_type: str) -> int:
-        """Get the number of profiles in a specific step."""
+        """Get the number of profiles currently in a specific step."""
         # Convert step UUID format for column matching
         step_uuid = step_id.replace('-', '_')
 
@@ -233,13 +233,22 @@ class CJOFlowchartGenerator:
         entry_column = f'intime_stage_{stage_idx}_{step_uuid}'
 
         if entry_column in self.profile_data.columns:
-            # Count non-null values in the entry column
-            return self.profile_data[entry_column].notna().sum()
+            # Get the corresponding outtime column
+            outtime_column = entry_column.replace('intime_', 'outtime_')
+
+            # Count profiles that have entered but not exited
+            condition = self.profile_data[entry_column].notna()
+
+            if outtime_column in self.profile_data.columns:
+                # Exclude profiles that have exited (outtime is not null)
+                condition = condition & self.profile_data[outtime_column].isna()
+
+            return condition.sum()
 
         return 0
 
     def _get_branch_profile_count(self, step_id: str, segment_id: str, stage_idx: int) -> int:
-        """Get the number of profiles in a decision point branch."""
+        """Get the number of profiles currently in a decision point branch."""
         if not segment_id:
             return 0
 
@@ -250,12 +259,22 @@ class CJOFlowchartGenerator:
         branch_column = f'intime_stage_{stage_idx}_{step_uuid}_{segment_id}'
 
         if branch_column in self.profile_data.columns:
-            return self.profile_data[branch_column].notna().sum()
+            # Get the corresponding outtime column
+            outtime_column = branch_column.replace('intime_', 'outtime_')
+
+            # Count profiles that have entered but not exited
+            condition = self.profile_data[branch_column].notna()
+
+            if outtime_column in self.profile_data.columns:
+                # Exclude profiles that have exited (outtime is not null)
+                condition = condition & self.profile_data[outtime_column].isna()
+
+            return condition.sum()
 
         return 0
 
     def _get_variant_profile_count(self, step_id: str, variant_id: str, stage_idx: int) -> int:
-        """Get the number of profiles in an AB test variant."""
+        """Get the number of profiles currently in an AB test variant."""
         if not variant_id:
             return 0
 
@@ -267,18 +286,38 @@ class CJOFlowchartGenerator:
         variant_column = f'intime_stage_{stage_idx}_{step_uuid}_variant_{variant_uuid}'
 
         if variant_column in self.profile_data.columns:
-            return self.profile_data[variant_column].notna().sum()
+            # Get the corresponding outtime column
+            outtime_column = variant_column.replace('intime_', 'outtime_')
+
+            # Count profiles that have entered but not exited
+            condition = self.profile_data[variant_column].notna()
+
+            if outtime_column in self.profile_data.columns:
+                # Exclude profiles that have exited (outtime is not null)
+                condition = condition & self.profile_data[outtime_column].isna()
+
+            return condition.sum()
 
         return 0
 
     def get_stage_profile_counts(self) -> Dict[int, int]:
-        """Get profile counts for each stage."""
+        """Get profile counts for each stage (profiles currently in the stage)."""
         stage_counts = {}
 
         for stage_idx in range(len(self.stages)):
             entry_column = f'intime_stage_{stage_idx}'
             if entry_column in self.profile_data.columns:
-                stage_counts[stage_idx] = self.profile_data[entry_column].notna().sum()
+                # Get the corresponding outtime column
+                outtime_column = f'outtime_stage_{stage_idx}'
+
+                # Count profiles that have entered but not exited the stage
+                condition = self.profile_data[entry_column].notna()
+
+                if outtime_column in self.profile_data.columns:
+                    # Exclude profiles that have exited the stage (outtime is not null)
+                    condition = condition & self.profile_data[outtime_column].isna()
+
+                stage_counts[stage_idx] = condition.sum()
             else:
                 stage_counts[stage_idx] = 0
 
@@ -304,13 +343,20 @@ class CJOFlowchartGenerator:
         }
 
     def get_profiles_in_step(self, step_column: str) -> List[str]:
-        """Get list of customer IDs for profiles in a specific step."""
+        """Get list of customer IDs for profiles currently in a specific step."""
         if step_column not in self.profile_data.columns:
             return []
 
-        # Filter profiles that have a non-null value in this step column
-        profiles_in_step = self.profile_data[
-            self.profile_data[step_column].notna()
-        ]['cdp_customer_id'].tolist()
+        # Get the corresponding outtime column
+        outtime_column = step_column.replace('intime_', 'outtime_')
+
+        # Filter profiles that have entered (intime not null) but not exited (outtime is null)
+        condition = self.profile_data[step_column].notna()
+
+        if outtime_column in self.profile_data.columns:
+            # Exclude profiles that have exited (outtime is not null)
+            condition = condition & self.profile_data[outtime_column].isna()
+
+        profiles_in_step = self.profile_data[condition]['cdp_customer_id'].tolist()
 
         return profiles_in_step
