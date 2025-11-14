@@ -661,15 +661,99 @@ def show_step_details(step_info: Dict, generator: CJOFlowchartGenerator, column_
     """Show detailed information about a selected step."""
     st.subheader(f"Step Details: {step_info['name']}")
 
+    # Show breadcrumb trail if available
+    if 'breadcrumbs' in step_info and len(step_info['breadcrumbs']) > 1:
+        st.markdown("### 🧭 Journey Path")
+
+        # Show individual breadcrumb steps with styling directly under the header
+        breadcrumb_html = '<div style="display: flex; align-items: center; gap: 10px; margin: 10px 0; flex-wrap: wrap;">'
+
+        # Define step type colors for journey path
+        step_type_colors = {
+            'DecisionPoint': '#f8eac5',        # Decision Point
+            'DecisionPoint_Branch': '#f8eac5', # Decision Point Branch - yellow/beige
+            'ABTest': '#f8eac5',               # AB Test
+            'ABTest_Variant': '#f8eac5',       # AB Test Variant - yellow/beige
+            'WaitStep': '#f8dcda',             # Wait Step - light pink/red
+            'Activation': '#d8f3ed',           # Activation - light green
+            'Jump': '#e8eaff',                 # Jump - light blue/purple
+            'End': '#e8eaff',                  # End Step - light blue/purple
+            'Unknown': '#f8eac5'               # Unknown - default to yellow/beige
+        }
+
+        # We need to get step types for each breadcrumb step
+        # This requires looking up the step info for each breadcrumb
+        for i, crumb in enumerate(step_info['breadcrumbs']):
+            # Check if this is the stage entry criteria (first item and has stage_entry_criteria)
+            is_entry_criteria = (i == 0 and step_info.get('stage_entry_criteria') and
+                                crumb == step_info['stage_entry_criteria'])
+
+            if i == len(step_info['breadcrumbs']) - 1:
+                # Current step - use its step type color with blue border
+                step_type = step_info.get('step_type', 'Unknown')
+                bg_color = step_type_colors.get(step_type, '#f8eac5')
+                breadcrumb_html += f'''
+                <div style="background-color: {bg_color}; color: #000000; padding: 8px 12px; border-radius: 4px; font-weight: normal; border: 2px solid #0066CC;">
+                    {crumb}
+                </div>
+                '''
+            elif is_entry_criteria:
+                # Stage entry criteria - use specified background color
+                breadcrumb_html += f'''
+                <div style="background-color: #d4ebf7; color: #000000; padding: 8px 12px; border-radius: 4px; font-weight: normal;">
+                    {crumb}
+                </div>
+                '''
+            else:
+                # Previous steps - need to find their step type from all_steps
+                # For now, use default muted color since we don't have easy access to previous step types
+                breadcrumb_html += f'''
+                <div style="background-color: #f0f0f0; color: #000000; padding: 8px 12px; border-radius: 4px; font-weight: normal;">
+                    {crumb}
+                </div>
+                '''
+
+            if i < len(step_info['breadcrumbs']) - 1:
+                breadcrumb_html += '<div style="color: #666; font-weight: bold;">→</div>'
+
+        breadcrumb_html += '</div>'
+        st.markdown(breadcrumb_html, unsafe_allow_html=True)
+
+    st.markdown("### 📊 Step Information")
     col1, col2 = st.columns(2)
 
     with col1:
         st.write(f"**Step Type:** {step_info['step_type']}")
-        st.write(f"**Stage Index:** {step_info['stage_index']}")
+        st.write(f"**Stage:** {step_info['stage_index'] + 1}")
         st.write(f"**Profiles in Step:** {step_info['profile_count']}")
 
     with col2:
-        st.write(f"**Step ID:** {step_info['step_id']}")
+        # Generate intime/outtime column names for this step
+        if '_branch_' in step_info['step_id']:
+            # Decision point branch
+            parts = step_info['step_id'].split('_branch_')
+            if len(parts) == 2:
+                step_uuid = parts[0].replace('-', '_')
+                segment_id = parts[1]
+                intime_column = f"intime_stage_{step_info['stage_index']}_{step_uuid}_{segment_id}"
+                outtime_column = f"outtime_stage_{step_info['stage_index']}_{step_uuid}_{segment_id}"
+        elif '_variant_' in step_info['step_id']:
+            # AB test variant
+            parts = step_info['step_id'].split('_variant_')
+            if len(parts) == 2:
+                step_uuid = parts[0].replace('-', '_')
+                variant_uuid = parts[1].replace('-', '_')
+                intime_column = f"intime_stage_{step_info['stage_index']}_{step_uuid}_variant_{variant_uuid}"
+                outtime_column = f"outtime_stage_{step_info['stage_index']}_{step_uuid}_variant_{variant_uuid}"
+        else:
+            # Regular step
+            step_uuid = step_info['step_id'].replace('-', '_')
+            intime_column = f"intime_stage_{step_info['stage_index']}_{step_uuid}"
+            outtime_column = f"outtime_stage_{step_info['stage_index']}_{step_uuid}"
+
+        st.markdown(f"**Step UUID:** `{step_info['step_id']}`")
+        st.markdown(f"**Intime Column:** `{intime_column}`")
+        st.markdown(f"**Outtime Column:** `{outtime_column}`")
 
     # Get profiles in this step
     if step_info['profile_count'] > 0:
@@ -770,9 +854,72 @@ def main():
     st.title("🔍 CJO Profile Viewer")
     st.markdown("**Visualize Customer Journey Orchestration journeys with profile data**")
 
-    # Check for existing API key
-    existing_api_key = get_api_key()
-    api_key_status = "✅ Found" if existing_api_key else "❌ Not Found"
+    # Journey loading container
+    with st.container():
+        st.markdown("---")
+        col1, col2, col3 = st.columns([1, 1, 4])
+        with col1:
+            journey_id = st.text_input(
+                "Journey ID",
+                placeholder="e.g., 12345",
+                key="main_journey_id",
+                on_change=lambda: st.session_state.update({"auto_load_triggered": True}),
+                label_visibility="collapsed"
+            )
+        with col2:
+            load_button = st.button(
+                "🔄 Load Journey Data",
+                type="primary",
+                disabled=not journey_id,
+                key="main_load_button"
+            )
+
+        # Check for existing API key (but don't show status)
+        existing_api_key = get_api_key()
+
+        # Check for auto-load trigger (when user presses Enter)
+        auto_load_triggered = st.session_state.get("auto_load_triggered", False)
+        if auto_load_triggered and journey_id:
+            st.session_state["auto_load_triggered"] = False
+            load_button = True  # Trigger the loading logic
+
+        # Handle data loading within the container
+        if load_button and journey_id:
+            if not existing_api_key:
+                st.error("❌ **API Key Required**: Please set up your TD API key (TD_API_KEY environment variable, ~/.td/config, or td_config.txt file)")
+                st.stop()
+
+            # Fetch journey data
+            api_response, error = fetch_journey_data(journey_id, existing_api_key)
+
+            if error:
+                st.error(f"❌ **API Error**: {error}")
+                st.stop()
+
+            if api_response:
+                st.session_state.api_response = api_response
+                st.session_state.journey_loaded = True
+
+                # Extract audience ID from API response
+                audience_id = None
+                try:
+                    audience_id = api_response.get('data', {}).get('attributes', {}).get('audienceId')
+                    if not audience_id:
+                        st.error("❌ **API Response Error**: Audience ID not found in API response")
+                        st.stop()
+                except Exception as e:
+                    st.error(f"❌ **API Response Error**: Failed to extract audience ID: {str(e)}")
+                    st.stop()
+
+                # Load profile data using pytd
+                profile_data = load_profile_data(journey_id, audience_id, existing_api_key)
+                if profile_data is not None:
+                    st.session_state.profile_data = profile_data
+                    st.success(f"✅ **Success**: Journey '{journey_id}' data loaded successfully!")
+                else:
+                    st.warning("⚠️ **Profile Data**: Could not load profile data. Some features may be limited.")
+
+        st.markdown("---")
 
     # Initialize session state for data
     if 'api_response' not in st.session_state:
@@ -781,6 +928,9 @@ def main():
         st.session_state.profile_data = None
     if 'journey_loaded' not in st.session_state:
         st.session_state.journey_loaded = False
+    if 'auto_load_attempted' not in st.session_state:
+        st.session_state.auto_load_attempted = False
+
 
     # Add global CSS styling for the blue button
     st.markdown("""
@@ -800,85 +950,7 @@ def main():
     </style>
     """, unsafe_allow_html=True)
 
-    # Sidebar Section
-    with st.sidebar:
-        # Journey ID input
-        journey_id = st.text_input(
-            "Journey ID",
-            placeholder="e.g., 211205",
-            key="sidebar_journey_id",
-            on_change=lambda: st.session_state.update({"auto_load_triggered": True})
-        )
 
-        load_button = st.button(
-            "🔄 Load Journey Data",
-            type="primary",
-            disabled=not journey_id,
-            key="sidebar_load_button"
-        )
-
-        # Add spacer to push configuration to bottom
-        st.markdown("<br>" * 20, unsafe_allow_html=True)
-
-        # Configuration section at very bottom
-        st.header("⚙️ Configuration")
-
-        # Show setup instructions only if API key not found
-        if not existing_api_key:
-            st.error(f"""
-            **TD API Key Status:** {api_key_status}
-
-            **Setup Instructions:**
-            1. **Environment Variable:** Set `TD_API_KEY`
-            2. **Config File:** `~/.td/config`
-            3. **Local File:** `td_config.txt`
-
-            **Get your API key:** TD Console → Profile → API Keys
-            """)
-        else:
-            st.success(f"**TD API Key Status:** {api_key_status}")
-
-    # Check for auto-load trigger (when user presses Enter)
-    auto_load_triggered = st.session_state.get("auto_load_triggered", False)
-    if auto_load_triggered and journey_id:
-        st.session_state["auto_load_triggered"] = False
-        load_button = True  # Trigger the loading logic
-
-    # Handle data loading
-    if load_button and journey_id:
-        if not existing_api_key:
-            st.error("❌ **API Key Required**: Please set up your TD API key using one of the methods above.")
-            return
-
-        # Fetch journey data
-        api_response, error = fetch_journey_data(journey_id, existing_api_key)
-
-        if error:
-            st.error(f"❌ **API Error**: {error}")
-            return
-
-        if api_response:
-            st.session_state.api_response = api_response
-            st.session_state.journey_loaded = True
-
-            # Extract audience ID from API response
-            audience_id = None
-            try:
-                audience_id = api_response.get('data', {}).get('attributes', {}).get('audienceId')
-                if not audience_id:
-                    st.error("❌ **API Response Error**: Audience ID not found in API response")
-                    return
-            except Exception as e:
-                st.error(f"❌ **API Response Error**: Failed to extract audience ID: {str(e)}")
-                return
-
-            # Load profile data using pytd
-            profile_data = load_profile_data(journey_id, audience_id, existing_api_key)
-            if profile_data is not None:
-                st.session_state.profile_data = profile_data
-                st.success(f"✅ **Success**: Journey '{journey_id}' data loaded successfully!")
-            else:
-                st.warning("⚠️ **Profile Data**: Could not load profile data. Some features may be limited.")
 
     # Check if we have data to work with
     if not st.session_state.journey_loaded or st.session_state.api_response is None:
@@ -935,40 +1007,500 @@ def main():
         st.metric("Audience ID", summary['audience_id'])
 
     # Main content area with tabs
-    tab1, tab2, tab3 = st.tabs(["Step Selection", "Canvas", "Data & Mappings"])
+    tab1, tab2, tab3 = st.tabs(["Step Browser", "Canvas", "Data & Mappings"])
 
-    # Create list of all steps (used by both tabs)
+    # Create list of all steps with breadcrumbs (used by both tabs)
     all_steps = []
     for stage in generator.stages:
-        for path in stage.paths:
-            for step in path:
-                step_display = f"Stage {step.stage_index}: {step.name} ({step.profile_count} profiles)"
+        for path_idx, path in enumerate(stage.paths):
+            # Build breadcrumb trail for this path
+            breadcrumbs = []
+            display_breadcrumbs = []
+
+            # Add stage entry criteria as root if it exists (for detail view only)
+            stage_entry_criteria = stage.entry_criteria
+            if stage_entry_criteria:
+                breadcrumbs.append(stage_entry_criteria)
+
+            for step_idx, step in enumerate(path):
+                # Add current step to breadcrumb (full breadcrumb for details)
+                breadcrumbs.append(step.name)
+
+                # Add current step to display breadcrumb (no entry criteria for list display)
+                display_breadcrumbs.append(step.name)
+
+                # Create display with breadcrumb (truncate if too long) - use display_breadcrumbs for list
+                breadcrumb_trail = " → ".join(display_breadcrumbs)
+
+                # Highlight profile count if there are profiles
+                if step.profile_count > 0:
+                    profile_text = f'<span style="color: rgb(92, 228, 136);">({step.profile_count} profiles)</span>'
+                else:
+                    profile_text = f"({step.profile_count} profiles)"
+
+                if len(breadcrumb_trail) > 60:
+                    # Show first step ... current step for long trails
+                    if len(display_breadcrumbs) > 2:
+                        short_trail = f"{display_breadcrumbs[0]} → ... → {display_breadcrumbs[-1]}"
+                    else:
+                        short_trail = breadcrumb_trail
+                    step_display = f"Stage {step.stage_index + 1}: {short_trail} {profile_text}"
+                else:
+                    step_display = f"Stage {step.stage_index + 1}: {breadcrumb_trail} {profile_text}"
+
                 all_steps.append((step_display, {
                     'step_id': step.step_id,
                     'step_type': step.step_type,
                     'stage_index': step.stage_index,
                     'profile_count': step.profile_count,
-                    'name': step.name
+                    'name': step.name,
+                    'breadcrumbs': breadcrumbs.copy(),
+                    'path_index': path_idx,
+                    'step_index': step_idx,
+                    'stage_entry_criteria': stage_entry_criteria
                 }))
 
     # Tab 1: Step Selection (Default)
     with tab1:
-        st.header("Step Selection")
+        st.markdown("**Browse through all journey steps to view detailed information including profile counts, customer lists, and journey paths. Select any step from the list below to see which profiles are currently in that step and explore their journey progression.**")
 
         if all_steps:
-            selected_step_display = st.selectbox(
-                "Select a step to view details:",
-                options=["None"] + [step[0] for step in all_steps],
-                index=0,
-                key="step_selector"
-            )
+            # Container 1: Journey Steps List
+            with st.container():
+                st.subheader("Journey Steps")
 
-            if selected_step_display != "None":
-                # Find the corresponding step info
-                for step_display, step_info in all_steps:
-                    if step_display == selected_step_display:
-                        show_step_details(step_info, generator, column_mapper)
-                        break
+                # Add checkbox to filter steps with profiles
+                filter_zero_profiles = st.checkbox("Only show steps with profiles", key="filter_zero_profiles")
+
+                # Add CSS for step type colors in radio buttons
+                st.markdown("""
+                <style>
+                /* Custom colors for radio button labels based on step types */
+                .stRadio > div > div > div > label > div[data-testid="stMarkdownContainer"] {
+                    font-weight: 500;
+                }
+
+                </style>
+                """, unsafe_allow_html=True)
+
+                # Define saturated colors for step types
+                step_type_colors_saturated = {
+                    'DecisionPoint': '#E6B800',        # More saturated yellow
+                    'DecisionPoint_Branch': '#E6B800', # More saturated yellow
+                    'ABTest': '#E6B800',               # More saturated yellow
+                    'ABTest_Variant': '#E6B800',       # More saturated yellow
+                    'WaitStep': '#CC0000',             # More saturated red
+                    'Activation': '#006600',           # More saturated green
+                    'Jump': '#0066CC',                 # More saturated blue
+                    'End': '#0066CC',                  # More saturated blue
+                    'Unknown': '#E6B800'               # More saturated yellow
+                }
+
+                # Create colored step display with individual breadcrumb coloring
+                def format_step_with_colors(idx):
+                    step_display, step_info = all_steps[idx]
+                    breadcrumbs = step_info.get('breadcrumbs', [])
+
+                    if len(breadcrumbs) <= 1:
+                        # Single step, color the whole thing
+                        step_type = step_info.get('step_type', 'Unknown')
+                        color = step_type_colors_saturated.get(step_type, '#E6B800')
+                        return step_display
+                    else:
+                        # Multiple breadcrumbs, need to color each part
+                        stage_part = f"Stage {step_info['stage_index'] + 1}: "
+                        breadcrumb_trail = " → ".join(breadcrumbs)
+                        profile_part = f" ({step_info['profile_count']} profiles)"
+
+                        # For now, use the final step's color for the whole line
+                        # since we can't easily apply different colors to different parts in radio buttons
+                        step_type = step_info.get('step_type', 'Unknown')
+                        color = step_type_colors_saturated.get(step_type, '#E6B800')
+                        return step_display
+
+                # Add CSS to highlight profile counts in radio buttons
+                st.markdown("""
+                <style>
+                /* Style radio button text to highlight profile counts */
+                .stRadio label div[data-testid="stMarkdownContainer"] p {
+                    font-family: inherit;
+                }
+
+                /* Custom style for steps with profiles - this is a workaround since we can't easily target specific text */
+                .radio-with-profiles {
+                    color: rgb(92, 228, 136) !important;
+                }
+                </style>
+                """, unsafe_allow_html=True)
+
+                # Create step display with hierarchical formatting using dashes
+                def format_step_display(idx):
+                    step_display, step_info = all_steps[idx]
+                    # Get step details for proper formatting
+                    step_type = step_info.get('step_type', '')
+                    breadcrumbs = step_info.get('breadcrumbs', [])
+                    step_name = step_info.get('name', '')
+                    profile_count = step_info.get('profile_count', 0)
+
+                    # Get profile count text
+                    profile_text = f"({profile_count} profiles)"
+
+                    if step_type == 'DecisionPoint_Branch':
+                        # Format decision point branches - no indentation, no profile count
+                        if 'Excluded Profiles' in step_name:
+                            return f"Decision Branch: Excluded Profiles"
+                        else:
+                            return f"Decision Branch: {step_name}"
+                    elif step_type == 'ABTest_Variant':
+                        # Format AB test variants - no indentation, no profile count
+                        # Extract AB test name from parent step if possible
+                        ab_test_name = "test_name"  # Default name, should extract from API
+                        return f"AB Test ({ab_test_name}): {step_name}"
+                    else:
+                        # Regular steps - check if this step comes after a decision point branch or AB test variant
+                        # We need to look through all_steps to find the previous steps in this path and check their types
+                        has_decision_or_abtest = False
+                        indent_level = 0
+
+                        # Find this step in all_steps to get its context
+                        current_step_info = all_steps[idx][1]
+                        stage_index = current_step_info['stage_index']
+                        path_index = current_step_info['path_index']
+                        step_index = current_step_info['step_index']
+
+                        # Look at previous steps in the same path to see if any are decision branches or AB variants
+                        branch_variant_count = 0
+                        for other_idx, (other_display, other_info) in enumerate(all_steps):
+                            if (other_info['stage_index'] == stage_index and
+                                other_info['path_index'] == path_index and
+                                other_info['step_index'] < step_index):
+
+                                other_step_type = other_info.get('step_type', '')
+                                if other_step_type in ['DecisionPoint_Branch', 'ABTest_Variant']:
+                                    branch_variant_count += 1
+
+                        if branch_variant_count > 0:
+                            has_decision_or_abtest = True
+                            # All steps after any branch/variant get the same indentation level
+                            # Only increase indentation for nested branches/variants
+                            indent_level = branch_variant_count
+
+                        if has_decision_or_abtest and indent_level > 0:
+                            # Apply indentation using dashes
+                            dash_indent = "--- " * indent_level
+                            return f"{dash_indent}{step_name} {profile_text}"
+                        else:
+                            # No hierarchy - regular step display
+                            return f"{step_name} {profile_text}"
+
+                # Group steps by stage for better organization
+                grouped_steps = {}
+                for i, (step_display, step_info) in enumerate(all_steps):
+                    stage_idx = step_info['stage_index']
+                    if stage_idx not in grouped_steps:
+                        grouped_steps[stage_idx] = []
+                    grouped_steps[stage_idx].append((i, step_display, step_info))
+
+                # Filter steps based on checkbox
+                if filter_zero_profiles:
+                    # Only show steps with profiles > 0
+                    filtered_steps = []
+                    for stage_idx in sorted(grouped_steps.keys()):
+                        stage_steps = [item for item in grouped_steps[stage_idx] if item[2]['profile_count'] > 0]
+                        if stage_steps:  # Only include stage if it has steps with profiles
+                            filtered_steps.extend(stage_steps)
+
+                    if filtered_steps:
+                        # Create options with stage headers
+                        options_with_headers = []
+                        current_stage = None
+
+                        for original_idx, step_display, step_info in filtered_steps:
+                            stage_idx = step_info['stage_index']
+                            if stage_idx != current_stage:
+                                # Add empty line before new stage (except for first stage)
+                                if current_stage is not None:
+                                    options_with_headers.append("")
+                                # Add stage header without profile count
+                                stage_name = generator.stages[stage_idx].name if stage_idx < len(generator.stages) else f"Stage {stage_idx + 1}"
+                                options_with_headers.append(f"STAGE {stage_idx + 1}: {stage_name}")
+                                current_stage = stage_idx
+                            options_with_headers.append(format_step_display(original_idx))
+
+                        # Create mapping from display index to original index
+                        step_mapping = []
+                        for original_idx, step_display, step_info in filtered_steps:
+                            step_mapping.append(original_idx)
+
+                        # Use selectbox instead of radio for better header support
+                        selected_option = st.selectbox(
+                            "Select a step to view details:",
+                            options=[""] + options_with_headers,
+                            key="step_selector",
+                            index=0
+                        )
+
+                        # Map back to original index
+                        selected_idx = None
+
+                        if selected_option and selected_option != "":
+                            if selected_option.startswith("STAGE"):
+                                # User selected a stage header - show informational message
+                                selected_idx = -1  # Special value to indicate stage header selection
+                            else:
+                                # User selected a step - find the index in the filtered list
+                                step_count = 0
+                                for i, option in enumerate(options_with_headers):
+                                    if not option.startswith("STAGE") and option != "":
+                                        if option == selected_option:
+                                            selected_idx = step_mapping[step_count]
+                                            break
+                                        step_count += 1
+                    else:
+                        st.info("No steps with profiles found.")
+                        selected_idx = None
+                else:
+                    # Show all steps with stage headers
+                    options_with_headers = []
+                    step_mapping = []
+
+                    for i, stage_idx in enumerate(sorted(grouped_steps.keys())):
+                        # Add empty line before new stage (except for first stage)
+                        if i > 0:
+                            options_with_headers.append("")
+                        # Add stage header without profile count
+                        stage_name = generator.stages[stage_idx].name if stage_idx < len(generator.stages) else f"Stage {stage_idx + 1}"
+                        options_with_headers.append(f"STAGE {stage_idx + 1}: {stage_name}")
+
+                        # Add steps for this stage
+                        for original_idx, step_display, step_info in grouped_steps[stage_idx]:
+                            options_with_headers.append(format_step_display(original_idx))
+                            step_mapping.append(original_idx)
+
+                    # Use selectbox instead of radio for better header support
+                    selected_option = st.selectbox(
+                        "Select a step to view details:",
+                        options=[""] + options_with_headers,
+                        key="step_selector",
+                        index=0
+                    )
+
+                    # Map back to original index
+                    selected_idx = None
+
+                    if selected_option and selected_option != "":
+                        if selected_option.startswith("STAGE"):
+                            # User selected a stage header - show informational message
+                            selected_idx = -1  # Special value to indicate stage header selection
+                        else:
+                            # User selected a step - find the index in the step mapping
+                            step_count = 0
+                            for option in options_with_headers:
+                                if not option.startswith("STAGE") and option != "":
+                                    if option == selected_option:
+                                        selected_idx = step_mapping[step_count]
+                                        break
+                                    step_count += 1
+
+            # Container 2: Step Details (only show if actual step is selected)
+            if selected_idx is not None:
+                with st.container():
+                    st.markdown("---")
+
+                    if selected_idx == -1:
+                        # User selected a stage header
+                        st.info("Please select an actual step to view profile details. Stage headers are grouping elements.")
+                    else:
+                        # Show step details only
+                        step_display, step_info = all_steps[selected_idx]
+
+                        # Only show details for actual steps, not for decision branches or AB variants
+                        step_type = step_info.get('step_type', '')
+                        if step_type in ['DecisionPoint_Branch', 'ABTest_Variant']:
+                            st.info("Please select an actual step to view profile details. Decision branches and AB test variants are grouping elements.")
+                        else:
+                            # Container 2a: Journey Path
+                            with st.container():
+                                # Show breadcrumb trail if available
+                                if 'breadcrumbs' in step_info and len(step_info['breadcrumbs']) > 1:
+                                    st.markdown("### 🧭 Journey Path")
+
+                                # Show individual breadcrumb steps with styling directly under the header
+                                breadcrumb_html = '<div style="display: flex; align-items: center; gap: 10px; margin: 10px 0; flex-wrap: wrap;">'
+
+                                # Define step type colors for journey path
+                                step_type_colors = {
+                                    'DecisionPoint': '#f8eac5',        # Decision Point
+                                    'DecisionPoint_Branch': '#f8eac5', # Decision Point Branch - yellow/beige
+                                    'ABTest': '#f8eac5',               # AB Test
+                                    'ABTest_Variant': '#f8eac5',       # AB Test Variant - yellow/beige
+                                    'WaitStep': '#f8dcda',             # Wait Step - light pink/red
+                                    'Activation': '#d8f3ed',           # Activation - light green
+                                    'Jump': '#e8eaff',                 # Jump - light blue/purple
+                                    'End': '#e8eaff',                  # End Step - light blue/purple
+                                    'Unknown': '#f8eac5'               # Unknown - default to yellow/beige
+                                }
+
+                                # We need to get step types for each breadcrumb step
+                                # This requires looking up the step info for each breadcrumb
+                                for i, crumb in enumerate(step_info['breadcrumbs']):
+                                    # Check if this is the stage entry criteria (first item and has stage_entry_criteria)
+                                    is_entry_criteria = (i == 0 and step_info.get('stage_entry_criteria') and
+                                                        crumb == step_info['stage_entry_criteria'])
+
+                                    if i == len(step_info['breadcrumbs']) - 1:
+                                        # Current step - use its step type color with blue border
+                                        step_type = step_info.get('step_type', 'Unknown')
+                                        bg_color = step_type_colors.get(step_type, '#f8eac5')
+                                        breadcrumb_html += f'''
+                                        <div style="background-color: {bg_color}; color: #000000; padding: 8px 12px; border-radius: 4px; font-weight: normal; border: 2px solid #0066CC;">
+                                            {crumb}
+                                        </div>
+                                        '''
+                                    elif is_entry_criteria:
+                                        # Stage entry criteria - use specified background color
+                                        breadcrumb_html += f'''
+                                        <div style="background-color: #d4ebf7; color: #000000; padding: 8px 12px; border-radius: 4px; font-weight: normal;">
+                                            {crumb}
+                                        </div>
+                                        '''
+                                    else:
+                                        # Previous steps - need to find their step type from all_steps
+                                        # For now, use default muted color since we don't have easy access to previous step types
+                                        breadcrumb_html += f'''
+                                        <div style="background-color: #f0f0f0; color: #000000; padding: 8px 12px; border-radius: 4px; font-weight: normal;">
+                                            {crumb}
+                                        </div>
+                                        '''
+
+                                    if i < len(step_info['breadcrumbs']) - 1:
+                                        breadcrumb_html += '<div style="color: #666; font-weight: bold;">→</div>'
+
+                                breadcrumb_html += '</div>'
+                                st.markdown(breadcrumb_html, unsafe_allow_html=True)
+
+                            # Container 2b: Profiles in Step (moved up)
+                            with st.container():
+                                st.markdown("---")
+
+                                # Try to find the corresponding column name
+                                step_column = None
+
+                                # For regular steps
+                                if '_branch_' in step_info['step_id']:
+                                    # Decision point branch
+                                    parts = step_info['step_id'].split('_branch_')
+                                    if len(parts) == 2:
+                                        step_uuid = parts[0].replace('-', '_')
+                                        segment_id = parts[1]
+                                        step_column = f"intime_stage_{step_info['stage_index']}_{step_uuid}_{segment_id}"
+                                elif '_variant_' in step_info['step_id']:
+                                    # AB test variant
+                                    parts = step_info['step_id'].split('_variant_')
+                                    if len(parts) == 2:
+                                        step_uuid = parts[0].replace('-', '_')
+                                        variant_uuid = parts[1].replace('-', '_')
+                                        step_column = f"intime_stage_{step_info['stage_index']}_{step_uuid}_variant_{variant_uuid}"
+                                else:
+                                    # Regular step
+                                    step_uuid = step_info['step_id'].replace('-', '_')
+                                    step_column = f"intime_stage_{step_info['stage_index']}_{step_uuid}"
+
+                                if step_column:
+                                    profiles = generator.get_profiles_in_step(step_column)
+
+                                    if profiles:
+                                        st.subheader("Profiles in this Step")
+
+                                        # Add search functionality
+                                        col1, col2, col3 = st.columns([3, 1, 4])
+                                with col1:
+                                    search_term = st.text_input(
+                                        "Search by cdp_customer_id:",
+                                        placeholder="Enter customer ID to search...",
+                                        key=f"search_{step_info['step_id']}",
+                                        on_change=lambda: st.session_state.update({f"search_triggered_{step_info['step_id']}": True})
+                                    )
+                                with col2:
+                                    # Add some spacing to align with input
+                                    st.write("")  # Empty line for alignment
+                                    search_button = st.button(
+                                        "🔍 Search",
+                                        key=f"search_btn_{step_info['step_id']}",
+                                        use_container_width=True
+                                    )
+
+                                # Check for search trigger (Enter or button click)
+                                search_triggered = st.session_state.get(f"search_triggered_{step_info['step_id']}", False) or search_button
+                                if search_triggered:
+                                    st.session_state[f"search_triggered_{step_info['step_id']}"] = False
+
+                                # Filter profiles if search term is provided and search is triggered
+                                if search_term and (search_triggered or search_button):
+                                    filtered_profiles = [p for p in profiles if search_term.lower() in p.lower()]
+                                elif not search_term:
+                                    filtered_profiles = profiles
+                                else:
+                                    # Show all profiles if search hasn't been triggered yet
+                                    filtered_profiles = profiles
+
+                                st.write(f"Showing {len(filtered_profiles)} of {len(profiles)} profiles")
+
+                                # Display profiles in a scrollable container
+                                if filtered_profiles:
+                                    # Create DataFrame for better display
+                                    profile_df = pd.DataFrame({'cdp_customer_id': filtered_profiles})
+                                    st.dataframe(profile_df, height=300)
+
+                                    # Add download button
+                                    csv = profile_df.to_csv(index=False)
+                                    st.download_button(
+                                        label="Download Profile List",
+                                        data=csv,
+                                        file_name=f"profiles_{step_info['name'].replace(' ', '_')}.csv",
+                                        mime="text/csv"
+                                    )
+                                else:
+                                    st.write("No profiles match the search criteria.")
+
+                            # Container 2c: Step Information (moved down)
+                            with st.container():
+                                st.markdown("---")
+                                st.markdown("### 📊 Step Information")
+
+                                st.write(f"**Step Type:** {step_info['step_type']}")
+
+                                # Generate correct intime/outtime column names using the same logic as column_mapper
+                                if '_branch_' in step_info['step_id']:
+                                    # Decision point branch - format: intime_stage_{stage}_{step_uuid_with_underscores}_{segment_id}
+                                    parts = step_info['step_id'].split('_branch_')
+                                    if len(parts) == 2:
+                                        step_uuid = parts[0].replace('-', '_')
+                                        segment_id = parts[1]
+                                        intime_column = f"intime_stage_{step_info['stage_index']}_{step_uuid}_{segment_id}"
+                                        outtime_column = f"outtime_stage_{step_info['stage_index']}_{step_uuid}_{segment_id}"
+                                elif '_variant_' in step_info['step_id']:
+                                    # AB test variant - format: intime_stage_{stage}_{step_uuid_with_underscores}_variant_{variant_uuid_with_underscores}
+                                    parts = step_info['step_id'].split('_variant_')
+                                    if len(parts) == 2:
+                                        step_uuid = parts[0].replace('-', '_')
+                                        variant_uuid = parts[1].replace('-', '_')
+                                        intime_column = f"intime_stage_{step_info['stage_index']}_{step_uuid}_variant_{variant_uuid}"
+                                        outtime_column = f"outtime_stage_{step_info['stage_index']}_{step_uuid}_variant_{variant_uuid}"
+                                else:
+                                    # Regular step - format: intime_stage_{stage}_{step_uuid_with_underscores}
+                                    step_uuid = step_info['step_id'].replace('-', '_')
+                                    intime_column = f"intime_stage_{step_info['stage_index']}_{step_uuid}"
+                                    outtime_column = f"outtime_stage_{step_info['stage_index']}_{step_uuid}"
+
+                                st.write("**Step UUID:**")
+                                st.code(step_info['step_id'])
+
+                                st.write("**Intime Column:**")
+                                st.code(intime_column)
+
+                                st.write("**Outtime Column:**")
+                                st.code(outtime_column)
         else:
             st.info("No steps found in the journey data.")
 
@@ -977,7 +1509,7 @@ def main():
         st.header("Journey Canvas")
 
         # Simple disclaimer
-        st.info("ℹ️ **Note**: The canvas visualization works best with smaller, less complex journeys. For large or complex journeys, consider using the **Step Selection** tab for better performance.")
+        st.info("ℹ️ **Note**: The canvas visualization works best with smaller, less complex journeys. For large or complex journeys, consider using the **Step Selection** tab.")
 
         # Generate flowchart button
         if st.button("🎨 Generate Canvas Visualization", type="primary", help="Click to generate the interactive flowchart"):
@@ -1039,13 +1571,6 @@ def main():
         st.write("This shows a sample of the raw profile data from the journey table.")
         st.dataframe(profile_data.head(10))
 
-        st.subheader("API Response Summary")
-        st.write("This shows the key information from the journey API response.")
-        st.json({
-            "journey_id": summary['journey_id'],
-            "journey_name": summary['journey_name'],
-            "stages": [{"name": stage.name, "id": stage.stage_id} for stage in generator.stages]
-        })
 
 
 if __name__ == "__main__":
