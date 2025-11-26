@@ -1072,12 +1072,64 @@ def main():
                 # Add checkbox to filter steps with profiles
                 filter_zero_profiles = st.checkbox("Only show steps with profiles", key="filter_zero_profiles")
 
-                # Add CSS for step type colors in radio buttons
+                # Add CSS for step type colors in radio buttons and selectbox dropdown background
                 st.markdown("""
                 <style>
                 /* Custom colors for radio button labels based on step types */
                 .stRadio > div > div > div > label > div[data-testid="stMarkdownContainer"] {
                     font-weight: 500;
+                }
+
+                /* Selectbox dropdown background color */
+                div[data-baseweb="popover"] {
+                    background-color: #2f3037 !important;
+                }
+
+                div[data-baseweb="popover"] div[data-baseweb="menu"] {
+                    background-color: #2f3037 !important;
+                }
+
+                div[data-baseweb="popover"] div[data-baseweb="menu"] ul {
+                    background-color: #2f3037 !important;
+                }
+
+                div[data-baseweb="popover"] div[data-baseweb="menu"] li {
+                    background-color: #2f3037 !important;
+                }
+
+                div[data-baseweb="popover"] [role="option"] {
+                    background-color: #2f3037 !important;
+                }
+
+                /* Target popover at body level (Streamlit renders these at document root) */
+                body div[data-baseweb="popover"] {
+                    background-color: #2f3037 !important;
+                }
+
+                body div[data-baseweb="popover"] * {
+                    background-color: #2f3037 !important;
+                }
+
+                /* Hover state - apply to all nested elements */
+                div[data-baseweb="popover"] [role="option"]:hover,
+                div[data-baseweb="popover"] div[data-baseweb="menu"] li:hover {
+                    background-color: #3a3a42 !important;
+                }
+
+                div[data-baseweb="popover"] [role="option"]:hover *,
+                div[data-baseweb="popover"] div[data-baseweb="menu"] li:hover * {
+                    background-color: #3a3a42 !important;
+                }
+
+                /* More specific hover targeting */
+                body div[data-baseweb="popover"] [role="option"]:hover,
+                body div[data-baseweb="popover"] div[data-baseweb="menu"] li:hover {
+                    background-color: #3a3a42 !important;
+                }
+
+                body div[data-baseweb="popover"] [role="option"]:hover *,
+                body div[data-baseweb="popover"] div[data-baseweb="menu"] li:hover * {
+                    background-color: #3a3a42 !important;
                 }
 
                 </style>
@@ -1501,6 +1553,26 @@ def main():
 
                                 st.write("**Outtime Column:**")
                                 st.code(outtime_column)
+
+                                # Extract audience ID from session state
+                                try:
+                                    api_response = st.session_state.api_response
+                                    audience_id = api_response.get('data', {}).get('attributes', {}).get('audienceId', 'YOUR_AUDIENCE_ID')
+                                    journey_id = api_response.get('data', {}).get('id', 'YOUR_JOURNEY_ID')
+                                except:
+                                    audience_id = 'YOUR_AUDIENCE_ID'
+                                    journey_id = 'YOUR_JOURNEY_ID'
+
+                                # Generate SQL query based on step type
+                                table_name = f"cdp_audience_{audience_id}.journey_{journey_id}"
+
+                                sql_query = f"""SELECT cdp_customer_id
+FROM {table_name}
+WHERE {intime_column} IS NOT NULL
+  AND {outtime_column} IS NULL;"""
+
+                                st.write("**SQL Query:**")
+                                st.code(sql_query, language="sql")
         else:
             st.info("No steps found in the journey data.")
 
