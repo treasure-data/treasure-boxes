@@ -137,6 +137,7 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         'ABTest': '#f8eac5',               # AB Test
         'ABTest_Variant': '#f8eac5',       # AB Test Variant - yellow/beige
         'WaitStep': '#f8dcda',             # Wait Step - light pink/red
+        'WaitCondition_Path': '#f8dcda',   # Wait Condition Path - light pink/red
         'Activation': '#d8f3ed',           # Activation - light green
         'Jump': '#e8eaff',                 # Jump - light blue/purple
         'End': '#e8eaff',                  # End Step - light blue/purple
@@ -271,20 +272,22 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
 
     .step-tooltip {
         position: absolute;
-        top: -45px;
+        top: -65px;
         left: 50%;
         transform: translateX(-50%);
         background-color: rgba(0,0,0,0.9);
         color: white;
-        padding: 8px;
+        padding: 8px 12px;
         border-radius: 4px;
         font-size: 14px;
-        white-space: nowrap;
+        white-space: pre-line;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s;
         z-index: 999999;
-        min-width: max-content;
+        max-width: 400px;
+        text-align: center;
+        word-wrap: break-word;
     }
 
     /* Adjust tooltip position for elements near left edge */
@@ -298,6 +301,11 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         left: auto;
         right: 0;
         transform: translateX(0);
+    }
+
+    /* Ensure tooltips don't go off-screen */
+    .step-tooltip {
+        min-width: 200px;
     }
 
     .step-box {
@@ -486,17 +494,19 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
                     display_name = f"Decision: {step.name}"
                 elif step.step_type == 'ABTest_Variant':
                     display_name = f"AB: {step.name}"
+                elif step.step_type == 'WaitCondition_Path':
+                    display_name = step.name  # Already formatted as "Wait Condition <wait_name>: <path_name>"
                 else:
                     display_name = step.name
 
                 # Truncate display name if too long
                 step_name = display_name[:25] + "..." if len(display_name) > 25 else display_name
 
-                # Create tooltip info - show full display name and step UUID
-                tooltip = f"{display_name} ({step.step_id})"
+                # Create tooltip info - show full display name and step UUID on separate lines
+                tooltip = f"{display_name}\n({step.step_id})"
 
                 # Determine the count text based on step type
-                if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant']:
+                if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path']:
                     # For groupings, don't show profile count
                     count_text = ""
                 else:
@@ -1091,6 +1101,75 @@ def main():
                     'stage_entry_criteria': stage_entry_criteria
                 }))
 
+    # Reorganize steps to merge duplicate decision branches with wait conditions
+    if all_steps:
+        reorganized_steps = []
+        decision_branch_groups = {}
+
+        # Group steps by decision branch + stage + decision branch name
+        for i, (step_display, step_info) in enumerate(all_steps):
+            step_type = step_info.get('step_type', '')
+            stage_index = step_info.get('stage_index', 0)
+
+            if step_type == 'DecisionPoint_Branch':
+                # Create a key for grouping identical decision branches
+                branch_key = (stage_index, step_info.get('name', ''))
+
+                if branch_key not in decision_branch_groups:
+                    decision_branch_groups[branch_key] = {
+                        'decision_step': (step_display, step_info),
+                        'decision_index': i,
+                        'child_paths': []
+                    }
+
+                # Find all steps that follow this decision branch in the same path
+                current_path_index = step_info.get('path_index', 0)
+                current_step_index = step_info.get('step_index', 0)
+
+                child_steps = []
+                for j, (child_display, child_info) in enumerate(all_steps):
+                    if (child_info.get('stage_index') == stage_index and
+                        child_info.get('path_index') == current_path_index and
+                        child_info.get('step_index') > current_step_index):
+                        child_steps.append((j, child_display, child_info))
+
+                decision_branch_groups[branch_key]['child_paths'].append(child_steps)
+
+        # Rebuild all_steps with merged decision branches
+        used_indices = set()
+
+        for i, (step_display, step_info) in enumerate(all_steps):
+            if i in used_indices:
+                continue
+
+            step_type = step_info.get('step_type', '')
+            stage_index = step_info.get('stage_index', 0)
+
+            if step_type == 'DecisionPoint_Branch':
+                branch_key = (stage_index, step_info.get('name', ''))
+
+                if branch_key in decision_branch_groups:
+                    group = decision_branch_groups[branch_key]
+
+                    # Add the decision branch once
+                    reorganized_steps.append(group['decision_step'])
+                    used_indices.add(group['decision_index'])
+
+                    # Add all child paths under this decision branch
+                    for child_path in group['child_paths']:
+                        for child_index, child_display, child_info in child_path:
+                            reorganized_steps.append((child_display, child_info))
+                            used_indices.add(child_index)
+
+                    # Mark this branch as processed
+                    del decision_branch_groups[branch_key]
+            else:
+                # Regular step - add if not already used
+                if i not in used_indices:
+                    reorganized_steps.append((step_display, step_info))
+
+        all_steps = reorganized_steps
+
     # Tab 1: Step Selection (Default)
     with tab1:
         st.markdown("**Browse through all journey steps to view detailed information including profile counts, customer lists, and journey paths. Select any step from the list below to see which profiles are currently in that step and explore their journey progression.**")
@@ -1239,36 +1318,56 @@ def main():
                         # Extract AB test name from parent step if possible
                         ab_test_name = "test_name"  # Default name, should extract from API
                         return f"AB Test ({ab_test_name}): {step_name}"
-                    else:
-                        # Regular steps - check if this step comes after a decision point branch or AB test variant
-                        # We need to look through all_steps to find the previous steps in this path and check their types
-                        has_decision_or_abtest = False
-                        indent_level = 0
-
-                        # Find this step in all_steps to get its context
+                    elif step_type == 'WaitCondition_Path':
+                        # Format wait condition paths - use breadcrumbs to determine true hierarchy depth
                         current_step_info = all_steps[idx][1]
-                        stage_index = current_step_info['stage_index']
-                        path_index = current_step_info['path_index']
-                        step_index = current_step_info['step_index']
+                        breadcrumbs = current_step_info.get('breadcrumbs', [])
 
-                        # Look at previous steps in the same path to see if any are decision branches or AB variants
-                        branch_variant_count = 0
-                        for other_idx, (other_display, other_info) in enumerate(all_steps):
-                            if (other_info['stage_index'] == stage_index and
-                                other_info['path_index'] == path_index and
-                                other_info['step_index'] < step_index):
+                        # Count only BRANCHING elements in the journey path (breadcrumbs)
+                        # Skip entry point, current step, and non-branching wait steps
+                        indent_level = 0
+                        if len(breadcrumbs) > 2:  # Entry + elements + current step
+                            # Analyze each breadcrumb to see if it represents a branching element
+                            for breadcrumb in breadcrumbs[1:-1]:  # Skip entry point and current step
+                                # Only count elements that create branching paths:
+                                # - Decision branches (contain decision logic)
+                                # - AB test variants
+                                # - Wait conditions (Wait: or Wait Condition)
+                                # Exclude linear wait steps (Wait Until, Wait X day, etc.)
+                                if (not breadcrumb.startswith('Wait') or
+                                    breadcrumb.startswith('Wait:') or
+                                    breadcrumb.startswith('Wait Condition')):
+                                    indent_level += 1
 
-                                other_step_type = other_info.get('step_type', '')
-                                if other_step_type in ['DecisionPoint_Branch', 'ABTest_Variant']:
-                                    branch_variant_count += 1
+                        if indent_level > 0:
+                            # Apply indentation using dashes
+                            dash_indent = "--- " * indent_level
+                            return f"{dash_indent}{step_name}"
+                        else:
+                            # No hierarchy - regular display
+                            return f"{step_name}"
+                    else:
+                        # Regular steps - use breadcrumbs to determine true hierarchy depth
+                        current_step_info = all_steps[idx][1]
+                        breadcrumbs = current_step_info.get('breadcrumbs', [])
 
-                        if branch_variant_count > 0:
-                            has_decision_or_abtest = True
-                            # All steps after any branch/variant get the same indentation level
-                            # Only increase indentation for nested branches/variants
-                            indent_level = branch_variant_count
+                        # Count only BRANCHING elements in the journey path (breadcrumbs)
+                        # Skip entry point, current step, and non-branching wait steps
+                        indent_level = 0
+                        if len(breadcrumbs) > 2:  # Entry + elements + current step
+                            # Analyze each breadcrumb to see if it represents a branching element
+                            for breadcrumb in breadcrumbs[1:-1]:  # Skip entry point and current step
+                                # Only count elements that create branching paths:
+                                # - Decision branches (contain decision logic)
+                                # - AB test variants
+                                # - Wait conditions (Wait: or Wait Condition)
+                                # Exclude linear wait steps (Wait Until, Wait X day, etc.)
+                                if (not breadcrumb.startswith('Wait') or
+                                    breadcrumb.startswith('Wait:') or
+                                    breadcrumb.startswith('Wait Condition')):
+                                    indent_level += 1
 
-                        if has_decision_or_abtest and indent_level > 0:
+                        if indent_level > 0:
                             # Apply indentation using dashes
                             dash_indent = "--- " * indent_level
                             return f"{dash_indent}{step_name} {profile_text}"
@@ -1399,8 +1498,8 @@ def main():
 
                         # Only show details for actual steps, not for decision branches or AB variants
                         step_type = step_info.get('step_type', '')
-                        if step_type in ['DecisionPoint_Branch', 'ABTest_Variant']:
-                            st.info("Please select a step to view profile details. These are the options that specify the profile count. Stage headers, decision branches, and ab test variants are grouping elements.")
+                        if step_type in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path']:
+                            st.info("Please select a step to view profile details. These are the options that specify the profile count. Stage headers, decision branches, ab test variants, and wait condition paths are grouping elements.")
                         else:
                             # Container 2a: Journey Path
                             with st.container():

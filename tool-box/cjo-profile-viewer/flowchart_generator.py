@@ -106,6 +106,31 @@ class CJOFlowchartGenerator:
             # Create separate path for each branch
             branches = root_step_data.get('branches', [])
             for branch in branches:
+                # Check if this branch points to a wait condition step
+                next_step_id = branch.get('next')
+                if next_step_id and next_step_id in steps:
+                    next_step_data = steps[next_step_id]
+                    if next_step_data.get('type') == 'WaitStep' and next_step_data.get('waitStepType') == 'Condition':
+                        # This branch points to a wait condition - create separate paths for each condition
+                        conditions = next_step_data.get('conditions', [])
+                        for condition in conditions:
+                            path = []
+                            # Add decision point step
+                            decision_step = self._create_step_from_branch(root_step_id, root_step_data, branch, stage_idx)
+                            path.append(decision_step)
+
+                            # Add wait condition step
+                            condition_step = self._create_step_from_condition(next_step_id, next_step_data, condition, stage_idx)
+                            path.append(condition_step)
+
+                            # Follow the path from this condition
+                            if condition.get('next'):
+                                self._follow_path(steps, condition['next'], path, stage_idx)
+
+                            paths.append(path)
+                        continue  # Skip the normal branch processing
+
+                # Normal branch processing (no wait condition)
                 path = []
                 # Add decision point step
                 decision_step = self._create_step_from_branch(root_step_id, root_step_data, branch, stage_idx)
@@ -132,6 +157,21 @@ class CJOFlowchartGenerator:
 
                 paths.append(path)
 
+        elif root_step_data.get('type') == 'WaitStep' and root_step_data.get('waitStepType') == 'Condition':
+            # Create separate path for each condition
+            conditions = root_step_data.get('conditions', [])
+            for condition in conditions:
+                path = []
+                # Add wait condition step
+                condition_step = self._create_step_from_condition(root_step_id, root_step_data, condition, stage_idx)
+                path.append(condition_step)
+
+                # Follow the path from this condition
+                if condition.get('next'):
+                    self._follow_path(steps, condition['next'], path, stage_idx)
+
+                paths.append(path)
+
         else:
             # Linear path starting from root
             path = []
@@ -146,6 +186,16 @@ class CJOFlowchartGenerator:
             return
 
         step_data = steps[step_id]
+
+        # Skip wait condition steps - they should have been handled at the path generation level
+        if step_data.get('type') == 'WaitStep' and step_data.get('waitStepType') == 'Condition':
+            # This should not happen if path generation is working correctly
+            # But if it does, skip this step and continue with the first condition's next step
+            conditions = step_data.get('conditions', [])
+            if conditions and conditions[0].get('next'):
+                self._follow_path(steps, conditions[0]['next'], path, stage_idx)
+            return
+
         step = self._create_step_from_data(step_id, step_data, stage_idx)
         path.append(step)
 
@@ -199,6 +249,25 @@ class CJOFlowchartGenerator:
             step_id=f"{step_id}_variant_{variant.get('id', '')}",
             step_type='ABTest_Variant',
             name=display_name,
+            stage_index=stage_idx,
+            profile_count=profile_count
+        )
+
+    def _create_step_from_condition(self, step_id: str, step_data: dict, condition: dict, stage_idx: int) -> FlowchartStep:
+        """Create a FlowchartStep from a wait condition."""
+        wait_name = step_data.get('name', 'Unknown Wait')
+        path_name = condition.get('name', 'Unknown Condition')
+
+        # Format: "Wait Condition <wait_name>: <path_name>"
+        name = f"Wait Condition {wait_name}: {path_name}"
+
+        # Get profile count for this condition
+        profile_count = self._get_condition_profile_count(step_id, condition.get('id'), stage_idx)
+
+        return FlowchartStep(
+            step_id=f"{step_id}_condition_{condition.get('id', '')}",
+            step_type='WaitCondition_Path',
+            name=name,
             stage_index=stage_idx,
             profile_count=profile_count
         )
@@ -318,6 +387,33 @@ class CJOFlowchartGenerator:
 
             # Count profiles that have entered but not exited
             condition = self.profile_data[variant_column].notna()
+
+            if outtime_column in self.profile_data.columns:
+                # Exclude profiles that have exited (outtime is not null)
+                condition = condition & self.profile_data[outtime_column].isna()
+
+            return condition.sum()
+
+        return 0
+
+    def _get_condition_profile_count(self, step_id: str, condition_id: str, stage_idx: int) -> int:
+        """Get the number of profiles currently in a wait condition path."""
+        if not condition_id:
+            return 0
+
+        # Convert step UUID format for column matching
+        step_uuid = step_id.replace('-', '_')
+        condition_uuid = condition_id.replace('-', '_')
+
+        # Look for condition entry column
+        condition_column = f'intime_stage_{stage_idx}_{step_uuid}_condition_{condition_uuid}'
+
+        if condition_column in self.profile_data.columns:
+            # Get the corresponding outtime column
+            outtime_column = condition_column.replace('intime_', 'outtime_')
+
+            # Count profiles that have entered but not exited
+            condition = self.profile_data[condition_column].notna()
 
             if outtime_column in self.profile_data.columns:
                 # Exclude profiles that have exited (outtime is not null)
