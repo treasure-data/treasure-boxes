@@ -1319,25 +1319,27 @@ def main():
                         ab_test_name = "test_name"  # Default name, should extract from API
                         return f"AB Test ({ab_test_name}): {step_name}"
                     elif step_type == 'WaitCondition_Path':
-                        # Format wait condition paths - use breadcrumbs to determine true hierarchy depth
+                        # Format wait condition paths - count branching levels by examining path steps
                         current_step_info = all_steps[idx][1]
-                        breadcrumbs = current_step_info.get('breadcrumbs', [])
-
-                        # Count only BRANCHING elements in the journey path (breadcrumbs)
-                        # Skip entry point, current step, and non-branching wait steps
                         indent_level = 0
-                        if len(breadcrumbs) > 2:  # Entry + elements + current step
-                            # Analyze each breadcrumb to see if it represents a branching element
-                            for breadcrumb in breadcrumbs[1:-1]:  # Skip entry point and current step
-                                # Only count elements that create branching paths:
-                                # - Decision branches (contain decision logic)
-                                # - AB test variants
-                                # - Wait conditions (Wait: or Wait Condition)
-                                # Exclude linear wait steps (Wait Until, Wait X day, etc.)
-                                if (not breadcrumb.startswith('Wait') or
-                                    breadcrumb.startswith('Wait:') or
-                                    breadcrumb.startswith('Wait Condition')):
-                                    indent_level += 1
+
+                        # Look at the current step's path to count actual branching elements
+                        current_path_idx = current_step_info.get('path_index', 0)
+                        current_stage_idx = current_step_info.get('stage_index', 0)
+
+                        # Find the path this step belongs to
+                        if current_stage_idx < len(generator.stages):
+                            stage = generator.stages[current_stage_idx]
+                            if current_path_idx < len(stage.paths):
+                                path = stage.paths[current_path_idx]
+
+                                # Count branching step types in this path (excluding current step)
+                                current_step_idx_in_path = current_step_info.get('step_index', 0)
+                                for step_idx_in_path, step in enumerate(path):
+                                    # Only count branching steps that come before the current step
+                                    if step_idx_in_path < current_step_idx_in_path:
+                                        if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path']:
+                                            indent_level += 1
 
                         if indent_level > 0:
                             # Apply indentation using dashes
@@ -1347,25 +1349,27 @@ def main():
                             # No hierarchy - regular display
                             return f"{step_name}"
                     else:
-                        # Regular steps - use breadcrumbs to determine true hierarchy depth
+                        # Regular steps - count branching levels by examining the path steps
                         current_step_info = all_steps[idx][1]
-                        breadcrumbs = current_step_info.get('breadcrumbs', [])
-
-                        # Count only BRANCHING elements in the journey path (breadcrumbs)
-                        # Skip entry point, current step, and non-branching wait steps
                         indent_level = 0
-                        if len(breadcrumbs) > 2:  # Entry + elements + current step
-                            # Analyze each breadcrumb to see if it represents a branching element
-                            for breadcrumb in breadcrumbs[1:-1]:  # Skip entry point and current step
-                                # Only count elements that create branching paths:
-                                # - Decision branches (contain decision logic)
-                                # - AB test variants
-                                # - Wait conditions (Wait: or Wait Condition)
-                                # Exclude linear wait steps (Wait Until, Wait X day, etc.)
-                                if (not breadcrumb.startswith('Wait') or
-                                    breadcrumb.startswith('Wait:') or
-                                    breadcrumb.startswith('Wait Condition')):
-                                    indent_level += 1
+
+                        # Look at the current step's path to count actual branching elements
+                        current_path_idx = current_step_info.get('path_index', 0)
+                        current_stage_idx = current_step_info.get('stage_index', 0)
+
+                        # Find the path this step belongs to
+                        if current_stage_idx < len(generator.stages):
+                            stage = generator.stages[current_stage_idx]
+                            if current_path_idx < len(stage.paths):
+                                path = stage.paths[current_path_idx]
+
+                                # Count branching step types in this path (excluding current step)
+                                current_step_idx_in_path = current_step_info.get('step_index', 0)
+                                for step_idx_in_path, step in enumerate(path):
+                                    # Only count branching steps that come before the current step
+                                    if step_idx_in_path < current_step_idx_in_path:
+                                        if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path']:
+                                            indent_level += 1
 
                         if indent_level > 0:
                             # Apply indentation using dashes
