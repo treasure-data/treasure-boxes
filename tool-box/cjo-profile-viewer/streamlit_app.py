@@ -115,7 +115,7 @@ def load_profile_data(journey_id: str, audience_id: str, api_key: str) -> Option
 
         # Provide helpful error messages for common issues
         if "Table not found" in error_msg or "does not exist" in error_msg:
-            st.error(f"Table 'cdp_audience_{audience_id}.journey_{journey_id}' does not exist. Please verify the audience ID and journey ID.")
+            st.error(f"Table 'cdp_audience_{audience_id}.journey_{journey_id}' does not exist. Please verify the audience ID and journey ID. Note: The journey workflow may not have been run yet and the audience needs to be built first.")
         elif "Authentication" in error_msg or "401" in error_msg:
             st.error("Authentication failed. Please check your TD API key.")
         elif "Permission denied" in error_msg or "403" in error_msg:
@@ -271,19 +271,42 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
 
     .step-tooltip {
         position: absolute;
-        top: -10px;
+        top: -45px;
         left: 50%;
         transform: translateX(-50%);
         background-color: rgba(0,0,0,0.9);
         color: white;
         padding: 8px;
         border-radius: 4px;
-        font-size: 10px;
+        font-size: 14px;
         white-space: nowrap;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s;
-        z-index: 1000;
+        z-index: 999999;
+        min-width: max-content;
+    }
+
+    /* Adjust tooltip position for elements near left edge */
+    .path .step-box:first-child .step-tooltip {
+        left: 0;
+        transform: translateX(0);
+    }
+
+    /* Adjust tooltip position for elements near right edge */
+    .path .step-box:last-child .step-tooltip {
+        left: auto;
+        right: 0;
+        transform: translateX(0);
+    }
+
+    .step-box {
+        position: relative;
+        z-index: 1;
+    }
+
+    .step-box:hover {
+        z-index: 1000000;
     }
 
     .step-box:hover .step-tooltip {
@@ -458,16 +481,24 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
                 # Get color for step type
                 step_color = step_type_colors.get(step.step_type, step_type_colors['Unknown'])
 
-                # Create step name (truncate if too long)
-                step_name = step.name[:25] + "..." if len(step.name) > 25 else step.name
+                # Create step name with prefixes for grouping types
+                if step.step_type == 'DecisionPoint_Branch':
+                    display_name = f"Decision: {step.name}"
+                elif step.step_type == 'ABTest_Variant':
+                    display_name = f"AB: {step.name}"
+                else:
+                    display_name = step.name
 
-                # Create tooltip info
-                tooltip = f"Type: {step.step_type} | Stage: {stage_idx} | ID: {step.step_id}"
+                # Truncate display name if too long
+                step_name = display_name[:25] + "..." if len(display_name) > 25 else display_name
+
+                # Create tooltip info - show full display name and step UUID
+                tooltip = f"{display_name} ({step.step_id})"
 
                 # Determine the count text based on step type
                 if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant']:
-                    # For groupings, show "Total Profiles: X" instead of "In Step: X"
-                    count_text = f"Total Profiles: {step.profile_count}"
+                    # For groupings, don't show profile count
+                    count_text = ""
                 else:
                     # For actual steps, show "In Step: X"
                     count_text = f"In Step: {step.profile_count}"
@@ -1361,7 +1392,7 @@ def main():
 
                     if selected_idx == -1:
                         # User selected a stage header
-                        st.info("Please select an actual step to view profile details. Stage headers are grouping elements.")
+                        st.info("Please select a step to view profile details. These are the options that specify the profile count. Stage headers, decision branches, and ab test variants are grouping elements.")
                     else:
                         # Show step details only
                         step_display, step_info = all_steps[selected_idx]
@@ -1369,7 +1400,7 @@ def main():
                         # Only show details for actual steps, not for decision branches or AB variants
                         step_type = step_info.get('step_type', '')
                         if step_type in ['DecisionPoint_Branch', 'ABTest_Variant']:
-                            st.info("Please select an actual step to view profile details. Decision branches and AB test variants are grouping elements.")
+                            st.info("Please select a step to view profile details. These are the options that specify the profile count. Stage headers, decision branches, and ab test variants are grouping elements.")
                         else:
                             # Container 2a: Journey Path
                             with st.container():
