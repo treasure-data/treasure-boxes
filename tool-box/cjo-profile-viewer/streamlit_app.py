@@ -1466,54 +1466,56 @@ def main():
 
                                         # Add search functionality
                                         col1, col2, col3 = st.columns([3, 1, 4])
-                                with col1:
-                                    search_term = st.text_input(
-                                        "Search by cdp_customer_id:",
-                                        placeholder="Enter customer ID to search...",
-                                        key=f"search_{step_info['step_id']}",
-                                        on_change=lambda: st.session_state.update({f"search_triggered_{step_info['step_id']}": True})
-                                    )
-                                with col2:
-                                    # Add some spacing to align with input
-                                    st.write("")  # Empty line for alignment
-                                    search_button = st.button(
-                                        "🔍 Search",
-                                        key=f"search_btn_{step_info['step_id']}",
-                                        use_container_width=True
-                                    )
+                                        with col1:
+                                            search_term = st.text_input(
+                                                "Search by cdp_customer_id:",
+                                                placeholder="Enter customer ID to search...",
+                                                key=f"search_{step_info['step_id']}",
+                                                on_change=lambda: st.session_state.update({f"search_triggered_{step_info['step_id']}": True})
+                                            )
+                                        with col2:
+                                            # Add some spacing to align with input
+                                            st.write("")  # Empty line for alignment
+                                            search_button = st.button(
+                                                "🔍 Search",
+                                                key=f"search_btn_{step_info['step_id']}",
+                                                use_container_width=True
+                                            )
 
-                                # Check for search trigger (Enter or button click)
-                                search_triggered = st.session_state.get(f"search_triggered_{step_info['step_id']}", False) or search_button
-                                if search_triggered:
-                                    st.session_state[f"search_triggered_{step_info['step_id']}"] = False
+                                        # Check for search trigger (Enter or button click)
+                                        search_triggered = st.session_state.get(f"search_triggered_{step_info['step_id']}", False) or search_button
+                                        if search_triggered:
+                                            st.session_state[f"search_triggered_{step_info['step_id']}"] = False
 
-                                # Filter profiles if search term is provided and search is triggered
-                                if search_term and (search_triggered or search_button):
-                                    filtered_profiles = [p for p in profiles if search_term.lower() in p.lower()]
-                                elif not search_term:
-                                    filtered_profiles = profiles
-                                else:
-                                    # Show all profiles if search hasn't been triggered yet
-                                    filtered_profiles = profiles
+                                        # Filter profiles if search term is provided and search is triggered
+                                        if search_term and (search_triggered or search_button):
+                                            filtered_profiles = [p for p in profiles if search_term.lower() in p.lower()]
+                                        elif not search_term:
+                                            filtered_profiles = profiles
+                                        else:
+                                            # Show all profiles if search hasn't been triggered yet
+                                            filtered_profiles = profiles
 
-                                st.write(f"Showing {len(filtered_profiles)} of {len(profiles)} profiles")
+                                        st.write(f"Showing {len(filtered_profiles)} of {len(profiles)} profiles")
 
-                                # Display profiles in a scrollable container
-                                if filtered_profiles:
-                                    # Create DataFrame for better display
-                                    profile_df = pd.DataFrame({'cdp_customer_id': filtered_profiles})
-                                    st.dataframe(profile_df, height=300)
+                                        # Display profiles in a scrollable container
+                                        if filtered_profiles:
+                                            # Create DataFrame for better display
+                                            profile_df = pd.DataFrame({'cdp_customer_id': filtered_profiles})
+                                            st.dataframe(profile_df, height=300)
 
-                                    # Add download button
-                                    csv = profile_df.to_csv(index=False)
-                                    st.download_button(
-                                        label="Download Profile List",
-                                        data=csv,
-                                        file_name=f"profiles_{step_info['name'].replace(' ', '_')}.csv",
-                                        mime="text/csv"
-                                    )
-                                else:
-                                    st.write("No profiles match the search criteria.")
+                                            # Add download button
+                                            csv = profile_df.to_csv(index=False)
+                                            st.download_button(
+                                                label="Download Profile List",
+                                                data=csv,
+                                                file_name=f"profiles_{step_info['name'].replace(' ', '_')}.csv",
+                                                mime="text/csv"
+                                            )
+                                        else:
+                                            st.write("No profiles match the search criteria.")
+                                    else:
+                                        st.info("This step has no profiles to display.")
 
                             # Container 2c: Step Information (moved down)
                             with st.container():
