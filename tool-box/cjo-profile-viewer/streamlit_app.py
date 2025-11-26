@@ -95,14 +95,14 @@ def load_profile_data(journey_id: str, audience_id: str, api_key: str) -> Option
             table_name = f"cdp_audience_{audience_id}.journey_{journey_id}"
             query = f"SELECT * FROM {table_name}"
 
-            st.info(f"Querying table: {table_name}")
+            st.toast(f"Querying table: {table_name}", icon="🔍")
 
             # Execute the query and return as DataFrame
             query_result = client.query(query)
 
             # Convert the result to a pandas DataFrame
             if not query_result.get('data'):
-                st.warning(f"No data found in table {table_name}")
+                st.toast(f"No data found in table {table_name}", icon="⚠️")
                 return pd.DataFrame()
 
             profile_data = pd.DataFrame(query_result['data'], columns=query_result['columns'])
@@ -889,7 +889,7 @@ def main():
     .stDataFrame {
         background-color: white;
     }
-    </style>
+
     """, unsafe_allow_html=True)
 
     st.title("🔍 CJO Profile Viewer")
@@ -911,7 +911,6 @@ def main():
             load_button = st.button(
                 "🔄 Load Journey Data",
                 type="primary",
-                disabled=not journey_id,
                 key="main_load_button"
             )
 
@@ -925,6 +924,11 @@ def main():
             load_button = True  # Trigger the loading logic
 
         # Handle data loading within the container
+        if load_button:
+            if not journey_id or journey_id.strip() == "":
+                st.toast("Please enter a Journey ID", icon="⚠️")
+                st.stop()
+
         if load_button and journey_id:
             if not existing_api_key:
                 st.error("❌ **API Key Required**: Please set up your TD API key (TD_API_KEY environment variable, ~/.td/config, or td_config.txt file)")
@@ -934,7 +938,7 @@ def main():
             api_response, error = fetch_journey_data(journey_id, existing_api_key)
 
             if error:
-                st.error(f"❌ **API Error**: {error}")
+                st.toast(f"API Error: {error}", icon="❌", duration=30)
                 st.stop()
 
             if api_response:
@@ -956,9 +960,9 @@ def main():
                 profile_data = load_profile_data(journey_id, audience_id, existing_api_key)
                 if profile_data is not None:
                     st.session_state.profile_data = profile_data
-                    st.success(f"✅ **Success**: Journey '{journey_id}' data loaded successfully!")
+                    st.toast(f"Journey '{journey_id}' data loaded successfully!", icon="✅")
                 else:
-                    st.warning("⚠️ **Profile Data**: Could not load profile data. Some features may be limited.")
+                    st.toast("Could not load profile data. Some features may be limited.", icon="⚠️")
 
         st.markdown("---")
 
