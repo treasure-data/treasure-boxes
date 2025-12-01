@@ -1,0 +1,25 @@
+timezone: Asia/Tokyo
+
+_export:
+  # Activation Actionsから自動的に渡されるパラメータを使用
+  # activation_actions_db: Parent Segmentが格納されているデータベース
+  # activation_actions_table: Parent Segmentのテーブル名（完全修飾名: database.table）
+
+  # ターゲットテーブルが格納されているデータベース（例）
+  integration_db: integration_db
+
+  td:
+    database: ${activation_actions_db}
+
+# Activation Actionsから渡されるパラメータ:
+# - activation_actions_db: データベース名
+# - activation_actions_table: Parent Segmentテーブル名（完全修飾名: database.table）
+# - target_table_name: String Builderで指定したターゲットテーブル名（カスタムパラメータ）
+# - integration_db: ターゲットテーブルが格納されているデータベース（カスタムパラメータ、デフォルト: integration_db）
+
++filter_by_target_list:
+  td>: queries/filter_segment.sql
+  # result_connection と result_settings はオプション
+  # Engage Studio への直接エクスポートを行う場合に使用
+  # result_connection: ${result_connection_name}
+  # result_settings: ${result_connection_settings}
