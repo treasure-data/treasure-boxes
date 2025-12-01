@@ -76,6 +76,33 @@ def fetch_journey_data(journey_id: str, api_key: str) -> Tuple[Optional[dict], O
         return None, f"Unexpected error: {str(e)}"
 
 
+def get_available_attributes(audience_id: str, api_key: str) -> List[str]:
+    """Get list of available customer attributes from the customers table."""
+    if not audience_id or not api_key:
+        return []
+
+    try:
+        with st.spinner("Loading available customer attributes..."):
+            client = pytd.Client(
+                apikey=api_key,
+                endpoint='https://api.treasuredata.com',
+                engine='presto'
+            )
+
+            # Query to describe the customers table
+            describe_query = f"DESCRIBE cdp_audience_{audience_id}.customers"
+            result = client.query(describe_query)
+
+            if result and result.get('data'):
+                # Extract column names, excluding 'time' and 'cdp_customer_id'
+                columns = [row[0] for row in result['data'] if row[0] not in ['time', 'cdp_customer_id']]
+                return sorted(columns)
+
+    except Exception as e:
+        st.toast(f"Could not load customer attributes: {str(e)}", icon="⚠️")
+
+    return []
+
 def load_profile_data(journey_id: str, audience_id: str, api_key: str) -> Optional[pd.DataFrame]:
     """Load profile data using pytd from live Treasure Data tables."""
     if not journey_id or not audience_id or not api_key:
@@ -91,11 +118,26 @@ def load_profile_data(journey_id: str, audience_id: str, api_key: str) -> Option
                 engine='presto'
             )
 
+            # Check if additional attributes are selected
+            selected_attributes = st.session_state.get("selected_attributes", [])
+
             # Construct the query for live profile data
             table_name = f"cdp_audience_{audience_id}.journey_{journey_id}"
-            query = f"SELECT * FROM {table_name}"
 
-            st.toast(f"Querying table: {table_name}", icon="🔍")
+            if selected_attributes:
+                # JOIN query with additional attributes from customers table
+                attributes_str = ", ".join([f"c.{attr}" for attr in selected_attributes])
+                query = f"""
+                SELECT j.cdp_customer_id, {attributes_str}
+                FROM {table_name} j
+                JOIN cdp_audience_{audience_id}.customers c
+                ON c.cdp_customer_id = j.cdp_customer_id
+                """
+                st.toast(f"Querying journey table with {len(selected_attributes)} additional attributes", icon="🔍")
+            else:
+                # Standard query without JOIN
+                query = f"SELECT * FROM {table_name}"
+                st.toast(f"Querying table: {table_name}", icon="🔍")
 
             # Execute the query and return as DataFrame
             query_result = client.query(query)
@@ -106,6 +148,22 @@ def load_profile_data(journey_id: str, audience_id: str, api_key: str) -> Option
                 return pd.DataFrame()
 
             profile_data = pd.DataFrame(query_result['data'], columns=query_result['columns'])
+
+            # If we used JOIN query, we need to merge back with the full journey data
+            if selected_attributes and not profile_data.empty:
+                # Get the full journey data for journey step information
+                full_journey_query = f"SELECT * FROM {table_name}"
+                full_result = client.query(full_journey_query)
+
+                if full_result and full_result.get('data'):
+                    full_journey_data = pd.DataFrame(full_result['data'], columns=full_result['columns'])
+
+                    # Merge the customer attributes with the full journey data
+                    profile_data = full_journey_data.merge(
+                        profile_data,
+                        on='cdp_customer_id',
+                        how='left'
+                    )
 
             return profile_data
 
@@ -340,8 +398,9 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         padding: 20px;
         border: 1px solid #444444;
         border-radius: 8px;
-        width: 80%;
-        max-width: 600px;
+        width: 90%;
+        max-width: 1200px;
+        min-width: 600px;
         max-height: 80%;
         overflow-y: auto;
         color: #FFFFFF;
@@ -427,6 +486,41 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         padding: 20px;
         color: #AAAAAA;
         font-style: italic;
+    }
+
+    .profiles-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        font-size: 12px;
+        color: #E0E0E0;
+        background-color: #3A3A3A;
+    }
+
+    .profiles-table th {
+        background-color: #2D2D2D;
+        color: #FFFFFF;
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 2px solid #444444;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .profiles-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #444444;
+        vertical-align: top;
+    }
+
+    .profiles-table tr:hover {
+        background-color: #404040;
+    }
+
+    .profiles-table tr:last-child td {
+        border-bottom: none;
     }
 
     .profile-count-info {
@@ -516,11 +610,15 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
                 # Get profiles for this step
                 step_profiles = _get_step_profiles(generator, step)
 
+                # Get full profile data with attributes for this step
+                step_profile_data = _get_step_profile_data(generator, step)
+
                 # Store step data for JavaScript access
                 step_data_key = f"step_{stage_idx}_{path_idx}_{step_idx}"
                 step_data_store[step_data_key] = {
                     'name': step.name,
-                    'profiles': step_profiles
+                    'profiles': step_profiles,
+                    'profile_data': step_profile_data
                 }
 
                 # Create step box with click handler (only clickable if has profiles)
@@ -577,6 +675,7 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
 
     let currentProfiles = [];
     let allProfiles = [];
+    let allProfileData = [];
 
     function showProfileModal(stepDataKey) {{
         const stepData = stepDataStore[stepDataKey];
@@ -587,8 +686,10 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
 
         const stepName = stepData.name;
         const profiles = stepData.profiles;
+        const profileData = stepData.profile_data || [];
 
         allProfiles = profiles;
+        allProfileData = profileData;
         currentProfiles = profiles;
 
         document.getElementById('modalTitle').textContent = stepName;
@@ -596,7 +697,10 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
             `<strong>Total Profiles:</strong> ${{profiles.length}}`;
 
         document.getElementById('searchBox').value = '';
-        displayProfiles(profiles);
+        document.getElementById('searchBox').placeholder = profileData.length > 0 ?
+            'Search customer ID or any attribute...' : 'Search customer ID...';
+
+        displayProfiles(profiles, profileData);
         document.getElementById('profileModal').style.display = 'block';
     }}
 
@@ -610,15 +714,33 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         if (searchTerm === '') {{
             currentProfiles = allProfiles;
         }} else {{
-            currentProfiles = allProfiles.filter(profile =>
-                profile.toLowerCase().includes(searchTerm)
-            );
+            if (allProfileData.length > 0) {{
+                // Search across all columns in the profile data
+                const matchingCustomerIds = allProfileData
+                    .filter(profile => {{
+                        return Object.values(profile).some(value =>
+                            String(value).toLowerCase().includes(searchTerm)
+                        );
+                    }})
+                    .map(profile => profile.cdp_customer_id);
+
+                currentProfiles = matchingCustomerIds;
+            }} else {{
+                // Fall back to searching just customer IDs
+                currentProfiles = allProfiles.filter(profile =>
+                    profile.toLowerCase().includes(searchTerm)
+                );
+            }}
         }}
 
-        displayProfiles(currentProfiles);
+        const currentProfileData = allProfileData.filter(profile =>
+            currentProfiles.includes(profile.cdp_customer_id)
+        );
+
+        displayProfiles(currentProfiles, currentProfileData);
     }}
 
-    function displayProfiles(profiles) {{
+    function displayProfiles(profiles, profileData = []) {{
         const profilesList = document.getElementById('profilesList');
 
         if (profiles.length === 0) {{
@@ -627,9 +749,41 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         }}
 
         let html = '';
-        profiles.forEach(profile => {{
-            html += `<div class="profile-item">${{profile}}</div>`;
-        }});
+
+        if (profileData.length > 0 && profileData.length === profiles.length) {{
+            // Display full profile data with attributes in table format
+            const keys = Object.keys(profileData[0]);
+
+            // Create table with headers
+            html += '<table class="profiles-table">';
+            html += '<thead><tr>';
+            keys.forEach(key => {{
+                const headerName = key === 'cdp_customer_id' ? 'Customer ID' : key;
+                html += `<th>${{headerName}}</th>`;
+            }});
+            html += '</tr></thead>';
+
+            // Create table body with data
+            html += '<tbody>';
+            profileData.forEach(profile => {{
+                html += '<tr>';
+                keys.forEach(key => {{
+                    const value = profile[key] || 'N/A';
+                    html += `<td>${{value}}</td>`;
+                }});
+                html += '</tr>';
+            }});
+            html += '</tbody></table>';
+        }} else {{
+            // Fall back to displaying just customer IDs in table format
+            html += '<table class="profiles-table">';
+            html += '<thead><tr><th>Customer ID</th></tr></thead>';
+            html += '<tbody>';
+            profiles.forEach(profile => {{
+                html += `<tr><td>${{profile}}</td></tr>`;
+            }});
+            html += '</tbody></table>';
+        }}
 
         profilesList.innerHTML = html;
 
@@ -694,6 +848,34 @@ def _get_step_profiles(generator: CJOFlowchartGenerator, step):
 
         profiles = generator.profile_data[condition]['cdp_customer_id'].tolist()
         return profiles
+
+    return []
+
+def _get_step_profile_data(generator: CJOFlowchartGenerator, step):
+    """Get full profile data with attributes for profiles in a specific step."""
+    # Get customer IDs in this step
+    step_profiles = _get_step_profiles(generator, step)
+
+    if not step_profiles or generator.profile_data.empty:
+        return []
+
+    # Get selected attributes from session state
+    import streamlit as st
+    selected_attributes = st.session_state.get("selected_attributes", [])
+
+    # Filter profile data for customers in this step
+    profile_data_subset = generator.profile_data[
+        generator.profile_data['cdp_customer_id'].isin(step_profiles)
+    ]
+
+    # Select columns to include
+    columns_to_show = ['cdp_customer_id'] + selected_attributes
+    available_columns = [col for col in columns_to_show if col in profile_data_subset.columns]
+
+    if available_columns:
+        # Convert to list of dictionaries for JavaScript
+        profile_records = profile_data_subset[available_columns].to_dict('records')
+        return profile_records
 
     return []
 
@@ -914,6 +1096,38 @@ def main():
                 key="main_load_button"
             )
 
+        # Additional Customer Attributes Selection (always visible)
+        st.markdown("**Additional Customer Attributes:**")
+
+        if st.session_state.get("journey_loaded") and st.session_state.get("api_response"):
+            st.caption("Select additional customer attributes to include when viewing step profiles. cdp_customer_id is included by default. Reload journey data to apply changes.")
+
+            try:
+                audience_id = st.session_state.api_response.get('data', {}).get('attributes', {}).get('audienceId')
+                if audience_id:
+                    available_attributes = get_available_attributes(audience_id, get_api_key())
+
+                    if available_attributes:
+                        selected_attributes = st.multiselect(
+                            "Select customer attributes:",
+                            options=available_attributes,
+                            default=st.session_state.get("selected_attributes", []),
+                            key="attribute_selector",
+                            help="These attributes will be joined from the customers table",
+                            label_visibility="collapsed"
+                        )
+
+                        # Store selected attributes in session state
+                        st.session_state.selected_attributes = selected_attributes
+                    else:
+                        st.info("No additional customer attributes available.")
+                else:
+                    st.warning("Could not find audience ID.")
+            except Exception as e:
+                st.warning(f"Could not load customer attributes: {str(e)}")
+        else:
+            st.caption("Load journey data first to see available customer attributes. cdp_customer_id is included by default.")
+
         # Check for existing API key (but don't show status)
         existing_api_key = get_api_key()
 
@@ -964,6 +1178,9 @@ def main():
                 else:
                     st.toast("Could not load profile data. Some features may be limited.", icon="⚠️")
 
+                # Force a rerun to show the attribute selector
+                st.rerun()
+
         st.markdown("---")
 
     # Initialize session state for data
@@ -996,11 +1213,11 @@ def main():
     """, unsafe_allow_html=True)
 
 
-
     # Check if we have data to work with
     if not st.session_state.journey_loaded or st.session_state.api_response is None:
         st.info("👆 **Get Started**: Enter a Journey ID and click 'Load Journey Data' to begin visualization.")
         return
+
 
     # Load profile data if not already loaded
     if st.session_state.profile_data is None:
@@ -1606,8 +1823,8 @@ def main():
                                         col1, col2, col3 = st.columns([3, 1, 4])
                                         with col1:
                                             search_term = st.text_input(
-                                                "Search by cdp_customer_id:",
-                                                placeholder="Enter customer ID to search...",
+                                                "Search profile data:",
+                                                placeholder="Search customer ID or any attribute...",
                                                 key=f"search_{step_info['step_id']}",
                                                 on_change=lambda: st.session_state.update({f"search_triggered_{step_info['step_id']}": True})
                                             )
@@ -1627,7 +1844,28 @@ def main():
 
                                         # Filter profiles if search term is provided and search is triggered
                                         if search_term and (search_triggered or search_button):
-                                            filtered_profiles = [p for p in profiles if search_term.lower() in p.lower()]
+                                            # Get profile data with additional attributes for searching
+                                            selected_attributes = st.session_state.get("selected_attributes", [])
+
+                                            if selected_attributes and not generator.profile_data.empty:
+                                                # Search across all columns in the profile data
+                                                profile_data_subset = generator.profile_data[
+                                                    generator.profile_data['cdp_customer_id'].isin(profiles)
+                                                ]
+
+                                                columns_to_search = ['cdp_customer_id'] + selected_attributes
+                                                available_columns = [col for col in columns_to_search if col in profile_data_subset.columns]
+
+                                                # Search across all available columns
+                                                mask = pd.Series([False] * len(profile_data_subset))
+                                                for col in available_columns:
+                                                    mask = mask | profile_data_subset[col].astype(str).str.lower().str.contains(search_term.lower(), na=False)
+
+                                                filtered_profile_data = profile_data_subset[mask]
+                                                filtered_profiles = filtered_profile_data['cdp_customer_id'].tolist()
+                                            else:
+                                                # Fall back to searching just customer IDs
+                                                filtered_profiles = [p for p in profiles if search_term.lower() in p.lower()]
                                         elif not search_term:
                                             filtered_profiles = profiles
                                         else:
@@ -1638,14 +1876,35 @@ def main():
 
                                         # Display profiles in a scrollable container
                                         if filtered_profiles:
-                                            # Create DataFrame for better display
-                                            profile_df = pd.DataFrame({'cdp_customer_id': filtered_profiles})
+                                            # Check if additional attributes are available
+                                            selected_attributes = st.session_state.get("selected_attributes", [])
+
+                                            if selected_attributes and not generator.profile_data.empty:
+                                                # Get full profile data with additional attributes
+                                                profile_data_subset = generator.profile_data[
+                                                    generator.profile_data['cdp_customer_id'].isin(filtered_profiles)
+                                                ]
+
+                                                # Select columns to display
+                                                columns_to_show = ['cdp_customer_id'] + selected_attributes
+                                                available_columns = [col for col in columns_to_show if col in profile_data_subset.columns]
+
+                                                if len(available_columns) > 1:  # More than just cdp_customer_id
+                                                    profile_df = profile_data_subset[available_columns].copy()
+                                                    st.write(f"**Showing profiles with {len(selected_attributes)} additional attributes:**")
+                                                else:
+                                                    profile_df = pd.DataFrame({'cdp_customer_id': filtered_profiles})
+                                                    st.write("**Additional attributes not available in current data. Try reloading journey data.**")
+                                            else:
+                                                # Standard display with just customer IDs
+                                                profile_df = pd.DataFrame({'cdp_customer_id': filtered_profiles})
+
                                             st.dataframe(profile_df, height=300)
 
                                             # Add download button
                                             csv = profile_df.to_csv(index=False)
                                             st.download_button(
-                                                label="Download Profile List",
+                                                label="Download Profile Data",
                                                 data=csv,
                                                 file_name=f"profiles_{step_info['name'].replace(' ', '_')}.csv",
                                                 mime="text/csv"
@@ -1724,7 +1983,7 @@ WHERE {intime_column} IS NOT NULL
         st.info("ℹ️ **Note**: The canvas visualization works best with smaller, less complex journeys. For large or complex journeys, consider using the **Step Selection** tab.")
 
         # Generate flowchart button
-        if st.button("🎨 Generate Canvas Visualization", type="primary", help="Click to generate the interactive flowchart"):
+        if st.button("🎨 Generate Canvas", type="primary", help="Click to generate the interactive flowchart"):
             try:
                 with st.spinner("Generating interactive flowchart..."):
                     html_flowchart = create_flowchart_html(generator, column_mapper)
