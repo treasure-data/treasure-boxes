@@ -89,14 +89,66 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                         # This is the branch decision
                         found_branch = True
                         current_branch_name = step.name
-                        profile_text = f"({step.profile_count} profiles)"
-
-                        branch_display = f"Decision: {step.name} {profile_text}"
+                        # Grouping headers don't show profile counts
+                        # Extract the decision point UUID (before _branch_)
+                        decision_uuid = step.step_id.split('_branch_')[0] if '_branch_' in step.step_id else step.step_id
+                        short_uuid = get_short_uuid(decision_uuid)
+                        branch_display = f"Decision: {step.name} ({short_uuid})"
 
                         # Breadcrumb is just the decision itself
-                        step_breadcrumbs = [f"Decision: {step.name}"]
+                        step_breadcrumbs = [f"Decision: {step.name} ({short_uuid})"]
+
+                        # Add empty line before grouping header for visual separation
+                        if formatted_steps:  # Only add if there are already items
+                            formatted_steps.append(("", {
+                                'step_id': '',
+                                'step_type': 'Empty',
+                                'stage_index': stage_idx,
+                                'profile_count': 0,
+                                'name': '',
+                                'is_empty_line': True
+                            }))
 
                         formatted_steps.append((branch_display, {
+                            'step_id': step.step_id,
+                            'step_type': step.step_type,
+                            'stage_index': step.stage_index,
+                            'profile_count': step.profile_count,
+                            'name': step.name,
+                            'path_index': path_idx,
+                            'step_index': step_idx,
+                            'is_branch_header': True,
+                            'breadcrumbs': step_breadcrumbs,
+                            'stage_entry_criteria': stage.entry_criteria
+                        }))
+
+                    elif step.step_type == 'ABTest_Variant':
+                        # This is an AB test variant
+                        found_branch = True
+                        current_branch_name = step.name
+                        # Grouping headers don't show profile counts
+                        # Extract the AB test UUID (before _variant_)
+                        ab_test_uuid = step.step_id.split('_variant_')[0] if '_variant_' in step.step_id else step.step_id
+                        short_uuid = get_short_uuid(ab_test_uuid)
+                        # For AB Test, we need to get the test name from the API or use a placeholder
+                        ab_test_name = "ABTest"  # Could be enhanced to extract from API
+                        variant_display = f"ABTest ({ab_test_name}): {step.name} ({short_uuid})"
+
+                        # Breadcrumb includes the AB test info
+                        step_breadcrumbs = [f"ABTest ({ab_test_name}): {step.name} ({short_uuid})"]
+
+                        # Add empty line before grouping header for visual separation
+                        if formatted_steps:  # Only add if there are already items
+                            formatted_steps.append(("", {
+                                'step_id': '',
+                                'step_type': 'Empty',
+                                'stage_index': stage_idx,
+                                'profile_count': 0,
+                                'name': '',
+                                'is_empty_line': True
+                            }))
+
+                        formatted_steps.append((variant_display, {
                             'step_id': step.step_id,
                             'step_type': step.step_type,
                             'stage_index': step.stage_index,
@@ -178,9 +230,19 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                         short_uuid = get_short_uuid(step.step_id)
                         post_merge_breadcrumbs = [f"Merge ({short_uuid})"]
 
-                        # Display merge as grouping header like Decision/AB Test, with profile count
-                        profile_text = f"({step.profile_count} profiles)"
-                        merge_header_display = f"Merge ({short_uuid}) {profile_text}"
+                        # Display merge as grouping header like Decision/AB Test, no profile count
+                        merge_header_display = f"Merge ({short_uuid})"
+
+                        # Add empty line before grouping header for visual separation
+                        if formatted_steps:  # Only add if there are already items
+                            formatted_steps.append(("", {
+                                'step_id': '',
+                                'step_type': 'Empty',
+                                'stage_index': stage_idx,
+                                'profile_count': 0,
+                                'name': '',
+                                'is_empty_line': True
+                            }))
 
                         formatted_steps.append((merge_header_display, {
                             'step_id': step.step_id,

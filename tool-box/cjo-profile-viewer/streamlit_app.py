@@ -1569,15 +1569,32 @@ def main():
 
                     if step_type == 'DecisionPoint_Branch':
                         # Format decision point branches - no indentation, no profile count
-                        if 'Excluded Profiles' in step_name:
-                            return f"Decision Branch: Excluded Profiles"
+                        # Match the format used in merge_display_formatter.py for consistency
+                        step_info = all_steps[idx][1]
+                        step_id = step_info.get('step_id', '')
+                        if '_branch_' in step_id:
+                            # Extract the decision point UUID (before _branch_)
+                            decision_uuid = step_id.split('_branch_')[0]
+                            # Get short UUID (first 8 characters)
+                            short_uuid = decision_uuid.split('-')[0] if decision_uuid else decision_uuid
+                            return f"Decision: {step_name} ({short_uuid})"
                         else:
-                            return f"Decision Branch: {step_name}"
+                            return f"Decision: {step_name}"
                     elif step_type == 'ABTest_Variant':
                         # Format AB test variants - no indentation, no profile count
-                        # Extract AB test name from parent step if possible
-                        ab_test_name = "test_name"  # Default name, should extract from API
-                        return f"AB Test ({ab_test_name}): {step_name}"
+                        # Match the format used in merge_display_formatter.py for consistency
+                        step_info = all_steps[idx][1]
+                        step_id = step_info.get('step_id', '')
+                        if '_variant_' in step_id:
+                            # Extract the AB test UUID (before _variant_)
+                            ab_test_uuid = step_id.split('_variant_')[0]
+                            # Get short UUID (first 8 characters)
+                            short_uuid = ab_test_uuid.split('-')[0] if ab_test_uuid else ab_test_uuid
+                            ab_test_name = "ABTest"  # Could be enhanced to extract from API
+                            return f"ABTest ({ab_test_name}): {step_name} ({short_uuid})"
+                        else:
+                            ab_test_name = "ABTest"
+                            return f"ABTest ({ab_test_name}): {step_name}"
                     elif step_type == 'WaitCondition_Path':
                         # Format wait condition paths - count branching levels by examining path steps
                         current_step_info = all_steps[idx][1]
@@ -1652,7 +1669,7 @@ def main():
                     # Only show steps with profiles > 0
                     filtered_steps = []
                     for stage_idx in sorted(grouped_steps.keys()):
-                        stage_steps = [item for item in grouped_steps[stage_idx] if item[2]['profile_count'] > 0]
+                        stage_steps = [item for item in grouped_steps[stage_idx] if item[2]['profile_count'] > 0 or item[2].get('is_empty_line', False)]
                         if stage_steps:  # Only include stage if it has steps with profiles
                             filtered_steps.extend(stage_steps)
 
@@ -1772,7 +1789,7 @@ def main():
 
                         # Only show details for actual steps, not for decision branches or AB variants
                         step_type = step_info.get('step_type', '')
-                        if step_type in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path']:
+                        if step_type in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path', 'Empty']:
                             st.info("Please select a step to view profile details. These are the options that specify the profile count. Stage headers, decision branches, ab test variants, and wait condition paths are grouping elements.")
                         else:
                             # Container 2a: Journey Path
