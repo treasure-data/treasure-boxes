@@ -42,7 +42,7 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
             for path_idx, path in enumerate(stage.paths):
                 for step_idx, step in enumerate(path):
                     profile_text = f"({step.profile_count} profiles)"
-                    step_display = f"Stage {stage_idx + 1}: {step.name} {profile_text}"
+                    step_display = f"{step.name} {profile_text}"
 
                     formatted_steps.append((step_display, {
                         'step_id': step.step_id,
@@ -91,7 +91,7 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                         current_branch_name = step.name
                         profile_text = f"({step.profile_count} profiles)"
 
-                        branch_display = f"Stage {stage_idx + 1}: Decision: {step.name} {profile_text}"
+                        branch_display = f"Decision: {step.name} {profile_text}"
 
                         # Breadcrumb is just the decision itself
                         step_breadcrumbs = [f"Decision: {step.name}"]
@@ -113,7 +113,7 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                         # This is the merge at the end of this branch
                         profile_text = f"({step.profile_count} profiles)"
                         short_uuid = get_short_uuid(step.step_id)
-                        merge_display = f"Stage {stage_idx + 1}: --- Merge ({short_uuid}) {profile_text}"
+                        merge_display = f"--- Merge ({short_uuid}) {profile_text}"
 
                         # Breadcrumb shows path up to merge
                         short_uuid = get_short_uuid(step.step_id)
@@ -139,7 +139,7 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                             continue
 
                         profile_text = f"({step.profile_count} profiles)"
-                        step_display = f"Stage {stage_idx + 1}: --- {step.name} {profile_text}"
+                        step_display = f"--- {step.name} {profile_text}"
 
                         # Build breadcrumb trail up to this step
                         step_breadcrumbs = []
@@ -178,19 +178,20 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                         short_uuid = get_short_uuid(step.step_id)
                         post_merge_breadcrumbs = [f"Merge ({short_uuid})"]
 
-                        # No profile count for grouping headers in dropdown
-                        merge_header_display = f"Stage {stage_idx + 1}: Merge: ({short_uuid})"
+                        # Display merge as grouping header like Decision/AB Test, with profile count
+                        profile_text = f"({step.profile_count} profiles)"
+                        merge_header_display = f"Merge ({short_uuid}) {profile_text}"
 
                         formatted_steps.append((merge_header_display, {
                             'step_id': step.step_id,
                             'step_type': step.step_type,
                             'stage_index': step.stage_index,
                             'profile_count': step.profile_count,
-                            'name': step.name,
+                            'name': f"Merge ({short_uuid})",  # Consistent naming
                             'path_index': len(branch_paths),  # Use a different path index
                             'step_index': step_idx,
                             'is_merge_header': True,
-                            'is_grouping_header': True,  # Mark as grouping header for dropdown
+                            'is_branch_header': True,  # Mark like Decision/AB Test headers
                             'breadcrumbs': post_merge_breadcrumbs.copy(),
                             'stage_entry_criteria': stage.entry_criteria
                         }))
@@ -201,7 +202,7 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                         post_merge_breadcrumbs.append(step.name)
 
                         profile_text = f"({step.profile_count} profiles)"
-                        step_display = f"Stage {stage_idx + 1}: --- {step.name} {profile_text}"
+                        step_display = f"--- {step.name} {profile_text}"
 
                         formatted_steps.append((step_display, {
                             'step_id': step.step_id,

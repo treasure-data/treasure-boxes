@@ -1295,14 +1295,13 @@ def main():
         # Convert to the format expected by the rest of the code (add HTML highlighting)
         formatted_steps = []
         for step_display, step_info in all_steps:
-            # Add HTML highlighting for profile counts (but not for grouping headers)
-            if not step_info.get('is_grouping_header', False):
-                profile_count = step_info.get('profile_count', 0)
-                if profile_count > 0:
-                    step_display = step_display.replace(
-                        f"({profile_count} profiles)",
-                        f'<span style="color: rgb(92, 228, 136);">({profile_count} profiles)</span>'
-                    )
+            # Add HTML highlighting for profile counts
+            profile_count = step_info.get('profile_count', 0)
+            if profile_count > 0:
+                step_display = step_display.replace(
+                    f"({profile_count} profiles)",
+                    f'<span style="color: rgb(92, 228, 136);">({profile_count} profiles)</span>'
+                )
 
             formatted_steps.append((step_display, step_info))
 
@@ -1344,9 +1343,9 @@ def main():
                             short_trail = f"{display_breadcrumbs[0]} → ... → {display_breadcrumbs[-1]}"
                         else:
                             short_trail = breadcrumb_trail
-                        step_display = f"Stage {step.stage_index + 1}: {short_trail} {profile_text}"
+                        step_display = f"{short_trail} {profile_text}"
                     else:
-                        step_display = f"Stage {step.stage_index + 1}: {breadcrumb_trail} {profile_text}"
+                        step_display = f"{breadcrumb_trail} {profile_text}"
 
                     all_steps.append((step_display, {
                         'step_id': step.step_id,
@@ -1361,7 +1360,8 @@ def main():
                     }))
 
     # Reorganize steps to merge duplicate decision branches with wait conditions
-    if all_steps:
+    # Skip reorganization for merge hierarchies as they're already properly formatted
+    if all_steps and not has_merge_points:
         reorganized_steps = []
         decision_branch_groups = {}
 
@@ -1671,7 +1671,12 @@ def main():
                                 stage_name = generator.stages[stage_idx].name if stage_idx < len(generator.stages) else f"Stage {stage_idx + 1}"
                                 options_with_headers.append(f"STAGE {stage_idx + 1}: {stage_name}")
                                 current_stage = stage_idx
-                            options_with_headers.append(format_step_display(original_idx))
+                            # For merge hierarchies, use the already-formatted step_display
+                            # For non-merge hierarchies, use format_step_display function
+                            if has_merge_points:
+                                options_with_headers.append(step_display)
+                            else:
+                                options_with_headers.append(format_step_display(original_idx))
 
                         # Create mapping from display index to original index
                         step_mapping = []
@@ -1720,7 +1725,12 @@ def main():
 
                         # Add steps for this stage
                         for original_idx, step_display, step_info in grouped_steps[stage_idx]:
-                            options_with_headers.append(format_step_display(original_idx))
+                            # For merge hierarchies, use the already-formatted step_display
+                            # For non-merge hierarchies, use format_step_display function
+                            if has_merge_points:
+                                options_with_headers.append(step_display)
+                            else:
+                                options_with_headers.append(format_step_display(original_idx))
                             step_mapping.append(original_idx)
 
                     # Use selectbox instead of radio for better header support

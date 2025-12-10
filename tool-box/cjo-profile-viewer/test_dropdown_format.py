@@ -111,13 +111,13 @@ def test_dropdown_format():
         print(f"{i+1:2d}. {step_display}")
 
         # Analyze the step
-        if is_merge_header and is_grouping_header:
+        if is_merge_header:
             merge_header_found = True
-            # Check that merge header has no profile count in display
-            if "profiles)" not in step_display:
-                print(f"    ✅ MERGE HEADER - No profile count (grouping header)")
+            # Check that merge header shows profile count like Decision/AB Test headers
+            if "profiles)" in step_display:
+                print(f"    ✅ MERGE HEADER - Shows profile count (like Decision/AB Test)")
             else:
-                print(f"    ❌ MERGE HEADER - Still shows profile count")
+                print(f"    ❌ MERGE HEADER - Missing profile count")
 
         elif is_post_merge:
             post_merge_steps.append((step_display, step_info))
@@ -154,14 +154,14 @@ def test_dropdown_format():
     # Expected format example
     print()
     print("Expected dropdown format:")
-    print("1. Decision: country is japan (X profiles)")
-    print("2. --- Wait 3 day (X profiles)")
-    print("3. --- Merge (5eca44ab) (X profiles)")
-    print("4. Decision: Excluded Profiles (X profiles)")
-    print("5. --- Merge (5eca44ab) (X profiles)")
-    print("6. Merge: (5eca44ab)                    ← No profile count (grouping header)")
-    print("7. --- Wait 1 day (X profiles)          ← Indented post-merge step")
-    print("8. --- End Step (X profiles)            ← Indented post-merge step")
+    print("1. Decision: country is japan (X profiles)      ← Grouping header with profile count")
+    print("2. --- Wait 3 day (X profiles)                  ← Indented under Decision")
+    print("3. --- Merge (5eca44ab) (X profiles)            ← Branch endpoint")
+    print("4. Decision: Excluded Profiles (X profiles)     ← Grouping header with profile count")
+    print("5. --- Merge (5eca44ab) (X profiles)            ← Branch endpoint")
+    print("6. Merge (5eca44ab) (X profiles)                ← Grouping header with profile count (like Decision/AB Test)")
+    print("7. --- Wait 1 day (X profiles)                  ← Indented under Merge")
+    print("8. --- End Step (X profiles)                    ← Indented under Merge")
 
     print("\n" + "="*60)
     print("Dropdown format test completed!")

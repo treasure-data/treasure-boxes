@@ -233,7 +233,7 @@ class CJOFlowchartGenerator:
             # Add post-merge steps
             next_step_id = merge_step_data.get('next')
             if next_step_id:
-                self._follow_path(steps, next_step_id, merge_path, stage_idx)
+                self._follow_path(steps, next_step_id, merge_path, stage_idx, merge_points)
 
             paths.append(merge_path)
 
@@ -450,6 +450,11 @@ class CJOFlowchartGenerator:
             return
 
         step_data = steps[step_id]
+
+        # Skip merge points - they are handled separately as grouping headers
+        # This prevents duplicate merge steps from overriding the header status
+        if step_id in merge_points:
+            return
 
         # Skip wait condition steps - they should have been handled at the path generation level
         if step_data.get('type') == 'WaitStep' and step_data.get('waitStepType') == 'Condition':
