@@ -19,6 +19,9 @@ class FlowchartStep:
         self.stage_index = stage_index
         self.profile_count = profile_count
         self.next_steps = []
+        # New attributes for merge step hierarchy
+        self.is_merge_endpoint = False  # True when this merge step is at the end of a branch
+        self.is_merge_header = False    # True when this merge step is a grouping header
 
     def add_next_step(self, step: 'FlowchartStep'):
         """Add a next step in the flow."""
@@ -102,6 +105,15 @@ class CJOFlowchartGenerator:
         root_step_data = steps[root_step_id]
         paths = []
 
+        # Track merge points to avoid duplicating steps after merge
+        merge_points = self._find_merge_points(steps)
+
+        # If this stage has merge points, we need to handle path convergence
+        if merge_points:
+            return self._build_paths_with_merges(steps, root_step_id, stage_idx, merge_points)
+
+        # Original logic for stages without merge points
+
         if root_step_data.get('type') == 'DecisionPoint':
             # Create separate path for each branch
             branches = root_step_data.get('branches', [])
@@ -125,7 +137,7 @@ class CJOFlowchartGenerator:
 
                             # Follow the path from this condition
                             if condition.get('next'):
-                                self._follow_path(steps, condition['next'], path, stage_idx)
+                                self._follow_path(steps, condition['next'], path, stage_idx, merge_points)
 
                             paths.append(path)
                         continue  # Skip the normal branch processing
@@ -138,7 +150,7 @@ class CJOFlowchartGenerator:
 
                 # Follow the path from this branch
                 if branch.get('next'):
-                    self._follow_path(steps, branch['next'], path, stage_idx)
+                    self._follow_path(steps, branch['next'], path, stage_idx, merge_points)
 
                 paths.append(path)
 
@@ -153,7 +165,7 @@ class CJOFlowchartGenerator:
 
                 # Follow the path from this variant
                 if variant.get('next'):
-                    self._follow_path(steps, variant['next'], path, stage_idx)
+                    self._follow_path(steps, variant['next'], path, stage_idx, merge_points)
 
                 paths.append(path)
 
@@ -168,20 +180,272 @@ class CJOFlowchartGenerator:
 
                 # Follow the path from this condition
                 if condition.get('next'):
-                    self._follow_path(steps, condition['next'], path, stage_idx)
+                    self._follow_path(steps, condition['next'], path, stage_idx, merge_points)
 
                 paths.append(path)
+
+        elif root_step_data.get('type') == 'Merge':
+            # Merge step - create a single path that consolidates multiple incoming paths
+            path = []
+            # Add merge step
+            merge_step = self._create_step_from_data(root_step_id, root_step_data, stage_idx)
+            path.append(merge_step)
+
+            # Follow the path from this merge step
+            if root_step_data.get('next'):
+                self._follow_path(steps, root_step_data['next'], path, stage_idx, merge_points)
+
+            paths.append(path)
 
         else:
             # Linear path starting from root
             path = []
-            self._follow_path(steps, root_step_id, path, stage_idx)
+            self._follow_path(steps, root_step_id, path, stage_idx, merge_points)
             paths.append(path)
 
         return paths
 
-    def _follow_path(self, steps: dict, step_id: str, path: List[FlowchartStep], stage_idx: int):
+    def _find_merge_points(self, steps: dict) -> set:
+        """Find all merge step IDs in the stage."""
+        merge_points = set()
+        for step_id, step_data in steps.items():
+            if step_data.get('type') == 'Merge':
+                merge_points.add(step_id)
+        return merge_points
+
+    def _build_paths_with_merges(self, steps: dict, root_step_id: str, stage_idx: int, merge_points: set) -> List[List[FlowchartStep]]:
+        """Build paths for stages that contain merge steps with proper hierarchy."""
+        paths = []
+
+        # First, build all branch paths that lead to merge points
+        branch_paths = self._build_branch_paths_to_merge(steps, root_step_id, stage_idx, merge_points)
+        paths.extend(branch_paths)
+
+        # Then, create separate merge grouping paths with post-merge steps
+        for merge_step_id in merge_points:
+            merge_step_data = steps[merge_step_id]
+            merge_header = self._create_step_from_data(merge_step_id, merge_step_data, stage_idx)
+            merge_header.is_merge_header = True  # Mark as grouping header
+
+            # Create post-merge path starting with the header
+            merge_path = [merge_header]
+
+            # Add post-merge steps
+            next_step_id = merge_step_data.get('next')
+            if next_step_id:
+                self._follow_path(steps, next_step_id, merge_path, stage_idx)
+
+            paths.append(merge_path)
+
+        return paths
+
+    def _build_branch_paths_to_merge(self, steps: dict, root_step_id: str, stage_idx: int, merge_points: set) -> List[List[FlowchartStep]]:
+        """Build all branch paths that lead to merge points, including the merge endpoint."""
+        paths = []
+
+        # Start from root and trace all possible paths
+        self._trace_paths_to_merge(steps, root_step_id, [], paths, stage_idx, merge_points, set())
+
+        return paths
+
+    def _trace_paths_to_merge(self, steps: dict, step_id: str, current_path: List, all_paths: List, stage_idx: int, merge_points: set, visited: set):
+        """Recursively trace paths until we reach a merge point."""
+        if step_id in visited or step_id not in steps:
+            return
+
+        visited = visited.copy()
+        visited.add(step_id)
+
+        step_data = steps[step_id]
+        step = self._create_step_from_data(step_id, step_data, stage_idx)
+        new_path = current_path + [step]
+
+        # If this is a merge point, add the merge endpoint and finish this path
+        if step_id in merge_points:
+            step.is_merge_endpoint = True
+            all_paths.append(new_path)
+            return
+
+        step_type = step_data.get('type', '')
+
+        if step_type == 'DecisionPoint':
+            # Create a path for each branch
+            branches = step_data.get('branches', [])
+            for branch in branches:
+                # Create branch step
+                branch_step = self._create_step_from_branch(step_id, step_data, branch, stage_idx)
+                branch_path = new_path + [branch_step]
+
+                # Continue from this branch
+                next_step = branch.get('next')
+                if next_step:
+                    self._trace_paths_to_merge(steps, next_step, branch_path, all_paths, stage_idx, merge_points, visited)
+
+        elif step_type == 'ABTest':
+            # Create a path for each variant
+            variants = step_data.get('variants', [])
+            for variant in variants:
+                variant_step = self._create_step_from_variant(step_id, step_data, variant, stage_idx)
+                variant_path = new_path + [variant_step]
+
+                next_step = variant.get('next')
+                if next_step:
+                    self._trace_paths_to_merge(steps, next_step, variant_path, all_paths, stage_idx, merge_points, visited)
+
+        elif step_type == 'WaitStep' and step_data.get('waitStepType') == 'Condition':
+            # Create a path for each condition
+            conditions = step_data.get('conditions', [])
+            for condition in conditions:
+                condition_step = self._create_step_from_condition(step_id, step_data, condition, stage_idx)
+                condition_path = new_path + [condition_step]
+
+                next_step = condition.get('next')
+                if next_step:
+                    self._trace_paths_to_merge(steps, next_step, condition_path, all_paths, stage_idx, merge_points, visited)
+
+        else:
+            # Regular step - continue to next
+            next_step = step_data.get('next')
+            if next_step:
+                self._trace_paths_to_merge(steps, next_step, new_path, all_paths, stage_idx, merge_points, visited)
+
+    def _path_leads_to_merge(self, steps: dict, path: List, merge_step_id: str) -> bool:
+        """Check if a path leads to the specified merge step."""
+        if not path:
+            return False
+
+        # Check if any step in this path eventually leads to the merge step
+        for step in path:
+            if self._step_eventually_leads_to_merge(steps, step.step_id, merge_step_id, set()):
+                return True
+
+        return False
+
+    def _step_eventually_leads_to_merge(self, steps: dict, step_id: str, merge_step_id: str, visited: set) -> bool:
+        """Check if a step eventually leads to a merge step (with cycle detection)."""
+        if step_id in visited or step_id not in steps:
+            return False
+
+        visited.add(step_id)
+        step_data = steps[step_id]
+
+        # Check direct next step
+        next_step = step_data.get('next')
+        if next_step == merge_step_id:
+            return True
+
+        # Check branches for decision points
+        if step_data.get('type') == 'DecisionPoint':
+            branches = step_data.get('branches', [])
+            for branch in branches:
+                branch_next = branch.get('next')
+                if branch_next == merge_step_id:
+                    return True
+                if branch_next and self._step_eventually_leads_to_merge(steps, branch_next, merge_step_id, visited.copy()):
+                    return True
+
+        # Check variants for AB tests
+        if step_data.get('type') == 'ABTest':
+            variants = step_data.get('variants', [])
+            for variant in variants:
+                variant_next = variant.get('next')
+                if variant_next == merge_step_id:
+                    return True
+                if variant_next and self._step_eventually_leads_to_merge(steps, variant_next, merge_step_id, visited.copy()):
+                    return True
+
+        # Check conditions for wait steps
+        if step_data.get('type') == 'WaitStep' and step_data.get('waitStepType') == 'Condition':
+            conditions = step_data.get('conditions', [])
+            for condition in conditions:
+                condition_next = condition.get('next')
+                if condition_next == merge_step_id:
+                    return True
+                if condition_next and self._step_eventually_leads_to_merge(steps, condition_next, merge_step_id, visited.copy()):
+                    return True
+
+        # Check next step recursively
+        if next_step and self._step_eventually_leads_to_merge(steps, next_step, merge_step_id, visited.copy()):
+            return True
+
+        return False
+
+    def _build_pre_merge_paths(self, steps: dict, root_step_id: str, stage_idx: int, merge_points: set) -> List[List[FlowchartStep]]:
+        """Build all paths from root until the first merge point."""
+        paths = []
+        root_step_data = steps[root_step_id]
+
+        if root_step_data.get('type') == 'DecisionPoint':
+            branches = root_step_data.get('branches', [])
+            for branch in branches:
+                path = []
+                decision_step = self._create_step_from_branch(root_step_id, root_step_data, branch, stage_idx)
+                path.append(decision_step)
+
+                # Follow path until we hit a merge point
+                if branch.get('next'):
+                    self._follow_path_until_merge(steps, branch['next'], path, stage_idx, merge_points)
+
+                paths.append(path)
+
+        elif root_step_data.get('type') == 'ABTest':
+            variants = root_step_data.get('variants', [])
+            for variant in variants:
+                path = []
+                variant_step = self._create_step_from_variant(root_step_id, root_step_data, variant, stage_idx)
+                path.append(variant_step)
+
+                if variant.get('next'):
+                    self._follow_path_until_merge(steps, variant['next'], path, stage_idx, merge_points)
+
+                paths.append(path)
+
+        elif root_step_data.get('type') == 'WaitStep' and root_step_data.get('waitStepType') == 'Condition':
+            conditions = root_step_data.get('conditions', [])
+            for condition in conditions:
+                path = []
+                condition_step = self._create_step_from_condition(root_step_id, root_step_data, condition, stage_idx)
+                path.append(condition_step)
+
+                if condition.get('next'):
+                    self._follow_path_until_merge(steps, condition['next'], path, stage_idx, merge_points)
+
+                paths.append(path)
+        else:
+            # Linear path
+            path = []
+            self._follow_path_until_merge(steps, root_step_id, path, stage_idx, merge_points)
+            paths.append(path)
+
+        return paths
+
+    def _follow_path_until_merge(self, steps: dict, step_id: str, path: List[FlowchartStep], stage_idx: int, merge_points: set):
+        """Follow a path until we reach a merge point."""
+        if step_id not in steps or step_id in merge_points:
+            return
+
+        step_data = steps[step_id]
+
+        # Skip wait condition steps - they should have been handled at the path generation level
+        if step_data.get('type') == 'WaitStep' and step_data.get('waitStepType') == 'Condition':
+            conditions = step_data.get('conditions', [])
+            if conditions and conditions[0].get('next'):
+                self._follow_path_until_merge(steps, conditions[0]['next'], path, stage_idx, merge_points)
+            return
+
+        step = self._create_step_from_data(step_id, step_data, stage_idx)
+        path.append(step)
+
+        # Continue to next step if it exists and is not a merge point
+        next_step = step_data.get('next')
+        if next_step and next_step not in merge_points:
+            self._follow_path_until_merge(steps, next_step, path, stage_idx, merge_points)
+
+    def _follow_path(self, steps: dict, step_id: str, path: List[FlowchartStep], stage_idx: int, merge_points: set = None):
         """Follow a path through the steps."""
+        if merge_points is None:
+            merge_points = set()
+
         if step_id not in steps:
             return
 
@@ -193,7 +457,7 @@ class CJOFlowchartGenerator:
             # But if it does, skip this step and continue with the first condition's next step
             conditions = step_data.get('conditions', [])
             if conditions and conditions[0].get('next'):
-                self._follow_path(steps, conditions[0]['next'], path, stage_idx)
+                self._follow_path(steps, conditions[0]['next'], path, stage_idx, merge_points)
             return
 
         step = self._create_step_from_data(step_id, step_data, stage_idx)
@@ -202,7 +466,7 @@ class CJOFlowchartGenerator:
         # Continue to next step if it exists
         next_step = step_data.get('next')
         if next_step:
-            self._follow_path(steps, next_step, path, stage_idx)
+            self._follow_path(steps, next_step, path, stage_idx, merge_points)
 
     def _create_step_from_data(self, step_id: str, step_data: dict, stage_idx: int) -> FlowchartStep:
         """Create a FlowchartStep from step data."""
@@ -317,6 +581,8 @@ class CJOFlowchartGenerator:
             return 'Decision Point'
         elif step_type == 'ABTest':
             return step_data.get('name', 'AB Test')
+        elif step_type == 'Merge':
+            return step_data.get('name', 'Merge Step')
         else:
             return step_data.get('name', step_type)
 

@@ -199,6 +199,7 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         'Activation': '#d8f3ed',           # Activation - light green
         'Jump': '#e8eaff',                 # Jump - light blue/purple
         'End': '#e8eaff',                  # End Step - light blue/purple
+        'Merge': '#d5e7f0',                # Merge Step - light blue
         'Unknown': '#f8eac5'               # Unknown - default to yellow/beige
     }
 
@@ -901,6 +902,7 @@ def show_step_details(step_info: Dict, generator: CJOFlowchartGenerator, column_
             'Activation': '#d8f3ed',           # Activation - light green
             'Jump': '#e8eaff',                 # Jump - light blue/purple
             'End': '#e8eaff',                  # End Step - light blue/purple
+            'Merge': '#d5e7f0',                # Merge Step - light blue
             'Unknown': '#f8eac5'               # Unknown - default to yellow/beige
         }
 
@@ -1272,55 +1274,91 @@ def main():
     tab1, tab2, tab3 = st.tabs(["Step Browser", "Canvas", "Data & Mappings"])
 
     # Create list of all steps with breadcrumbs (used by both tabs)
-    all_steps = []
+    # Check if any stage has merge points to use special formatting
+    has_merge_points = False
     for stage in generator.stages:
-        for path_idx, path in enumerate(stage.paths):
-            # Build breadcrumb trail for this path
-            breadcrumbs = []
-            display_breadcrumbs = []
+        for path in stage.paths:
+            for step in path:
+                if getattr(step, 'is_merge_header', False) or getattr(step, 'is_merge_endpoint', False):
+                    has_merge_points = True
+                    break
+            if has_merge_points:
+                break
+        if has_merge_points:
+            break
 
-            # Add stage entry criteria as root if it exists (for detail view only)
-            stage_entry_criteria = stage.entry_criteria
-            if stage_entry_criteria:
-                breadcrumbs.append(stage_entry_criteria)
+    if has_merge_points:
+        # Use special merge hierarchy formatting
+        from merge_display_formatter import format_merge_hierarchy
+        all_steps = format_merge_hierarchy(generator)
 
-            for step_idx, step in enumerate(path):
-                # Add current step to breadcrumb (full breadcrumb for details)
-                breadcrumbs.append(step.name)
+        # Convert to the format expected by the rest of the code (add HTML highlighting)
+        formatted_steps = []
+        for step_display, step_info in all_steps:
+            # Add HTML highlighting for profile counts (but not for grouping headers)
+            if not step_info.get('is_grouping_header', False):
+                profile_count = step_info.get('profile_count', 0)
+                if profile_count > 0:
+                    step_display = step_display.replace(
+                        f"({profile_count} profiles)",
+                        f'<span style="color: rgb(92, 228, 136);">({profile_count} profiles)</span>'
+                    )
 
-                # Add current step to display breadcrumb (no entry criteria for list display)
-                display_breadcrumbs.append(step.name)
+            formatted_steps.append((step_display, step_info))
 
-                # Create display with breadcrumb (truncate if too long) - use display_breadcrumbs for list
-                breadcrumb_trail = " → ".join(display_breadcrumbs)
+        all_steps = formatted_steps
+    else:
+        # Use original logic for stages without merge points
+        all_steps = []
+        for stage in generator.stages:
+            for path_idx, path in enumerate(stage.paths):
+                # Build breadcrumb trail for this path
+                breadcrumbs = []
+                display_breadcrumbs = []
 
-                # Highlight profile count if there are profiles
-                if step.profile_count > 0:
-                    profile_text = f'<span style="color: rgb(92, 228, 136);">({step.profile_count} profiles)</span>'
-                else:
-                    profile_text = f"({step.profile_count} profiles)"
+                # Add stage entry criteria as root if it exists (for detail view only)
+                stage_entry_criteria = stage.entry_criteria
+                if stage_entry_criteria:
+                    breadcrumbs.append(stage_entry_criteria)
 
-                if len(breadcrumb_trail) > 60:
-                    # Show first step ... current step for long trails
-                    if len(display_breadcrumbs) > 2:
-                        short_trail = f"{display_breadcrumbs[0]} → ... → {display_breadcrumbs[-1]}"
+                for step_idx, step in enumerate(path):
+                    # Regular step processing
+                    # Add current step to breadcrumb (full breadcrumb for details)
+                    breadcrumbs.append(step.name)
+
+                    # Add current step to display breadcrumb (no entry criteria for list display)
+                    display_breadcrumbs.append(step.name)
+
+                    # Create display with breadcrumb (truncate if too long) - use display_breadcrumbs for list
+                    breadcrumb_trail = " → ".join(display_breadcrumbs)
+
+                    # Highlight profile count if there are profiles
+                    if step.profile_count > 0:
+                        profile_text = f'<span style="color: rgb(92, 228, 136);">({step.profile_count} profiles)</span>'
                     else:
-                        short_trail = breadcrumb_trail
-                    step_display = f"Stage {step.stage_index + 1}: {short_trail} {profile_text}"
-                else:
-                    step_display = f"Stage {step.stage_index + 1}: {breadcrumb_trail} {profile_text}"
+                        profile_text = f"({step.profile_count} profiles)"
 
-                all_steps.append((step_display, {
-                    'step_id': step.step_id,
-                    'step_type': step.step_type,
-                    'stage_index': step.stage_index,
-                    'profile_count': step.profile_count,
-                    'name': step.name,
-                    'breadcrumbs': breadcrumbs.copy(),
-                    'path_index': path_idx,
-                    'step_index': step_idx,
-                    'stage_entry_criteria': stage_entry_criteria
-                }))
+                    if len(breadcrumb_trail) > 60:
+                        # Show first step ... current step for long trails
+                        if len(display_breadcrumbs) > 2:
+                            short_trail = f"{display_breadcrumbs[0]} → ... → {display_breadcrumbs[-1]}"
+                        else:
+                            short_trail = breadcrumb_trail
+                        step_display = f"Stage {step.stage_index + 1}: {short_trail} {profile_text}"
+                    else:
+                        step_display = f"Stage {step.stage_index + 1}: {breadcrumb_trail} {profile_text}"
+
+                    all_steps.append((step_display, {
+                        'step_id': step.step_id,
+                        'step_type': step.step_type,
+                        'stage_index': step.stage_index,
+                        'profile_count': step.profile_count,
+                        'name': step.name,
+                        'breadcrumbs': breadcrumbs.copy(),
+                        'path_index': path_idx,
+                        'step_index': step_idx,
+                        'stage_entry_criteria': stage_entry_criteria
+                    }))
 
     # Reorganize steps to merge duplicate decision branches with wait conditions
     if all_steps:
@@ -1476,6 +1514,7 @@ def main():
                     'Activation': '#006600',           # More saturated green
                     'Jump': '#0066CC',                 # More saturated blue
                     'End': '#0066CC',                  # More saturated blue
+                    'Merge': '#0099CC',                # More saturated light blue
                     'Unknown': '#E6B800'               # More saturated yellow
                 }
 
@@ -1745,6 +1784,7 @@ def main():
                                     'Activation': '#d8f3ed',           # Activation - light green
                                     'Jump': '#e8eaff',                 # Jump - light blue/purple
                                     'End': '#e8eaff',                  # End Step - light blue/purple
+                                    'Merge': '#d5e7f0',                # Merge Step - light blue
                                     'Unknown': '#f8eac5'               # Unknown - default to yellow/beige
                                 }
 
