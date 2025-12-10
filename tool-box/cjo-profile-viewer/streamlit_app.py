@@ -1698,7 +1698,9 @@ def main():
                         # Create mapping from display index to original index
                         step_mapping = []
                         for original_idx, step_display, step_info in filtered_steps:
-                            step_mapping.append(original_idx)
+                            # Only add to step_mapping for non-empty lines (empty lines are not selectable)
+                            if not step_info.get('is_empty_line', False):
+                                step_mapping.append(original_idx)
 
                         # Use selectbox instead of radio for better header support
                         selected_option = st.selectbox(
@@ -1748,7 +1750,10 @@ def main():
                                 options_with_headers.append(step_display)
                             else:
                                 options_with_headers.append(format_step_display(original_idx))
-                            step_mapping.append(original_idx)
+
+                            # Only add to step_mapping for non-empty lines (empty lines are not selectable)
+                            if not step_info.get('is_empty_line', False):
+                                step_mapping.append(original_idx)
 
                     # Use selectbox instead of radio for better header support
                     selected_option = st.selectbox(
