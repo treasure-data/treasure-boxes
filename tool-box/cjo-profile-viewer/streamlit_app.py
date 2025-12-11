@@ -199,7 +199,7 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         'Activation': '#d8f3ed',           # Activation - light green
         'Jump': '#e8eaff',                 # Jump - light blue/purple
         'End': '#e8eaff',                  # End Step - light blue/purple
-        'Merge': '#d5e7f0',                # Merge Step - light blue
+        'Merge': '#f8eac5',                # Merge Step - yellow/beige (same as Decision/AB Test)
         'Unknown': '#f8eac5'               # Unknown - default to yellow/beige
     }
 
@@ -579,8 +579,11 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         for path_idx, path in enumerate(stage.paths):
             html += '<div class="path">'
 
-            # Process each step in the path
-            for step_idx, step in enumerate(path):
+            # Filter out DecisionPoint steps for display, but keep them for logic
+            visible_steps = [(idx, step) for idx, step in enumerate(path) if step.step_type != 'DecisionPoint']
+
+            # Process each visible step in the path
+            for display_idx, (step_idx, step) in enumerate(visible_steps):
                 # Get color for step type
                 step_color = step_type_colors.get(step.step_type, step_type_colors['Unknown'])
 
@@ -638,8 +641,8 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
                 '''
                 html += step_html
 
-                # Add arrow if not the last step
-                if step_idx < len(path) - 1:
+                # Add arrow if not the last visible step
+                if display_idx < len(visible_steps) - 1:
                     html += '<div class="arrow">→</div>'
 
             html += '</div>'  # End path
@@ -1816,7 +1819,7 @@ def main():
                                     'Activation': '#d8f3ed',           # Activation - light green
                                     'Jump': '#e8eaff',                 # Jump - light blue/purple
                                     'End': '#e8eaff',                  # End Step - light blue/purple
-                                    'Merge': '#d5e7f0',                # Merge Step - light blue
+                                    'Merge': '#f8eac5',                # Merge Step - yellow/beige (same as Decision/AB Test)
                                     'Unknown': '#f8eac5'               # Unknown - default to yellow/beige
                                 }
 
