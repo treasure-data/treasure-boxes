@@ -1634,6 +1634,13 @@ def main():
 
     all_steps = create_unified_step_list(generator)
 
+    # Debug: Check if steps are being created
+    st.write(f"DEBUG: Total steps created: {len(all_steps)}")
+    if all_steps:
+        st.write("DEBUG: First few steps:")
+        for i, (step_display, step_info) in enumerate(all_steps[:3]):
+            st.write(f"  {i+1}. {step_display}")
+
     # Keep display names clean for dropdown selector (no HTML formatting)
 
     # Canvas logic is now used for both tabs - consistent data, different presentation
@@ -1869,6 +1876,29 @@ def main():
                         elif step_type in ['DecisionPoint_Branch_Header', 'ABTest_Variant_Header', 'WaitCondition_Path_Header', 'DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path']:
                             st.info("This is a grouping header. Please select a step below it to view profile details.")
                         else:
+                            # Container 2a: Step Information (simplified, no complex HTML)
+                            st.markdown("### 📋 Step Details")
+
+                            col1, col2 = st.columns(2)
+
+                            with col1:
+                                st.write(f"**Step Type:** {step_type}")
+                                st.write(f"**Stage:** {step_info.get('stage_index', 0) + 1}")
+                                if 'name' in step_info and step_info['name']:
+                                    st.write(f"**Name:** {step_info['name']}")
+
+                            with col2:
+                                profile_count = step_info.get('profile_count', 0)
+                                st.write(f"**Profile Count:** {profile_count}")
+                                if 'step_id' in step_info and step_info['step_id']:
+                                    step_id_display = step_info['step_id'][:8] + "..." if len(step_info['step_id']) > 8 else step_info['step_id']
+                                    st.write(f"**Step ID:** {step_id_display}")
+
+                            # Show entry criteria if available
+                            if 'stage_entry_criteria' in step_info and step_info['stage_entry_criteria']:
+                                st.write(f"**Stage Entry Criteria:** {step_info['stage_entry_criteria']}")
+
+                            st.markdown("---")
 
                             # Container 2b: Profiles in Step (moved up)
                             with st.container():
