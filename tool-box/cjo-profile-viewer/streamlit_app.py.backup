@@ -1342,6 +1342,70 @@ def main():
 
     # Canvas logic is now used for both tabs - consistent data, different presentation
 
+    with tab1:
+        st.markdown("**Browse through all journey steps to view detailed information including profile counts, customer lists, and journey paths. Select any step from the list below to see which profiles are currently in that step and explore their journey progression.**")
+            step_type = step_info.get('step_type', '')
+            stage_index = step_info.get('stage_index', 0)
+
+            if step_type == 'DecisionPoint_Branch':
+                # Create a key for grouping identical decision branches
+                branch_key = (stage_index, step_info.get('name', ''))
+
+                if branch_key not in decision_branch_groups:
+                    decision_branch_groups[branch_key] = {
+                        'decision_step': (step_display, step_info),
+                        'decision_index': i,
+                        'child_paths': []
+                    }
+
+                # Find all steps that follow this decision branch in the same path
+                current_path_index = step_info.get('path_index', 0)
+                current_step_index = step_info.get('step_index', 0)
+
+                child_steps = []
+                for j, (child_display, child_info) in enumerate(all_steps):
+                    if (child_info.get('stage_index') == stage_index and
+                        child_info.get('path_index') == current_path_index and
+                        child_info.get('step_index') > current_step_index):
+                        child_steps.append((j, child_display, child_info))
+
+                decision_branch_groups[branch_key]['child_paths'].append(child_steps)
+
+        # Rebuild all_steps with merged decision branches
+        used_indices = set()
+
+        for i, (step_display, step_info) in enumerate(all_steps):
+            if i in used_indices:
+                continue
+
+            step_type = step_info.get('step_type', '')
+            stage_index = step_info.get('stage_index', 0)
+
+            if step_type == 'DecisionPoint_Branch':
+                branch_key = (stage_index, step_info.get('name', ''))
+
+                if branch_key in decision_branch_groups:
+                    group = decision_branch_groups[branch_key]
+
+                    # Add the decision branch once
+                    reorganized_steps.append(group['decision_step'])
+                    used_indices.add(group['decision_index'])
+
+                    # Add all child paths under this decision branch
+                    for child_path in group['child_paths']:
+                        for child_index, child_display, child_info in child_path:
+                            reorganized_steps.append((child_display, child_info))
+                            used_indices.add(child_index)
+
+                    # Mark this branch as processed
+                    del decision_branch_groups[branch_key]
+            else:
+                # Regular step - add if not already used
+                if i not in used_indices:
+                    reorganized_steps.append((step_display, step_info))
+
+    # Canvas logic is now used for both tabs - consistent data, different presentation
+
     # Tab 1: Step Selection (Default)
     with tab1:
         st.markdown("**Browse through all journey steps to view detailed information including profile counts, customer lists, and journey paths. Select any step from the list below to see which profiles are currently in that step and explore their journey progression.**")
