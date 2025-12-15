@@ -16,6 +16,7 @@ from src.flowchart_generator import CJOFlowchartGenerator
 from src.components.flowchart_renderer import create_flowchart_html
 from src.styles import load_all_styles
 from src.utils.session_state import SessionStateManager
+from src.utils.step_display import get_step_display_name
 
 
 def render_configuration_panel():
@@ -237,8 +238,8 @@ def render_step_selection_tab(generator: CJOFlowchartGenerator, column_mapper: C
 
         # Iterate through step dictionary
         for step_id, step_data in steps.items():
-            # Extract step name with fallbacks
-            step_name = step_data.get('name', '') or step_data.get('stepName', '') or step_id or 'Unknown Step'
+            # Use shared utility for consistent step naming
+            step_name = get_step_display_name(step_data)
             step_type = step_data.get('type', 'Unknown')
             display_name = f"{stage_name} → {step_name}"
 
