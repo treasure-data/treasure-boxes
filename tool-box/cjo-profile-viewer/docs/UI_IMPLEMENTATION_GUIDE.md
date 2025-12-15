@@ -257,6 +257,27 @@ function showProfileModal(stepDataKey) {
 }
 ```
 
+### Keyboard Shortcuts
+
+#### Auto-Load on Enter
+The application supports pressing Enter in the Journey ID field to automatically trigger configuration loading:
+
+```python
+# In streamlit_app.py
+journey_id = st.text_input(
+    "Journey ID",
+    placeholder="e.g., 12345",
+    key="main_journey_id",
+    on_change=lambda: st.session_state.update({"auto_load_triggered": True})
+)
+
+# Auto-load trigger handling
+auto_load_triggered = st.session_state.get("auto_load_triggered", False)
+if auto_load_triggered and journey_id:
+    st.session_state["auto_load_triggered"] = False
+    load_config_button = True  # Trigger the loading logic
+```
+
 ### Search and Filtering
 
 #### Search Implementation

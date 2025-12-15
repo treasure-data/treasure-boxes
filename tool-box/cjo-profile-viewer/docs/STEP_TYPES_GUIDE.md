@@ -31,12 +31,17 @@ The CJO Profile Viewer supports all 7 core step types defined in the Treasure Da
 - **Date Waits**: Wait until specific date/time
 - **Days of Week Waits**: Wait for specific days
 
+**Step Type Variants:**
+- **`WaitStep`**: Standard wait steps (duration, date, days of week)
+- **`WaitCondition_Path`**: Conditional wait paths with timeout handling
+
 **Display Format:**
 ```
 Wait 7 days (45 profiles)
 Wait for purchase (timeout: 14 days) (23 profiles)
 Wait until 2024-01-15 (12 profiles)
 Wait for Monday, Wednesday (8 profiles)
+Wait Condition: event_name - path_name (15 profiles)  # WaitCondition_Path
 ```
 
 **Profile Tracking:**
@@ -164,6 +169,12 @@ class FlowchartStep:
 - Breadcrumb preservation for post-merge steps
 - Profile count aggregation at merge points
 
+**Specialized Formatter Module:**
+- **`merge_display_formatter.py`**: Dedicated module for merge hierarchy formatting
+- **`format_merge_hierarchy()`**: Creates the exact hierarchical display format
+- **Branch Path Separation**: Distinguishes pre-merge and post-merge paths
+- **Smart Detection**: Only activates when merge points are present in journey
+
 #### 6.3 Merge Step Profile Tracking
 
 **Branch Entry Tracking:**
@@ -273,6 +284,42 @@ WHERE intime_stage_{N}_{step_uuid} IS NOT NULL
   AND intime_goal IS NULL
 ```
 
+**Actual Implementation Logic:**
+The `CJOFlowchartGenerator` class implements detailed profile counting:
+
+```python
+def _get_step_profile_count(self, step_id: str, stage_idx: int, step_type: str) -> int:
+    """Get profile count for a specific step with type-specific logic."""
+    if self.profile_data.empty:
+        return 0
+
+    try:
+        # Convert step ID to column name
+        step_uuid = step_id.replace('-', '_')
+        step_column = f"intime_stage_{stage_idx}_{step_uuid}"
+        outtime_column = f"outtime_stage_{stage_idx}_{step_uuid}"
+
+        if step_column not in self.profile_data.columns:
+            return 0
+
+        # Base condition: profiles that entered this step
+        condition = self.profile_data[step_column].notna()
+
+        # For non-endpoint steps, only count active profiles
+        if outtime_column in self.profile_data.columns:
+            # Still in step (not exited)
+            condition = condition & self.profile_data[outtime_column].isna()
+
+        # Only count profiles still active in journey
+        condition = condition & self.profile_data['intime_journey'].notna()
+        condition = condition & self.profile_data['outtime_journey'].isna()
+        condition = condition & self.profile_data['intime_goal'].isna()
+
+        return len(self.profile_data[condition])
+    except Exception:
+        return 0
+```
+
 **Completed Step:**
 ```sql
 WHERE intime_stage_{N}_{step_uuid} IS NOT NULL
@@ -310,6 +357,25 @@ def get_step_type(step_data: dict) -> str:
         return 'WaitCondition_Path' if has_conditions else 'WaitStep'
 
     return step_type
+```
+
+**Column Mapper Integration:**
+The `CJOColumnMapper` class handles complex step type detection and formatting:
+
+```python
+# In column_mapper.py - Decision Point branch detection
+if step_data.get('type') == 'DecisionPoint':
+    branches = step_data.get('branches', [])
+    for branch in branches:
+        segment_id = branch.get('segmentId')
+        # Creates DecisionPoint_Branch entries
+
+# AB Test variant detection
+if step_data.get('type') == 'ABTest':
+    variants = step_data.get('variants', [])
+    for variant in variants:
+        variant_id = variant.get('id')
+        # Creates ABTest_Variant entries
 ```
 
 ### Display Integration
