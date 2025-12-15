@@ -1,0 +1,13 @@
+.stButton > button[data-testid="baseButton-primary"],
+.stButton > button[kind="primary"] {
+    background-color: #0066CC !important;
+    border-color: #0066CC !important;
+    color: white !important;
+}
+
+.stButton > button[data-testid="baseButton-primary"]:hover,
+.stButton > button[kind="primary"]:hover {
+    background-color: #0052A3 !important;
+    border-color: #0052A3 !important;
+    color: white !important;
+}
