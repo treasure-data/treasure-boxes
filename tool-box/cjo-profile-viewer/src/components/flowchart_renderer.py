@@ -8,38 +8,21 @@ for CJO journey data.
 import json
 from typing import Dict, List
 from ..flowchart_generator import CJOFlowchartGenerator
-from ..column_mapper import CJOColumnMapper
 from ..styles import load_flowchart_styles
 from ..utils.step_display import get_step_display_name
+from ..utils.profile_filtering import get_step_profiles, get_filtered_profile_data
 
 
-def _get_step_column_name(step_id: str, stage_idx: int) -> str:
-    """Generate step column name based on step ID and stage index."""
-    step_uuid = step_id.replace('-', '_')
-    return f"intime_stage_{stage_idx}_{step_uuid}"
-
-
-def _get_step_profiles(generator: CJOFlowchartGenerator, step) -> List[str]:
-    """Get profiles for a specific step."""
+def _get_step_profiles_from_dict(generator: CJOFlowchartGenerator, step) -> List[str]:
+    """Get profiles for a specific step (wrapper for shared utility)."""
     step_id = step.get('id', '')
     stage_idx = step.get('stage_idx', 0)
 
-    if not step_id or generator.profile_data.empty:
+    if not step_id:
         return []
 
-    # Get the column name for this step
     try:
-        step_column = _get_step_column_name(step_id, stage_idx)
-        if step_column not in generator.profile_data.columns:
-            return []
-
-        # Get profiles that have non-null values in this step column
-        step_profiles = generator.profile_data[
-            generator.profile_data[step_column].notna()
-        ]['cdp_customer_id'].tolist()
-
-        return step_profiles
-
+        return get_step_profiles(generator.profile_data, step_id, stage_idx)
     except Exception:
         return []
 
@@ -48,7 +31,7 @@ def _get_step_profile_data(generator: CJOFlowchartGenerator, step) -> List[Dict]
     """Get profile data with additional attributes for a specific step."""
     import streamlit as st
 
-    step_profiles = _get_step_profiles(generator, step)
+    step_profiles = _get_step_profiles_from_dict(generator, step)
 
     if not step_profiles or generator.profile_data.empty:
         return []
@@ -73,13 +56,12 @@ def _get_step_profile_data(generator: CJOFlowchartGenerator, step) -> List[Dict]
     return []
 
 
-def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOColumnMapper) -> str:
+def create_flowchart_html(generator: CJOFlowchartGenerator) -> str:
     """
     Create an HTML/CSS flowchart visualization.
 
     Args:
         generator: CJOFlowchartGenerator instance
-        column_mapper: CJOColumnMapper instance
 
     Returns:
         Complete HTML string with embedded CSS and JavaScript
@@ -160,7 +142,7 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
             }
 
             # Get profile count for this step
-            step_profiles = _get_step_profiles(generator, step_obj)
+            step_profiles = _get_step_profiles_from_dict(generator, step_obj)
             profile_count = len(step_profiles)
 
             # Get profile data for modal

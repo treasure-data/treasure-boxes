@@ -17,6 +17,13 @@ from src.components.flowchart_renderer import create_flowchart_html
 from src.styles import load_all_styles
 from src.utils.session_state import SessionStateManager
 from src.utils.step_display import get_step_display_name
+from src.utils.profile_filtering import (
+    get_step_column_name,
+    get_step_profiles,
+    get_step_profile_count,
+    get_filtered_profile_data,
+    create_step_profile_condition
+)
 
 
 def render_configuration_panel():
@@ -312,11 +319,59 @@ def render_step_selection_tab(generator: CJOFlowchartGenerator, column_mapper: C
                 render_step_details(selected_step, generator, column_mapper)
 
 
-def get_step_column_name(step_id: str, stage_idx: int) -> str:
-    """Generate step column name based on step ID and stage index."""
-    # Convert step_id with hyphens to underscore format for column names
-    step_uuid = step_id.replace('-', '_')
-    return f"intime_stage_{stage_idx}_{step_uuid}"
+def generate_step_query_sql(step_column: str, profile_data_columns: List[str], selected_attributes: List[str] = None) -> str:
+    """
+    Generate the equivalent SQL query that would be used to retrieve step profile data.
+
+    Args:
+        step_column: The step column name (e.g., 'intime_stage_0_step_uuid')
+        profile_data_columns: List of all available columns in the profile data
+        selected_attributes: List of selected customer attributes to include
+
+    Returns:
+        Formatted SQL query string
+    """
+    # Get actual table name using audience ID and journey ID from session state
+    audience_id = SessionStateManager.get_audience_id()
+    journey_id = SessionStateManager.get_journey_id()
+
+    if audience_id and journey_id:
+        table_name = f"cdp_audience_{audience_id}.journey_{journey_id}"
+    else:
+        table_name = "profile_data"  # Fallback for when IDs aren't available
+
+    # Determine columns to select
+    if selected_attributes:
+        select_columns = ['cdp_customer_id'] + [attr for attr in selected_attributes if attr in profile_data_columns]
+    else:
+        select_columns = ['cdp_customer_id']
+
+    select_clause = "SELECT " + ", ".join(select_columns)
+
+    # Build WHERE conditions
+    where_conditions = []
+
+    # Step entry condition
+    where_conditions.append(f"{step_column} IS NOT NULL")
+
+    # Step exit condition (profile still in this specific step)
+    step_outtime_column = step_column.replace('intime_', 'outtime_')
+    if step_outtime_column in profile_data_columns:
+        where_conditions.append(f"{step_outtime_column} IS NULL")
+
+    # Journey exit condition
+    if 'outtime_journey' in profile_data_columns:
+        where_conditions.append("outtime_journey IS NULL")
+
+    where_clause = "WHERE " + " AND ".join(where_conditions)
+
+    # Combine into full query
+    query = f"""{select_clause}
+FROM {table_name}
+{where_clause}
+ORDER BY cdp_customer_id"""
+
+    return query
 
 
 def render_step_details(step_info: Dict, generator: CJOFlowchartGenerator, column_mapper: CJOColumnMapper):
@@ -332,16 +387,17 @@ def render_step_details(step_info: Dict, generator: CJOFlowchartGenerator, colum
     if step_id:
         st.markdown(f"**ID:** {step_id}")
 
-    # Get profiles for this step
+    # Get profiles for this step using shared utility
     try:
-        step_column = get_step_column_name(step_id, stage_idx)
-        if step_column not in generator.profile_data.columns:
-            st.warning("No profile data available for this step.")
-            return
+        step_profiles = get_step_profiles(generator.profile_data, step_id, stage_idx)
 
-        step_profiles = generator.profile_data[
-            generator.profile_data[step_column].notna()
-        ]['cdp_customer_id'].tolist()
+        if not step_profiles:
+            step_column = get_step_column_name(step_id, stage_idx)
+            if step_column not in generator.profile_data.columns:
+                st.warning("No profile data available for this step.")
+            else:
+                st.info("No profiles are currently in this step.")
+            return
 
         st.markdown(f"**Profile Count:** {len(step_profiles)}")
 
@@ -356,35 +412,29 @@ def render_step_details(step_info: Dict, generator: CJOFlowchartGenerator, colum
 
             st.write(f"Showing {len(filtered_profiles)} of {len(step_profiles)} profiles")
 
-            # Display profiles
+            # Display profiles using shared utility
             if filtered_profiles:
                 selected_attributes = SessionStateManager.get("selected_attributes", [])
 
-                if selected_attributes and not generator.profile_data.empty:
-                    # Show full profile data with additional attributes
-                    profile_subset = generator.profile_data[
-                        generator.profile_data['cdp_customer_id'].isin(filtered_profiles)
-                    ]
+                # Get filtered profile data with selected attributes
+                profile_df = get_filtered_profile_data(
+                    generator.profile_data[generator.profile_data['cdp_customer_id'].isin(filtered_profiles)],
+                    step_id, stage_idx, selected_attributes
+                )
 
-                    columns_to_show = ['cdp_customer_id'] + selected_attributes
-                    available_columns = [col for col in columns_to_show if col in profile_subset.columns]
+                if not profile_df.empty:
+                    st.dataframe(profile_df, use_container_width=True)
 
-                    if len(available_columns) > 1:
-                        profile_df = profile_subset[available_columns].copy()
-                        st.dataframe(profile_df, use_container_width=True)
-
-                        # Download button
-                        csv = profile_df.to_csv(index=False)
-                        st.download_button(
-                            label="📥 Download as CSV",
-                            data=csv,
-                            file_name=f"step_{step_id}_profiles.csv",
-                            mime="text/csv"
-                        )
-                    else:
-                        st.write("Additional attributes not available in current data.")
+                    # Download button
+                    csv = profile_df.to_csv(index=False)
+                    st.download_button(
+                        label="📥 Download as CSV",
+                        data=csv,
+                        file_name=f"step_{step_id}_profiles.csv",
+                        mime="text/csv"
+                    )
                 else:
-                    # Simple profile list
+                    # Fallback to simple list
                     profile_df = pd.DataFrame({'cdp_customer_id': filtered_profiles})
                     st.dataframe(profile_df, use_container_width=True)
 
@@ -396,6 +446,39 @@ def render_step_details(step_info: Dict, generator: CJOFlowchartGenerator, colum
                         file_name=f"step_{step_id}_profiles.csv",
                         mime="text/csv"
                     )
+
+            # Show SQL query used for this step
+            st.markdown("---")
+            st.markdown("**📊 SQL Query Used:**")
+            st.caption("This shows the equivalent SQL query that would be used to retrieve the profile data displayed above.")
+
+            selected_attributes = SessionStateManager.get("selected_attributes", [])
+            step_column = get_step_column_name(step_id, stage_idx)
+            sql_query = generate_step_query_sql(
+                step_column,
+                generator.profile_data.columns.tolist(),
+                selected_attributes
+            )
+
+            # Show query in expandable section for better UI
+            with st.expander("🔍 View SQL Query", expanded=False):
+                st.code(sql_query, language="sql")
+
+                # Add helpful explanation
+                st.markdown("**Query Explanation:**")
+                st.markdown(f"- **Step Entry**: `{step_column} IS NOT NULL` (profiles who entered this step)")
+
+                step_outtime_column = step_column.replace('intime_', 'outtime_')
+                if step_outtime_column in generator.profile_data.columns:
+                    st.markdown(f"- **Step Exit**: `{step_outtime_column} IS NULL` (exclude profiles that exited this step)")
+
+                if 'outtime_journey' in generator.profile_data.columns:
+                    st.markdown("- **Journey Filter**: `outtime_journey IS NULL` (exclude profiles that left the journey)")
+
+                if selected_attributes:
+                    st.markdown(f"- **Selected Attributes**: {', '.join(selected_attributes)}")
+                else:
+                    st.markdown("- **Columns**: Only `cdp_customer_id` (no additional attributes selected)")
 
     except Exception as e:
         st.error(f"Error loading step details: {str(e)}")
@@ -415,7 +498,7 @@ def render_canvas_tab(generator: CJOFlowchartGenerator, column_mapper: CJOColumn
     if st.button("🎨 Generate Canvas Visualization", type="primary"):
         with st.spinner("Generating interactive flowchart..."):
             try:
-                flowchart_html = create_flowchart_html(generator, column_mapper)
+                flowchart_html = create_flowchart_html(generator)
                 st.components.v1.html(flowchart_html, height=800, scrolling=True)
             except Exception as e:
                 st.error(f"Error generating flowchart: {str(e)}")

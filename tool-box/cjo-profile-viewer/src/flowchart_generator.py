@@ -8,6 +8,7 @@ to create visual representations of customer journeys.
 from typing import Dict, List, Optional, Tuple
 import pandas as pd
 from src.utils.step_display import get_step_display_name
+from src.utils.profile_filtering import get_step_profile_count
 
 
 class FlowchartStep:
@@ -478,7 +479,7 @@ class CJOFlowchartGenerator:
         """Create a FlowchartStep from step data."""
         step_type = step_data.get('type', 'Unknown')
         name = get_step_display_name(step_data)
-        profile_count = self._get_step_profile_count(step_id, stage_idx, step_type)
+        profile_count = get_step_profile_count(self.profile_data, step_id, stage_idx)
 
         return FlowchartStep(
             step_id=step_id,
@@ -543,28 +544,6 @@ class CJOFlowchartGenerator:
         )
 
 
-    def _get_step_profile_count(self, step_id: str, stage_idx: int, step_type: str) -> int:
-        """Get the number of profiles currently in a specific step."""
-        # Convert step UUID format for column matching
-        step_uuid = step_id.replace('-', '_')
-
-        # Look for entry column for this step
-        entry_column = f'intime_stage_{stage_idx}_{step_uuid}'
-
-        if entry_column in self.profile_data.columns:
-            # Get the corresponding outtime column
-            outtime_column = entry_column.replace('intime_', 'outtime_')
-
-            # Count profiles that have entered but not exited
-            condition = self.profile_data[entry_column].notna()
-
-            if outtime_column in self.profile_data.columns:
-                # Exclude profiles that have exited (outtime is not null)
-                condition = condition & self.profile_data[outtime_column].isna()
-
-            return condition.sum()
-
-        return 0
 
     def _get_branch_profile_count(self, step_id: str, segment_id: str, stage_idx: int) -> int:
         """Get the number of profiles currently in a decision point branch."""
