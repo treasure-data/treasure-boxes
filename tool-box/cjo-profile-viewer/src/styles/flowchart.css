@@ -61,11 +61,10 @@
 
 .path {
     display: flex;
+    flex-direction: column;
     align-items: center;
     margin: 20px 0;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 }
 
 .step-box {
@@ -156,4 +155,46 @@
 
 .step-box:hover .step-tooltip {
     opacity: 1;
+}
+
+/* Hierarchical step styling */
+.branch-header {
+    font-weight: bold;
+    background-color: #e8f4f8 !important;
+    border: 2px solid #85C1E9 !important;
+    font-size: 14px;
+    min-width: 250px;
+    max-width: 400px;
+}
+
+.indented-step {
+    margin-left: 30px;
+    font-size: 12px;
+    min-width: 200px;
+    max-width: 350px;
+    position: relative;
+}
+
+/* Indentation line for visual hierarchy */
+.indented-step::before {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    width: 15px;
+    height: 2px;
+    background-color: #85C1E9;
+    opacity: 0.6;
+}
+
+/* Vertical line to connect indented steps to parent */
+.indented-step::after {
+    content: "";
+    position: absolute;
+    left: -30px;
+    top: -8px;
+    width: 2px;
+    height: calc(100% + 16px);
+    background-color: #85C1E9;
+    opacity: 0.4;
 }

@@ -11,14 +11,15 @@ from ..flowchart_generator import CJOFlowchartGenerator
 from ..styles import load_flowchart_styles
 from ..utils.step_display import get_step_display_name
 from ..utils.profile_filtering import get_step_profiles, get_filtered_profile_data
+from ..hierarchical_step_formatter import format_hierarchical_steps
 
 
 def _get_step_profiles_from_dict(generator: CJOFlowchartGenerator, step) -> List[str]:
     """Get profiles for a specific step (wrapper for shared utility)."""
-    step_id = step.get('id', '')
-    stage_idx = step.get('stage_idx', 0)
+    step_id = step.get('step_id', step.get('id', ''))
+    stage_idx = step.get('stage_index', step.get('stage_idx', 0))
 
-    if not step_id:
+    if not step_id or step.get('is_empty_line', False):
         return []
 
     try:
@@ -33,7 +34,7 @@ def _get_step_profile_data(generator: CJOFlowchartGenerator, step) -> List[Dict]
 
     step_profiles = _get_step_profiles_from_dict(generator, step)
 
-    if not step_profiles or generator.profile_data.empty:
+    if not step_profiles or generator.profile_data.empty or step.get('is_empty_line', False):
         return []
 
     # Get selected attributes from session state
@@ -103,50 +104,47 @@ def create_flowchart_html(generator: CJOFlowchartGenerator) -> str:
     # Collect step data for JavaScript
     step_data = {}
 
-    # Process each stage using available properties
-    stages_data = generator.stages_data
-    for stage_idx, stage_data in enumerate(stages_data):
-        stage_name = stage_data.get('name', f'Stage {stage_idx + 1}')
+    # Get hierarchical steps using the same logic as dropdown
+    hierarchical_steps = format_hierarchical_steps(generator)
+
+    # Group hierarchical steps by stage
+    stages_steps = {}
+    for step_display, step_info in hierarchical_steps:
+        stage_idx = step_info.get('stage_index', 0)
+        if stage_idx not in stages_steps:
+            stages_steps[stage_idx] = []
+        stages_steps[stage_idx].append((step_display, step_info))
+
+    # Process each stage using hierarchical steps
+    for stage_idx, stage in enumerate(generator.stages):
+        stage_name = stage.name
+        stage_steps = stages_steps.get(stage_idx, [])
 
         html += f'''
         <div class="stage-container">
             <div class="stage-header">{stage_name}</div>
         '''
 
-        # Add simple stage info
-        steps = stage_data.get('steps', {})
-        html += f'''
-        <div class="stage-info">
-            <div class="stage-info-section">
-                <span class="stage-info-header">Steps:</span> {len(steps)}
-            </div>
-        </div>
-        '''
-
         html += '<div class="paths-container">'
 
-        # Process steps in this stage
-        html += '<div class="path">'
+        # Process hierarchical steps for this stage
+        for i, (step_display, step_info) in enumerate(stage_steps):
+            # Skip empty lines in visual rendering
+            if step_info.get('is_empty_line', False):
+                continue
 
-        for i, (step_id, step_data_dict) in enumerate(steps.items()):
-            # Use shared utility for consistent step naming
-            step_name = get_step_display_name(step_data_dict)
-            step_type = step_data_dict.get('type', 'Unknown')
+            step_id = step_info.get('step_id', '')
+            step_name = step_info.get('name', '')
+            step_type = step_info.get('step_type', 'Unknown')
+            profile_count = step_info.get('profile_count', 0)
 
-            # Create step object for helper functions
-            step_obj = {
-                'id': step_id,
-                'name': step_name,
-                'type': step_type,
-                'stage_idx': stage_idx
-            }
-
-            # Get profile count for this step
-            step_profiles = _get_step_profiles_from_dict(generator, step_obj)
-            profile_count = len(step_profiles)
+            # Determine if this is a branch header or indented step
+            is_branch_header = step_info.get('is_branch_header', False)
+            is_indented = step_info.get('is_indented', False)
 
             # Get profile data for modal
-            step_profile_data = _get_step_profile_data(generator, step_obj)
+            step_profile_data = _get_step_profile_data(generator, step_info)
+            step_profiles = _get_step_profiles_from_dict(generator, step_info)
 
             # Store step data for JavaScript
             step_data_key = f"step_{stage_idx}_{i}_{step_id}"
@@ -160,29 +158,43 @@ def create_flowchart_html(generator: CJOFlowchartGenerator) -> str:
             # Get color for step type
             color = step_type_colors.get(step_type, step_type_colors['Unknown'])
 
-            # Use step name directly (column mapper is for database columns, not step names)
-            display_name = step_name
-
             # Create tooltip content
-            tooltip_content = f"Type: {step_type}\\nProfiles: {profile_count}"
+            tooltip_content = f"Type: {step_type}"
+            if not is_branch_header:  # Only show profile count for non-header steps
+                tooltip_content += f"\\nProfiles: {profile_count}"
             if step_id:
-                tooltip_content += f"\\nID: {step_id}"
+                tooltip_content += f"\\nID: {step_id[:8]}..."
 
-            html += f'''
-            <div class="step-box" style="background-color: {color};"
-                 onclick="showProfileModal('{step_data_key}')"
-                 title="{tooltip_content}">
-                <div class="step-name">{display_name}</div>
-                <div class="step-count">{profile_count} profiles</div>
-                <div class="step-tooltip">{tooltip_content}</div>
-            </div>
-            '''
+            # Apply CSS classes based on hierarchy
+            css_classes = "step-box"
+            if is_indented:
+                css_classes += " indented-step"
+            if is_branch_header:
+                css_classes += " branch-header"
 
-            # Add arrow if not last step
-            if i < len(steps) - 1:
-                html += '<div class="arrow">→</div>'
+            # Create the step box with appropriate styling
+            if is_branch_header:
+                # Branch header - no profile count display
+                html += f'''
+                <div class="{css_classes}" style="background-color: {color};"
+                     onclick="showProfileModal('{step_data_key}')"
+                     title="{tooltip_content}">
+                    <div class="step-name">{step_display}</div>
+                    <div class="step-tooltip">{tooltip_content}</div>
+                </div>
+                '''
+            else:
+                # Regular step - show profile count
+                html += f'''
+                <div class="{css_classes}" style="background-color: {color};"
+                     onclick="showProfileModal('{step_data_key}')"
+                     title="{tooltip_content}">
+                    <div class="step-name">{step_display.replace('--- ', '')}</div>
+                    <div class="step-count">{profile_count} profiles</div>
+                    <div class="step-tooltip">{tooltip_content}</div>
+                </div>
+                '''
 
-        html += '</div>'  # Close path div
         html += '</div>'  # Close paths-container div
         html += '</div>'  # Close stage-container div
 
