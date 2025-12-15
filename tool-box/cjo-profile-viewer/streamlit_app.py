@@ -1095,22 +1095,21 @@ def main():
                 label_visibility="collapsed"
             )
         with col2:
-            load_button = st.button(
-                "🔄 Load Journey Data",
+            load_config_button = st.button(
+                "📋 Load Journey Config",
                 type="primary",
-                key="main_load_button"
+                key="load_config_button"
             )
 
-        # Additional Customer Attributes Selection (always visible)
-        st.markdown("**Additional Customer Attributes:**")
-
-        if st.session_state.get("journey_loaded") and st.session_state.get("api_response"):
-            st.caption("Select additional customer attributes to include when viewing step profiles. cdp_customer_id is included by default. Reload journey data to apply changes.")
+        # Additional Customer Attributes Selection (show after config loaded)
+        if st.session_state.get("config_loaded") and st.session_state.get("api_response"):
+            st.markdown("**Step 2: Select Additional Customer Attributes**")
+            st.caption("Select additional customer attributes to include when viewing step profiles. cdp_customer_id is included by default.")
 
             try:
                 audience_id = st.session_state.api_response.get('data', {}).get('attributes', {}).get('audienceId')
-                if audience_id:
-                    available_attributes = get_available_attributes(audience_id, get_api_key())
+                if audience_id and audience_id in st.session_state.get("available_attributes", {}):
+                    available_attributes = st.session_state.available_attributes[audience_id]
 
                     if available_attributes:
                         selected_attributes = st.multiselect(
@@ -1124,14 +1123,32 @@ def main():
 
                         # Store selected attributes in session state
                         st.session_state.selected_attributes = selected_attributes
+
+                        # Show Load Profile Data button
+                        load_profile_button = st.button(
+                            "📊 Load Profile Data",
+                            type="primary",
+                            key="load_profile_button",
+                            help="Load customer profile data with selected attributes"
+                        )
                     else:
                         st.info("No additional customer attributes available.")
+                        # Show Load Profile Data button even without attributes
+                        load_profile_button = st.button(
+                            "📊 Load Profile Data",
+                            type="primary",
+                            key="load_profile_button_no_attr",
+                            help="Load customer profile data"
+                        )
                 else:
-                    st.warning("Could not find audience ID.")
+                    st.warning("Could not find audience ID or attributes not loaded.")
+                    load_profile_button = False
             except Exception as e:
                 st.warning(f"Could not load customer attributes: {str(e)}")
+                load_profile_button = False
         else:
-            st.caption("Load journey data first to see available customer attributes. cdp_customer_id is included by default.")
+            st.caption("Load journey configuration first to see available customer attributes.")
+            load_profile_button = False
 
         # Check for existing API key (but don't show status)
         existing_api_key = get_api_key()
@@ -1140,15 +1157,15 @@ def main():
         auto_load_triggered = st.session_state.get("auto_load_triggered", False)
         if auto_load_triggered and journey_id:
             st.session_state["auto_load_triggered"] = False
-            load_button = True  # Trigger the loading logic
+            load_config_button = True  # Trigger the loading logic
 
-        # Handle data loading within the container
-        if load_button:
+        # Handle Step 1: Load Journey Configuration
+        if load_config_button:
             if not journey_id or journey_id.strip() == "":
                 st.toast("Please enter a Journey ID", icon="⚠️")
                 st.stop()
 
-        if load_button and journey_id:
+        if load_config_button and journey_id:
             if not existing_api_key:
                 st.error("❌ **API Key Required**: Please set up your TD API key (TD_API_KEY environment variable, ~/.td/config, or td_config.txt file)")
                 st.stop()
@@ -1162,7 +1179,7 @@ def main():
 
             if api_response:
                 st.session_state.api_response = api_response
-                st.session_state.journey_loaded = True
+                st.session_state.config_loaded = True
 
                 # Extract audience ID from API response
                 audience_id = None
@@ -1175,16 +1192,53 @@ def main():
                     st.error(f"❌ **API Response Error**: Failed to extract audience ID: {str(e)}")
                     st.stop()
 
-                # Load profile data using pytd
-                profile_data = load_profile_data(journey_id, audience_id, existing_api_key)
-                if profile_data is not None:
-                    st.session_state.profile_data = profile_data
-                    st.toast(f"Journey '{journey_id}' data loaded successfully!", icon="✅")
-                else:
-                    st.toast("Could not load profile data. Some features may be limited.", icon="⚠️")
+                # Load available customer attributes
+                available_attributes = get_available_attributes(audience_id, existing_api_key)
+
+                # Store available attributes in session state
+                if "available_attributes" not in st.session_state:
+                    st.session_state.available_attributes = {}
+                st.session_state.available_attributes[audience_id] = available_attributes
+
+                # Reset profile data and journey_loaded state since we're doing this in two steps
+                st.session_state.profile_data = None
+                st.session_state.journey_loaded = False
+
+                st.toast(f"Journey configuration for '{journey_id}' loaded successfully! Now select attributes and load profile data.", icon="✅")
 
                 # Force a rerun to show the attribute selector
                 st.rerun()
+
+        # Handle Step 2: Load Profile Data
+        if load_profile_button:
+            if not st.session_state.get("config_loaded") or not st.session_state.get("api_response"):
+                st.toast("Please load journey configuration first", icon="⚠️")
+                st.stop()
+
+            if not existing_api_key:
+                st.error("❌ **API Key Required**: Please set up your TD API key")
+                st.stop()
+
+            # Get journey and audience info from session state
+            api_response = st.session_state.api_response
+            journey_id = api_response.get('data', {}).get('id')
+            audience_id = api_response.get('data', {}).get('attributes', {}).get('audienceId')
+
+            if not journey_id or not audience_id:
+                st.error("❌ Missing journey or audience ID from configuration")
+                st.stop()
+
+            # Load profile data using pytd
+            profile_data = load_profile_data(journey_id, audience_id, existing_api_key)
+            if profile_data is not None:
+                st.session_state.profile_data = profile_data
+                st.session_state.journey_loaded = True  # Now we have complete data
+                st.toast(f"Profile data loaded successfully! {len(profile_data)} profiles found.", icon="✅")
+            else:
+                st.toast("Could not load profile data. Some features may be limited.", icon="⚠️")
+
+            # Force a rerun to show the visualization
+            st.rerun()
 
         st.markdown("---")
 
@@ -1195,6 +1249,10 @@ def main():
         st.session_state.profile_data = None
     if 'journey_loaded' not in st.session_state:
         st.session_state.journey_loaded = False
+    if 'config_loaded' not in st.session_state:
+        st.session_state.config_loaded = False
+    if 'available_attributes' not in st.session_state:
+        st.session_state.available_attributes = {}
     if 'auto_load_attempted' not in st.session_state:
         st.session_state.auto_load_attempted = False
 
@@ -1220,7 +1278,10 @@ def main():
 
     # Check if we have data to work with
     if not st.session_state.journey_loaded or st.session_state.api_response is None:
-        st.info("👆 **Get Started**: Enter a Journey ID and click 'Load Journey Data' to begin visualization.")
+        if not st.session_state.config_loaded:
+            st.info("👆 **Step 1**: Enter a Journey ID and click 'Load Journey Config' to begin.")
+        else:
+            st.info("👆 **Step 2**: Select customer attributes (if desired) and click 'Load Profile Data' to begin visualization.")
         return
 
 
