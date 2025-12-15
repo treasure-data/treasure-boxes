@@ -6,8 +6,8 @@ This script tests the core functionality of the application without the Streamli
 
 import json
 import pandas as pd
-from column_mapper import CJOColumnMapper
-from flowchart_generator import CJOFlowchartGenerator
+from src.column_mapper import CJOColumnMapper
+from src.flowchart_generator import CJOFlowchartGenerator
 
 
 def test_components():

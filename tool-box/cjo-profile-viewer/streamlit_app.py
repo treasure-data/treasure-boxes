@@ -13,8 +13,8 @@ import os
 import pytd
 from typing import Dict, List, Optional, Tuple
 
-from column_mapper import CJOColumnMapper
-from flowchart_generator import CJOFlowchartGenerator
+from src.column_mapper import CJOColumnMapper
+from src.flowchart_generator import CJOFlowchartGenerator
 
 
 def get_api_key():

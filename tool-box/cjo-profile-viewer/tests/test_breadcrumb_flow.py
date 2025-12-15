@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-Test script to verify dropdown format treats merges as grouping headers.
+Test script to verify breadcrumb flow for post-merge steps.
 """
 
 import pandas as pd
-from flowchart_generator import CJOFlowchartGenerator
-from merge_display_formatter import format_merge_hierarchy
+from src.flowchart_generator import CJOFlowchartGenerator
+from src.merge_display_formatter import format_merge_hierarchy
 
-def test_dropdown_format():
-    """Test that merge steps are treated as grouping headers in dropdown format."""
+def test_breadcrumb_flow():
+    """Test that post-merge steps show proper breadcrumb progression."""
 
-    # API response with merge steps
+    # The API response from your example
     api_response = {
         "data": {
             "id": "218058",
@@ -83,88 +83,74 @@ def test_dropdown_format():
     }
 
     profile_data = pd.DataFrame({
-        'cdp_customer_id': ['user1', 'user2', 'user3'],
-        'intime_journey': ['2023-01-01 10:00:00'] * 3,
+        'cdp_customer_id': ['user1', 'user2'],
+        'intime_journey': ['2023-01-01 10:00:00'] * 2,
     })
 
     # Initialize the generator
     generator = CJOFlowchartGenerator(api_response, profile_data)
 
-    print("Testing dropdown format for merge grouping headers...")
+    print("Testing breadcrumb flow for post-merge steps...")
     print("="*60)
 
     # Use the formatter
     formatted_steps = format_merge_hierarchy(generator)
 
-    print("Generated dropdown format:")
+    print("Generated steps with breadcrumb analysis:")
     print()
 
-    merge_header_found = False
-    post_merge_steps = []
-
     for i, (step_display, step_info) in enumerate(formatted_steps):
+        breadcrumbs = step_info.get('breadcrumbs', [])
+        step_name = step_info.get('name', 'Unknown')
         step_type = step_info.get('step_type', 'Unknown')
-        is_grouping_header = step_info.get('is_grouping_header', False)
-        is_merge_header = step_info.get('is_merge_header', False)
-        is_post_merge = step_info.get('is_post_merge', False)
 
         print(f"{i+1:2d}. {step_display}")
+        print(f"    Step: {step_name} ({step_type})")
+        print(f"    Breadcrumbs: {' → '.join(breadcrumbs)}")
 
-        # Analyze the step
-        if is_merge_header:
-            merge_header_found = True
-            # Check that merge header shows profile count like Decision/AB Test headers
-            if "profiles)" in step_display:
-                print(f"    ✅ MERGE HEADER - Shows profile count (like Decision/AB Test)")
-            else:
-                print(f"    ❌ MERGE HEADER - Missing profile count")
-
-        elif is_post_merge:
-            post_merge_steps.append((step_display, step_info))
-            # Check that post-merge steps are indented
-            if step_display.startswith("Stage") and "--- " in step_display:
-                print(f"    ✅ POST-MERGE STEP - Properly indented with ---")
-            else:
-                print(f"    ❌ POST-MERGE STEP - Not properly indented")
-
+        # Check if this is a post-merge step
+        if step_info.get('is_post_merge', False):
+            print(f"    ✓ POST-MERGE STEP - Breadcrumbs show path from merge")
+        elif step_info.get('is_merge_header', False):
+            print(f"    ✓ MERGE HEADER - Starting point for post-merge breadcrumbs")
+        elif step_info.get('is_merge_endpoint', False):
+            print(f"    ✓ MERGE ENDPOINT - End of branch path")
         else:
-            print(f"    ✓ REGULAR STEP")
+            print(f"    ✓ BRANCH STEP - Individual step in branch path")
 
         print()
 
-    print("Verification Summary:")
-    print()
+    # Verify expected breadcrumbs
+    print("Expected breadcrumb flows:")
+    print("1. Branch steps: Just the step name")
+    print("2. Merge endpoints: 'Merge (uuid)'")
+    print("3. Merge header: 'Merge (uuid)'")
+    print("4. Wait 1 day step: 'Merge (uuid) → Wait 1 day'")
+    print("5. End step: 'Merge (uuid) → Wait 1 day → End Step'")
 
-    # Check merge header format
-    if merge_header_found:
-        print("✅ Merge header found and treated as grouping header")
-    else:
-        print("❌ Merge header not found or not marked as grouping header")
+    # Find the end step and check its breadcrumbs
+    end_step_found = False
+    for step_display, step_info in formatted_steps:
+        if step_info.get('step_type') == 'End':
+            breadcrumbs = step_info.get('breadcrumbs', [])
+            expected_crumbs = ['Merge (5eca44ab-201f-40a7-98aa-b312449df0fe)', 'Wait 1 day', 'End Step']
 
-    # Check post-merge step indentation
-    if len(post_merge_steps) > 0:
-        all_indented = all("--- " in display for display, info in post_merge_steps)
-        if all_indented:
-            print(f"✅ All {len(post_merge_steps)} post-merge steps properly indented with ---")
-        else:
-            print(f"❌ Some post-merge steps not properly indented")
-    else:
-        print("⚠️  No post-merge steps found to verify indentation")
+            print(f"\n🔍 End step breadcrumb verification:")
+            print(f"   Actual: {breadcrumbs}")
+            print(f"   Expected: {expected_crumbs}")
 
-    # Expected format example
-    print()
-    print("Expected dropdown format:")
-    print("1. Decision: country is japan (X profiles)      ← Grouping header with profile count")
-    print("2. --- Wait 3 day (X profiles)                  ← Indented under Decision")
-    print("3. --- Merge (5eca44ab) (X profiles)            ← Branch endpoint")
-    print("4. Decision: Excluded Profiles (X profiles)     ← Grouping header with profile count")
-    print("5. --- Merge (5eca44ab) (X profiles)            ← Branch endpoint")
-    print("6. Merge (5eca44ab) (X profiles)                ← Grouping header with profile count (like Decision/AB Test)")
-    print("7. --- Wait 1 day (X profiles)                  ← Indented under Merge")
-    print("8. --- End Step (X profiles)                    ← Indented under Merge")
+            if breadcrumbs == expected_crumbs:
+                print(f"   ✅ CORRECT! End step shows full path from merge")
+                end_step_found = True
+            else:
+                print(f"   ❌ INCORRECT breadcrumb flow")
+            break
+
+    if not end_step_found:
+        print("❌ End step not found in formatted steps")
 
     print("\n" + "="*60)
-    print("Dropdown format test completed!")
+    print("Breadcrumb flow test completed!")
 
 if __name__ == "__main__":
-    test_dropdown_format()
+    test_breadcrumb_flow()

@@ -221,7 +221,7 @@ def test_display_rules():
 
     try:
         # Import required modules after mocking streamlit
-        from flowchart_generator import CJOFlowchartGenerator
+        from src.flowchart_generator import CJOFlowchartGenerator
 
         # Create generator
         print("\n1. Creating CJO Flowchart Generator...")

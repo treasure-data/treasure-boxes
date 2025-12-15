@@ -154,7 +154,10 @@ def _process_steps_from_root_test(steps, root_step_id, stage_idx, generator):
     return processed_steps
 
 try:
-    from flowchart_generator import CJOFlowchartGenerator
+    import sys
+    import os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from src.flowchart_generator import CJOFlowchartGenerator
 
     print("Creating generator...")
     generator = CJOFlowchartGenerator(test_api_response, test_profile_data)

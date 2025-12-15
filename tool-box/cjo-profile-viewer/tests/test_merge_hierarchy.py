@@ -4,7 +4,7 @@ Test script to verify merge step hierarchy display with the provided API respons
 """
 
 import pandas as pd
-from flowchart_generator import CJOFlowchartGenerator
+from src.flowchart_generator import CJOFlowchartGenerator
 
 def test_merge_hierarchy_display():
     """Test the merge step hierarchy with the exact API response provided."""

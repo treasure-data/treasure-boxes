@@ -4,7 +4,7 @@ Test script to verify the exact display format matches what was requested.
 """
 
 import pandas as pd
-from flowchart_generator import CJOFlowchartGenerator
+from src.flowchart_generator import CJOFlowchartGenerator
 
 def simulate_streamlit_display():
     """Simulate the Streamlit display format to verify it matches the expected output."""

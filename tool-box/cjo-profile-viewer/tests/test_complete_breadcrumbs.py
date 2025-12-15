@@ -4,8 +4,8 @@ Test script to verify complete breadcrumb history for all steps.
 """
 
 import pandas as pd
-from flowchart_generator import CJOFlowchartGenerator
-from merge_display_formatter import format_merge_hierarchy
+from src.flowchart_generator import CJOFlowchartGenerator
+from src.merge_display_formatter import format_merge_hierarchy
 
 def test_complete_breadcrumbs():
     """Test that all steps show complete breadcrumb history."""

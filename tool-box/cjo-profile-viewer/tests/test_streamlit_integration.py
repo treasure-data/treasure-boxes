@@ -4,8 +4,8 @@ Test to verify the Streamlit integration works without errors.
 """
 
 import pandas as pd
-from flowchart_generator import CJOFlowchartGenerator
-from merge_display_formatter import format_merge_hierarchy
+from src.flowchart_generator import CJOFlowchartGenerator
+from src.merge_display_formatter import format_merge_hierarchy
 
 def test_streamlit_integration():
     """Test that the formatter produces step_info dictionaries that work with Streamlit app."""

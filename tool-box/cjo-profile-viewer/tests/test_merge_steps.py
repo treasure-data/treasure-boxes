@@ -4,7 +4,7 @@ Test script to verify merge step functionality works correctly.
 """
 
 import pandas as pd
-from flowchart_generator import CJOFlowchartGenerator
+from src.flowchart_generator import CJOFlowchartGenerator
 
 def test_merge_step_handling():
     """Test that merge steps are handled correctly and don't duplicate subsequent steps."""
