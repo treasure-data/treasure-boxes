@@ -5,7 +5,7 @@ Test script to verify breadcrumb flow for post-merge steps.
 
 import pandas as pd
 from src.flowchart_generator import CJOFlowchartGenerator
-from src.merge_display_formatter import format_merge_hierarchy
+from src.hierarchical_step_formatter import format_hierarchical_steps
 
 def test_breadcrumb_flow():
     """Test that post-merge steps show proper breadcrumb progression."""
@@ -94,7 +94,7 @@ def test_breadcrumb_flow():
     print("="*60)
 
     # Use the formatter
-    formatted_steps = format_merge_hierarchy(generator)
+    formatted_steps = format_hierarchical_steps(generator)
 
     print("Generated steps with breadcrumb analysis:")
     print()

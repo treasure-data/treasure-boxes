@@ -5,7 +5,7 @@ Test script to verify dropdown format treats merges as grouping headers.
 
 import pandas as pd
 from src.flowchart_generator import CJOFlowchartGenerator
-from src.merge_display_formatter import format_merge_hierarchy
+from src.hierarchical_step_formatter import format_hierarchical_steps
 
 def test_dropdown_format():
     """Test that merge steps are treated as grouping headers in dropdown format."""
@@ -94,7 +94,7 @@ def test_dropdown_format():
     print("="*60)
 
     # Use the formatter
-    formatted_steps = format_merge_hierarchy(generator)
+    formatted_steps = format_hierarchical_steps(generator)
 
     print("Generated dropdown format:")
     print()

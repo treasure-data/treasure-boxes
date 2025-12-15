@@ -24,6 +24,7 @@ from src.utils.profile_filtering import (
     get_filtered_profile_data,
     create_step_profile_condition
 )
+from src.hierarchical_step_formatter import format_hierarchical_steps
 
 
 def render_configuration_panel():
@@ -285,22 +286,99 @@ def render_step_selection_tab(generator: CJOFlowchartGenerator, column_mapper: C
                 st.warning("No steps found in the selected stage.")
                 return
 
-            # Create step options for the selected stage
-            step_options = {}
-            for step_id, step_data in steps.items():
-                # Use shared utility for consistent step naming (without stage name prefix)
-                step_name = get_step_display_name(step_data)
-                step_type = step_data.get('type', 'Unknown')
+            # Use hierarchical formatter to get properly formatted step display
+            try:
+                # Get hierarchical formatted steps for all stages
+                formatted_steps = format_hierarchical_steps(generator)
 
-                # Create step info dict
-                step_info = {
-                    'id': step_id,
-                    'name': step_name,
-                    'type': step_type,
-                    'stage_idx': stage_idx,
-                    'stage_name': selected_stage_name
-                }
-                step_options[step_name] = step_info
+                # Build step options from hierarchical formatter output, filtering for selected stage
+                step_options = {}
+                display_name_counts = {}
+                step_items = []
+
+                # First pass: collect all steps and count duplicate display names
+                for display_name, step_info in formatted_steps:
+                    # Skip empty lines used for visual separation
+                    if step_info.get('is_empty_line', False):
+                        continue
+
+                    # Only include steps from the selected stage
+                    if step_info.get('stage_index', 0) == stage_idx:
+                        # Update step_info with required fields for compatibility
+                        step_info.update({
+                            'stage_idx': stage_idx,
+                            'stage_name': selected_stage_name
+                        })
+
+                        # Use step_id as the id field for compatibility
+                        if 'step_id' in step_info:
+                            step_info['id'] = step_info['step_id']
+
+                        step_items.append((display_name, step_info))
+                        display_name_counts[display_name] = display_name_counts.get(display_name, 0) + 1
+
+                # Second pass: disambiguate duplicates and build final step_options
+                def get_short_uuid(uuid_string: str) -> str:
+                    """Extract the first part of a UUID (before first hyphen)."""
+                    return uuid_string.split('-')[0] if uuid_string else uuid_string
+
+                name_sequence = {}
+                for display_name, step_info in step_items:
+                    if display_name_counts[display_name] > 1:
+                        # Try UUID first, but if that would create duplicates, use sequence numbers
+                        step_id = step_info.get('id', '')
+                        short_uuid = get_short_uuid(step_id)
+
+                        # Check if UUID disambiguation would create a unique name
+                        uuid_disambiguated = f"{display_name} ({short_uuid})"
+
+                        # Count how many times we've seen this UUID-disambiguated name
+                        if uuid_disambiguated in step_options:
+                            # UUID collision - use sequence numbers instead
+                            sequence = name_sequence.get(display_name, 0) + 1
+                            name_sequence[display_name] = sequence
+                            disambiguated_name = f"{display_name} (#{sequence})"
+                        else:
+                            # UUID is unique - use it
+                            disambiguated_name = uuid_disambiguated
+                    else:
+                        disambiguated_name = display_name
+
+                    step_options[disambiguated_name] = step_info
+
+            except Exception as e:
+                st.warning(f"Could not load hierarchical display, falling back to simple format: {str(e)}")
+
+                # Fallback to simple display with disambiguation
+                step_options = {}
+                step_name_counts = {}
+                step_items = []
+
+                for step_id, step_data in steps.items():
+                    step_name = get_step_display_name(step_data)
+                    step_type = step_data.get('type', 'Unknown')
+
+                    step_info = {
+                        'id': step_id,
+                        'name': step_name,
+                        'type': step_type,
+                        'stage_idx': stage_idx,
+                        'stage_name': selected_stage_name
+                    }
+                    step_items.append((step_name, step_info))
+                    step_name_counts[step_name] = step_name_counts.get(step_name, 0) + 1
+
+                # Disambiguate duplicates
+                name_sequence = {}
+                for step_name, step_info in step_items:
+                    if step_name_counts[step_name] > 1:
+                        sequence = name_sequence.get(step_name, 0) + 1
+                        name_sequence[step_name] = sequence
+                        disambiguated_name = f"{step_name} (#{sequence})"
+                    else:
+                        disambiguated_name = step_name
+
+                    step_options[disambiguated_name] = step_info
 
             selected_step_name = st.selectbox(
                 "2. Select a step:",

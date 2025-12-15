@@ -114,7 +114,12 @@ class CJOFlowchartGenerator:
         if merge_points:
             return self._build_paths_with_merges(steps, root_step_id, stage_idx, merge_points)
 
-        # Original logic for stages without merge points
+        # Universal path building that handles hierarchical steps anywhere in the journey
+        return self._build_all_paths_from_step(steps, root_step_id, [], stage_idx, merge_points)
+
+    def _deprecated_build_stage_paths_old(self, steps, root_step_id, root_step_data, stage_idx, merge_points):
+        """Deprecated - old logic that only handled hierarchical steps at root."""
+        paths = []
 
         if root_step_data.get('type') == 'DecisionPoint':
             # Create separate path for each branch
@@ -207,6 +212,117 @@ class CJOFlowchartGenerator:
 
         return paths
 
+    def _build_all_paths_from_step(self, steps: dict, step_id: str, current_path: List[FlowchartStep],
+                                   stage_idx: int, merge_points: set = None, visited: set = None) -> List[List[FlowchartStep]]:
+        """
+        Build all possible paths from a given step, handling hierarchical steps anywhere in the journey.
+
+        This method properly expands DecisionPoints, ABTests, and WaitConditions wherever they appear,
+        not just at the root of a stage.
+        """
+        if merge_points is None:
+            merge_points = set()
+        if visited is None:
+            visited = set()
+
+        # Prevent infinite loops and handle missing steps
+        if step_id in visited or step_id not in steps:
+            return [current_path] if current_path else []
+
+        visited = visited.copy()
+        visited.add(step_id)
+
+        step_data = steps[step_id]
+        step_type = step_data.get('type', '')
+
+        # Handle merge points
+        if step_id in merge_points:
+            step = self._create_step_from_data(step_id, step_data, stage_idx)
+            step.is_merge_endpoint = True
+            return [current_path + [step]]
+
+        # Handle hierarchical step types - these create multiple paths
+        if step_type == 'DecisionPoint':
+            branches = step_data.get('branches', [])
+            all_paths = []
+
+            for branch in branches:
+                # Create branch step
+                branch_step = self._create_step_from_branch(step_id, step_data, branch, stage_idx)
+                branch_path = current_path + [branch_step]
+
+                # Continue from this branch's next step
+                next_step = branch.get('next')
+                if next_step:
+                    branch_paths = self._build_all_paths_from_step(
+                        steps, next_step, branch_path, stage_idx, merge_points, visited
+                    )
+                    all_paths.extend(branch_paths)
+                else:
+                    # End of path
+                    all_paths.append(branch_path)
+
+            return all_paths
+
+        elif step_type == 'ABTest':
+            variants = step_data.get('variants', [])
+            all_paths = []
+
+            for variant in variants:
+                # Create variant step
+                variant_step = self._create_step_from_variant(step_id, step_data, variant, stage_idx)
+                variant_path = current_path + [variant_step]
+
+                # Continue from this variant's next step
+                next_step = variant.get('next')
+                if next_step:
+                    variant_paths = self._build_all_paths_from_step(
+                        steps, next_step, variant_path, stage_idx, merge_points, visited
+                    )
+                    all_paths.extend(variant_paths)
+                else:
+                    # End of path
+                    all_paths.append(variant_path)
+
+            return all_paths
+
+        elif step_type == 'WaitStep' and step_data.get('waitStepType') == 'Condition':
+            conditions = step_data.get('conditions', [])
+            all_paths = []
+
+            for condition in conditions:
+                # Create condition step
+                condition_step = self._create_step_from_condition(step_id, step_data, condition, stage_idx)
+                condition_path = current_path + [condition_step]
+
+                # Continue from this condition's next step
+                next_step = condition.get('next')
+                if next_step:
+                    condition_paths = self._build_all_paths_from_step(
+                        steps, next_step, condition_path, stage_idx, merge_points, visited
+                    )
+                    all_paths.extend(condition_paths)
+                else:
+                    # End of path
+                    all_paths.append(condition_path)
+
+            return all_paths
+
+        else:
+            # Regular step - create single step and continue
+            step = self._create_step_from_data(step_id, step_data, stage_idx)
+            new_path = current_path + [step]
+
+            # Continue to next step
+            next_step = step_data.get('next')
+            if next_step:
+                return self._build_all_paths_from_step(
+                    steps, next_step, new_path, stage_idx, merge_points, visited
+                )
+            else:
+                # End of path
+                return [new_path]
+
     def _find_merge_points(self, steps: dict) -> set:
         """Find all merge step IDs in the stage."""
         merge_points = set()
@@ -282,6 +398,9 @@ class CJOFlowchartGenerator:
                 next_step = branch.get('next')
                 if next_step:
                     self._trace_paths_to_merge(steps, next_step, branch_path, all_paths, stage_idx, merge_points, visited)
+                else:
+                    # End of branch path - add this complete path
+                    all_paths.append(branch_path)
 
         elif step_type == 'ABTest':
             # Create a path for each variant
@@ -293,6 +412,9 @@ class CJOFlowchartGenerator:
                 next_step = variant.get('next')
                 if next_step:
                     self._trace_paths_to_merge(steps, next_step, variant_path, all_paths, stage_idx, merge_points, visited)
+                else:
+                    # End of variant path - add this complete path
+                    all_paths.append(variant_path)
 
         elif step_type == 'WaitStep' and step_data.get('waitStepType') == 'Condition':
             # Create a path for each condition
@@ -304,12 +426,18 @@ class CJOFlowchartGenerator:
                 next_step = condition.get('next')
                 if next_step:
                     self._trace_paths_to_merge(steps, next_step, condition_path, all_paths, stage_idx, merge_points, visited)
+                else:
+                    # End of condition path - add this complete path
+                    all_paths.append(condition_path)
 
         else:
             # Regular step - continue to next
             next_step = step_data.get('next')
             if next_step:
                 self._trace_paths_to_merge(steps, next_step, new_path, all_paths, stage_idx, merge_points, visited)
+            else:
+                # End of path (no next step) - add this complete path
+                all_paths.append(new_path)
 
     def _path_leads_to_merge(self, steps: dict, path: List, merge_step_id: str) -> bool:
         """Check if a path leads to the specified merge step."""

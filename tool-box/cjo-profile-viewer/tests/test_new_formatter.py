@@ -5,7 +5,7 @@ Test the new merge hierarchy formatter.
 
 import pandas as pd
 from src.flowchart_generator import CJOFlowchartGenerator
-from src.merge_display_formatter import format_merge_hierarchy
+from src.hierarchical_step_formatter import format_hierarchical_steps
 
 def test_new_formatter():
     """Test the new formatter with the provided API response."""
@@ -100,7 +100,7 @@ def test_new_formatter():
     print("="*60)
 
     # Use the new formatter
-    formatted_steps = format_merge_hierarchy(generator)
+    formatted_steps = format_hierarchical_steps(generator)
 
     print("Generated step list with new formatter:")
     print("")

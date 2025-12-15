@@ -5,7 +5,7 @@ Test to verify the Streamlit integration works without errors.
 
 import pandas as pd
 from src.flowchart_generator import CJOFlowchartGenerator
-from src.merge_display_formatter import format_merge_hierarchy
+from src.hierarchical_step_formatter import format_hierarchical_steps
 
 def test_streamlit_integration():
     """Test that the formatter produces step_info dictionaries that work with Streamlit app."""
@@ -73,7 +73,7 @@ def test_streamlit_integration():
     print("="*50)
 
     # Use the formatter
-    formatted_steps = format_merge_hierarchy(generator)
+    formatted_steps = format_hierarchical_steps(generator)
 
     # Test that all required fields are present
     required_fields = ['step_id', 'step_type', 'stage_index', 'profile_count', 'name', 'breadcrumbs', 'stage_entry_criteria']

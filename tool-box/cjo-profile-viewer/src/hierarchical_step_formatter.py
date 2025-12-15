@@ -1,24 +1,38 @@
 #!/usr/bin/env python3
 """
-Special formatter for merge step hierarchy display.
+Hierarchical step formatter for all branching step types.
+
+Handles indented display formatting for:
+- Decision Points and their branches
+- AB Tests and their variants
+- Wait Conditions and their paths
+- Merge Points and post-merge steps
 """
 
 from typing import List, Tuple, Dict, Any
 
-def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
+def format_hierarchical_steps(generator) -> List[Tuple[str, Dict[str, Any]]]:
     """
-    Format steps with merge hierarchy in the exact format requested:
+    Format steps with hierarchical indentation for all branching step types.
+
+    Examples of formatted output:
 
     Decision: country is japan
     --- Wait 3 days
     --- Merge (merge uuid)
 
-    Decision: Excluded profiles
-    --- Merge (merge uuid)
+    AB Test: email variants
+    --- Variant A (5%): 2 profiles
+    --- Variant B (5%): 3 profiles
+    --- Control (90%): 40 profiles
 
-    Merge: (merge uuid) - this is a grouping header
-    --- wait 1 day
-    --- end
+    Wait Condition: pageview event
+    --- Path: event occurred (12 profiles)
+    --- Path: timeout (3 profiles)
+
+    Merge: (merge uuid) - grouping header
+    --- Wait 1 day
+    --- End Step
     """
 
     def get_short_uuid(uuid_string: str) -> str:
@@ -39,17 +53,54 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                     merge_points.add(step.step_id)
 
         if not merge_points:
-            # No merge points - use regular display logic
+            # No merge points - use hierarchical display logic for branching steps
             for path_idx, path in enumerate(stage.paths):
+                # Track when we encounter a hierarchical step in this path
+                found_hierarchical_step = False
+
                 for step_idx, step in enumerate(path):
                     # Skip if this step has already been processed
                     if step.step_id in processed_step_ids:
                         continue
 
-                    profile_text = f"({step.profile_count} profiles)"
-                    step_display = f"{step.name} {profile_text}"
+                    # Get shortened UUID for all steps
+                    short_uuid = get_short_uuid(step.step_id)
+                    profile_text = f"- {step.profile_count} profiles"
 
-                    formatted_steps.append((step_display, {
+                    # Apply hierarchical formatting based on step type
+                    if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path']:
+                        # Hierarchical step - use grouping header format with prefix (no profile count for parent items)
+                        if step.step_type == 'DecisionPoint_Branch':
+                            step_display = f"Decision Branch: {step.name} ({short_uuid})"
+                        elif step.step_type == 'ABTest_Variant':
+                            step_display = f"AB Test: {step.name} ({short_uuid})"
+                        elif step.step_type == 'WaitCondition_Path':
+                            step_display = f"Wait Until: {step.name} ({short_uuid})"
+                        is_grouping_header = True
+                        found_hierarchical_step = True  # Mark that we found a hierarchical step
+
+                        # Add empty line before grouping headers for visual separation
+                        if formatted_steps:
+                            formatted_steps.append(("", {
+                                'step_id': '',
+                                'step_type': 'Empty',
+                                'stage_index': stage_idx,
+                                'profile_count': 0,
+                                'name': '',
+                                'is_empty_line': True
+                            }))
+                    else:
+                        # Regular step - only indent if it comes AFTER a hierarchical step
+                        if found_hierarchical_step:
+                            step_display = f"--- {step.name} ({short_uuid}) {profile_text}"
+                            is_indented = True
+                        else:
+                            step_display = f"{step.name} ({short_uuid}) {profile_text}"
+                            is_indented = False
+                        is_grouping_header = False
+
+                    # Create step info
+                    step_info = {
                         'step_id': step.step_id,
                         'step_type': step.step_type,
                         'stage_index': step.stage_index,
@@ -59,7 +110,15 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                         'step_index': step_idx,
                         'breadcrumbs': [step.name],
                         'stage_entry_criteria': stage.entry_criteria
-                    }))
+                    }
+
+                    # Add type-specific metadata
+                    if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path']:
+                        step_info['is_branch_header'] = True
+                    elif found_hierarchical_step and step.step_type not in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path']:
+                        step_info['is_indented'] = True
+
+                    formatted_steps.append((step_display, step_info))
                     processed_step_ids.add(step.step_id)  # Mark as processed
         else:
             # Has merge points - use special hierarchy formatting
@@ -81,10 +140,11 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                 # Build breadcrumb trail for this entire path
                 for step in path:
                     if step.step_type == 'DecisionPoint_Branch':
-                        branch_breadcrumbs.append(f"Decision: {step.name}")
+                        branch_breadcrumbs.append(f"Decision Branch: {step.name}")
                     elif step.step_type == 'ABTest_Variant':
-                        ab_test_name = "ABTest"  # Could be enhanced to extract from API
-                        branch_breadcrumbs.append(f"ABTest ({ab_test_name}): {step.name}")
+                        branch_breadcrumbs.append(f"AB Test: {step.name}")
+                    elif step.step_type == 'WaitCondition_Path':
+                        branch_breadcrumbs.append(f"Wait Until: {step.name}")
                     elif not getattr(step, 'is_merge_endpoint', False):
                         branch_breadcrumbs.append(step.name)
 
@@ -92,53 +152,63 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                 path_has_grouping_header = False
 
                 for step_idx, step in enumerate(path):
-                    # Skip if this step has already been processed
-                    if step.step_id in processed_step_ids:
+                    is_merge_endpoint = getattr(step, 'is_merge_endpoint', False)
+
+                    # Skip if this step has already been processed, EXCEPT for merge endpoints
+                    # (merge endpoints should appear under each variant path that leads to them)
+                    if step.step_id in processed_step_ids and not is_merge_endpoint:
                         continue
 
-                    is_merge_endpoint = getattr(step, 'is_merge_endpoint', False)
-                    profile_text = f"({step.profile_count} profiles)"
-
-                    # Handle grouping header steps (DecisionPoint_Branch, ABTest_Variant)
+                    # Handle grouping header steps (DecisionPoint_Branch, ABTest_Variant, WaitCondition_Path)
                     if step.step_type == 'DecisionPoint_Branch':
-                        # Decision point grouping header
+                        # Decision point grouping header (no profile count for parent items)
                         decision_uuid = step.step_id.split('_branch_')[0] if '_branch_' in step.step_id else step.step_id
                         short_uuid = get_short_uuid(decision_uuid)
-                        step_display = f"Decision: {step.name} ({short_uuid})"
-                        step_breadcrumbs = [f"Decision: {step.name} ({short_uuid})"]
+                        step_display = f"Decision Branch: {step.name} ({short_uuid})"
+                        step_breadcrumbs = [f"Decision Branch: {step.name} ({short_uuid})"]
                         is_grouping_header = True
                         path_has_grouping_header = True
 
                     elif step.step_type == 'ABTest_Variant':
-                        # AB test variant grouping header
+                        # AB test variant grouping header (no profile count for parent items)
                         ab_test_uuid = step.step_id.split('_variant_')[0] if '_variant_' in step.step_id else step.step_id
                         short_uuid = get_short_uuid(ab_test_uuid)
-                        ab_test_name = "ABTest"  # Could be enhanced to extract from API
-                        step_display = f"ABTest ({ab_test_name}): {step.name} ({short_uuid})"
-                        step_breadcrumbs = [f"ABTest ({ab_test_name}): {step.name} ({short_uuid})"]
+                        step_display = f"AB Test: {step.name} ({short_uuid})"
+                        step_breadcrumbs = [f"AB Test: {step.name} ({short_uuid})"]
+                        is_grouping_header = True
+                        path_has_grouping_header = True
+
+                    elif step.step_type == 'WaitCondition_Path':
+                        # Wait condition path grouping header (no profile count for parent items)
+                        wait_uuid = step.step_id.split('_path_')[0] if '_path_' in step.step_id else step.step_id
+                        short_uuid = get_short_uuid(wait_uuid)
+                        step_display = f"Wait Until: {step.name} ({short_uuid})"
+                        step_breadcrumbs = [f"Wait Until: {step.name} ({short_uuid})"]
                         is_grouping_header = True
                         path_has_grouping_header = True
 
                     elif is_merge_endpoint:
                         # Merge endpoint step
                         short_uuid = get_short_uuid(step.step_id)
-                        step_display = f"--- Merge ({short_uuid}) {profile_text}" if path_has_grouping_header else f"Merge ({short_uuid}) {profile_text}"
+                        step_display = f"--- Merge ({short_uuid}) - {step.profile_count} profiles" if path_has_grouping_header else f"Merge ({short_uuid}) - {step.profile_count} profiles"
                         merge_breadcrumbs = branch_breadcrumbs + [f"Merge ({short_uuid})"]
                         step_breadcrumbs = merge_breadcrumbs
                         is_grouping_header = False
 
                     else:
                         # Regular step (any type: WaitStep, ActivationStep, etc.)
-                        step_display = f"--- {step.name} {profile_text}" if path_has_grouping_header else f"{step.name} {profile_text}"
+                        short_uuid = get_short_uuid(step.step_id)
+                        step_display = f"--- {step.name} ({short_uuid}) - {step.profile_count} profiles" if path_has_grouping_header else f"{step.name} ({short_uuid}) - {step.profile_count} profiles"
 
                         # Build breadcrumb trail up to this step
                         step_breadcrumbs = []
                         for i, path_step in enumerate(path):
                             if path_step.step_type == 'DecisionPoint_Branch':
-                                step_breadcrumbs.append(f"Decision: {path_step.name}")
+                                step_breadcrumbs.append(f"Decision Branch: {path_step.name}")
                             elif path_step.step_type == 'ABTest_Variant':
-                                ab_test_name = "ABTest"
-                                step_breadcrumbs.append(f"ABTest ({ab_test_name}): {path_step.name}")
+                                step_breadcrumbs.append(f"AB Test: {path_step.name}")
+                            elif path_step.step_type == 'WaitCondition_Path':
+                                step_breadcrumbs.append(f"Wait Until: {path_step.name}")
                             elif not getattr(path_step, 'is_merge_endpoint', False):
                                 step_breadcrumbs.append(path_step.name)
                                 if path_step.step_id == step.step_id:
@@ -146,7 +216,7 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                         is_grouping_header = False
 
                     # Add empty line before grouping headers for visual separation
-                    if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant'] and formatted_steps:
+                    if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path'] and formatted_steps:
                         formatted_steps.append(("", {
                             'step_id': '',
                             'step_type': 'Empty',
@@ -170,7 +240,7 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                     }
 
                     # Add type-specific metadata
-                    if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant']:
+                    if step.step_type in ['DecisionPoint_Branch', 'ABTest_Variant', 'WaitCondition_Path']:
                         step_info['is_branch_header'] = True
                     elif is_merge_endpoint:
                         step_info['is_merge_endpoint'] = True
@@ -178,7 +248,11 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                         step_info['is_indented'] = True
 
                     formatted_steps.append((step_display, step_info))
-                    processed_step_ids.add(step.step_id)  # Mark as processed
+
+                    # Only mark non-merge-endpoint steps as processed to avoid duplicates
+                    # Merge endpoints can appear under multiple variant paths
+                    if not is_merge_endpoint:
+                        processed_step_ids.add(step.step_id)
 
             # Format merge header and post-merge steps using unified approach
             # Also check for any remaining unprocessed steps that should be included
@@ -192,10 +266,9 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
                         continue
 
                     is_merge_header = getattr(step, 'is_merge_header', False)
-                    profile_text = f"({step.profile_count} profiles)"
 
                     if is_merge_header:
-                        # Merge grouping header
+                        # Merge grouping header (no profile count for parent items)
                         short_uuid = get_short_uuid(step.step_id)
                         post_merge_breadcrumbs = [f"Merge ({short_uuid})"]
                         step_display = f"Merge ({short_uuid})"
@@ -228,8 +301,9 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
 
                     else:
                         # Post-merge step (any type: WaitStep, ActivationStep, etc.)
+                        short_uuid = get_short_uuid(step.step_id)
                         post_merge_breadcrumbs.append(step.name)
-                        step_display = f"--- {step.name} {profile_text}" if merge_header_processed else f"{step.name} {profile_text}"
+                        step_display = f"--- {step.name} ({short_uuid}) - {step.profile_count} profiles" if merge_header_processed else f"{step.name} ({short_uuid}) - {step.profile_count} profiles"
 
                         step_info = {
                             'step_id': step.step_id,
@@ -293,10 +367,10 @@ def format_merge_hierarchy(generator) -> List[Tuple[str, Dict[str, Any]]]:
 
             # Now add all unprocessed steps (indented if post-merge)
             for step, path_idx, step_idx in unprocessed_steps:
-                profile_text = f"({step.profile_count} profiles)"
+                short_uuid = get_short_uuid(step.step_id)
                 is_post_merge = bool(merge_points)  # Indent if there are merge points
 
-                step_display = f"--- {step.name} {profile_text}" if is_post_merge else f"{step.name} {profile_text}"
+                step_display = f"--- {step.name} ({short_uuid}) - {step.profile_count} profiles" if is_post_merge else f"{step.name} ({short_uuid}) - {step.profile_count} profiles"
 
                 formatted_steps.append((step_display, {
                     'step_id': step.step_id,

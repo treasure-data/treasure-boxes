@@ -340,7 +340,7 @@ if all_steps and not has_merge_points:
     pass
 else:
     # Preserve merge hierarchy formatting
-    formatted_steps = merge_display_formatter.format_merge_hierarchy(
+    formatted_steps = hierarchical_step_formatter.format_hierarchical_steps(
         generator, journey_api_response
     )
 ```
