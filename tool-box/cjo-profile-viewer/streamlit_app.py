@@ -230,43 +230,86 @@ def render_step_selection_tab(generator: CJOFlowchartGenerator, column_mapper: C
         st.warning("No steps found in the journey configuration.")
         return
 
-    # Create step options for selectbox
-    step_options = {}
-    for stage_idx, stage_data in enumerate(stages_data):
-        stage_name = stage_data.get('name', f'Stage {stage_idx + 1}')
-        steps = stage_data.get('steps', {})
+    # Add helpful description
+    st.markdown("**How to use:** First select a stage from the journey, then choose a specific step within that stage to view profile details.")
 
-        # Iterate through step dictionary
-        for step_id, step_data in steps.items():
-            # Use shared utility for consistent step naming
-            step_name = get_step_display_name(step_data)
-            step_type = step_data.get('type', 'Unknown')
-            display_name = f"{stage_name} → {step_name}"
+    # Create two-column layout for stage and step selection
+    col1, col2 = st.columns(2)
 
-            # Create step info dict
-            step_info = {
-                'id': step_id,
-                'name': step_name,
-                'type': step_type,
-                'stage_idx': stage_idx,
-                'stage_name': stage_name
+    with col1:
+        # Stage selector
+        stage_options = {}
+        for stage_idx, stage_data in enumerate(stages_data):
+            stage_name = stage_data.get('name', f'Stage {stage_idx + 1}')
+            stage_options[stage_name] = {
+                'idx': stage_idx,
+                'name': stage_name,
+                'data': stage_data
             }
-            step_options[display_name] = step_info
 
-    if not step_options:
-        st.warning("No steps available for selection.")
-        return
+        if not stage_options:
+            st.warning("No stages available for selection.")
+            return
 
-    # Step selector
-    selected_display_name = st.selectbox(
-        "Select a step to view details:",
-        options=list(step_options.keys()),
-        key="step_selector"
-    )
+        selected_stage_name = st.selectbox(
+            "1. Select a stage:",
+            options=list(stage_options.keys()),
+            key="stage_selector",
+            index=0,  # Default to first stage
+            help="Choose a stage from the customer journey"
+        )
 
-    if selected_display_name:
-        selected_step = step_options[selected_display_name]
-        render_step_details(selected_step, generator, column_mapper)
+        # Show stage info
+        if selected_stage_name:
+            selected_stage = stage_options[selected_stage_name]
+            stage_data = selected_stage['data']
+            steps_count = len(stage_data.get('steps', {}))
+            st.caption(f"Stage has {steps_count} step{'s' if steps_count != 1 else ''}")
+
+    with col2:
+        # Step selector (updates based on selected stage)
+        if selected_stage_name:
+            selected_stage = stage_options[selected_stage_name]
+            stage_idx = selected_stage['idx']
+            stage_data = selected_stage['data']
+            steps = stage_data.get('steps', {})
+
+            if not steps:
+                st.warning("No steps found in the selected stage.")
+                return
+
+            # Create step options for the selected stage
+            step_options = {}
+            for step_id, step_data in steps.items():
+                # Use shared utility for consistent step naming (without stage name prefix)
+                step_name = get_step_display_name(step_data)
+                step_type = step_data.get('type', 'Unknown')
+
+                # Create step info dict
+                step_info = {
+                    'id': step_id,
+                    'name': step_name,
+                    'type': step_type,
+                    'stage_idx': stage_idx,
+                    'stage_name': selected_stage_name
+                }
+                step_options[step_name] = step_info
+
+            selected_step_name = st.selectbox(
+                "2. Select a step:",
+                options=list(step_options.keys()),
+                key=f"step_selector_{stage_idx}",  # Unique key per stage
+                help="Choose a specific step to view customer profiles"
+            )
+
+            # Show step type info and render details
+            if selected_step_name:
+                selected_step = step_options[selected_step_name]
+                step_type = selected_step.get('type', 'Unknown')
+                st.caption(f"Step type: {step_type}")
+
+                st.markdown("---")
+                render_step_details(selected_step, generator, column_mapper)
 
 
 def get_step_column_name(step_id: str, stage_idx: int) -> str:

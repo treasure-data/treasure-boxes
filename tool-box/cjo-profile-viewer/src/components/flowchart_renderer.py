@@ -10,6 +10,7 @@ from typing import Dict, List
 from ..flowchart_generator import CJOFlowchartGenerator
 from ..column_mapper import CJOColumnMapper
 from ..styles import load_flowchart_styles
+from ..utils.step_display import get_step_display_name
 
 
 def _get_step_column_name(step_id: str, stage_idx: int) -> str:
@@ -146,8 +147,8 @@ def create_flowchart_html(generator: CJOFlowchartGenerator, column_mapper: CJOCo
         html += '<div class="path">'
 
         for i, (step_id, step_data_dict) in enumerate(steps.items()):
-            # Extract step name with fallbacks
-            step_name = step_data_dict.get('name', '') or step_data_dict.get('stepName', '') or step_id or 'Unknown Step'
+            # Use shared utility for consistent step naming
+            step_name = get_step_display_name(step_data_dict)
             step_type = step_data_dict.get('type', 'Unknown')
 
             # Create step object for helper functions
