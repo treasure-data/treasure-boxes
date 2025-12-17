@@ -263,7 +263,7 @@ function showProfileModal(stepDataKey) {
 The application supports pressing Enter in the Journey ID field to automatically trigger configuration loading:
 
 ```python
-# In streamlit_app.py
+# In app.py
 journey_id = st.text_input(
     "Journey ID",
     placeholder="e.g., 12345",

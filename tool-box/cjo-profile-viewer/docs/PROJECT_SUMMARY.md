@@ -28,7 +28,7 @@ src/
 ├── flowchart_generator.py          # Journey structure processing
 └── merge_display_formatter.py      # Merge step formatting
 
-streamlit_app.py                    # Main application (452 lines)
+app.py                    # Main application (452 lines)
 ```
 
 ### Core Components
@@ -160,7 +160,7 @@ WHERE intime_journey IS NOT NULL
 ### **Getting Started**
 1. **Launch Application**:
    ```bash
-   streamlit run streamlit_app.py
+   streamlit run app.py
    ```
 
 2. **Load Journey Configuration**:
