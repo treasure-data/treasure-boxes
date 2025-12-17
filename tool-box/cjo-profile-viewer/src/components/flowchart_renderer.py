@@ -59,7 +59,7 @@ def _get_step_profile_data(generator: CJOFlowchartGenerator, step) -> List[Dict]
 
 def create_flowchart_html(generator: CJOFlowchartGenerator) -> str:
     """
-    Create an HTML/CSS flowchart visualization.
+    Create an HTML/CSS flowchart visualization with horizontal stage layout.
 
     Args:
         generator: CJOFlowchartGenerator instance
@@ -88,24 +88,23 @@ def create_flowchart_html(generator: CJOFlowchartGenerator) -> str:
         'Unknown': '#f8eac5'               # Unknown - default to yellow/beige
     }
 
-    # Build HTML content
+    # Build HTML content with horizontal layout (always)
     html = f'''
     {css}
 
-    <div class="flowchart-container">
+    <div class="flowchart-container horizontal">
         <div class="journey-header">
-            <strong>Journey:</strong> {summary.get('journey_name', 'N/A')} (ID: {summary.get('journey_id', 'N/A')})<br>
-            <strong>Audience ID:</strong> {summary.get('audience_id', 'N/A')}<br>
-            <strong>Total Profiles:</strong> {summary.get('total_profiles', 0)}<br>
-            <strong>Stages:</strong> {len(summary.get('stages', []))}
+            <strong>Journey:</strong> {summary.get('journey_name', 'N/A')} (ID: {summary.get('journey_id', 'N/A')})
         </div>
+
+        <div class="stages-wrapper">
     '''
 
     # Collect step data for JavaScript
     step_data = {}
 
-    # Get hierarchical steps using the same logic as dropdown
-    hierarchical_steps = format_hierarchical_steps(generator)
+    # Get hierarchical steps for canvas (without profile counts and UUIDs in names)
+    hierarchical_steps = format_hierarchical_steps(generator, include_profile_counts=False, include_uuid=False)
 
     # Group hierarchical steps by stage
     stages_steps = {}
@@ -158,12 +157,13 @@ def create_flowchart_html(generator: CJOFlowchartGenerator) -> str:
             # Get color for step type
             color = step_type_colors.get(step_type, step_type_colors['Unknown'])
 
-            # Create tooltip content
-            tooltip_content = f"Type: {step_type}"
-            if not is_branch_header:  # Only show profile count for non-header steps
-                tooltip_content += f"\\nProfiles: {profile_count}"
-            if step_id:
-                tooltip_content += f"\\nID: {step_id[:8]}..."
+            # Create tooltip content - show only shortened UUID
+            def get_short_uuid(uuid_string: str) -> str:
+                """Extract the first part of a UUID (before first hyphen)."""
+                return uuid_string.split('-')[0] if uuid_string else uuid_string
+
+            short_uuid = get_short_uuid(step_id) if step_id else ""
+            tooltip_content = f"Step UUID: {short_uuid}" if short_uuid else "No UUID"
 
             # Apply CSS classes based on hierarchy
             css_classes = "step-box"
@@ -197,6 +197,9 @@ def create_flowchart_html(generator: CJOFlowchartGenerator) -> str:
 
         html += '</div>'  # Close paths-container div
         html += '</div>'  # Close stage-container div
+
+    # Close stages-wrapper div
+    html += '</div>'  # Close stages-wrapper div
 
     # Convert step data to JSON
     step_data_json = json.dumps(step_data)

@@ -282,8 +282,8 @@ def render_step_selection_tab(generator: CJOFlowchartGenerator, column_mapper: C
 
         # Use hierarchical formatter to get properly formatted step display
         try:
-            # Get hierarchical formatted steps for all stages
-            formatted_steps = format_hierarchical_steps(generator)
+            # Get hierarchical formatted steps for dropdown (with profile counts and UUIDs in names)
+            formatted_steps = format_hierarchical_steps(generator, include_profile_counts=True, include_uuid=True)
 
             # Build step options from hierarchical formatter output, filtering for selected stage
             step_options = {}
