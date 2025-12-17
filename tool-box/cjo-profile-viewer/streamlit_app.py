@@ -470,14 +470,7 @@ def render_step_details(step_info: Dict, generator: CJOFlowchartGenerator, colum
     try:
         step_profiles = get_step_profiles(generator.profile_data, step_id, stage_idx)
 
-        if not step_profiles:
-            step_column = get_step_column_name(step_id, stage_idx)
-            if step_column not in generator.profile_data.columns:
-                st.warning("No profile data available for this step.")
-            else:
-                st.info("No profiles are currently in this step.")
-            return
-
+        # Handle profile display (only if there are profiles)
         if step_profiles:
             # Show profiles with search functionality
             search_term = st.text_input("Filter profiles by customer ID:", key=f"search_{step_id}")
@@ -523,46 +516,53 @@ def render_step_details(step_info: Dict, generator: CJOFlowchartGenerator, colum
                         file_name=f"step_{step_id}_profiles.csv",
                         mime="text/csv"
                     )
-
-            # Display step information after profile list
-            st.markdown("---")
-            st.markdown(f"**Step:** {step_name}")
-            st.markdown(f"**Type:** {step_type}")
-            if step_id:
-                st.markdown(f"**ID:** {step_id}")
-
-            # Show SQL query used for this step
-            st.markdown("---")
-            st.markdown("**📊 SQL Query Used:**")
-            st.caption("This shows the equivalent SQL query that would be used to retrieve the profile data displayed above.")
-
-            selected_attributes = SessionStateManager.get("selected_attributes", [])
+        else:
+            # Show appropriate message when no profiles
             step_column = get_step_column_name(step_id, stage_idx)
-            sql_query = generate_step_query_sql(
-                step_column,
-                generator.profile_data.columns.tolist(),
-                selected_attributes
-            )
+            if step_column not in generator.profile_data.columns:
+                st.warning("No profile data available for this step.")
+            else:
+                st.info("No profiles are currently in this step.")
 
-            # Show query in expandable section for better UI
-            with st.expander("🔍 View SQL Query", expanded=False):
-                st.code(sql_query, language="sql")
+        # Always display step information regardless of profile count
+        st.markdown("---")
+        st.markdown(f"**Step:** {step_name}")
+        st.markdown(f"**Type:** {step_type}")
+        if step_id:
+            st.markdown(f"**ID:** {step_id}")
 
-                # Add helpful explanation
-                st.markdown("**Query Explanation:**")
-                st.markdown(f"- **Step Entry**: `{step_column} IS NOT NULL` (profiles who entered this step)")
+        # Show SQL query used for this step
+        st.markdown("---")
+        st.markdown("**📊 SQL Query Used:**")
+        st.caption("This shows the equivalent SQL query that would be used to retrieve the profile data displayed above.")
 
-                step_outtime_column = step_column.replace('intime_', 'outtime_')
-                if step_outtime_column in generator.profile_data.columns:
-                    st.markdown(f"- **Step Exit**: `{step_outtime_column} IS NULL` (exclude profiles that exited this step)")
+        selected_attributes = SessionStateManager.get("selected_attributes", [])
+        step_column = get_step_column_name(step_id, stage_idx)
+        sql_query = generate_step_query_sql(
+            step_column,
+            generator.profile_data.columns.tolist(),
+            selected_attributes
+        )
 
-                if 'outtime_journey' in generator.profile_data.columns:
-                    st.markdown("- **Journey Filter**: `outtime_journey IS NULL` (exclude profiles that left the journey)")
+        # Show query in expandable section for better UI
+        with st.expander("🔍 View SQL Query", expanded=False):
+            st.code(sql_query, language="sql")
 
-                if selected_attributes:
-                    st.markdown(f"- **Selected Attributes**: {', '.join(selected_attributes)}")
-                else:
-                    st.markdown("- **Columns**: Only `cdp_customer_id` (no additional attributes selected)")
+            # Add helpful explanation
+            st.markdown("**Query Explanation:**")
+            st.markdown(f"- **Step Entry**: `{step_column} IS NOT NULL` (profiles who entered this step)")
+
+            step_outtime_column = step_column.replace('intime_', 'outtime_')
+            if step_outtime_column in generator.profile_data.columns:
+                st.markdown(f"- **Step Exit**: `{step_outtime_column} IS NULL` (exclude profiles that exited this step)")
+
+            if 'outtime_journey' in generator.profile_data.columns:
+                st.markdown("- **Journey Filter**: `outtime_journey IS NULL` (exclude profiles that left the journey)")
+
+            if selected_attributes:
+                st.markdown(f"- **Selected Attributes**: {', '.join(selected_attributes)}")
+            else:
+                st.markdown("- **Columns**: Only `cdp_customer_id` (no additional attributes selected)")
 
     except Exception as e:
         st.error(f"Error loading step details: {str(e)}")
@@ -594,29 +594,16 @@ def render_data_tab(generator: CJOFlowchartGenerator, column_mapper: CJOColumnMa
     """Render the data and mappings tab."""
     st.subheader("Data & Mappings")
 
-    # Journey API Response Summary
-    st.markdown("### 📋 Journey Configuration")
-    api_response = SessionStateManager.get('api_response')
-    if api_response:
-        journey_summary = generator.get_journey_summary()
-        st.json({
-            "journey_id": journey_summary.get('journey_id'),
-            "journey_name": journey_summary.get('journey_name'),
-            "audience_id": journey_summary.get('audience_id'),
-            "stages_count": len(journey_summary.get('stages', [])),
-            "total_profiles": journey_summary.get('total_profiles', 0)
-        })
-
-    # Column Mappings
+    # Column Mappings (moved to top)
     st.markdown("### 🗂️ Column Mappings")
     st.caption("Technical column names → Display names")
 
     profile_data = SessionStateManager.get('profile_data')
     if profile_data is not None and not profile_data.empty:
-        # Show sample of column mappings
-        sample_columns = profile_data.columns.tolist()[:10]
+        # Show ALL column mappings
+        all_columns = profile_data.columns.tolist()
         mapping_data = []
-        for col in sample_columns:
+        for col in all_columns:
             display_name = column_mapper.map_column_to_display_name(col)
             mapping_data.append({
                 "Technical Name": col,
@@ -624,23 +611,32 @@ def render_data_tab(generator: CJOFlowchartGenerator, column_mapper: CJOColumnMa
             })
 
         st.dataframe(pd.DataFrame(mapping_data), use_container_width=True)
-
-        # Profile Data Preview
-        st.markdown("### 📊 Profile Data Preview")
-        st.caption(f"Showing first 5 rows of {len(profile_data)} total profiles")
-        st.dataframe(profile_data.head(), use_container_width=True)
-
-        # Data Info
-        st.markdown("### ℹ️ Data Information")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Total Profiles", len(profile_data))
-        with col2:
-            st.metric("Total Columns", len(profile_data.columns))
-        with col3:
-            st.metric("Selected Attributes", len(SessionStateManager.get("selected_attributes", [])))
     else:
-        st.info("Load profile data to see column mappings and data preview.")
+        st.info("Load profile data to see column mappings.")
+
+    # Journey API Response and Request Details
+    st.markdown("### 📋 Journey Configuration")
+
+    api_response = SessionStateManager.get('api_response')
+    journey_id = SessionStateManager.get_journey_id()
+
+    if api_response and journey_id:
+        # Show the API request details with redacted key
+        st.markdown("#### API Request Made:")
+        api_request_info = {
+            "method": "GET",
+            "url": f"https://api-cdp.treasuredata.com/entities/journeys/{journey_id}",
+            "headers": {
+                "Authorization": "TD1 [REDACTED_API_KEY]",
+                "Content-Type": "application/json"
+            }
+        }
+        st.code(f"curl -X GET '{api_request_info['url']}' \\\n  -H 'Authorization: TD1 [REDACTED_API_KEY]' \\\n  -H 'Content-Type: application/json'", language="bash")
+
+        st.markdown("#### Full API Response:")
+        st.json(api_response)
+    else:
+        st.info("Load journey configuration to see API request and response details.")
 
 
 def main():
