@@ -1,0 +1,23 @@
+.main {
+    background-color: #2C3E50;
+}
+
+.stTitle {
+    color: white;
+}
+
+.stMarkdown {
+    color: white;
+}
+
+.stSelectbox label {
+    color: white;
+}
+
+.stTextInput label {
+    color: white;
+}
+
+.stDataFrame {
+    background-color: white;
+}

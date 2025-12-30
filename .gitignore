@@ -5,3 +5,4 @@
 *.pyc
 out/
 td-bulk-import.log
+/tool-box/cjo-profile-viewer/debug
