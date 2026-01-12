@@ -1,0 +1,33 @@
+#timezone: Asia/Tokyo
+#timezone: PST
+
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: sample_datasets # dummy to avoid error on create_databases
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: ["ml_datasets", "ml_test"]
+
++load_datasets:
+  ipynb>:
+    docker:
+      task_mem: 64g
+    notebook: ml_datasets
+    output_database: ml_datasets
+    datasets: ts_airline
+
++run_ts_forecast:
+  ipynb>:
+    docker:
+      task_mem: 256g # 64g/128g/256g/384g/512g
+    notebook: ts_forecast
+    train_table: ml_datasets.ts_airline
+    tstamp_column: period
+    target_column: number_of_airline_passengers
+    forecast_length: 30
+    output_table: ml_test.ts_airline_predicted
+    time_limit: 10 * 60 # 10 min by the default
+
