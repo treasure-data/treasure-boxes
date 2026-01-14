@@ -45,7 +45,8 @@ Available parameters for `result_settings` are here.
 
 - container: (string, required)
 - path_prefix: (string, required)
-- file_ext: (string, required)
+- file_ext: (string)
+- blob_type: (string("UNSPECIFIED"|"BLOCK_BLOB"), default "UNSPECIFIED")
 - format: (string(csv|tsv), default csv)
 - compression: (string(None|gz), default None)
 - header_line: (boolean, default true)
