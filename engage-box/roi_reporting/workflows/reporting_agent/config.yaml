@@ -20,8 +20,6 @@ td:
 
   # API settings
   api_server: "https://api.treasuredata.com"
-  presto_api: "https://api-presto.treasuredata.com"
-  plazma_api: "https://api-plazma.treasuredata.com"
   cdp_api: "https://api-cdp.treasuredata.com"
   engage_api: "https://engage-api.treasuredata.com"
 
