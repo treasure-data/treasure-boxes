@@ -25,8 +25,6 @@ schedule:
     _env:
       TD_API_KEY: ${secret:td.apikey}
       TD_API_SERVER: ${td.api_server}
-      TD_PRESTO_API: ${td.presto_api}
-      TD_PLAZMA_API: ${td.plazma_api}
       CDP_API_BASE: ${td.cdp_api}
       ENGAGE_API_BASE: ${td.engage_api}
     docker:
@@ -77,8 +75,6 @@ schedule:
     _env:
       TD_API_KEY: ${secret:td.apikey}
       TD_API_SERVER: ${td.api_server}
-      TD_PRESTO_API: ${td.presto_api}
-      TD_PLAZMA_API: ${td.plazma_api}
     docker:
       image: digdag/digdag-python:3.10.1
 

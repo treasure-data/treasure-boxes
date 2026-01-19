@@ -10,8 +10,6 @@ which serves as a reference for linking campaigns, journeys, and activations.
 Required environment variables:
 - TD_API_KEY: Treasure Data API key
 - TD_API_SERVER: Treasure Data API server URL
-- TD_PRESTO_API: TD Presto API URL
-- TD_PLAZMA_API: TD Plazma API URL
 - CDP_API_BASE: CDP API base URL (defaults to https://api-cdp.treasuredata.com)
 - ENGAGE_API_BASE: Engage API base URL (defaults to https://engage-api.treasuredata.com)
 """
