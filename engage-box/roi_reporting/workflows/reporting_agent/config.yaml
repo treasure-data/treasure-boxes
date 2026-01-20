@@ -14,15 +14,19 @@ td:
   # Email domains for event collection
   # List all domains that have email_events tables
   email_domains:
-    - "example_com"
-    - "customer_com"
+    - "delivery_email_example_com"
     # Add more domains as needed
 
   # API settings
+  # US region
   api_server: "https://api.treasuredata.com"
   cdp_api: "https://api-cdp.treasuredata.com"
   engage_api: "https://engage-api.treasuredata.com"
 
+  # Tokyo region
+  #api_server: "https://api.treasuredata.co.jp"
+  #cdp_api: "https://api-cdp.treasuredata.co.jp"
+  #engage_api: "https://engage-api.treasuredata.co.jp"
 
   # Revenue generation settings
   revenue_generation:
