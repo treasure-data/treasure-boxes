@@ -220,6 +220,18 @@ Additional scripts for sample data generation:
 scripts/reporting_agent/generate_revenue_data.py
 ```
 
+## Schema of Revenue Table
+
+| Column Name | Data Type | Description |
+| :--- | :--- | :--- |
+| conversion_id | string | A unique ID for the conversion. |
+| email_hash | string | The ID of the user who converted. |
+| conversion_timestamp | string | The timestamp of the conversion. |
+| total_revenue | double | The total revenue for the order. |
+| attribution_type | string | The type of attribution ('direct' or 'contributed'). |
+| campaign_id | string | The ID of the campaign. |
+| custom_event_id | string | A custom ID used for linking to campaigns/journeys. |
+
 ## Important Notes
 
 - This workflow is designed to be run by the PS team
