@@ -17,19 +17,24 @@ reporting_agent/
 ├── README.md                 # This document
 ├── config.yaml               # Configuration file
 ├── report_preparation.dig    # Main workflow file (includes revenue generation)
-└── queries/                  # SQL query files
-    ├── daily_summary.sql           # Daily Summary table query
-    ├── deduplicate_email_events.sql # Email events deduplication query
-    ├── email_events.sql            # Email Events collection query
-    └── merge_summary_data.sql      # Summary data merge query
+├── queries
+│   ├── daily_summary.sql            # Daily Summary table query
+│   ├── deduplicate_email_events.sql # Email events deduplication query
+│   ├── email_events.sql             # Email Events collection query
+│   └── merge_summary_data.sql       # Summary data merge query
+├── revenue_generation.dig
+└── scripts
+    └── reporting_agent
+        ├── __init__.py
+        ├── events_master.py
+        ├── generate_revenue_data.py
+        └── setup_test_tables.py
 ```
 
 ## Configuration
 
 The `config.yaml` file allows you to configure:
 
-- Database name
-- Table names (Events Master, Email Events, Daily Summary, etc.)
 - List of email domains
 - API endpoints
 - Revenue generation settings
@@ -39,18 +44,29 @@ The `config.yaml` file allows you to configure:
 ### Prerequisites
 
 - Access to Treasure Data environment
+- Custom Scripts is enabled
 - API keys required for workflow execution
 - User defined workflow setup for execution
 
 ### Setup
 
-1. Ensure the following tables exist:
-   - events_master (Event master table)
-   - email_events (Email events table)
-   - revenue_table (Revenue data table)
-   - daily_summary (Daily summary table)
+1. Create Database named `engage_roi_reporting`
 
-2. Edit the `config.yaml` file to match your environment
+1. Prepare Revenue data table named `revenue_table` under `engage_roi_reporting` database
+
+1. Edit the `config.yaml` file to match your environment after you download this example
+    1. Set email_domains  
+    When you send emails using Engage Studio, a database with a name beginning with "delivery_email_" is generated. Please list that database name under `email_domains` instead of the existing database name, `delivery_email_example_com`.
+
+    1. Set endpoint  
+    Please set the endpoints that matches the Treasure Data region you are using. In this example, the US region endpoints are set. If you are using the Tokyo region, please comment out the US region endpoints and use the commented out endpoints.
+
+    1. Upload your project  
+    Upload the project using `td workflow push` command in the same directory as `report_preparation.dig`.
+
+    1. Register Master Key(API Key) to Secret  
+    Please register Master Key to the secret of uploaded project. The name of the Secret is `td.apikey`.
+
 
 ### Scheduled Execution
 
