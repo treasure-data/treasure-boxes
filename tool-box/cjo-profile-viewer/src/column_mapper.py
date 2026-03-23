@@ -163,6 +163,160 @@ class CJOColumnMapper:
 
         return 'Unknown'
 
+    def get_timeline_display_name(self, column_name: str) -> str:
+        """
+        Enhanced mapping for timeline-specific display with better formatting.
+
+        All events use the format: Enter|Exit (event name)
+
+        Args:
+            column_name: Technical column name from timeline query
+
+        Returns:
+            Human-readable timeline event name in "Enter|Exit (event)" format
+        """
+        # Determine direction prefix
+        if column_name.startswith('intime_'):
+            prefix = 'Enter'
+        elif column_name.startswith('outtime_'):
+            prefix = 'Exit'
+        else:
+            prefix = None
+
+        # Handle auxiliary table columns (no intime/outtime prefix)
+        if any(aux in column_name for aux in ['jump_history', 'reentry_history', 'standby']):
+            if 'jump_history' in column_name:
+                return 'Cross-Journey Jump'
+            elif 'reentry_history' in column_name:
+                return 'Re-entry'
+            elif 'standby' in column_name:
+                return 'Pending Jump'
+
+        # Get the base display name from the standard mapper
+        display_name = self.map_column_to_display_name(column_name)
+
+        if display_name == 'Unknown':
+            event_label = column_name
+        else:
+            # Strip the trailing "(Entry)" / "(Exit)" that map_column_to_display_name adds
+            event_label = re.sub(r'\s*\((Entry|Exit)\)$', '', display_name).strip()
+
+            # Special labels for journey/goal/milestone
+            if column_name == 'intime_journey':
+                event_label = 'Journey'
+            elif column_name == 'outtime_journey':
+                event_label = 'Journey'
+            elif column_name == 'intime_goal':
+                event_label = 'Goal'
+            elif re.match(r'^(intime|outtime)_stage_\d+$', column_name):
+                stage_match = re.search(r'stage_(\d+)', column_name)
+                stage_num = stage_match.group(1) if stage_match else '?'
+                event_label = f'Stage {stage_num}'
+            elif re.match(r'^intime_stage_\d+_milestone$', column_name):
+                event_label = re.sub(r'\s*\((Entry|Exit)\)$', '', display_name).strip()
+
+        if prefix:
+            return f'{prefix} - {event_label}'
+        return event_label
+
+    def is_timeline_column(self, column_name: str) -> bool:
+        """
+        Check if column represents a timeline event.
+
+        Args:
+            column_name: Technical column name
+
+        Returns:
+            True if column is a timeline event column
+        """
+        # Check for standard timeline columns
+        if column_name.startswith(('intime_', 'outtime_')):
+            return True
+
+        # Check for auxiliary table columns
+        if any(aux in column_name for aux in ['jump_history', 'reentry_history', 'standby']):
+            return True
+
+        return False
+
+    def get_event_type_from_column(self, column_name: str) -> str:
+        """
+        Determine timeline event type from column name.
+
+        Args:
+            column_name: Technical column name
+
+        Returns:
+            Event type string for timeline categorization
+        """
+        if column_name.startswith('intime_'):
+            if 'goal' in column_name:
+                return 'goal_achieved'
+            elif 'milestone' in column_name:
+                return 'milestone'
+            elif 'journey' in column_name:
+                return 'journey_entry'
+            elif 'stage' in column_name and not any(x in column_name for x in ['milestone', 'exit']):
+                return 'stage_entry'
+            else:
+                return 'step_entry'
+
+        elif column_name.startswith('outtime_'):
+            if 'journey' in column_name:
+                return 'journey_exit'
+            elif 'stage' in column_name:
+                return 'stage_exit'
+            else:
+                return 'step_exit'
+
+        elif any(aux in column_name for aux in ['jump_history', 'reentry_history', 'standby']):
+            return 'cross_journey'
+
+        else:
+            return 'unknown'
+
+    def get_timeline_stage_name(self, stage_index: int) -> str:
+        """
+        Get human-readable stage name for timeline display.
+
+        Args:
+            stage_index: Stage index number
+
+        Returns:
+            Human-readable stage name
+        """
+        if stage_index < len(self.stages):
+            stage = self.stages[stage_index]
+            stage_name = stage.get('name', f'Stage {stage_index}')
+            return stage_name
+        return f'Stage {stage_index}'
+
+    def get_timeline_step_name(self, step_uuid: str, stage_index: Optional[int] = None) -> str:
+        """
+        Get human-readable step name for timeline display.
+
+        Args:
+            step_uuid: Step UUID (with underscores)
+            stage_index: Optional stage index for context
+
+        Returns:
+            Human-readable step name
+        """
+        step_info = self.step_map.get(step_uuid)
+        if step_info:
+            step_data = step_info['data']
+            step_type = step_data.get('type', 'Unknown')
+
+            # Use existing step display logic from utils
+            from .utils.step_display import get_step_display_name
+            try:
+                return get_step_display_name(step_data)
+            except:
+                # Fallback if import fails
+                return step_data.get('name', f'{step_type} Step')
+
+        return f'Step {step_uuid[:8]}...'  # Show first 8 chars of UUID
+
     def _get_milestone_name(self, stage_index: int) -> Optional[str]:
         """Get milestone name for a stage."""
         if stage_index < len(self.stages):

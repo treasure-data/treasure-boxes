@@ -21,3 +21,9 @@
 .stDataFrame {
     background-color: white;
 }
+
+div[data-testid="stToast"] {
+    background-color: #dce8f5;
+    color: #1a3a5c;
+    border: 1px solid #a8c8e8;
+}

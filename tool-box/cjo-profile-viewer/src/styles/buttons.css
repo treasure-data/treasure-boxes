@@ -1,12 +1,16 @@
 .stButton > button[data-testid="baseButton-primary"],
-.stButton > button[kind="primary"] {
+.stButton > button[kind="primary"],
+.stButton > button[data-testid="stBaseButton-primary"],
+div[data-testid="stButton"] > button {
     background-color: #0066CC !important;
     border-color: #0066CC !important;
     color: white !important;
 }
 
 .stButton > button[data-testid="baseButton-primary"]:hover,
-.stButton > button[kind="primary"]:hover {
+.stButton > button[kind="primary"]:hover,
+.stButton > button[data-testid="stBaseButton-primary"]:hover,
+div[data-testid="stButton"] > button:hover {
     background-color: #0052A3 !important;
     border-color: #0052A3 !important;
     color: white !important;
