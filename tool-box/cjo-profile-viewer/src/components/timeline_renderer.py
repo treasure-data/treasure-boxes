@@ -150,12 +150,8 @@ def create_grouped_event_html(
     Returns:
         HTML string for the event
     """
-    # Build display name with technical name in parentheses if requested
-    display_name = event.display_name
-    if show_technical_name and event.technical_name:
-        display_name = f"{event.display_name} ({event.technical_name})"
-
     # Split "Enter - ..." or "Exit - ..." into styled prefix and label
+    display_name = event.display_name
     if display_name.startswith("Enter - "):
         prefix_html = '<span class="event-prefix event-enter">Enter</span>'
         label = display_name[len("Enter - "):]
@@ -166,7 +162,11 @@ def create_grouped_event_html(
         prefix_html = ""
         label = display_name
 
-    event_text = f'{prefix_html}<span class="event-label"> - {label}</span>' if prefix_html else f'<span class="event-label">{label}</span>'
+    technical_html = ""
+    if show_technical_name and event.technical_name:
+        technical_html = f' <code class="event-technical">{event.technical_name}</code>'
+
+    event_text = f'{prefix_html}<span class="event-label"> - {label}</span>{technical_html}' if prefix_html else f'<span class="event-label">{label}</span>{technical_html}'
 
     html_parts = [
         '<div class="grouped-event">',
@@ -338,6 +338,16 @@ def get_timeline_css() -> str:
 
     .event-label {
         color: #495057;
+    }
+
+    .event-technical {
+        font-size: 11px;
+        font-family: monospace;
+        background: #e9ecef;
+        color: #6c757d;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-weight: normal;
     }
 
     /* Legacy timeline styles for backward compatibility */
