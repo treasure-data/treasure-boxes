@@ -1,0 +1,97 @@
+# Agent Tool Configuration
+# ROI Reporting Agent — AI Agent Foundry tool settings
+#
+# This file defines all tools to be configured for the agent.
+# Replace <DATABASE_NAME> with your actual database name containing ROI reporting tables
+#
+# To deploy via CLI:
+#   tdx llm project create "ROI Reporting Agent"
+#   tdx agent push . -f
+
+tools:
+  # ── Data Access ──────────────────────────────────────────
+
+  - function_name: list_columns
+    function_description: >
+      Get data schema. Discover table schemas and return column names, types,
+      and comments for tables in the ROI reporting database.
+    target: knowledge_base
+    target_knowledge_base: <DATABASE_NAME>
+    target_function: List columns
+
+  - function_name: query_data
+    function_description: >
+      Run Presto/Trino query against the ROI reporting database.
+      Max 100 rows returned. Use GROUP BY aggregations. Never SELECT *.
+      If result contains [TRUNCATED], use OFFSET and LIMIT for pagination.
+    target: knowledge_base
+    target_knowledge_base: <DATABASE_NAME>
+    target_function: Query data directly (Presto SQL)
+
+  - function_name: Read_OverallSummary_Spec
+    function_description: >
+      Spec for OverallSummary report. Read the Overall Summary report
+      specification from knowledge base.
+    target: knowledge_base
+    target_knowledge_base: OverallSummary_Spec
+    target_function: Read
+
+  - function_name: Read_CampaignDetails_Spec
+    function_description: >
+      Spec for Individual Campaign Detail Report. Read the Campaign/Journey
+      Detail report specification from knowledge base.
+    target: knowledge_base
+    target_knowledge_base: CampaignDetails_Spec
+    target_function: Read
+
+  # ── Output ───────────────────────────────────────────────
+
+  - output_name: renderReactApp
+    function_name: renderReactApp
+    function_description: >
+      Generates React components using Tailwind CSS. Use ONLY when explicitly
+      requested (React, PDF, Dashboard). STRICT: Single file, export default.
+      NO external libs (no lucide-react). Use inline SVGs. Self-contained.
+      Render visual content ONLY; NO print/download buttons (system handled).
+    output_type: Artifact
+    artifact_content_type: React
+
+  - output_name: text_in_form
+    function_name: text_in_form
+    function_description: >
+      Out text with MD format. Use this when you want to output an error message.
+    output_type: Artifact
+    artifact_content_type: Text
+
+  - output_name: ":plotly:"
+    function_name: new_plot
+    function_description: >
+      Provide visualization for analysis result by rendering charts using Plotly.js.
+      - Use the color scheme: ["B4E3E3", "ABB3DB", "D9BFDF", "F8E1B0", "8FD6D4",
+        "828DCA", "C69ED0", "F5D389", "6AC8C6", "5867B8", "B37EC0", "F1C461",
+        "44BAB8", "2E41A6", "8CC97E", "A05EB0"]
+      - For charts with more than three categories, actively use updatemenus
+      - When summarizing multiple analysis, combine relevant charts into a single
+        dashboard using Plotly's grid layout (e.g., grid: {rows: 2, columns: 2,
+        pattern: 'independent'}) and ensure no elements overlap
+      - Prevent text overlap by:
+        * Include adequate margins: {l: 80, r: 80, t: 100, b: 80}
+        * For pie charts with small segments (<5%), use textinfo: 'none' and rely
+          on legend instead of labels
+        * Set minimum dashboard dimensions: height: 600, width: 1000
+        * For grid layouts, use wider domain spacing with 0.1 gap: [0, 0.45] and
+          [0.55, 1]
+    output_type: Custom
+    json_schema:
+      type: object
+      properties:
+        data:
+          type: array
+          description: Plotly.js data JSON objects
+          items:
+            type: object
+        layout:
+          type: object
+          description: Plotly.js layout JSON object
+      required:
+        - data
