@@ -1,0 +1,28 @@
+timezone: Asia/Tokyo
+_export:
+  s3:
+    bucket: td-test-bucket
+    path_prefix: files
+    upload_path_prefix: with_filename
+    datafile: data.tmp
+  td:
+    database: database_name
+    table: master_with_filename
+    endpoint: api.treasuredata.com
+
++read_s3files:
+
+  py>: s3_filename_add.main_proc
+  _env:
+    s3_access_key: ${secret:s3.access_key_id}
+    s3_secret_key: ${secret:s3.secret_access_key}
+    s3_bucket: ${s3.bucket}
+    path_prefix: ${s3.path_prefix}
+    upload_path_prefix: ${s3.upload_path_prefix}
+    datafile: ${s3.datafile}
+
+  docker:
+    image: "digdag/digdag-python:3.9"
+
++load_from_s3:
+  td_load>: load_s3.yml
