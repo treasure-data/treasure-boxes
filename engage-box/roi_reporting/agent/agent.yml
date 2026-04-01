@@ -1,0 +1,17 @@
+llm_project: "ROI Reporting Agent"
+name: "TD-Managed: Dashboard Viz"
+model: claude-4.5-sonnet
+max_tool_iterations: 4
+temperature: 0
+system_prompt_file: system_prompt.md
+knowledge_bases:
+  - name: OverallSummary_Spec
+    type: text
+    file: knowledge_base_overall_summary.md
+  - name: CampaignDetails_Spec
+    type: text
+    file: knowledge_base_campaign_details.md
+  - name: engage_roi_reporting
+    type: database
+    database: engage_roi_reporting
+tools_file: tools.yml

@@ -16,7 +16,7 @@ tools:
       Get data schema. Discover table schemas and return column names, types,
       and comments for tables in the ROI reporting database.
     target: knowledge_base
-    target_knowledge_base: <DATABASE_NAME>
+    target_knowledge_base: engage_roi_reporting
     target_function: List columns
 
   - function_name: query_data
@@ -25,7 +25,7 @@ tools:
       Max 100 rows returned. Use GROUP BY aggregations. Never SELECT *.
       If result contains [TRUNCATED], use OFFSET and LIMIT for pagination.
     target: knowledge_base
-    target_knowledge_base: <DATABASE_NAME>
+    target_knowledge_base: engage_roi_reporting
     target_function: Query data directly (Presto SQL)
 
   - function_name: Read_OverallSummary_Spec
