@@ -71,8 +71,6 @@ The `config.yaml` file allows you to configure:
     1. Register Master Key(API Key) to Secret
     Please register Master Key to the secret of uploaded project. The name of the Secret is `td.apikey`.
 
-    > **Important**: The `td.apikey` secret must be a Master API Key in the format `ACCOUNT_ID/KEY` (e.g., `7060/abc123...`). OAuth session tokens (used by Treasure Studio and `tdx auth`) will NOT work with `td_ddl>` operators and will result in `[AUTHENTICATION_FAILURE] [401:Unauthorized]` errors.
-
 
 ### Scheduled Execution
 
