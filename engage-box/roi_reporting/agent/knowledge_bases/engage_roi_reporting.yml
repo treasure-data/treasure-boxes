@@ -1,0 +1,19 @@
+name: engage_roi_reporting
+database: engage_roi_reporting
+tables:
+  - name: daily_summary
+    td_query: SELECT * FROM daily_summary
+    enable_data: false
+    enable_data_index: false
+  - name: email_events
+    td_query: SELECT * FROM email_events
+    enable_data: false
+    enable_data_index: false
+  - name: revenue_table
+    td_query: SELECT * FROM revenue_table
+    enable_data: false
+    enable_data_index: false
+  - name: events_master
+    td_query: SELECT * FROM events_master
+    enable_data: false
+    enable_data_index: false

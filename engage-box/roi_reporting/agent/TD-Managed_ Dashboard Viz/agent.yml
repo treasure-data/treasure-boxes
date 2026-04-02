@@ -1,0 +1,66 @@
+name: "TD-Managed: Dashboard Viz"
+model: claude-4.5-sonnet
+temperature: 0
+max_tool_iterations: 4
+
+tools:
+  - type: knowledge_base
+    target: '@ref(type: "knowledge_base", name: "engage_roi_reporting")'
+    target_function: LIST_COLUMNS
+    function_name: list_columns
+    function_description: >
+      Get data schema. Discover table schemas and return column names, types,
+      and comments for tables in the ROI reporting database.
+
+  - type: knowledge_base
+    target: '@ref(type: "knowledge_base", name: "engage_roi_reporting")'
+    target_function: QUERY_DATA_DIRECT
+    function_name: query_data
+    function_description: >
+      Run Presto/Trino query against the ROI reporting database.
+      Max 100 rows returned. Use GROUP BY aggregations. Never SELECT *.
+      If result contains [TRUNCATED], use OFFSET and LIMIT for pagination.
+
+  - type: knowledge_base
+    target: '@ref(type: "knowledge_base", name: "OverallSummary_Spec")'
+    target_function: READ_TEXT
+    function_name: Read_OverallSummary_Spec
+    function_description: >
+      Spec for OverallSummary report. Read the Overall Summary report
+      specification from knowledge base.
+
+  - type: knowledge_base
+    target: '@ref(type: "knowledge_base", name: "CampaignDetails_Spec")'
+    target_function: READ_TEXT
+    function_name: Read_CampaignDetails_Spec
+    function_description: >
+      Spec for Individual Campaign Detail Report. Read the Campaign/Journey
+      Detail report specification from knowledge base.
+
+outputs:
+  - name: renderReactApp
+    function_name: renderReactApp
+    function_description: >
+      Generates React components using Tailwind CSS. Use ONLY when explicitly
+      requested (React, PDF, Dashboard). STRICT: Single file, export default.
+      NO external libs (no lucide-react). Use inline SVGs. Self-contained.
+      Render visual content ONLY; NO print/download buttons (system handled).
+    json_schema: '{"type":"object","properties":{"code":{"type":"string","description":"React JSX code"}},"required":["code"]}'
+
+  - name: text_in_form
+    function_name: text_in_form
+    function_description: >
+      Out text with MD format. Use this when you want to output an error message.
+    json_schema: '{"type":"object","properties":{"text":{"type":"string","description":"Markdown formatted text"}},"required":["text"]}'
+
+  - name: ":plotly:"
+    function_name: new_plot
+    function_description: >
+      Provide visualization for analysis result by rendering charts using Plotly.js.
+      Use the color scheme: ["B4E3E3", "ABB3DB", "D9BFDF", "F8E1B0", "8FD6D4",
+      "828DCA", "C69ED0", "F5D389", "6AC8C6", "5867B8", "B37EC0", "F1C461",
+      "44BAB8", "2E41A6", "8CC97E", "A05EB0"].
+      For charts with more than three categories, actively use updatemenus.
+      When summarizing multiple analysis, combine relevant charts into a single
+      dashboard using Plotly grid layout. Prevent text overlap with adequate margins.
+    json_schema: '{"type":"object","properties":{"data":{"type":"array","description":"Plotly.js data JSON objects","items":{"type":"object"}},"layout":{"type":"object","description":"Plotly.js layout JSON object"}},"required":["data"]}'

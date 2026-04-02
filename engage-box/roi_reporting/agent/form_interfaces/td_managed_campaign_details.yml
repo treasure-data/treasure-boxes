@@ -1,5 +1,5 @@
 name: "TD-Managed: Campaign Details"
-agent: "@ref(type: \"agent\", name: \"TD-Managed: Dashboard Viz\")"
+agent: '@ref(type: "agent", name: "TD-Managed: Dashboard Viz")'
 prompt_template: |
   Create dashboard with following conditions:
   - Report_id: 2. Campaign Summary
@@ -7,6 +7,51 @@ prompt_template: |
   - Journey_id: {{Journey_id}},
   - Language: {{Language}},
   - Currency: {{Currency}}
-form_json_schema: '{"type":"object","properties":{"Campaign_id":{"title":"Campaign ID","type":"string","placeholder":"Enter either \"Campaign ID\" or \"Journey ID\""},"Journey_id":{"title":"Journey ID","type":"string","placeholder":"Enter either \"Campaign ID\" or \"Journey ID\""},"Language":{"title":"Language","type":"string","enum":["English","Japanese"],"enumNames":["English","Japanese"]},"Currency":{"title":"Currency","type":"string","enum":["USD","JPY"],"enumNames":["USD","JPY"]}},"required":["Language","Currency"]}'
-form_ui_schema: '{"Campaign_id":{"ui:en:title":"Campaign ID","ui:en:placeholder":"Enter either \"Campaign ID\" or \"Journey ID\"","ui:ja:placeholder":"キャンペーンIDまたは、ジャーニーIDを入力してください","ui:ja:title":"キャンペーンID"},"Journey_id":{"ui:en:title":"Journey ID","ui:en:placeholder":"Enter either \"Campaign ID\" or \"Journey ID\"","ui:ja:title":"ジャーニーID","ui:ja:placeholder":"キャンペーンIDまたは、ジャーニーIDを入力してください"},"Language":{"ui:widget":"radio","ui:en:title":"Language","ui:ja:title":"言語","ui:enumNames":["English","Japanese"],"ui:en:enumNames":["English","Japanese"],"ui:ja:enumNames":["英語","日本語"]},"Currency":{"ui:widget":"radio","ui:en:title":"Currency","ui:ja:title":"通貨","ui:enumNames":["USD","JPY"],"ui:en:enumNames":["USD","JPY"],"ui:ja:enumNames":["米ドル","円"]}}'
+form_schema:
+  type: object
+  properties:
+    Campaign_id:
+      title: Campaign ID
+      type: string
+      placeholder: 'Enter either "Campaign ID" or "Journey ID"'
+    Journey_id:
+      title: Journey ID
+      type: string
+      placeholder: 'Enter either "Campaign ID" or "Journey ID"'
+    Language:
+      title: Language
+      type: string
+      enum: ["English", "Japanese"]
+      enumNames: ["English", "Japanese"]
+    Currency:
+      title: Currency
+      type: string
+      enum: ["USD", "JPY"]
+      enumNames: ["USD", "JPY"]
+  required: ["Language", "Currency"]
+ui_schema:
+  Campaign_id:
+    "ui:en:title": Campaign ID
+    "ui:en:placeholder": 'Enter either "Campaign ID" or "Journey ID"'
+    "ui:ja:placeholder": キャンペーンIDまたは、ジャーニーIDを入力してください
+    "ui:ja:title": キャンペーンID
+  Journey_id:
+    "ui:en:title": Journey ID
+    "ui:en:placeholder": 'Enter either "Campaign ID" or "Journey ID"'
+    "ui:ja:title": ジャーニーID
+    "ui:ja:placeholder": キャンペーンIDまたは、ジャーニーIDを入力してください
+  Language:
+    "ui:widget": radio
+    "ui:en:title": Language
+    "ui:ja:title": 言語
+    "ui:enumNames": ["English", "Japanese"]
+    "ui:en:enumNames": ["English", "Japanese"]
+    "ui:ja:enumNames": ["英語", "日本語"]
+  Currency:
+    "ui:widget": radio
+    "ui:en:title": Currency
+    "ui:ja:title": 通貨
+    "ui:enumNames": ["USD", "JPY"]
+    "ui:en:enumNames": ["USD", "JPY"]
+    "ui:ja:enumNames": ["米ドル", "円"]
 use_text_resource: false

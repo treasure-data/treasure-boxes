@@ -23,12 +23,17 @@ Two report types are supported:
 
 | File | Description |
 |---|---|
-| `system_prompt.md` | Agent system prompt — paste into System Prompt field |
-| `knowledge_base_overall_summary.md` | Report spec for Overall Summary — register as Text KB named `OverallSummary_Spec` |
-| `knowledge_base_campaign_details.md` | Report spec for Campaign Details — register as Text KB named `CampaignDetails_Spec` |
-| `tools.yml` | All tool configurations — reference when configuring agent tools |
-| `forms/td_managed_overall_summary.yml` | Form interface for Overall Summary report |
-| `forms/td_managed_campaign_details.yml` | Form interface for Campaign Details report |
+| `TD-Managed_ Dashboard Viz/agent.yml` | Agent configuration with tools and outputs |
+| `TD-Managed_ Dashboard Viz/prompt.md` | Agent system prompt |
+| `knowledge_bases/engage_roi_reporting.yml` | Database KB definition |
+| `knowledge_bases/OverallSummary_Spec.md` | Text KB — Overall Summary report spec |
+| `knowledge_bases/CampaignDetails_Spec.md` | Text KB — Campaign Details report spec |
+| `form_interfaces/td_managed_overall_summary.yml` | Form interface for Overall Summary report |
+| `form_interfaces/td_managed_campaign_details.yml` | Form interface for Campaign Details report |
+| `system_prompt.md` | System prompt source (English) |
+| `system_prompt_JA.md` | System prompt source (Japanese) |
+| `knowledge_base_overall_summary.md` | Report spec source (English) |
+| `knowledge_base_campaign_details.md` | Report spec source (English) |
 
 ## Prerequisites
 
@@ -67,11 +72,14 @@ Two report types are supported:
 
 ```bash
 # 1. Clone or download this directory
-# 2. Edit tools.yml and replace <DATABASE_NAME> with your actual database name
-# 3. Run:
+# 2. Create the LLM project
 tdx llm project create "ROI Reporting Agent"
+# 3. Push from the agent/ directory (project root)
+cd agent/
 tdx agent push . -f
 ```
+
+> **Note**: You must push from the project root directory (where `tdx.json` is located) to include knowledge bases and form interfaces. Pushing from an agent subdirectory only syncs that agent's configuration.
 
 ### Option B: Manual (AI Agent Foundry UI)
 
@@ -100,11 +108,12 @@ Create a new project named **`ROI Reporting Agent`** in AI Agent Foundry.
 - Temperature: 0
 
 #### 5. Configure Tools
-See **[tools.yml](./tools.yml)** for all tool names, descriptions, and settings.
+See **[TD-Managed_ Dashboard Viz/agent.yml](./TD-Managed_%20Dashboard%20Viz/agent.yml)** for all tool names, descriptions, and settings.
 
-#### 6. Register Form Interfaces (when API available)
-- Overall Summary: `forms/td_managed_overall_summary.yml`
-- Campaign Details: `forms/td_managed_campaign_details.yml`
+#### 6. Register Form Interfaces
+Form interfaces are automatically deployed via `tdx agent push` when pushing from the project root.
+- Overall Summary: `form_interfaces/td_managed_overall_summary.yml`
+- Campaign Details: `form_interfaces/td_managed_campaign_details.yml`
 
 ## Usage
 

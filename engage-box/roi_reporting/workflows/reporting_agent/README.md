@@ -57,8 +57,10 @@ The `config.yaml` file allows you to configure:
 1. Prepare Revenue data table named `revenue_table` under `engage_roi_reporting` database
 
 1. Edit the `config.yaml` file to match your environment after you download this example
-    1. Set email_domains  
+    1. Set email_domains
     When you send emails using Engage Studio, a database with a name beginning with "delivery_email_" is generated. Please list that database name under `email_domains` instead of the existing database name, `delivery_email_example_com`.
+
+    > **Note**: Only include databases created by Engage Studio. Support notification databases (e.g., `delivery_email_support_*`) lack `campaign_id` and `journey_id` columns and will cause SQL errors in the workflow.
 
     1. Set endpoint  
     Please set the endpoints that matches the Treasure Data region you are using. In this example, the US region endpoints are set. If you are using the Tokyo region, please comment out the US region endpoints and use the commented out endpoints.
@@ -66,8 +68,10 @@ The `config.yaml` file allows you to configure:
     1. Upload your project  
     Upload the project using `td workflow push` command in the same directory as `report_preparation.dig`.
 
-    1. Register Master Key(API Key) to Secret  
+    1. Register Master Key(API Key) to Secret
     Please register Master Key to the secret of uploaded project. The name of the Secret is `td.apikey`.
+
+    > **Important**: The `td.apikey` secret must be a Master API Key in the format `ACCOUNT_ID/KEY` (e.g., `7060/abc123...`). OAuth session tokens (used by Treasure Studio and `tdx auth`) will NOT work with `td_ddl>` operators and will result in `[AUTHENTICATION_FAILURE] [401:Unauthorized]` errors.
 
 
 ### Scheduled Execution

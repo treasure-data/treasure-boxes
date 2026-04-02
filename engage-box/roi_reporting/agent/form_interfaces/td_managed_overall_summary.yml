@@ -1,5 +1,5 @@
 name: "TD-Managed: Overall Summary"
-agent: "@ref(type: \"agent\", name: \"TD-Managed: Dashboard Viz\")"
+agent: '@ref(type: "agent", name: "TD-Managed: Dashboard Viz")'
 prompt_template: |
   Create dashboard with following conditions:
   - Report_id: 1.Overall Summary
@@ -8,6 +8,46 @@ prompt_template: |
   - Timezone: {{Timezone}},
   - Language: {{Language}},
   - Currency: {{Currency}}
-form_json_schema: '{"type":"object","properties":{"Start_date":{"title":"Start Date","type":"string","format":"date"},"End_date":{"title":"End Date","type":"string","format":"date"},"Language":{"title":"Language","type":"string","enum":["English","Japanese"],"enumNames":["English","Japanese"]},"Currency":{"title":"Currency","type":"string","enum":["USD","JPY"],"readOnly":false,"enumNames":["USD","JPY"]}},"required":["Start_date","Language","End_date","Currency"]}'
-form_ui_schema: '{"Start_date":{"ui:en:title":"Start Date"},"End_date":{"ui:en:title":"End Date"},"Language":{"ui:widget":"radio","ui:en:title":"Language","ui:enumNames":["English","Japanese"],"ui:en:enumNames":["English","Japanese"],"ui:ja:enumNames":["英語","日本語"],"ui:ja:title":"言語"},"Currency":{"ui:widget":"radio","ui:en:title":"Currency","ui:ja:title":"通貨","ui:enumNames":["USD","JPY"],"ui:en:enumNames":["USD","JPY"],"ui:ja:enumNames":["米ドル","円"]}}'
+form_schema:
+  type: object
+  properties:
+    Start_date:
+      title: Start Date
+      type: string
+      format: date
+    End_date:
+      title: End Date
+      type: string
+      format: date
+    Language:
+      title: Language
+      type: string
+      enum: ["English", "Japanese"]
+      enumNames: ["English", "Japanese"]
+    Currency:
+      title: Currency
+      type: string
+      enum: ["USD", "JPY"]
+      readOnly: false
+      enumNames: ["USD", "JPY"]
+  required: ["Start_date", "Language", "End_date", "Currency"]
+ui_schema:
+  Start_date:
+    "ui:en:title": Start Date
+  End_date:
+    "ui:en:title": End Date
+  Language:
+    "ui:widget": radio
+    "ui:en:title": Language
+    "ui:enumNames": ["English", "Japanese"]
+    "ui:en:enumNames": ["English", "Japanese"]
+    "ui:ja:enumNames": ["英語", "日本語"]
+    "ui:ja:title": 言語
+  Currency:
+    "ui:widget": radio
+    "ui:en:title": Currency
+    "ui:ja:title": 通貨
+    "ui:enumNames": ["USD", "JPY"]
+    "ui:en:enumNames": ["USD", "JPY"]
+    "ui:ja:enumNames": ["米ドル", "円"]
 use_text_resource: false
