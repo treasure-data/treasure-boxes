@@ -13,6 +13,8 @@ td:
     journey_activation_history: journey_activation_history
     activations: activations
     activations_history: activations_history
+    parent_segments_configuration: parent_segments_configuration
+    parent_segments_configuration_history: parent_segments_configuration_history
   api_endpoint: api.treasuredata.com
   cdp_api_endpoint: api-cdp.treasuredata.com
 
