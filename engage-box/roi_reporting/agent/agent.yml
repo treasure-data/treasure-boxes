@@ -1,5 +1,5 @@
 llm_project: "ROI Reporting Agent"
-name: "TD-Managed: Dashboard Viz"
+name: "Dashboard Viz"
 model: claude-4.5-sonnet
 max_tool_iterations: 4
 temperature: 0
