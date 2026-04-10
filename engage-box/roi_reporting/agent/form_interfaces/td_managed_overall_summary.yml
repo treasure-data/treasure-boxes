@@ -1,5 +1,5 @@
-name: "TD-Managed: Overall Summary"
-agent: "@ref(type: \"agent\", name: \"TD-Managed: Dashboard Viz\")"
+name: "Overall Summary"
+agent: "@ref(type: \"agent\", name: \"Dashboard Viz\")"
 prompt_template: |
   Create dashboard with following conditions:
   - Report_id: 1.Overall Summary

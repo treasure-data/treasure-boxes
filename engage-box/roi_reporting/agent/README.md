@@ -32,14 +32,20 @@ Two report types are supported:
 
 ## Prerequisites
 
+### Data Preparation
+
+Before using this agent, you need to prepare the required database tables. The `roi_reporting` workflow in the treasure-boxes repository provides a reference implementation for creating these tables.
+
 ### Required Database Tables
+
+The agent requires the following tables in the `engage_roi_reporting` database:
 
 | Table | Description | Key Columns |
 |---|---|---|
 | `daily_summary` | Daily aggregated performance metrics | `summary_date`, `campaign_id`, `journey_id`, `total_sends`, `total_deliveries`, `total_opens`, `total_clicks`, `total_conversions`, `total_revenue_direct`, `total_revenue_contributed` |
-| `event_master` | Campaign/journey metadata | `campaign_id`, `journey_id`, `campaign_name`, `journey_name` |
+| `events_master` | Campaign/journey metadata | `campaign_id`, `journey_id`, `campaign_name`, `journey_name` |
 | `email_events` | Email event logs | `event_timestamp`, `event_type`, `message_id`, `campaign_id`, `journey_id`, `email_title` |
-| `revenue` | Revenue attribution data | `conversion_timestamp`, `conversion_id`, `campaign_id`, `total_revenue`, `attribution_type` |
+| `revenue_table` | Revenue attribution data | `conversion_timestamp`, `conversion_id`, `campaign_id`, `total_revenue`, `attribution_type` |
 
 ### Data Schema Requirements
 
@@ -63,17 +69,51 @@ Two report types are supported:
 
 ## Setup Instructions
 
-### Option A: CLI (Recommended)
+**IMPORTANT**: The `tdx agent push` command currently creates ONLY the agent resource itself. Knowledge Bases, Tools, Outputs, and Form Interfaces must be configured separately via LLM API or the AI Agent Foundry UI.
+
+### Option A: LLM API Setup (Recommended for Complete Setup)
+
+For a fully automated setup including all components, use the LLM API approach:
+
+**Step 1: Create Project**
+```bash
+tdx llm project create "ROI Reporting Agent"
+```
+
+**Step 2-6: Use LLM API**
+
+Use Python scripts to create the agent and all resources via LLM API. This ensures:
+- ✅ Agent core attributes (name, model, system prompt)
+- ✅ Knowledge Bases (Text KBs and Database KB)
+- ✅ Tools and Outputs configuration
+- ✅ Form Interfaces
+
+Reference implementation: See the `/llm-api-setup` skill documentation for complete workflow and Python script templates.
+
+**Key points:**
+- Use `POST /api/agents` to create the agent with core attributes
+- Use `POST /api/text_knowledge_bases` for Text KBs
+- Use `POST /api/knowledge_bases` for Database KB
+- Use `PATCH /api/agents/{id}` to configure tools and outputs
+- Use `POST /api/form_interfaces` for form interfaces
+- Verify all components after setup
+
+### Option B: CLI + Manual Configuration (Partial Automation)
 
 ```bash
 # 1. Clone or download this directory
 # 2. Edit tools.yml and replace <DATABASE_NAME> with your actual database name
-# 3. Run:
+# 3. Create project and agent:
 tdx llm project create "ROI Reporting Agent"
 tdx agent push . -f
 ```
 
-### Option B: Manual (AI Agent Foundry UI)
+**Note**: `tdx agent push` creates only the agent itself. You must manually configure:
+- Knowledge Bases (via UI or LLM API)
+- Tools and Outputs (via LLM API)
+- Form Interfaces (via LLM API)
+
+### Option C: Manual (AI Agent Foundry UI)
 
 #### 1. Create Project
 Create a new project named **`ROI Reporting Agent`** in AI Agent Foundry.
@@ -93,7 +133,7 @@ Create a new project named **`ROI Reporting Agent`** in AI Agent Foundry.
 - Content: paste from `knowledge_base_campaign_details.md`
 
 #### 4. Create Agent
-- Name: **`TD-Managed: Dashboard Viz`**
+- Name: **`Dashboard Viz`**
 - System Prompt: paste from `system_prompt.md`
 - Model: Claude 4.5 Sonnet
 - Max tool iterations: 4
