@@ -99,18 +99,24 @@ ls -la form_interfaces/              # Form interfaces
 ```
 agent/
 ├── tdx.json                              # Project reference
-├── README.md                             # This file
+├── README.md                             # This file (English)
+├── README_JA.md                          # Japanese README
 ├── Dashboard Viz/
-│   ├── prompt.md                         # System prompt
+│   ├── prompt.md                         # System prompt (English)
+│   ├── prompt_ja.md                      # System prompt (Japanese, reference only)
 │   └── agent.yml                         # Agent configuration (includes tools/outputs)
 ├── knowledge_bases/
-│   ├── OverallSummary_Spec.md           # Overall Summary report specification
-│   ├── CampaignDetails_Spec.md          # Campaign Details report specification
+│   ├── OverallSummary_Spec.md           # Overall Summary report specification (English)
+│   ├── OverallSummary_Spec_ja.md        # Overall Summary report specification (Japanese, reference only)
+│   ├── CampaignDetails_Spec.md          # Campaign Details report specification (English)
+│   ├── CampaignDetails_Spec_ja.md       # Campaign Details report specification (Japanese, reference only)
 │   └── engage_roi_reporting.yml         # Database KB definition
 └── form_interfaces/
     ├── Overall Summary.yml               # Form for Overall Summary report
     └── Campaign Details.yml              # Form for Campaign Details report
 ```
+
+**Note**: Japanese files (`*_ja.md`) are included for reference. The `tdx agent push` command uses English files only. To use Japanese versions, manually replace the files before pushing.
 
 ## Usage
 
@@ -225,10 +231,11 @@ For assistance with setup and deployment, consult Treasure Data documentation or
 
 ## Changelog
 
-### 2026-04-10
+### 2026-04-13
 - **BREAKING**: Updated to tdx CLI format
 - Simplified setup to 2 commands (`tdx llm project create` + `tdx agent push`)
 - Removed LLM API dependency for setup
 - Updated file structure to match `tdx agent pull/push` format
 - Form interfaces now use YAML object format instead of JSON strings
 - Agent tools and outputs now embedded in `Dashboard Viz/agent.yml`
+- Added Japanese files (`*_ja.md`) for reference
