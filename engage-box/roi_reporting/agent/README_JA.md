@@ -52,7 +52,7 @@ cd treasure-boxes/engage-box/roi_reporting/agent
 
 # 2. プロジェクトを作成してエージェントをプッシュ
 tdx llm project create "ROI Reporting Agent"
-tdx agent push . -y
+tdx agent push . -f
 ```
 
 **これだけです！** すべてのコンポーネントが作成されます:
@@ -78,7 +78,7 @@ cd agents/ROI\ Reporting\ Agent
 echo '{"llm_project": "My New Project"}' > tdx.json
 
 # 4. 新しいプロジェクトにプッシュ
-tdx agent push . -y
+tdx agent push . -f
 ```
 
 ### セットアップの確認
