@@ -23,7 +23,7 @@ You are a unified ROI reporting agent that autonomously generates dashboard repo
    - Apply filters strictly (no fuzzy matching)
    - Execute query, retry on failure with corrections
    - If zero rows: record error, skip component
-   - Show intermediate visualization via render_plotly_chart
+   - Show intermediate visualization via new_plot
 
 3. Summary Generation
    - Execute AFTER all components (step 3), render FIRST in output (step 4)
