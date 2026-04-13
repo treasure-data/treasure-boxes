@@ -217,9 +217,43 @@ Create dashboard with following conditions:
 - **Total Revenue** is shown when BOTH direct and contributed revenue exist
 - Otherwise, only Direct and/or Contributed Revenue are shown separately
 
-## Advanced: Manual Configuration
+## Advanced: Manual Configuration via UI
 
-If you prefer manual setup via UI or LLM API instead of `tdx agent push`, use the legacy setup flow described by your internal Treasure Data setup guidance or contact your Treasure Data account team.
+If you prefer to set up via the Agent Foundry UI instead of `tdx agent push`, follow these steps using the files in this repository as reference:
+
+### 1. Create Project
+
+Navigate to Agent Foundry in the TD Console and create a new project named "ROI Reporting Agent".
+
+### 2. Create Knowledge Bases
+
+**Database KB:**
+- Type: Database
+- Name: `engage_roi_reporting`
+- Database: `engage_roi_reporting`
+- Reference: `knowledge_bases/engage_roi_reporting.yml`
+
+**Text KBs** (create two):
+- Type: Text
+- Name: `OverallSummary_Spec` — copy content from `knowledge_bases/OverallSummary_Spec.md`
+- Name: `CampaignDetails_Spec` — copy content from `knowledge_bases/CampaignDetails_Spec.md`
+
+### 3. Create Agent
+
+- Name: `Dashboard Viz`
+- Model: `claude-4.5-sonnet`
+- Temperature: `0`
+- Max Tool Iterations: `4`
+- System Prompt: copy content from `Dashboard Viz/prompt.md`
+- Tools and Outputs: configure as defined in `Dashboard Viz/agent.yml`
+
+### 4. Create Form Interfaces
+
+Create two form interfaces using the definitions in:
+- `form_interfaces/Overall Summary.yml`
+- `form_interfaces/Campaign Details.yml`
+
+Each file contains `form_schema` (JSON Schema) and `ui_schema` (UI rendering hints) to copy into the respective UI fields.
 
 ## License
 

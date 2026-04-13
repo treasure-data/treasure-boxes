@@ -217,9 +217,43 @@ Create dashboard with following conditions:
 - **Total Revenue**は、DirectとContributed Revenueの両方が存在する場合に表示
 - それ以外の場合は、DirectまたはContributed Revenueのみが個別に表示
 
-## 上級: 手動設定
+## 上級: UIによる手動設定
 
-UIやLLM API経由での手動セットアップを希望する場合は、英語版READMEの該当セクションを参照してください。
+`tdx agent push` の代わりに Agent Foundry UIでセットアップしたい場合は、このリポジトリのファイルをリファレンスとして以下の手順に従ってください:
+
+### 1. プロジェクト作成
+
+TD ConsoleのAgent Foundryで「ROI Reporting Agent」という名前の新しいプロジェクトを作成します。
+
+### 2. ナレッジベースの作成
+
+**Database KB:**
+- タイプ: Database
+- 名前: `engage_roi_reporting`
+- データベース: `engage_roi_reporting`
+- リファレンス: `knowledge_bases/engage_roi_reporting.yml`
+
+**Text KB** (2つ作成):
+- タイプ: Text
+- 名前: `OverallSummary_Spec` — `knowledge_bases/OverallSummary_Spec.md` の内容をコピー
+- 名前: `CampaignDetails_Spec` — `knowledge_bases/CampaignDetails_Spec.md` の内容をコピー
+
+### 3. エージェントの作成
+
+- 名前: `Dashboard Viz`
+- モデル: `claude-4.5-sonnet`
+- Temperature: `0`
+- Max Tool Iterations: `4`
+- システムプロンプト: `Dashboard Viz/prompt.md` の内容をコピー
+- ツールと出力: `Dashboard Viz/agent.yml` に定義された内容を設定
+
+### 4. フォームインターフェースの作成
+
+以下の定義ファイルを使用してフォームインターフェースを2つ作成:
+- `form_interfaces/Overall Summary.yml`
+- `form_interfaces/Campaign Details.yml`
+
+各ファイルには `form_schema`（JSON Schema）と `ui_schema`（UI表示ヒント）が含まれているので、それぞれUIのフィールドにコピーしてください。
 
 ## ライセンス
 
