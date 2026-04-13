@@ -109,7 +109,7 @@ cd workflows/reporting_agent/
 
 ## Required Tables
 
-The solution requires the following tables to be created by the workflow:
+The solution requires the following tables in the `engage_roi_reporting` database:
 
 | Table | Description | Created By |
 |---|---|---|
@@ -157,7 +157,7 @@ Deep-dive into specific campaign or journey performance:
 roi_reporting/
 ├── README.md                    # This file
 ├── agent/                       # AI Reporting Agent
-│   ├── tdx.json                 # Project reference
+│   ├── tdx.json                 # User-created local project file (not committed)
 │   ├── README.md
 │   ├── README_JA.md
 │   ├── Dashboard Viz/
@@ -175,7 +175,7 @@ roi_reporting/
 │       └── Campaign Details.yml
 └── workflows/                   # Data Preparation Workflows
     └── reporting_agent/
-        ├── tdx.json             # Workflow project reference
+        ├── tdx.json             # User-created local project file (not committed)
         ├── README.md
         ├── config.yaml
         ├── report_preparation.dig
