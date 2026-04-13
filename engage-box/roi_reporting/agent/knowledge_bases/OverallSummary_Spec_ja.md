@@ -6,7 +6,7 @@
 - purpose: "指定された期間における主要パフォーマンス指標（KPI）、トレンド、上位キャンペーン/ジャーニーを可視化する。"
 - source_tables:
     - "daily_summary"
-    - "event_master" # ランキングでの名前検索に使用
+    - "events_master" # ランキングでの名前検索に使用
 
 ## 2. フィルタ
 - filter:
@@ -46,7 +46,7 @@
     - component_id: "campaign_performance_ranking"
     - component_type: "table"
     - title: "Top 5 Campaigns"
-    - source_tables: ["daily_summary", "event_master"]
+    - source_tables: ["daily_summary", "events_master"]
     - dimensions:
         - { id: "campaign_name", display_name: "Campaign Name" }
         - { id: "campaign_id", display_name: "Campaign ID" }
@@ -68,7 +68,7 @@
     - component_id: "journey_performance_ranking"
     - component_type: "table"
     - title: "Top 5 Journeys"
-    - source_tables: ["daily_summary", "event_master"]
+    - source_tables: ["daily_summary", "events_master"]
     - dimensions:
         - { id: "journey_name", display_name: "Journey Name" }
         - { id: "journey_id", display_name: "Journey ID" }
