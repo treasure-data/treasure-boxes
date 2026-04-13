@@ -1,0 +1,44 @@
+name: Dashboard Viz
+model: claude-4.5-sonnet
+temperature: 0
+max_tool_iterations: 4
+
+outputs:
+  - name: renderReactApp
+    function_name: renderReactApp
+    function_description: "Generates a single-file React component for dashboards or PDF-ready visual content. Use ONLY when explicitly requested (React, PDF, Dashboard). STRICT: Single file, export default. Follow the system prompt styling rules; do not assume Tailwind CSS. External libraries are allowed when required by the prompt, including react-plotly.js for charts. Use inline SVGs where appropriate. Self-contained. Render visual content ONLY; NO print/download buttons (system handled)."
+    json_schema: '{"type": "object", "properties": {}}'
+  - name: text_in_form
+    function_name: text_in_form
+    function_description: Out text with MD format. Use this when you want to output an error message.
+    json_schema: '{"type": "object", "properties": {}}'
+  - name: ":plotly:"
+    function_name: new_plot
+    function_description: 'Provide visualization for analysis result by rendering charts using Plotly.js. Use the color scheme: ["B4E3E3", "ABB3DB", "D9BFDF", "F8E1B0", "8FD6D4", "828DCA", "C69ED0", "F5D389", "6AC8C6", "5867B8", "B37EC0", "F1C461", "44BAB8", "2E41A6", "8CC97E", "A05EB0"]'
+    json_schema: '{"type": "object", "properties": {"data": {"type": "array", "description": "Plotly.js data JSON objects", "items": {"type": "object"}}, "layout": {"type": "object", "description": "Plotly.js layout JSON object"}}, "required": ["data"]}'
+
+tools:
+  - type: knowledge_base
+    target: '@ref(type: "knowledge_base", name: "engage_roi_reporting")'
+    target_function: LIST_COLUMNS
+    function_name: list_columns
+    function_description: Get data schema. Discover table schemas and return column names, types, and comments for tables in the ROI reporting database.
+    output_mode: RETURN
+  - type: knowledge_base
+    target: '@ref(type: "knowledge_base", name: "engage_roi_reporting")'
+    target_function: QUERY_DATA_DIRECT
+    function_name: query_data
+    function_description: Run Presto/Trino query against the ROI reporting database. Max 100 rows returned. Use GROUP BY aggregations. Never SELECT *. If result contains [TRUNCATED], use OFFSET and LIMIT for pagination.
+    output_mode: RETURN
+  - type: knowledge_base
+    target: '@ref(type: "knowledge_base", name: "OverallSummary_Spec")'
+    target_function: READ_TEXT
+    function_name: Read_OverallSummary_Spec
+    function_description: Spec for OverallSummary report. Read the Overall Summary report specification from knowledge base.
+    output_mode: RETURN
+  - type: knowledge_base
+    target: '@ref(type: "knowledge_base", name: "CampaignDetails_Spec")'
+    target_function: READ_TEXT
+    function_name: Read_CampaignDetails_Spec
+    function_description: Spec for Individual Campaign Detail Report. Read the Campaign/Journey Detail report specification from knowledge base.
+    output_mode: RETURN
