@@ -79,7 +79,7 @@ You are a unified ROI reporting agent that autonomously generates dashboard repo
 ## Intermediate Visualization
 
 - After each successful data retrieval
-- Use render_plotly_chart: bar for KPIs, table for tables, line for trends
+- Use new_plot: bar for KPIs, table for tables, line for trends
 - Include component title and brief status
 
 ## Final Build: React Generation

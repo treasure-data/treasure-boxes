@@ -14,15 +14,15 @@ name: CampaignDetails_Spec
 - filter:
     - id: "campaign_id"
       type: "string"
-      required: false
+      required: true
       exclusive_with: "journey_id"
 - filter:
     - id: "journey_id"
       type: "string"
-      required: false
+      required: true
       exclusive_with: "campaign_id"
-- filter_notes: "Exactly one of campaign_id or journey_id is required. Do not provide both. When one of these IDs is provided, a date range is NOT required. The report should run on all available data for that ID."
-- notes: "Timestamp columns (event_timestamp, conversion_timestamp) are varchar strings. They MUST be parsed using date_parse(column, '%Y-%m-%d %H:%i:%s.%f')."
+- filter_notes: "A campaign_id or journey_id is required. When one of these IDs is provided, a date range is NOT required. The report should run on all available data for that ID."
+- notes: "Timestamp parsing: event_timestamp is ISO8601 format (use from_iso8601_timestamp(event_timestamp)). conversion_timestamp can be cast directly (use CAST(conversion_timestamp AS TIMESTAMP))."
 
 ## 3. Important Notes on Metrics
 
@@ -38,9 +38,9 @@ name: CampaignDetails_Spec
 ### Time Granularity (for trend components)
 
 **CRITICAL: Timestamp Parsing**
-- event_timestamp and conversion_timestamp are VARCHAR strings, NOT TIMESTAMP types.
-- You MUST use `date_parse(column, '%Y-%m-%d %H:%i:%s.%f')` to parse these columns.
-- DO NOT use `CAST(column AS DATE)` or `CAST(column AS TIMESTAMP)` - these will fail.
+- event_timestamp is stored in ISO8601 format. Use `from_iso8601_timestamp(event_timestamp)` to parse.
+- conversion_timestamp can be cast directly. Use `CAST(conversion_timestamp AS TIMESTAMP)`.
+- Example for date truncation: `DATE_TRUNC('day', from_iso8601_timestamp(event_timestamp))` for email events, `DATE_TRUNC('day', CAST(conversion_timestamp AS TIMESTAMP))` for revenue_table.
 
 The SQL agent must dynamically set the time grain based on the total date range of available data for the specified campaign_id or journey_id:
 - **<=20 days**: daily granularity
@@ -77,17 +77,17 @@ This ensures optimal visualization density and performance.
 
 ### Component 2: Revenue KPIs
 - component:
-    - component_id: "kpi_summary_revenue"
+    - component_id: "kpi_summary_revenue_table"
     - component_type: "kpi_card_group"
     - title: "Revenue KPIs for {name} ({id})"
-    - source_tables: ["revenue", "email_events"]
+    - source_tables: ["revenue_table", "email_events"]
     - display_condition: "Only show this component if filtering by campaign_id."
     - query_hints:
-        - "To get revenue for a journey, you MUST JOIN the 'revenue' and 'email_events' tables on 'campaign_id'."
+        - "To get revenue_table for a journey, you MUST JOIN the 'revenue_table' and 'email_events' tables on 'campaign_id'."
     - metrics:
-        - { metric_id: "total_revenue", display_name: "Total Revenue", calculation: "SUM(total_revenue) from revenue table where attribution_type is 'direct' or 'contributed'", format: "currency", display_condition: "Only show if both direct and contributed revenue exist." }
-        - { metric_id: "direct_revenue", display_name: "Direct Revenue", calculation: "SUM(total_revenue) from revenue table where attribution_type = 'direct'", format: "currency" }
-        - { metric_id: "contributed_revenue", display_name: "Contributed Revenue", calculation: "SUM(total_revenue) from revenue table where attribution_type = 'contributed'", format: "currency" }
+        - { metric_id: "total_revenue_table", display_name: "Total Revenue", calculation: "SUM(total_revenue_table) from revenue_table table where attribution_type is 'direct' or 'contributed'", format: "currency", display_condition: "Only show if both direct and contributed revenue_table exist." }
+        - { metric_id: "direct_revenue_table", display_name: "Direct Revenue", calculation: "SUM(total_revenue_table) from revenue_table table where attribution_type = 'direct'", format: "currency" }
+        - { metric_id: "contributed_revenue_table", display_name: "Contributed Revenue", calculation: "SUM(total_revenue_table) from revenue_table table where attribution_type = 'contributed'", format: "currency" }
 
 ### Component 3: Performance by Email Title
 - component:
@@ -141,20 +141,20 @@ This ensures optimal visualization density and performance.
     - component_id: "conversions_trend"
     - component_type: "line_chart"
     - title: "Conversions & Revenue Trend"
-    - source_tables: ["revenue", "email_events"]
+    - source_tables: ["revenue_table", "email_events"]
     - y_axis_shared: false
     - visualization_hint: "mode: 'lines+markers', dual y-axis (left: count, right: currency)"
     - display_condition: "Only show if filtering by campaign_id."
     - metrics:
-        - { metric_id: "conversions", display_name: "Conversions", calculation: "COUNT(DISTINCT conversion_id) FROM revenue", format: "integer", y_axis: "left" }
-        - { metric_id: "direct_revenue", display_name: "Direct Revenue", calculation: "SUM(total_revenue) FROM revenue WHERE attribution_type = 'direct'", format: "currency", y_axis: "right" }
-        - { metric_id: "contributed_revenue", display_name: "Contributed Revenue", calculation: "SUM(total_revenue) FROM revenue WHERE attribution_type = 'contributed'", format: "currency", y_axis: "right" }
-        - { metric_id: "total_revenue", display_name: "Total Revenue", calculation: "SUM(total_revenue) FROM revenue WHERE attribution_type IN ('direct', 'contributed')", format: "currency", y_axis: "right" }
+        - { metric_id: "conversions", display_name: "Conversions", calculation: "COUNT(DISTINCT conversion_id) FROM revenue_table", format: "integer", y_axis: "left" }
+        - { metric_id: "direct_revenue_table", display_name: "Direct Revenue", calculation: "SUM(total_revenue_table) FROM revenue_table WHERE attribution_type = 'direct'", format: "currency", y_axis: "right" }
+        - { metric_id: "contributed_revenue_table", display_name: "Contributed Revenue", calculation: "SUM(total_revenue_table) FROM revenue_table WHERE attribution_type = 'contributed'", format: "currency", y_axis: "right" }
+        - { metric_id: "total_revenue_table", display_name: "Total Revenue", calculation: "SUM(total_revenue_table) FROM revenue_table WHERE attribution_type IN ('direct', 'contributed')", format: "currency", y_axis: "right" }
     - notes: |
         - This component is based on the 'conversion_timestamp' column.
         - Zero-padding is NOT required.
         - Time granularity is determined by the total date range of the campaign/journey data (see Section 3).
-        - Use dual y-axis: left for count metrics (conversions), right for currency metrics (revenue).
+        - Use dual y-axis: left for count metrics (conversions), right for currency metrics (revenue_table).
         - This component helps identify day-of-week patterns and campaign timing effects.
 
 ## 5. Component Rendering Order
@@ -164,7 +164,7 @@ The final output should render components in the following order:
 1. Title
 2. Summary (data-driven insights)
 3. kpi_summary_engagement
-4. kpi_summary_revenue (if campaign_id and data exists)
+4. kpi_summary_revenue_table (if campaign_id and data exists)
 5. engagement_count_trend
 6. conversions_trend (if campaign_id and data exists)
 7. email_title_performance
