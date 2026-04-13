@@ -8,7 +8,7 @@ name: OverallSummary_Spec
 - purpose: "To visualize key performance indicators (KPIs), trends, and top-performing campaigns/journeys over a specified period."
 - source_tables:
     - "daily_summary"
-    - "event_master" # Used for name lookups in rankings
+    - "events_master" # Used for name lookups in rankings
 
 ## 2. Filters
 - filter:
