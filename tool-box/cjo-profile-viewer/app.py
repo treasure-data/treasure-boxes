@@ -11,9 +11,15 @@ from typing import Dict, List, Optional
 
 # Import refactored modules
 from src.services.td_api import TDAPIService
+from src.services.timeline_service import ProfileTimelineService
 from src.column_mapper import CJOColumnMapper
 from src.flowchart_generator import CJOFlowchartGenerator
 from src.components.flowchart_renderer import create_flowchart_html
+from src.components.timeline_renderer import (
+    render_timeline_events,
+    render_timeline_summary,
+    render_pagination_controls
+)
 from src.styles import load_all_styles
 from src.utils.session_state import SessionStateManager
 from src.utils.step_display import get_step_display_name
@@ -31,8 +37,20 @@ def render_configuration_panel():
     """Render the journey configuration input panel."""
     st.header("🔧 Journey Configuration")
 
+    st.markdown("""
+        <style>
+        div[data-testid="column"]:has(div[data-testid="stTextInput"]) + div[data-testid="column"] {
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 6px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.caption("Enter a Journey ID to load the journey configuration and profile data.")
+
     with st.container():
-        col1, col2 = st.columns([2, 1])
+        col1, col2, col3 = st.columns([1, 2, 6])
 
         with col1:
             journey_id = st.text_input(
@@ -57,7 +75,6 @@ def render_attribute_selector():
     load_profile_button = False
 
     if SessionStateManager.is_config_loaded():
-        st.markdown("**Step 2: Select Additional Customer Attributes**")
         st.caption("Select additional customer attributes to include when viewing step profiles. cdp_customer_id is included by default.")
 
         try:
@@ -66,25 +83,27 @@ def render_attribute_selector():
                 available_attributes = SessionStateManager.get_available_attributes(audience_id)
 
                 if available_attributes:
-                    selected_attributes = st.multiselect(
-                        "Select customer attributes:",
-                        options=available_attributes,
-                        default=SessionStateManager.get("selected_attributes", []),
-                        key="attribute_selector",
-                        help="These attributes will be joined from the customers table",
-                        label_visibility="collapsed"
-                    )
+                    ms_col, btn_col, _ = st.columns([3, 2, 4])
+                    with ms_col:
+                        selected_attributes = st.multiselect(
+                            "Select customer attributes:",
+                            options=available_attributes,
+                            default=SessionStateManager.get("selected_attributes", []),
+                            key="attribute_selector",
+                            help="These attributes will be joined from the customers table",
+                            label_visibility="collapsed"
+                        )
 
                     # Store selected attributes in session state
                     SessionStateManager.set("selected_attributes", selected_attributes)
 
-                    # Show Load Profile Data button
-                    load_profile_button = st.button(
-                        "📊 Load Profile Data",
-                        type="primary",
-                        key="load_profile_button",
-                        help="Load customer profile data with selected attributes"
-                    )
+                    with btn_col:
+                        load_profile_button = st.button(
+                            "📊 Load Profile Data",
+                            type="primary",
+                            key="load_profile_button",
+                            help="Load customer profile data with selected attributes"
+                        )
                 else:
                     st.info("No additional customer attributes available.")
                     # Show Load Profile Data button even without attributes
@@ -98,9 +117,6 @@ def render_attribute_selector():
                 st.warning("Could not find audience ID or attributes not loaded.")
         except Exception as e:
             st.warning(f"Could not load customer attributes: {str(e)}")
-    else:
-        st.caption("Load journey configuration first to see available customer attributes.")
-
     return load_profile_button
 
 
@@ -187,9 +203,9 @@ def render_journey_tabs():
     """Render the main journey visualization tabs."""
     if not SessionStateManager.is_journey_loaded():
         if not SessionStateManager.is_config_loaded():
-            st.info("👆 **Step 1**: Enter a Journey ID and click 'Load Journey Config' to begin.")
+            pass
         else:
-            st.info("👆 **Step 2**: Select customer attributes (if desired) and click 'Load Profile Data' to begin visualization.")
+            pass
         return
 
     # Initialize components
@@ -212,7 +228,12 @@ def render_journey_tabs():
         return
 
     # Create tabs
-    step_tab, canvas_tab, data_tab = st.tabs(["📋 Step Selection", "🎨 Canvas", "📊 Data & Mappings"])
+    step_tab, canvas_tab, data_tab, timeline_tab = st.tabs([
+        "📋 Step Selection",
+        "🎨 Canvas",
+        "📊 Data & Mappings",
+        "📅 Profile Timeline"
+    ])
 
     with step_tab:
         render_step_selection_tab(flowchart_generator, column_mapper)
@@ -222,6 +243,9 @@ def render_journey_tabs():
 
     with data_tab:
         render_data_tab(flowchart_generator, column_mapper)
+
+    with timeline_tab:
+        render_timeline_tab(flowchart_generator, column_mapper)
 
 
 def render_step_selection_tab(generator: CJOFlowchartGenerator, column_mapper: CJOColumnMapper):
@@ -637,6 +661,122 @@ def render_data_tab(generator: CJOFlowchartGenerator, column_mapper: CJOColumnMa
         st.json(api_response)
     else:
         st.info("Load journey configuration to see API request and response details.")
+
+
+def render_timeline_tab(generator: CJOFlowchartGenerator, column_mapper: CJOColumnMapper):
+    """Render the Profile Timeline tab."""
+    st.subheader("📅 Profile Timeline")
+    st.markdown("View chronological timeline of a customer's journey progression")
+
+    # Customer ID input section
+    with st.container():
+        col1, col2, col3 = st.columns([2, 1, 2])
+
+        with col1:
+            customer_id = st.text_input(
+                "Customer ID",
+                placeholder="Enter cdp_customer_id to view timeline",
+                key="timeline_customer_id_input",
+                help="Enter the customer ID (cdp_customer_id) to load their journey timeline"
+            )
+
+        with col2:
+            st.markdown("<div style='margin-top: 28px;'>", unsafe_allow_html=True)
+            load_timeline_button = st.button(
+                "📊 Load Timeline",
+                type="primary",
+                help="Load timeline events for the specified customer"
+            )
+            st.markdown("</div>", unsafe_allow_html=True)
+
+    show_technical_names = st.checkbox("Show Technical Column Names", value=False)
+
+    # Handle timeline loading
+    if load_timeline_button:
+        journey_id = SessionStateManager.get_journey_id()
+        audience_id = SessionStateManager.get_audience_id()
+
+        if not journey_id or not audience_id:
+            st.error("Journey configuration not loaded. Please load journey config first.")
+            return
+
+        # Set loading state
+        SessionStateManager.set_timeline_loading(True)
+        st.toast(f"Loading timeline for customer {customer_id}...", icon="🔍")
+
+        try:
+            # Create API service
+            api_service = TDAPIService()
+            timeline_service = ProfileTimelineService(api_service, column_mapper)
+
+            # Get current pagination settings
+            pagination = SessionStateManager.get_timeline_pagination()
+            current_page = pagination['page']
+            page_size = pagination['page_size']
+
+            # Load timeline data
+            timeline_data = timeline_service.get_profile_timeline(
+                journey_id=int(journey_id),
+                audience_id=int(audience_id),
+                customer_id=customer_id.strip(),
+                page=current_page,
+                page_size=page_size
+            )
+
+            if timeline_data.get('error'):
+                SessionStateManager.set_timeline_error(timeline_data['error'])
+                st.toast(timeline_data['error'], icon="❌")
+            elif timeline_data.get('events') or timeline_data.get('total_count', 0) > 0:
+                SessionStateManager.set_timeline_data(timeline_data, customer_id.strip())
+                st.toast(f"Loaded {timeline_data.get('total_count', 0)} timeline events for customer {customer_id}", icon="✅")
+            else:
+                SessionStateManager.set_timeline_error(f"No timeline events found for customer {customer_id}")
+                st.toast(f"No timeline events found for customer {customer_id}", icon="⚠️")
+
+        except Exception as e:
+            error_msg = f"Error loading timeline: {str(e)}"
+            SessionStateManager.set_timeline_error(error_msg)
+            st.toast(error_msg, icon="❌")
+
+    # Display timeline data if available
+    timeline_data = SessionStateManager.get('timeline_data')
+    timeline_error = SessionStateManager.get('timeline_error')
+
+    if timeline_error:
+        st.error(timeline_error)
+        return
+
+    if timeline_data and timeline_data.get('events'):
+        # Show timeline events
+        render_timeline_events(
+            timeline_data['events'],
+            show_technical_names=show_technical_names
+        )
+
+        # Show pagination if needed
+        if timeline_data.get('total_pages', 0) > 1:
+            def on_page_change(new_page):
+                SessionStateManager.set_timeline_page(new_page)
+                st.rerun()
+
+            def on_page_size_change(new_page_size):
+                SessionStateManager.set_timeline_page_size(new_page_size)
+                st.rerun()
+
+            render_pagination_controls(
+                current_page=timeline_data.get('current_page', 0),
+                total_pages=timeline_data.get('total_pages', 0),
+                page_size=timeline_data.get('page_size', 50),
+                total_count=timeline_data.get('total_count', 0),
+                on_page_change=on_page_change,
+                on_page_size_change=on_page_size_change
+            )
+
+    elif SessionStateManager.is_journey_loaded():
+        st.info("👆 Enter a Customer ID and click 'Load Timeline' to view their journey timeline.")
+    else:
+        st.info("👆 Please load journey configuration and profile data first, then enter a Customer ID to view timeline.")
+
 
 
 def main():

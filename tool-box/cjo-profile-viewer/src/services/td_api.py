@@ -60,17 +60,17 @@ class TDAPIService:
         }
 
         try:
-            with st.spinner(f"Fetching journey data for ID: {journey_id}..."):
-                response = requests.get(url, headers=headers, timeout=30)
+            st.toast(f"Fetching journey data for ID: {journey_id}...", icon="🔍")
+            response = requests.get(url, headers=headers, timeout=30)
 
-                if response.status_code == 200:
-                    return response.json(), None
-                elif response.status_code == 401:
-                    return None, "Authentication failed. Please check your API key."
-                elif response.status_code == 404:
-                    return None, f"Journey ID '{journey_id}' not found."
-                else:
-                    return None, f"API request failed with status {response.status_code}: {response.text}"
+            if response.status_code == 200:
+                return response.json(), None
+            elif response.status_code == 401:
+                return None, "Authentication failed. Please check your API key."
+            elif response.status_code == 404:
+                return None, f"Journey ID '{journey_id}' not found."
+            else:
+                return None, f"API request failed with status {response.status_code}: {response.text}"
 
         except requests.exceptions.Timeout:
             return None, "Request timed out. Please try again."
@@ -85,21 +85,21 @@ class TDAPIService:
             return []
 
         try:
-            with st.spinner("Loading available customer attributes..."):
-                client = pytd.Client(
-                    apikey=self.api_key,
-                    endpoint='https://api.treasuredata.com',
-                    engine='presto'
-                )
+            st.toast("Loading available customer attributes...", icon="🔍")
+            client = pytd.Client(
+                apikey=self.api_key,
+                endpoint='https://api.treasuredata.com',
+                engine='presto'
+            )
 
-                # Query to describe the customers table
-                describe_query = f"DESCRIBE cdp_audience_{audience_id}.customers"
-                result = client.query(describe_query)
+            # Query to describe the customers table
+            describe_query = f"DESCRIBE cdp_audience_{audience_id}.customers"
+            result = client.query(describe_query)
 
-                if result and result.get('data'):
-                    # Extract column names, excluding 'time' and 'cdp_customer_id'
-                    columns = [row[0] for row in result['data'] if row[0] not in ['time', 'cdp_customer_id']]
-                    return sorted(columns)
+            if result and result.get('data'):
+                # Extract column names, excluding 'time' and 'cdp_customer_id'
+                columns = [row[0] for row in result['data'] if row[0] not in ['time', 'cdp_customer_id']]
+                return sorted(columns)
 
         except Exception as e:
             st.toast(f"Could not load customer attributes: {str(e)}", icon="⚠️")
@@ -117,58 +117,58 @@ class TDAPIService:
 
         try:
             # Initialize pytd client with presto engine and api.treasuredata.com endpoint
-            with st.spinner(f"Connecting to Treasure Data and querying profile data..."):
-                client = pytd.Client(
-                    apikey=self.api_key,
-                    endpoint='https://api.treasuredata.com',
-                    engine='presto'
-                )
+            st.toast("Connecting to Treasure Data and querying profile data...", icon="🔍")
+            client = pytd.Client(
+                apikey=self.api_key,
+                endpoint='https://api.treasuredata.com',
+                engine='presto'
+            )
 
-                # Construct the query for live profile data
-                table_name = f"cdp_audience_{audience_id}.journey_{journey_id}"
+            # Construct the query for live profile data
+            table_name = f"cdp_audience_{audience_id}.journey_{journey_id}"
 
-                if selected_attributes:
-                    # JOIN query with additional attributes from customers table
-                    attributes_str = ", ".join([f"c.{attr}" for attr in selected_attributes])
-                    query = f"""
-                    SELECT j.cdp_customer_id, {attributes_str}
-                    FROM {table_name} j
-                    JOIN cdp_audience_{audience_id}.customers c
-                    ON c.cdp_customer_id = j.cdp_customer_id
-                    """
-                    st.toast(f"Querying journey table with {len(selected_attributes)} additional attributes", icon="🔍")
-                else:
-                    # Standard query without JOIN
-                    query = f"SELECT * FROM {table_name}"
-                    st.toast(f"Querying table: {table_name}", icon="🔍")
+            if selected_attributes:
+                # JOIN query with additional attributes from customers table
+                attributes_str = ", ".join([f"c.{attr}" for attr in selected_attributes])
+                query = f"""
+                SELECT j.cdp_customer_id, {attributes_str}
+                FROM {table_name} j
+                JOIN cdp_audience_{audience_id}.customers c
+                ON c.cdp_customer_id = j.cdp_customer_id
+                """
+                st.toast(f"Querying journey table with {len(selected_attributes)} additional attributes", icon="🔍")
+            else:
+                # Standard query without JOIN
+                query = f"SELECT * FROM {table_name}"
+                st.toast(f"Querying table: {table_name}", icon="🔍")
 
-                # Execute the query and return as DataFrame
-                query_result = client.query(query)
+            # Execute the query and return as DataFrame
+            query_result = client.query(query)
 
-                # Convert the result to a pandas DataFrame
-                if not query_result.get('data'):
-                    st.toast(f"No data found in table {table_name}", icon="⚠️")
-                    return pd.DataFrame()
+            # Convert the result to a pandas DataFrame
+            if not query_result.get('data'):
+                st.toast(f"No data found in table {table_name}", icon="⚠️")
+                return pd.DataFrame()
 
-                profile_data = pd.DataFrame(query_result['data'], columns=query_result['columns'])
+            profile_data = pd.DataFrame(query_result['data'], columns=query_result['columns'])
 
-                # If we used JOIN query, we need to merge back with the full journey data
-                if selected_attributes and not profile_data.empty:
-                    # Get the full journey data for journey step information
-                    full_journey_query = f"SELECT * FROM {table_name}"
-                    full_result = client.query(full_journey_query)
+            # If we used JOIN query, we need to merge back with the full journey data
+            if selected_attributes and not profile_data.empty:
+                # Get the full journey data for journey step information
+                full_journey_query = f"SELECT * FROM {table_name}"
+                full_result = client.query(full_journey_query)
 
-                    if full_result and full_result.get('data'):
-                        full_journey_data = pd.DataFrame(full_result['data'], columns=full_result['columns'])
+                if full_result and full_result.get('data'):
+                    full_journey_data = pd.DataFrame(full_result['data'], columns=full_result['columns'])
 
-                        # Merge the customer attributes with the full journey data
-                        profile_data = full_journey_data.merge(
-                            profile_data,
-                            on='cdp_customer_id',
-                            how='left'
-                        )
+                    # Merge the customer attributes with the full journey data
+                    profile_data = full_journey_data.merge(
+                        profile_data,
+                        on='cdp_customer_id',
+                        how='left'
+                    )
 
-                return profile_data
+            return profile_data
 
         except Exception as e:
             error_msg = str(e)

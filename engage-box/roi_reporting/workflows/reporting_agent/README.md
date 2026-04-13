@@ -2,6 +2,8 @@
 
 This workflow provides dig files and SQL queries for preparing data for the ROI dashboard.
 
+> **Note**: This workflow prepares data for the [ROI Reporting Agent](../../agent/). After running this workflow, use the agent to generate interactive dashboards and reports. See the [main ROI Reporting README](../../README.md) for the complete solution overview.
+
 ## Overview
 
 The report preparation workflow performs the following tasks:

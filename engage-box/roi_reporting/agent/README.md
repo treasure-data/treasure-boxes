@@ -19,12 +19,18 @@ Two report types are supported:
 - Campaign/journey performance tables with revenue attribution
 - Graceful degradation when components fail
 
+## Files
+
+| File | Description |
+|---|---|
+| `system_prompt.md` | Agent system prompt — paste into System Prompt field |
+| `knowledge_base_overall_summary.md` | Report spec for Overall Summary — register as Text KB named `OverallSummary_Spec` |
+| `knowledge_base_campaign_details.md` | Report spec for Campaign Details — register as Text KB named `CampaignDetails_Spec` |
+| `tools.yml` | All tool configurations — reference when configuring agent tools |
+| `forms/td_managed_overall_summary.yml` | Form interface for Overall Summary report |
+| `forms/td_managed_campaign_details.yml` | Form interface for Campaign Details report |
+
 ## Prerequisites
-
-### Required Tools
-
-- `tdx` CLI (version 2026.4.55 or later)
-- Git or `gh` CLI (for cloning repository)
 
 ### Data Preparation
 
@@ -41,82 +47,104 @@ The agent requires the following tables in the `engage_roi_reporting` database:
 | `email_events` | Email event logs | `event_timestamp`, `event_type`, `message_id`, `campaign_id`, `journey_id`, `email_title` |
 | `revenue_table` | Revenue attribution data | `conversion_timestamp`, `conversion_id`, `campaign_id`, `total_revenue`, `attribution_type` |
 
+### Data Schema Requirements
+
+**daily_summary table:**
+- `summary_date` (varchar): Date in 'YYYY-MM-DD' format
+- `campaign_id`, `journey_id` (varchar): Identifiers
+- `total_sends`, `total_deliveries`, `total_opens`, `total_clicks`, `total_conversions` (integer): Event counts
+- `total_hard_bounces`, `total_soft_bounces`, `total_unsubscribes` (integer): Negative event counts
+- `total_revenue_direct`, `total_revenue_contributed` (double): Revenue amounts
+
+**email_events table:**
+- `event_timestamp` (varchar): Timestamp in '%Y-%m-%d %H:%i:%s.%f' format
+- `event_type` (varchar): 'Send', 'Delivery', 'Open', 'Click', 'Bounce', 'Complaint'
+- `message_id` (varchar): Unique message identifier
+- `email_title` (varchar): Email subject line
+
+**revenue table:**
+- `conversion_timestamp` (varchar): Timestamp in '%Y-%m-%d %H:%i:%s.%f' format
+- `attribution_type` (varchar): 'direct' or 'contributed'
+- `total_revenue` (double): Revenue amount
+
 ## Setup Instructions
 
-### Quick Start
+**IMPORTANT**: The `tdx agent push` command currently creates ONLY the agent resource itself. Knowledge Bases, Tools, Outputs, and Form Interfaces must be configured separately via LLM API or the AI Agent Foundry UI.
 
+### Option A: LLM API Setup (Recommended for Complete Setup)
+
+For a fully automated setup including all components, use the LLM API approach:
+
+**Step 1: Create Project**
 ```bash
-# 1. Clone or download this repository
-gh repo clone treasure-data/treasure-boxes
-cd treasure-boxes/engage-box/roi_reporting/agent
-
-# 2. Create project and push agent
 tdx llm project create "ROI Reporting Agent"
-tdx agent push . -y
 ```
 
-**That's it!** All components are created:
-- ✅ Agent (Dashboard Viz)
-- ✅ Knowledge Bases (Database KB + 2 Text KBs)
-- ✅ Tools (4 tools)
-- ✅ Outputs (3 outputs)
-- ✅ Form Interfaces (2 forms)
+**Step 2-6: Use LLM API**
 
-### Clone to New Project
+Use Python scripts to create the agent and all resources via LLM API. This ensures:
+- ✅ Agent core attributes (name, model, system prompt)
+- ✅ Knowledge Bases (Text KBs and Database KB)
+- ✅ Tools and Outputs configuration
+- ✅ Form Interfaces
 
-To create a copy in a different project:
+Reference implementation: See the `/llm-api-setup` skill documentation for complete workflow and Python script templates.
+
+**Key points:**
+- Use `POST /api/agents` to create the agent with core attributes
+- Use `POST /api/text_knowledge_bases` for Text KBs
+- Use `POST /api/knowledge_bases` for Database KB
+- Use `PATCH /api/agents/{id}` to configure tools and outputs
+- Use `POST /api/form_interfaces` for form interfaces
+- Verify all components after setup
+
+### Option B: CLI + Manual Configuration (Partial Automation)
 
 ```bash
-# 1. Pull existing agent
-tdx agent pull "ROI Reporting Agent"
-
-# 2. Create new project
-tdx llm project create "My New Project"
-
-# 3. Update project reference
-cd agents/ROI\ Reporting\ Agent
-echo '{"llm_project": "My New Project"}' > tdx.json
-
-# 4. Push to new project
-tdx agent push . -y
+# 1. Clone or download this directory
+# 2. Edit tools.yml and replace <DATABASE_NAME> with your actual database name
+# 3. Create project and agent:
+tdx llm project create "ROI Reporting Agent"
+tdx agent push . -f
 ```
 
-### Verify Setup
+**Note**: `tdx agent push` creates only the agent itself. You must manually configure:
+- Knowledge Bases (via UI or LLM API)
+- Tools and Outputs (via LLM API)
+- Form Interfaces (via LLM API)
 
-```bash
-# Pull back to verify
-tdx agent pull "ROI Reporting Agent" -y
+### Option C: Manual (AI Agent Foundry UI)
 
-# Check created resources
-cd agents/ROI\ Reporting\ Agent
-ls -la Dashboard\ Viz/agent.yml     # Agent config with tools/outputs
-ls -la knowledge_bases/              # Knowledge bases
-ls -la form_interfaces/              # Form interfaces
-```
+#### 1. Create Project
+Create a new project named **`ROI Reporting Agent`** in AI Agent Foundry.
 
-## File Structure
+#### 2. Register Database as Knowledge Base
+- Type: **Database**
+- Select your ROI reporting database (containing daily_summary, email_events, revenue tables)
 
-```
-agent/
-├── tdx.json                              # Project reference
-├── README.md                             # This file (English)
-├── README_JA.md                          # Japanese README
-├── Dashboard Viz/
-│   ├── prompt.md                         # System prompt (English)
-│   ├── prompt_ja.md                      # System prompt (Japanese, reference only)
-│   └── agent.yml                         # Agent configuration (includes tools/outputs)
-├── knowledge_bases/
-│   ├── OverallSummary_Spec.md           # Overall Summary report specification (English)
-│   ├── OverallSummary_Spec_ja.md        # Overall Summary report specification (Japanese, reference only)
-│   ├── CampaignDetails_Spec.md          # Campaign Details report specification (English)
-│   ├── CampaignDetails_Spec_ja.md       # Campaign Details report specification (Japanese, reference only)
-│   └── engage_roi_reporting.yml         # Database KB definition
-└── form_interfaces/
-    ├── Overall Summary.yml               # Form for Overall Summary report
-    └── Campaign Details.yml              # Form for Campaign Details report
-```
+#### 3. Register Report Specs as Text Knowledge Bases
 
-**Note**: Japanese files (`*_ja.md`) are included for reference. The `tdx agent push` command uses English files only. To use Japanese versions, manually replace the files before pushing.
+**KB 1:**
+- Type: **Text**, Name: `OverallSummary_Spec`
+- Content: paste from `knowledge_base_overall_summary.md`
+
+**KB 2:**
+- Type: **Text**, Name: `CampaignDetails_Spec`
+- Content: paste from `knowledge_base_campaign_details.md`
+
+#### 4. Create Agent
+- Name: **`Dashboard Viz`**
+- System Prompt: paste from `system_prompt.md`
+- Model: Claude 4.5 Sonnet
+- Max tool iterations: 4
+- Temperature: 0
+
+#### 5. Configure Tools
+See **[tools.yml](./tools.yml)** for all tool names, descriptions, and settings.
+
+#### 6. Register Form Interfaces (when API available)
+- Overall Summary: `forms/td_managed_overall_summary.yml`
+- Campaign Details: `forms/td_managed_campaign_details.yml`
 
 ## Usage
 
@@ -204,7 +232,6 @@ Create dashboard with following conditions:
 | "Date range exceeds 365 days" | Date range too long | Reduce date range to 365 days or less |
 | No data returned | Filters don't match data | Verify campaign_id/journey_id exist; check date range; verify table names |
 | Schema mismatch | Missing required columns | Verify tables contain required columns as documented in Prerequisites |
-| `tdx agent push` fails | Wrong tdx version | Update to tdx 2026.4.55 or later (`npm install -g @treasuredata/tdx`) |
 
 ## Revenue Metrics
 
@@ -217,25 +244,8 @@ Create dashboard with following conditions:
 - **Total Revenue** is shown when BOTH direct and contributed revenue exist
 - Otherwise, only Direct and/or Contributed Revenue are shown separately
 
-## Advanced: Manual Configuration
-
-If you prefer manual setup via UI or LLM API instead of `tdx agent push`, refer to the [legacy setup documentation](./LEGACY_SETUP.md).
-
 ## License
-
 This agent configuration is provided as-is for use with Treasure Data's Engage service.
 
 ## Support
-
-For assistance with setup and deployment, consult Treasure Data documentation or your account team.
-
-## Changelog
-
-### 2026-04-13
-- **BREAKING**: Updated to tdx CLI format
-- Simplified setup to 2 commands (`tdx llm project create` + `tdx agent push`)
-- Removed LLM API dependency for setup
-- Updated file structure to match `tdx agent pull/push` format
-- Form interfaces now use YAML object format instead of JSON strings
-- Agent tools and outputs now embedded in `Dashboard Viz/agent.yml`
-- Added Japanese files (`*_ja.md`) for reference
+This is a reference implementation. For assistance with setup and deployment, consult Treasure Data documentation or your account team.
