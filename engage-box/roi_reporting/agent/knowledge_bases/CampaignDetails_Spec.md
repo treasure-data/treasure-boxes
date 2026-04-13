@@ -8,7 +8,7 @@ name: CampaignDetails_Spec
 - purpose: "To provide comprehensive performance analysis for a single campaign or journey, including KPIs, trends, and email title breakdown."
 - source_tables:
     - "email_events"
-    - "revenue"
+    - "revenue_table"
 
 ## 2. Filters
 - filter:
