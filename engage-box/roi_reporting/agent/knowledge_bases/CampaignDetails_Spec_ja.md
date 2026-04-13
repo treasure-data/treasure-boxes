@@ -1,6 +1,6 @@
 # Report Specification: Campaign Details（日本語版）
 
-> **注意**: このドキュメントは参考資料です。正式なレポート仕様は英語版（[knowledge_base_campaign_details.md](./knowledge_base_campaign_details.md)）を参照してください。
+> **注意**: このドキュメントは参考資料です。正式なレポート仕様は英語版（[CampaignDetails_Spec.md](./CampaignDetails_Spec.md)）を参照してください。
 
 ## 1. レポート概要
 - purpose: "単一のキャンペーンまたはジャーニーの包括的なパフォーマンス分析を提供し、KPI、トレンド、メール件名別の内訳を含む。"
