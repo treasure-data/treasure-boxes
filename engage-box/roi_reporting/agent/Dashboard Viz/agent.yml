@@ -6,7 +6,7 @@ max_tool_iterations: 4
 outputs:
   - name: renderReactApp
     function_name: renderReactApp
-    function_description: "Generates React components using Tailwind CSS. Use ONLY when explicitly requested (React, PDF, Dashboard). STRICT: Single file, export default. NO external libs (no lucide-react). Use inline SVGs. Self-contained. Render visual content ONLY; NO print/download buttons (system handled)."
+    function_description: "Generates a single-file React component for dashboards or PDF-ready visual content. Use ONLY when explicitly requested (React, PDF, Dashboard). STRICT: Single file, export default. Follow the system prompt styling rules; do not assume Tailwind CSS. External libraries are allowed when required by the prompt, including react-plotly.js for charts. Use inline SVGs where appropriate. Self-contained. Render visual content ONLY; NO print/download buttons (system handled)."
     json_schema: '{"type": "object", "properties": {}}'
   - name: text_in_form
     function_name: text_in_form
