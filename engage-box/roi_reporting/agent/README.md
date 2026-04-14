@@ -46,25 +46,108 @@ The agent requires the following tables in the `engage_roi_reporting` database:
 ### Quick Start
 
 ```bash
-# 1. Clone or download this repository
-gh repo clone treasure-data/treasure-boxes
-cd treasure-boxes/engage-box/roi_reporting/agent
+# 1. Clone repository
+git clone --depth 1 --filter=blob:none --sparse https://github.com/treasure-data/treasure-boxes.git
+cd treasure-boxes
+git sparse-checkout set engage-box/roi_reporting
+cd engage-box/roi_reporting/agent
 
-# 2. Create project and push agent
+# 2. Create database (if not exists)
+tdx api -X POST /v3/database/create/engage_roi_reporting
+# Note: "Name has already been taken" error is OK if database already exists
+
+# 3. Create LLM project
 tdx llm project create "ROI Reporting Agent"
+
+# 4. Push agent
 tdx agent push . -f
 ```
 
-**That's it!** All components are created:
-- ✅ Agent (Dashboard Viz)
-- ✅ Knowledge Bases (Database KB + 2 Text KBs)
-- ✅ Tools (4 tools)
-- ✅ Outputs (3 outputs)
-- ✅ Form Interfaces (2 forms)
+**That's it!** Resources created:
+- ✅ Agent: Dashboard Viz
+- ✅ Knowledge Bases: 1 Database KB + 2 Text KBs
+- ✅ Tools: 4 (list_columns, query_data, Read_OverallSummary_Spec, Read_CampaignDetails_Spec)
+- ✅ Outputs: 3 (renderReactApp, text_in_form, new_plot)
+- ✅ Form Interfaces: 2
 
-### Clone to New Project
+Access your agent:
+```bash
+# Via CLI
+tdx chat "Dashboard Viz"
 
-To create a copy in a different project:
+# Or open in browser: AI Agent Foundry > ROI Reporting Agent > Dashboard Viz
+```
+
+### Verify Deployment
+
+```bash
+tdx agent show "Dashboard Viz"
+```
+
+Expected output:
+```
+Agent: Dashboard Viz
+System Prompt: 6,800+ chars
+Tools: 4/4
+  - list_columns
+  - query_data
+  - Read_OverallSummary_Spec
+  - Read_CampaignDetails_Spec
+Outputs: 3/3
+  - renderReactApp
+  - text_in_form
+  - new_plot
+```
+
+### Advanced Options
+
+<details>
+<summary>Use a custom project name</summary>
+
+If you want to use a different project name instead of the default "ROI Reporting Agent":
+
+```bash
+# 1. Create project with your custom name
+tdx llm project create "My Custom ROI Project"
+
+# 2. Update tdx.json
+cat > tdx.json << 'EOF'
+{
+  "llm_project": "My Custom ROI Project",
+  "version": "1.0"
+}
+EOF
+
+# 3. Push agent
+tdx agent push . -f
+```
+
+**Important**: The project name in `tdx.json` must exactly match your created project name.
+</details>
+
+<details>
+<summary>Use Japanese Knowledge Bases</summary>
+
+Japanese versions of specifications are available in `docs/japanese/`. The English Knowledge Bases work for both English and Japanese reports by default.
+
+To use Japanese specifications:
+
+```bash
+# Replace English files with Japanese versions
+cp docs/japanese/OverallSummary_Spec_ja.md knowledge_bases/OverallSummary_Spec.md
+cp docs/japanese/CampaignDetails_Spec_ja.md knowledge_bases/CampaignDetails_Spec.md
+
+# Push agent
+tdx agent push . -f
+```
+
+**Note**: This only affects the specification language. The agent generates Japanese reports when you specify `Language: Japanese` in parameters, regardless of KB language.
+</details>
+
+<details>
+<summary>Clone to a different project</summary>
+
+To deploy this agent to a different project:
 
 ```bash
 # 1. Pull existing agent
@@ -75,48 +158,44 @@ tdx llm project create "My New Project"
 
 # 3. Update project reference
 cd agents/ROI\ Reporting\ Agent
-echo '{"llm_project": "My New Project"}' > tdx.json
+echo '{
+  "llm_project": "My New Project",
+  "version": "1.0"
+}' > tdx.json
 
 # 4. Push to new project
 tdx agent push . -f
 ```
-
-### Verify Setup
-
-```bash
-# Pull back to verify
-tdx agent pull "ROI Reporting Agent" -y
-
-# Check created resources
-cd agents/ROI\ Reporting\ Agent
-ls -la Dashboard\ Viz/agent.yml     # Agent config with tools/outputs
-ls -la knowledge_bases/              # Knowledge bases
-ls -la form_interfaces/              # Form interfaces
-```
+</details>
 
 ## File Structure
 
 ```
 agent/
+├── README.md                             # This file
 ├── tdx.json                              # Project reference
-├── README.md                             # This file (English)
-├── README_JA.md                          # Japanese README
 ├── Dashboard Viz/
-│   ├── prompt.md                         # System prompt (English)
-│   ├── prompt_ja.md                      # System prompt (Japanese, reference only)
-│   └── agent.yml                         # Agent configuration (includes tools/outputs)
+│   ├── agent.yml                         # Agent config (tools, outputs, prompt reference)
+│   └── prompt.md                         # System prompt (English)
 ├── knowledge_bases/
-│   ├── OverallSummary_Spec.md           # Overall Summary report specification (English)
-│   ├── OverallSummary_Spec_ja.md        # Overall Summary report specification (Japanese, reference only)
-│   ├── CampaignDetails_Spec.md          # Campaign Details report specification (English)
-│   ├── CampaignDetails_Spec_ja.md       # Campaign Details report specification (Japanese, reference only)
-│   └── engage_roi_reporting.yml         # Database KB definition
-└── form_interfaces/
-    ├── Overall Summary.yml               # Form for Overall Summary report
-    └── Campaign Details.yml              # Form for Campaign Details report
+│   ├── engage_roi_reporting.yml         # Database KB definition
+│   ├── OverallSummary_Spec.md           # Overall Summary specification (English)
+│   └── CampaignDetails_Spec.md          # Campaign Details specification (English)
+├── form_interfaces/
+│   ├── Overall Summary.yml               # Form for Overall Summary report
+│   └── Campaign Details.yml              # Form for Campaign Details report
+└── docs/
+    └── japanese/                         # Japanese reference materials
+        ├── OverallSummary_Spec_ja.md    # Overall Summary spec (Japanese)
+        ├── CampaignDetails_Spec_ja.md   # Campaign Details spec (Japanese)
+        ├── prompt_ja.md                  # System prompt (Japanese)
+        └── README_JA.md                  # Japanese README
 ```
 
-**Note**: Japanese files (`*_ja.md`) are included for reference. The `tdx agent push` command uses English files only. To use Japanese versions, manually replace the files before pushing.
+**Notes**:
+- Files in `docs/japanese/` are reference materials and are not deployed by default
+- `Dashboard Viz/agent.yml` is auto-generated during `tdx agent push` - do not edit directly
+- The agent generates reports in both English and Japanese regardless of KB language
 
 ## Usage
 
@@ -198,13 +277,149 @@ Create dashboard with following conditions:
 
 ## Troubleshooting
 
-| Error | Cause | Fix |
-|---|---|---|
-| "Missing required parameters" | Required filter not provided | Provide start_date, end_date, language, and currency for Overall Summary; campaign_id or journey_id for Campaign Details |
-| "Date range exceeds 365 days" | Date range too long | Reduce date range to 365 days or less |
-| No data returned | Filters don't match data | Verify campaign_id/journey_id exist; check date range; verify table names |
-| Schema mismatch | Missing required columns | Verify tables contain required columns as documented in Prerequisites |
-| `tdx agent push` fails | Wrong tdx version | Update to tdx 2026.4.55 or later (`npm install -g @treasuredata/tdx`) |
+### Setup Issues
+
+#### "LLM_PROJECT_NOT_FOUND" error
+
+**Cause**: Project name in `tdx.json` doesn't match an existing project  
+**Solution**:
+```bash
+# Check existing projects
+tdx llm projects
+
+# Create the project specified in tdx.json
+tdx llm project create "ROI Reporting Agent"
+
+# OR update tdx.json to match an existing project
+cat > tdx.json << 'EOF'
+{
+  "llm_project": "Existing Project Name",
+  "version": "1.0"
+}
+EOF
+```
+
+#### Database "engage_roi_reporting" not found
+
+**Cause**: Database hasn't been created  
+**Solution**:
+```bash
+tdx api -X POST /v3/database/create/engage_roi_reporting
+```
+
+If the database exists but you get this error, verify the name:
+```bash
+tdx db list | grep engage_roi_reporting
+```
+
+#### Tools show 0/4 or outputs missing
+
+**Cause**: Agent configuration wasn't properly loaded during push  
+**Solution**:
+```bash
+# Re-push the agent
+tdx agent push . -f
+
+# Verify
+tdx agent show "Dashboard Viz"
+```
+
+If the issue persists, check that you're in the correct directory (should contain `tdx.json` and `Dashboard Viz/` folder).
+
+#### `tdx agent push` fails
+
+**Cause**: Wrong tdx version  
+**Solution**: Update to tdx 2026.4.55 or later:
+```bash
+tdx upgrade
+```
+
+### Usage Issues
+
+#### Agent doesn't generate Japanese reports
+
+**This is not an issue**: The agent generates Japanese reports when you specify `Language: Japanese` in the report parameters. The Knowledge Base language doesn't affect output language.
+
+Example prompt for Japanese report:
+```
+Create dashboard with following conditions:
+- Report_id: 1.Overall Summary
+- Start Date: 2025-01-01
+- End Date: 2025-01-31
+- Language: Japanese
+- Currency: JPY
+```
+
+#### "Missing required parameters" error
+
+**Cause**: Required filter not provided  
+**Solution**: Provide all required parameters:
+- Overall Summary: `start_date`, `end_date`, `language`, `currency`
+- Campaign Details: `campaign_id` OR `journey_id`, `language`, `currency`
+
+#### "Date range exceeds 365 days" error
+
+**Cause**: Date range too long  
+**Solution**: Reduce date range to 365 days or less
+
+#### No data returned
+
+**Cause**: Filters don't match data  
+**Solution**:
+- Verify campaign_id/journey_id exist in the database
+- Check date range matches available data
+- Verify table names in Prerequisites
+
+#### Schema mismatch error
+
+**Cause**: Missing required columns  
+**Solution**: Verify tables contain required columns as documented in Prerequisites section
+
+### Project Management
+
+#### Need to change project name after deployment
+
+```bash
+# 1. Create new project
+tdx llm project create "New Project Name"
+
+# 2. Update tdx.json
+cat > tdx.json << 'EOF'
+{
+  "llm_project": "New Project Name",
+  "version": "1.0"
+}
+EOF
+
+# 3. Push to new project (creates new agent instance)
+tdx agent push . -f
+```
+
+**Note**: This creates a new agent in the new project. The original agent remains in the old project.
+
+### Data Preparation Issues
+
+See the [workflow README](../workflow/README.md) for troubleshooting data preparation and table creation issues.
+
+## Japanese Documentation
+
+Japanese versions of specifications and documentation are available in `docs/japanese/`:
+
+| File | Description |
+|------|-------------|
+| `OverallSummary_Spec_ja.md` | Overall Summary report specification (Japanese) |
+| `CampaignDetails_Spec_ja.md` | Campaign Details report specification (Japanese) |
+| `prompt_ja.md` | System prompt reference (Japanese) |
+| `README_JA.md` | Japanese README |
+
+**Note**: These are reference materials. The English specifications are sufficient for all functionality, including Japanese report generation. The agent can generate reports in Japanese when you specify `Language: Japanese` in the report parameters.
+
+To deploy Japanese specifications instead of English (advanced):
+```bash
+cp docs/japanese/OverallSummary_Spec_ja.md knowledge_bases/OverallSummary_Spec.md
+cp docs/japanese/CampaignDetails_Spec_ja.md knowledge_bases/CampaignDetails_Spec.md
+tdx agent push . -f
+```
 
 ## Revenue Metrics
 
