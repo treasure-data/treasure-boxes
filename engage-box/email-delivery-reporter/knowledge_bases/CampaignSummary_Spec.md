@@ -14,14 +14,14 @@ type: text
 - filter:
     - id: "campaign_id"
       type: "string"
-      required: true
+      required: false
       exclusive_with: "journey_id"
 - filter:
     - id: "journey_id"
       type: "string"
-      required: true
+      required: false
       exclusive_with: "campaign_id"
-- filter_notes: "A campaign_id or journey_id is required. When one of these IDs is provided, a date range is NOT required. The report should run on all available data for that ID."
+- filter_notes: "Exactly one of campaign_id or journey_id must be provided. Do not provide both. When one of these IDs is provided, a date range is NOT required. The report should run on all available data for that ID."
 - notes: "Timestamp column (event_timestamp) is a varchar string. It MUST be parsed using date_parse(column, '%Y-%m-%d %H:%i:%s.%f')."
 
 ## 3. Important Notes on Metrics

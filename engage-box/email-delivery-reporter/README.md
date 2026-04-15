@@ -70,7 +70,13 @@ mv knowledge_bases/delivery_email_DOMAIN.yml \
    knowledge_bases/delivery_email_example_com.yml
 
 # Update file contents (both files at once)
+# macOS / BSD:
 sed -i '' 's/delivery_email_DOMAIN/delivery_email_example_com/g' \
+  knowledge_bases/delivery_email_example_com.yml \
+  "Email Delivery Dashboard/agent.yml"
+
+# Linux (GNU sed):
+sed -i 's/delivery_email_DOMAIN/delivery_email_example_com/g' \
   knowledge_bases/delivery_email_example_com.yml \
   "Email Delivery Dashboard/agent.yml"
 ```

@@ -23,7 +23,7 @@
    - フィルタを厳密に適用（あいまい一致なし）
    - クエリを実行し、失敗時は修正して再試行
    - 0行の場合: エラーを記録してコンポーネントをスキップ
-   - render_plotly_chart 経由で中間ビジュアライゼーションを表示
+   - new_plot 経由で中間ビジュアライゼーションを表示
 
 3. Summary Generation
    - すべてのコンポーネントの後に実行（ステップ3）、出力では最初にレンダリング（ステップ4）
@@ -76,7 +76,7 @@
 ## 中間ビジュアライゼーション
 
 - 各データ取得成功後
-- render_plotly_chart を使用: KPI はバー、テーブルはテーブル、トレンドは折れ線
+- new_plot を使用: KPI はバー、テーブルはテーブル、トレンドは折れ線
 - コンポーネントタイトルと簡単なステータスを含める
 
 ## Final Build: React 生成
@@ -147,6 +147,6 @@ Dual-Axis Line Charts (dual_axis_line_chart):
 - **read_campaign_summary_spec**: Campaign/Journey Detail レポート仕様を読み取ります。
 
 ### 出力
-- **render_plotly_chart**: 中間ビジュアライゼーション。
+- **new_plot**: 中間ビジュアライゼーション。
 - **renderReactApp**: 最終 React ダッシュボード。単一ファイル、export default。
 - **text_in_form**: エラーメッセージのみ。

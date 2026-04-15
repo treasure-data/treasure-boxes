@@ -1,6 +1,6 @@
 # Report Specification: OverallSummary（日本語版）
 
-> **注意**: このドキュメントは参考資料です。正式なレポート仕様は英語版（[knowledge_base_overall_summary.md](./knowledge_base_overall_summary.md)）を参照してください。
+> **注意**: このドキュメントは参考資料です。正式なレポート仕様は英語版（[OverallSummary_Spec.md](../../knowledge_bases/OverallSummary_Spec.md)）を参照してください。
 
 ## 1. レポート概要
 - purpose: "指定された期間における主要パフォーマンス指標（KPI）、トレンド、上位キャンペーン/ジャーニーを可視化する。"
