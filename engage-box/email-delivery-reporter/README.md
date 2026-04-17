@@ -1,4 +1,6 @@
-# Email Delivery Reporter Agent
+# Email Delivery Reporter
+
+An AI agent that automatically analyzes Treasure Data Engage email delivery logs from PlazmaDB and generates interactive React + Plotly dashboards. Supports English and Japanese, USD and JPY.
 
 ## Overview
 
@@ -11,23 +13,38 @@ Two report types are supported:
 ## Features
 
 - Automated SQL query generation and execution
-- Interactive visualizations
+- Interactive visualizations with Plotly
 - Multilingual support (English/Japanese)
+- Multi-currency support (USD/JPY)
 - KPI cards with engagement and quality metrics
 - Time-series trend analysis with dual-axis charts
 - Campaigns/journeys/subjects performance tables
 - Graceful degradation when components fail
 
-## Files
+## Repository Structure
 
-| File | Description |
-|---|---|
-| `system_prompt.md` | Agent system prompt — paste into System Prompt field |
-| `knowledge_base_overall_summary.md` | Report spec for Overall Summary — register as Text KB named `DeliveryOverallSummary_Spec` |
-| `knowledge_base_campaign_summary.md` | Report spec for Campaign Detail — register as Text KB named `DeliveryCampaignSummary_Spec` |
-| `tools.yml` | All tool configurations — reference when configuring agent tools |
+```
+email-delivery-reporter/
+├── tdx.json                                    # Project manifest (no changes needed)
+├── README.md                                   # This file
+├── Email Delivery Dashboard/
+│   ├── agent.yml                               # ← EDIT: replace DOMAIN (2 places)
+│   └── prompt.md                               # System prompt (no changes needed)
+├── knowledge_bases/
+│   ├── delivery_email_DOMAIN.yml               # ← EDIT: replace DOMAIN (filename + 2 places inside)
+│   ├── OverallSummary_Spec.md                  # Report spec (no changes needed)
+│   └── CampaignSummary_Spec.md                 # Report spec (no changes needed)
+├── form_interfaces/
+│   ├── Overall Summary.yml                     # Form UI (no changes needed)
+│   └── Campaign Details.yml                    # Form UI (no changes needed)
+└── docs/japanese/                              # Japanese documentation (reference only, not deployed)
+```
 
 ## Prerequisites
+
+- `tdx` CLI (v2026.4.55+), authenticated (`tdx auth setup`)
+- Treasure Data account with Engage enabled
+- PlazmaDB database `delivery_email_<domain>` must exist
 
 ### Required PlazmaDB Database
 
@@ -35,7 +52,7 @@ The database name follows this pattern:
 ```
 delivery_email_<maildomain>
 ```
-Where `<maildomain>` is your email domain with dots replaced by underscores.
+Where `<maildomain>` is your email domain with dots and hyphens replaced by underscores.
 
 **Examples:**
 - `example.com` → `delivery_email_example_com`
@@ -49,84 +66,144 @@ Where `<maildomain>` is your email domain with dots replaced by underscores.
 | `error_events` | Pre-send failures | `timestamp`, `error_type`, `error_message`, `custom_event_id` |
 | `subscription_events` | Opt-out events | `profile_identifier_value`, `campaign_id`, `action`, `received_time`, `time` |
 
-event_type values: `Send`, `Delivery`, `Open`, `Click`, `Bounce`, `Complaint`, `DeliveryDelay`
+Event types: `Send`, `Delivery`, `Open`, `Click`, `Bounce`, `Complaint`, `DeliveryDelay`
 
-## Setup Instructions
+## Quick Start
 
-### Option A: CLI (Recommended)
+### Step 1: Clone
 
 ```bash
-# 1. Clone or download this directory
-# 2. Edit knowledge_bases/<DB_NAME>.yml with your actual database name
-# 3. Run:
+git clone --depth 1 --filter=blob:none --sparse \
+  https://github.com/treasure-data/treasure-boxes.git
+cd treasure-boxes
+git sparse-checkout set engage-box/email-delivery-reporter
+cd engage-box/email-delivery-reporter
+```
+
+### Step 2: Determine your domain slug
+
+Derive the database name from your Engage sending email domain:
+- Replace dots and hyphens with underscores
+- Example: `example.com` → `example_com`, `my-company.co.jp` → `my_company_co_jp`
+
+Verify the database exists:
+
+```bash
+tdx databases | grep delivery_email
+```
+
+### Step 3: Replace DOMAIN (5 replacements across 2 files + 1 rename)
+
+The following example uses `example_com`. Replace with your actual domain slug.
+
+| # | File | Location | Before → After |
+|---|------|----------|----------------|
+| 1 | `knowledge_bases/delivery_email_DOMAIN.yml` | **Filename** | → `delivery_email_example_com.yml` |
+| 2 | Same file | `name:` (line 1) | `delivery_email_DOMAIN` → `delivery_email_example_com` |
+| 3 | Same file | `database:` (line 3) | `delivery_email_DOMAIN` → `delivery_email_example_com` |
+| 4 | `Email Delivery Dashboard/agent.yml` | 1st `@ref` | `"delivery_email_DOMAIN"` → `"delivery_email_example_com"` |
+| 5 | Same file | 2nd `@ref` | `"delivery_email_DOMAIN"` → `"delivery_email_example_com"` |
+
+Commands (replace `example_com` with your slug):
+
+```bash
+# Rename the knowledge base file
+mv knowledge_bases/delivery_email_DOMAIN.yml \
+   knowledge_bases/delivery_email_example_com.yml
+
+# Update file contents (both files at once)
+# macOS / BSD:
+sed -i '' 's/delivery_email_DOMAIN/delivery_email_example_com/g' \
+  knowledge_bases/delivery_email_example_com.yml \
+  "Email Delivery Dashboard/agent.yml"
+
+# Linux (GNU sed):
+sed -i 's/delivery_email_DOMAIN/delivery_email_example_com/g' \
+  knowledge_bases/delivery_email_example_com.yml \
+  "Email Delivery Dashboard/agent.yml"
+```
+
+### Step 4: Deploy
+
+```bash
 tdx llm project create "Email Delivery Reporter"
 tdx agent push . -f
 ```
 
-### Option B: Manual (AI Agent Foundry UI)
+Expected output:
+```
+Push summary for 'Email Delivery Reporter':
+  + 6 new
+  Agents: 1 created
+  Knowledge Bases: 1 created
+  Text Knowledge Bases: 2 created
+  Form Interfaces: 2 created
 
-#### 1. Create Project
-Create a new project named **`Email Delivery Reporter`** in AI Agent Foundry.
+✔ Pushed 6 resources to 'Email Delivery Reporter'
+```
 
-#### 2. Register PlazmaDB as Knowledge Base
-- Type: **Database**
-- Select: `delivery_email_<your_domain>`
+### Step 5: Verify
 
-#### 3. Register Report Specs as Text Knowledge Bases
+```bash
+tdx agent list
+```
 
-**KB 1:**
-- Type: **Text**, Name: `DeliveryOverallSummary_Spec`
-- Content: paste from `knowledge_base_overall_summary.md`
-
-**KB 2:**
-- Type: **Text**, Name: `DeliveryCampaignSummary_Spec`
-- Content: paste from `knowledge_base_campaign_summary.md`
-
-#### 4. Create Agent
-- Name: **`Email Delivery Reporter`**
-- System Prompt: paste from `system_prompt.md`
-
-#### 5. Configure Tools
-See **[tools.yml](./tools.yml)** for all tool names, descriptions, and settings.
+Or open: AI Agent Foundry > Email Delivery Reporter > Email Delivery Dashboard
 
 ## Usage
 
 ### Overall Summary Report
 
+**Example (English):**
 ```
-Generate an overall email delivery report for January 2025 in English.
-date_range: { start_date: '2025-01-01', end_date: '2025-01-31' }
-language: 'en'
-```
-
-```
-2024年12月のメール配信レポートを日本語で作成してください。
-date_range: { start_date: '2024-12-01', end_date: '2024-12-31' }
-language: 'ja'
+Generate an overall email delivery report with following conditions:
+- Report_id: 1. Overall Summary
+- Start Date: 2025-01-01
+- End Date: 2025-01-31
+- Language: English
+- Currency: USD
 ```
 
-**Parameters:**
-- `date_range` (optional): defaults to full data range
-- `language` (optional): `'en'` or `'ja'`, defaults to `'en'`
-- `campaign_id`, `journey_id`, `subject` (optional): additional filters
+**Example (Japanese):**
+```
+以下の条件でメール配信の全体サマリーレポートを作成してください:
+- Report_id: 1. Overall Summary
+- Start Date: 2025-01-01
+- End Date: 2025-01-31
+- Language: Japanese
+- Currency: JPY
+```
+
+**Parameters:** 
+- `Start_date`, `End_date` (required, max 365 days apart)
+- `Language` (`English` or `Japanese`)
+- `Currency` (`USD` or `JPY`)
 
 ### Campaign Detail Report
 
+**Example (English):**
 ```
-Create a detailed report for campaign XYZ789.
-campaign_id: 'XYZ789'
-language: 'en'
+Generate a detailed email delivery report with following conditions:
+- Report_id: 2. Campaign Summary
+- Campaign_id: ABC123
+- Language: English
+- Currency: USD
 ```
 
+**Example (Japanese):**
 ```
-ジャーニーID "welcome-series" の詳細レポートを日本語で作成してください。
-journey_id: 'welcome-series'
-language: 'ja'
+以下の条件でキャンペーン詳細レポートを作成してください:
+- Report_id: 2. Campaign Summary
+- Campaign_id: ABC123
+- Language: Japanese
+- Currency: JPY
 ```
 
 **Parameters:**
-- At least one of `campaign_id`, `journey_id`, or `subject` is required
-- `date_range`, `language` optional
+- `Campaign_id` or `Journey_id` (at least one required)
+- `Language` (`English` or `Japanese`)
+- `Currency` (`USD` or `JPY`)
+- Optional: `date_range`, `subject` filter
 
 ## Report Components
 
@@ -139,7 +216,7 @@ language: 'ja'
 
 ### Campaign Detail includes:
 1. Executive Summary
-2. KPI Cards (filtered)
+2. KPI Cards (filtered by campaign/journey)
 3. Performance Trend Chart
 4. Email Subject Performance Table (top 100 by sends)
 
@@ -154,12 +231,15 @@ language: 'ja'
 
 | Error | Cause | Fix |
 |---|---|---|
-| "No email delivery database found" | DB not registered or wrong name | Verify `delivery_email_<domain>` is registered as KB |
-| "Missing required parameters" | Campaign Detail needs at least one identifier | Provide campaign_id, journey_id, or subject |
-| No data returned | Filters don't match data | Verify IDs exist; check date range; broaden filters |
+| Knowledge base not found | `name` in `.yml` doesn't match `@ref` in `agent.yml` | Check all 5 DOMAIN replacements above |
+| Database not found | `database:` field doesn't match existing TD database | Run `tdx databases \| grep delivery_email` to verify |
+| `tdx agent push` structure error | `knowledge_bases/` not at project root | Ensure `knowledge_bases/` is at same level as `tdx.json`, not nested in `agent/` |
+| LLM_PROJECT_NOT_FOUND | Project not created | Run `tdx llm project create "Email Delivery Reporter"` first |
+| No data returned | Filter doesn't match data or date range too narrow | Verify campaign_id/journey_id exists; widen date range; check filters |
+| "Missing required parameters" | Campaign Detail needs at least one identifier | Provide campaign_id or journey_id |
 
 ## License
 This agent configuration is provided as-is for use with Treasure Data's Engage service.
 
 ## Support
-This is a reference implementation. No support is provided.
+For questions or issues, please contact your Treasure Data support team.

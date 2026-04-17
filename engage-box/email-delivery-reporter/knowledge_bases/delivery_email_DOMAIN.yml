@@ -1,0 +1,28 @@
+name: delivery_email_DOMAIN
+type: database
+database: delivery_email_DOMAIN
+tables:
+  - name: events
+    td_query: SELECT * FROM events
+    enable_data: true
+    enable_data_index: true
+  - name: error_events
+    td_query: SELECT * FROM error_events
+    enable_data: true
+    enable_data_index: true
+  - name: subscription_events
+    td_query: SELECT * FROM subscription_events
+    enable_data: true
+    enable_data_index: true
+  - name: daily_summary
+    td_query: SELECT * FROM daily_summary
+    enable_data: true
+    enable_data_index: true
+  - name: event_master
+    td_query: SELECT * FROM event_master
+    enable_data: true
+    enable_data_index: true
+  - name: email_events
+    td_query: SELECT * FROM email_events
+    enable_data: true
+    enable_data_index: true

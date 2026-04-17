@@ -1,0 +1,71 @@
+name: Overall Summary
+agent: '@ref(type: "agent", name: "Email Delivery Dashboard")'
+prompt_template: |
+  Generate an overall email delivery report with following conditions:
+  - Report_id: 1. Overall Summary
+  - Start Date: {{Start_date}}
+  - End Date: {{End_date}}
+  - Language: {{Language}}
+  - Currency: {{Currency}}
+form_schema:
+  type: object
+  properties:
+    Start_date:
+      title: Start Date
+      type: string
+      format: date
+    End_date:
+      title: End Date
+      type: string
+      format: date
+    Language:
+      title: Language
+      type: string
+      enum:
+        - English
+        - Japanese
+      enumNames:
+        - English
+        - Japanese
+    Currency:
+      title: Currency
+      type: string
+      enum:
+        - USD
+        - JPY
+      enumNames:
+        - USD
+        - JPY
+  required:
+    - Start_date
+    - End_date
+    - Language
+    - Currency
+ui_schema:
+  Start_date:
+    ui:en:title: Start Date
+    ui:ja:title: 開始日
+  End_date:
+    ui:en:title: End Date
+    ui:ja:title: 終了日
+  Language:
+    ui:widget: radio
+    ui:en:title: Language
+    ui:ja:title: 言語
+    ui:en:enumNames:
+      - English
+      - Japanese
+    ui:ja:enumNames:
+      - 英語
+      - 日本語
+  Currency:
+    ui:widget: radio
+    ui:en:title: Currency
+    ui:ja:title: 通貨
+    ui:en:enumNames:
+      - USD
+      - JPY
+    ui:ja:enumNames:
+      - 米ドル
+      - 円
+use_text_resource: false
