@@ -1,12 +1,32 @@
 # Email Delivery Reporter
 
-Treasure Data Engage のメール配信ログ (PlazmaDB) を自動分析し、React + Plotly のインタラクティブダッシュボードを生成する AI エージェントです。英語・日本語、USD・JPY に対応しています。
+An AI agent that automatically analyzes Treasure Data Engage email delivery logs from PlazmaDB and generates interactive React + Plotly dashboards. Supports English and Japanese, USD and JPY.
+
+## Overview
+
+This agent generates email delivery reports for Treasure Data's Engage service. It autonomously analyzes email delivery logs from PlazmaDB, executes SQL queries against Trino, and produces interactive dashboards with visualizations and insights.
+
+Two report types are supported:
+- **Overall Summary Report**: High-level KPIs, trends, and campaign/journey performance over a period
+- **Campaign Detail Report**: Detailed analysis for a specific campaign, journey, or subject filter
+
+## Features
+
+- Automated SQL query generation and execution
+- Interactive visualizations with Plotly
+- Multilingual support (English/Japanese)
+- Multi-currency support (USD/JPY)
+- KPI cards with engagement and quality metrics
+- Time-series trend analysis with dual-axis charts
+- Campaigns/journeys/subjects performance tables
+- Graceful degradation when components fail
 
 ## Repository Structure
 
 ```
 email-delivery-reporter/
 ├── tdx.json                                    # Project manifest (no changes needed)
+├── README.md                                   # This file
 ├── Email Delivery Dashboard/
 │   ├── agent.yml                               # ← EDIT: replace DOMAIN (2 places)
 │   └── prompt.md                               # System prompt (no changes needed)
@@ -17,14 +37,36 @@ email-delivery-reporter/
 ├── form_interfaces/
 │   ├── Overall Summary.yml                     # Form UI (no changes needed)
 │   └── Campaign Details.yml                    # Form UI (no changes needed)
-└── docs/japanese/                              # Reference only (not deployed)
+└── docs/japanese/                              # Japanese documentation (reference only, not deployed)
 ```
 
 ## Prerequisites
 
 - `tdx` CLI (v2026.4.55+), authenticated (`tdx auth setup`)
 - Treasure Data account with Engage enabled
-- PlazmaDB database `delivery_email_<domain>` が存在すること
+- PlazmaDB database `delivery_email_<domain>` must exist
+
+### Required PlazmaDB Database
+
+The database name follows this pattern:
+```
+delivery_email_<maildomain>
+```
+Where `<maildomain>` is your email domain with dots and hyphens replaced by underscores.
+
+**Examples:**
+- `example.com` → `delivery_email_example_com`
+- `my-company.co.jp` → `delivery_email_my_company_co_jp`
+
+### Required Tables
+
+| Table | Description | Key Columns |
+|---|---|---|
+| `events` | Email event logs | `time`, `timestamp`, `event_type`, `message_id`, `campaign_id`, `journey_id`, `subject`, `email_sender_id`, `email_template_id` |
+| `error_events` | Pre-send failures | `timestamp`, `error_type`, `error_message`, `custom_event_id` |
+| `subscription_events` | Opt-out events | `profile_identifier_value`, `campaign_id`, `action`, `received_time`, `time` |
+
+Event types: `Send`, `Delivery`, `Open`, `Click`, `Bounce`, `Complaint`, `DeliveryDelay`
 
 ## Quick Start
 
@@ -40,11 +82,11 @@ cd engage-box/email-delivery-reporter
 
 ### Step 2: Determine your domain slug
 
-Engage の送信元メールドメインからデータベース名を導出します:
-- ドットとハイフンをアンダースコアに置換
-- 例: `example.com` → `example_com`, `my-company.co.jp` → `my_company_co_jp`
+Derive the database name from your Engage sending email domain:
+- Replace dots and hyphens with underscores
+- Example: `example.com` → `example_com`, `my-company.co.jp` → `my_company_co_jp`
 
-データベースが存在するか確認:
+Verify the database exists:
 
 ```bash
 tdx databases | grep delivery_email
@@ -52,7 +94,7 @@ tdx databases | grep delivery_email
 
 ### Step 3: Replace DOMAIN (5 replacements across 2 files + 1 rename)
 
-以下の例では `example_com` を使用しています。ご自身のドメインスラッグに置き換えてください。
+The following example uses `example_com`. Replace with your actual domain slug.
 
 | # | File | Location | Before → After |
 |---|------|----------|----------------|
@@ -112,6 +154,7 @@ Or open: AI Agent Foundry > Email Delivery Reporter > Email Delivery Dashboard
 
 ### Overall Summary Report
 
+**Example (English):**
 ```
 Generate an overall email delivery report with following conditions:
 - Report_id: 1. Overall Summary
@@ -121,10 +164,24 @@ Generate an overall email delivery report with following conditions:
 - Currency: USD
 ```
 
-Parameters: `Start_date`, `End_date` (required, max 365 days), `Language` (`English`/`Japanese`), `Currency` (`USD`/`JPY`)
+**Example (Japanese):**
+```
+以下の条件でメール配信の全体サマリーレポートを作成してください:
+- Report_id: 1. Overall Summary
+- Start Date: 2025-01-01
+- End Date: 2025-01-31
+- Language: Japanese
+- Currency: JPY
+```
+
+**Parameters:** 
+- `Start_date`, `End_date` (required, max 365 days apart)
+- `Language` (`English` or `Japanese`)
+- `Currency` (`USD` or `JPY`)
 
 ### Campaign Detail Report
 
+**Example (English):**
 ```
 Generate a detailed email delivery report with following conditions:
 - Report_id: 2. Campaign Summary
@@ -133,14 +190,56 @@ Generate a detailed email delivery report with following conditions:
 - Currency: USD
 ```
 
-Parameters: `Campaign_id` or `Journey_id` (one required), `Language`, `Currency`
+**Example (Japanese):**
+```
+以下の条件でキャンペーン詳細レポートを作成してください:
+- Report_id: 2. Campaign Summary
+- Campaign_id: ABC123
+- Language: Japanese
+- Currency: JPY
+```
+
+**Parameters:**
+- `Campaign_id` or `Journey_id` (at least one required)
+- `Language` (`English` or `Japanese`)
+- `Currency` (`USD` or `JPY`)
+- Optional: `date_range`, `subject` filter
+
+## Report Components
+
+### Overall Summary includes:
+1. Executive Summary
+2. KPI Cards — Sends, Deliveries, Unique Opens, Unique Clicks, Bounces, Unsubscribes
+3. Performance Trend Chart (dual-axis, auto granularity)
+4. Campaign Performance Table (top 100 by sends)
+5. Journey Performance Table (top 100 by sends)
+
+### Campaign Detail includes:
+1. Executive Summary
+2. KPI Cards (filtered by campaign/journey)
+3. Performance Trend Chart
+4. Email Subject Performance Table (top 100 by sends)
+
+### Auto Granularity
+| Data span | Granularity |
+|---|---|
+| 1–34 days | Daily |
+| 35–90 days | Weekly |
+| 91+ days | Monthly |
 
 ## Troubleshooting
 
 | Error | Cause | Fix |
 |---|---|---|
 | Knowledge base not found | `name` in `.yml` doesn't match `@ref` in `agent.yml` | Check all 5 DOMAIN replacements above |
-| Database not found | `database:` field doesn't match existing TD database | Run `tdx databases \| grep delivery_email` |
+| Database not found | `database:` field doesn't match existing TD database | Run `tdx databases \| grep delivery_email` to verify |
 | `tdx agent push` structure error | `knowledge_bases/` not at project root | Ensure `knowledge_bases/` is at same level as `tdx.json`, not nested in `agent/` |
 | LLM_PROJECT_NOT_FOUND | Project not created | Run `tdx llm project create "Email Delivery Reporter"` first |
-| No data returned | Filter doesn't match data | Verify campaign_id/journey_id exists, widen date range |
+| No data returned | Filter doesn't match data or date range too narrow | Verify campaign_id/journey_id exists; widen date range; check filters |
+| "Missing required parameters" | Campaign Detail needs at least one identifier | Provide campaign_id or journey_id |
+
+## License
+This agent configuration is provided as-is for use with Treasure Data's Engage service.
+
+## Support
+For questions or issues, please contact your Treasure Data support team.

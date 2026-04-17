@@ -2,6 +2,8 @@
 
 This workflow provides dig files and SQL queries for preparing data for the ROI dashboard.
 
+> **Note**: This workflow prepares data for the [ROI Reporting Agent](../../agent/). After running this workflow, use the agent to generate interactive dashboards and reports. See the [main ROI Reporting README](../../README.md) for the complete solution overview.
+
 ## Overview
 
 The report preparation workflow performs the following tasks:
@@ -52,8 +54,6 @@ The `config.yaml` file allows you to configure:
 
 1. Create Database named `engage_roi_reporting`
 
-1. Prepare Revenue data table named `revenue_table` under `engage_roi_reporting` database
-
 1. Edit the `config.yaml` file to match your environment after you download this example
     1. Set email_domains  
     When you send emails using Engage Studio, a database with a name beginning with "delivery_email_" is generated. Please list that database name under `email_domains` instead of the existing database name, `delivery_email_example_com`.
@@ -61,11 +61,21 @@ The `config.yaml` file allows you to configure:
     1. Set endpoint  
     Please set the endpoints that matches the Treasure Data region you are using. In this example, the US region endpoints are set. If you are using the Tokyo region, please comment out the US region endpoints and use the commented out endpoints.
 
+    1. Set revenue generation settings  
+    The workflow can generate sample revenue data for testing by setting `revenue_generation.generate_sample: true` in config.yaml. This creates realistic dummy data for verifying report output. **Note**: Sample data is for testing only. For production use, you must prepare your own `revenue_table` with actual conversion and revenue data from your systems, and set `generate_sample: false`.
+
+    1. Create `tdx.json` in the workflow directory (if it doesn't exist):
+       ```json
+       {
+         "workflow_project": "reporting_agent"
+       }
+       ```
+
     1. Upload your project  
-    Upload the project using `td workflow push` command in the same directory as `report_preparation.dig`.
+    Upload the project using `tdx wf push` command in the same directory as `report_preparation.dig`.
 
     1. Register Master Key(API Key) to Secret  
-    Please register Master Key to the secret of uploaded project. The name of the Secret is `td.apikey`.
+    Register Master Key to the secret of the uploaded project using `tdx wf secrets set reporting_agent "td.apikey=ACCOUNT_ID/YOUR_MASTER_API_KEY"`. The name of the Secret is `td.apikey`.
 
 
 ### Scheduled Execution
@@ -234,7 +244,6 @@ scripts/reporting_agent/generate_revenue_data.py
 
 ## Important Notes
 
-- This workflow is designed to be run by the PS team
 - The workflow should be implemented as a user-defined workflow
 - Handle API keys with appropriate security measures
 
