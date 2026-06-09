@@ -18,7 +18,10 @@ def get_activations_per_audience(base_url, headers, id):
 def get_all_activations(base_url, headers, id_list):
     l = []
     for i in id_list:
-        l.extend(get_activations_per_audience(base_url=base_url, headers=headers, id=i))
+        try:
+            l.extend(get_activations_per_audience(base_url=base_url, headers=headers, id=i))
+        except requests.exceptions.HTTPError as e:
+            print(f'Skipping audience {i}: {e}')
     return l
 
 def insert_activations(import_unixtime, endpoint, apikey, dest_db, dest_table, activations):

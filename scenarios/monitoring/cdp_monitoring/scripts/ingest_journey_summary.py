@@ -24,9 +24,12 @@ def get_journey_summary(base_url, headers, id):
 def get_all_journey_summary(base_url, headers, ids):
     l = []
     for i in ids:
-        d = get_journey_summary(base_url, headers, i)
-        if d != None:
-            l.append(d)
+        try:
+            d = get_journey_summary(base_url, headers, i)
+            if d != None:
+                l.append(d)
+        except requests.exceptions.HTTPError as e:
+            print(f'Skipping journey {i}: {e}')
     return l
 
 def run(session_unixtime, dest_db, dest_table, journey_ids, api_endpoint='api.treasuredata.com', cdp_api_endpoint='api-cdp.treasuredata.com'):
