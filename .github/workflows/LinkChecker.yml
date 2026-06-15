@@ -33,7 +33,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: boxes.treasuredata.com.html
           path: ./logs/boxes.treasuredata.com.html
