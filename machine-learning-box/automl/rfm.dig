@@ -1,0 +1,26 @@
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: ${output_database}
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: ["${output_database}"]
+
++load_datasets:
+   ipynb>:
+     notebook: ml_datasets
+     output_database: ${input_database}
+     datasets: cosmetics_store
+
++run_rfm:
+  ipynb>:
+    notebook: RFM
+    input_table: ${input_database}.cosmetics_store
+    output_table: ${output_database}.rfm_output_cosmetics_store
+    user_column: user_id
+    # tstamp_column: event_time
+    # tstamp_column: tstamp
+    amount_column: price
+    audience_name: cosmetics_${session_id}

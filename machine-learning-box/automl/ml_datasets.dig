@@ -1,0 +1,13 @@
+timezone: Asia/Tokyo
+#timezone: PST
+
+_export:
+  td:
+    engine: presto
+
++load_datasets:
+  ipynb>:
+    notebook: ml_datasets
+    output_database: ml_datasets
+    datasets: all
+#   datasets: gluon, bank_marketing

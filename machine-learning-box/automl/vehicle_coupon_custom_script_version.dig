@@ -1,0 +1,80 @@
+_export:
+  output_database: ml_test
+  td:
+    engine: presto
+    database: ${output_database}
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: ["ml_test"]
+
++load_datasets:
+  ipynb>:
+    docker:
+      task_mem: 64g # 64g/128g/256g/384g/512g
+    notebook: ml_datasets
+    output_database: ml_datasets
+    datasets: vehicle_coupon
+
++train:
+  ml_train>:
+    docker:
+      task_mem: 256g # 64g/128g/256g/384g/512g
+    notebook: gluon_train
+    model_name: gluon_model_${session_id}
+    input_table: ml_datasets.vehicle_coupon_train
+    target_column: y
+    time_limit: 3 * 60 # 3 min
+
++prepare_input:
+  td>: queries/assign_rowid.sql
+  table: ml_datasets.vehicle_coupon_test
+  rowid_column: userid
+  create_table: ml_datasets.vehicle_coupon_test_with_rowid
+  engine: hive
+
++predict:
+  ml_predict>:
+    docker:
+      task_mem: 128g # 64g/128g/256g/384g/512g
+    notebook: gluon_predict
+    model_name: gluon_model_${session_id}
+    input_table: ml_datasets.vehicle_coupon_test_with_rowid
+    output_table: ${output_database}.predicted_${session_id}
+
++create_master_segment:
+  py>: scripts.audience.create_master_segment
+  name: vehicle_coupon_${session_id}
+  # description: xxx
+  master:
+    database: ml_datasets
+    table: vehicle_coupon_test_with_rowid
+  run: false
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: "api.treasuredata.com"
+
++add_attribute:
+  py>: scripts.audience.add_attribute
+  audience:
+    name: vehicle_coupon_${session_id}
+    # id: 1111
+    foreign_key: userid
+    ### optional
+    rerun: true
+  attribute:
+    table: ${output_database}.predicted_${session_id}
+    attr_columns: predicted_proba, y
+    # attr_column: predicted_proba
+    join_key: "userid"
+    ### optional
+    attr_aliases: predicted_proba, y2
+    attr_group: "AutoML"
+    replace_if_exists: true
+  docker:
+    image: "digdag/digdag-python:3.9"
+  _env:
+    TD_API_KEY: ${secret:td.apikey}
+    TD_API_SERVER: "api.treasuredata.com"

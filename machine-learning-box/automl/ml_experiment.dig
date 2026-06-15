@@ -1,0 +1,71 @@
+_export:
+  !include : config/params.yaml
+  td:
+    engine: presto
+    database: ${output_database}
+
++create_db_tbl_if_not_exists:
+  td_ddl>:
+  create_databases: ["${output_database}"]
+  create_tables: ["automl_experiments", "automl_eval_results"]
+
++train:
+  ml_train>:
+    docker:
+      task_mem: 128g # 64g/128g/256g/384g/512g
+    notebook: gluon_train
+    model_name: gluon_model_${session_id}
+    input_table: ${input_database}.${train_data_table}
+    target_column: ${target_column}
+    time_limit: ${fit_time_limit}
+    share_model: true
+    export_leaderboard: ${output_database}.leaderboard_${train_data_table}
+    export_feature_importance: ${output_database}.feature_importance_${train_data_table}
+
++track_experiment:
+  td>: queries/track_experiment.sql
+  insert_into: ${output_database}.automl_experiments
+  last_executed_notebook: ${automl.last_executed_notebook}
+  user_id: ${automl.last_executed_user_id}
+  user_email: ${automl.last_executed_user_email}
+  model_name: gluon_model_${session_id}
+  shared_model: ${automl.shared_model}
+  task_attempt_id: ${attempt_id}
+  session_time: ${session_local_time}
+  engine: presto
+
+# Note: If input_table contains target labels, ml_predict shows evaluation results
++predict:
+  ml_predict>:
+    docker:
+      task_mem: 64g # 64g/128g/256g/384g/512g
+    notebook: gluon_predict
+    model_name: gluon_model_${session_id}
+    input_table: ${input_database}.${test_data_table}
+    output_table: ${output_database}.predicted_${test_data_table}_${session_id}
+
++evaluation:
+  td>: queries/auc.sql
+  table: ${output_database}.predicted_${test_data_table}_${session_id}
+  target_column: ${target_column}
+  positive_class: ' >50K'
+  store_last_results: true
+  engine: hive
+
++alert_if_drift_detected:
+  if>: ${td.last_results.auc < drift_auc_threshold}
+  _do:
+    mail>:
+      data: Detect drift in model performance. AUC was ${td.last_results.auc}.
+    subject: Drift detected
+    to: [me+alerts@example.com]
+    # bcc: [foo@example.com,bar@example.com]
+
++record_evaluation:
+  td>: queries/record_evaluation.sql
+  insert_into: ${output_database}.automl_eval_results
+  engine: presto
+  model_name: gluon_model_${session_id}
+  test_table: ${input_database}.${test_data_table}
+  session_time: ${session_local_time}
+  auc: ${td.last_results.auc}
