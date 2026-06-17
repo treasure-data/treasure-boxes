@@ -1,0 +1,6 @@
+{
+  "endpoint": "c360-ingest-api.treasuredata.com",
+  "apikey": "1/123456789abcdefghijklmnopqrstuvwxyz",
+  "database": "database_name",
+  "table": "table_name"
+}
