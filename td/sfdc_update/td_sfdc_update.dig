@@ -1,0 +1,14 @@
+timezone: UTC
+
++td-result-output-sfdc-update-mode:
+  td>: queries/sample.sql
+  database: sample_datasets
+  result_connection: your_connection_name
+  result_settings:
+    retry: 5
+    splitRecords: 10000
+    object: contact
+    concurrencyMode: parallel
+    mode: update
+    upsert: false #optional default is true
+    unique: unique_field_name    #required when mode is update.  
