@@ -37,4 +37,3 @@ SELECT
 FROM
   t2 l
   JOIN label_mapping r ON (l.predicted.label = r.label_id)
-

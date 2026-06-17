@@ -1,0 +1,112 @@
+_export:
+  !include : config/params.yml
+  td:
+    database: ${target_db}
+    engine: hive
+#   engine_version: experimental
+    priority: ${job_priority}
+
++preparation:
+
+  +label_mapping:
+    td>: queries/rf/label_mapping.sql
+    create_table: label_mapping
+
+  +rf_input:
+    td>: queries/rf/rf_input.sql
+    create_table: rf_input
+
+  +compute_class_weight:
+    td>: queries/rf/compute_class_weight.sql
+    create_table: class_weight
+    engine: presto
+
+  +prepare_model_tables:
+    td_ddl>:
+    empty_tables: ["rf_model_cv", "rf_model"]
+
++store_weights:
+  td>: queries/rf/store_weights.sql
+  store_last_results: true
+
++validate_and_train:
+  _export:
+    class_weights: ${td.last_results.weights}
+
+  +cross_validation:
+
+    +parallel_train:
+      for_range>:
+        from: 0
+        to: ${rf_num_train_parallel}
+        step: 1
+      _parallel: true
+      _do:
+        +train:
+          td>: queries/rf/train_cv.sql
+          insert_into: rf_model_cv
+          seed: ${rf_seed + range.index * 100}
+  
+    +predict:
+      td>: queries/rf/predict_cv.sql
+      create_table: rf_predicted_cv
+
+#   +topk_predict:
+#     td>: queries/blogposts/rf/topk_predict.sql
+#     create_table: rf_topk_predict
+#
+#   +evaluation_measures:
+#     td>: queries/rf/eval.sql
+
+    +eval:
+      _parallel: true
+
+      +confusion_matrix:
+
+        +confusion_matrix_table:
+          td>: queries/rf/confusion_matrix.sql
+          engine: presto
+          create_table: rf_confusion_matrix
+
+        +confusion_matrix_pivot:
+          td>: queries/blogposts/rf/confusion_matrix_pivot.sql
+          engine: presto
+
+      +actual_predict_diff:
+        td>: queries/rf/actual_predict_diff.sql
+        engine: presto
+
+#     +heuristic_calibration:
+#
+#       +calibration_prediction:
+#         td>: queries/rf/calibrate_prediction.sql
+#         engine: presto
+#         create_table: rf_predicted_cv_calibrated
+#
+#       +eval_calibration:
+#         td>: queries/rf/confusion_matrix_calibrated.sql
+#         engine: presto
+#         create_table: rf_confusion_matrix_calibrated
+
+  +train_predict:
+  
+    +parallel_train:
+      for_range>:
+        from: 0
+        to: ${rf_num_train_parallel}
+        step: 1
+      _parallel: true
+      _do:
+        +train:
+          td>: queries/rf/train.sql
+          insert_into: rf_model
+          seed: ${rf_seed + range.index * 100}
+  
+    +prediction:
+      td>: queries/blogposts/rf/predict.sql
+      create_table: rf_predicted
+  
+    +complement_prediction:
+      td>: queries/rf/complement_prediction.sql
+      engine: presto
+      create_table: rf_complemented
