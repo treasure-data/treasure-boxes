@@ -28,7 +28,7 @@ def run(
     # https://www.tensorflow.org/hub/tutorials/text_classification_with_tf_hub
 
     os.system(
-        f"{sys.executable} -m pip install -U tensorflow==2.0.0 tensorflow_hub==0.7.0"
+        f"{sys.executable} -m pip install -U tensorflow==2.5.0 tensorflow_hub==0.7.0"
     )
 
     import pytd
