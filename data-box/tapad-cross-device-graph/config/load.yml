@@ -28,4 +28,4 @@ filters:
   from_value:
     mode: upload_time
 out:
-  mode: append
+  mode: replace
