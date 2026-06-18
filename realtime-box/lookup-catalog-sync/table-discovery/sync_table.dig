@@ -1,0 +1,78 @@
+# Reusable single-table sync logic.
+# Parameters:
+#   table_name: Name of the table to sync (set by the calling workflow)
+
++get_columns:
+  td>:
+  database: ${td.database}
+  store_last_results: true
+  query: |
+    SELECT
+      array_agg(column_name ORDER BY ordinal_position) AS columns,
+      array_agg(data_type ORDER BY ordinal_position) AS column_types
+    FROM information_schema.columns
+    WHERE table_schema = '${td.database}'
+      AND table_name = '${table_name}'
+
++generate_sql:
+  py>: scripts.generate_sql.generate_extract_sql
+  database: ${td.database}
+  table_name: ${table_name}
+  columns: ${td.last_results.columns}
+  column_types: ${td.last_results.column_types}
+  docker:
+    image: "digdag/digdag-python:3.10.1"
+
++extract_updated:
+  td>:
+  database: ${td.database}
+  query: ${extract_sql}
+
++count_updated:
+  td>:
+  database: ${td.database}
+  store_last_results: true
+  query: |
+    SELECT COUNT(*) AS row_count FROM _wf_${table_name}_updated
+
++upload_if_needed:
+  if>: ${td.last_results.row_count > 0}
+  _do:
+    +log_upload:
+      echo>: "Uploading ${td.last_results.row_count} changed records for ${table_name}"
+
+    +upload:
+      td>:
+      database: ${td.database}
+      query: |
+        SELECT ${key_column}, payload FROM _wf_${table_name}_updated
+      result_url: |
+        {
+          "type": "rest",
+          "method": "POST",
+          "authorization": "${secret:td.apikey}",
+          "endpoint": "${reactor_importer_endpoint}/internal/lookup-catalog/bulk-load",
+          "headers": "{\"x-reactor-instance-name\": \"${reactor_instance}\", \"x-lookup-table-name\": \"${table_name}\"}",
+          "parallelism": ${parallelism},
+          "page_size": ${batch_size}
+        }
+
+    +update_digests:
+      td>:
+      database: ${td.database}
+      query: |
+        INSERT INTO _wf_${table_name}_digests (_key, payload_xxhash64, time)
+        SELECT
+          ${key_column},
+          from_big_endian_64(xxhash64(to_utf8(payload))) AS payload_xxhash64,
+          CAST(to_unixtime(current_timestamp) AS bigint) AS time
+        FROM _wf_${table_name}_updated
+
+  _else_do:
+    +log_no_updates:
+      echo>: "No changes for ${table_name}"
+
++cleanup:
+  td_ddl>:
+    drop_tables:
+      - _wf_${table_name}_updated

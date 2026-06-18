@@ -1,0 +1,91 @@
+_export:
+  # Obtain these values from Treasure AI Support or your Customer Success Manager
+  reactor_importer_endpoint: "https://<your-endpoint>"
+  reactor_instance: "<your-reactor-instance>"
+
+  td:
+    database: cdp_lookup_catalog
+
+  # Define each table to sync.
+  # key_column: primary key column name (must be the first column in the table)
+  # col_expr: SQL expression for each non-key column to include in the JSON payload
+  tables:
+    - name: limited_time_sale
+      key_column: product_id
+      col_expr: >-
+        '"discount_rate":' || json_format(cast(discount_rate AS json)),
+        '"sale_end":' || json_format(cast(sale_end AS json)),
+        '"banner_html":' || json_format(cast(banner_html AS json))
+
+    # Add more tables as needed:
+    # - name: user_product_coupon
+    #   key_column: user_product_id
+    #   col_expr: >-
+    #     '"has_coupon":' || json_format(cast(has_coupon AS json)),
+    #     '"coupon_code":' || json_format(cast(coupon_code AS json))
+
++sync_all_tables:
+  for_each>:
+    table_config: ${tables}
+  _parallel:
+    limit: 2
+  _do:
+    +log_start:
+      echo>: "Processing ${table_config.name}"
+
+    +init_digests:
+      td>: queries/initialize_digest.sql
+      database: ${td.database}
+
+    +extract_updated:
+      td>: queries/extract_updated.sql
+      database: ${td.database}
+
+    +check_count:
+      td>: queries/check_count.sql
+      database: ${td.database}
+      store_last_results: true
+
+    +upload_if_needed:
+      if>: ${td.last_results.row_count > 0}
+      _do:
+        +log_upload:
+          echo>: "Uploading ${td.last_results.row_count} changed records for ${table_config.name}"
+
+        +upload:
+          td>:
+          database: ${td.database}
+          query: |
+            SELECT
+              ${table_config.key_column},
+              payload
+            FROM _wf_${table_config.name}_updated
+          result_url: |
+            {
+              "type": "rest",
+              "method": "POST",
+              "authorization": "${secret:td.apikey}",
+              "endpoint": "${reactor_importer_endpoint}/internal/lookup-catalog/bulk-load",
+              "headers": "{\"x-reactor-instance-name\": \"${reactor_instance}\", \"x-lookup-table-name\":\"${table_config.name}\"}",
+              "parallelism": "10",
+              "page_size": 1000
+            }
+
+        +update_digests:
+          td>: queries/update_digest.sql
+          database: ${td.database}
+
+        +rename_digests:
+          td_ddl>:
+            rename_tables:
+              - from: _wf_${table_config.name}_digests_new
+                to: _wf_${table_config.name}_digests
+
+      _else_do:
+        +log_no_updates:
+          echo>: "No changes for ${table_config.name}"
+
+    +cleanup:
+      td_ddl>:
+        drop_tables:
+          - _wf_${table_config.name}_updated

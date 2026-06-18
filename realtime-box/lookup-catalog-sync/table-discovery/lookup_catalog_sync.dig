@@ -1,0 +1,44 @@
+_export:
+  # Obtain these values from Treasure AI Support or your Customer Success Manager
+  reactor_importer_endpoint: "https://<your-endpoint>"
+  reactor_instance: "<your-reactor-instance>"
+
+  td:
+    database: cdp_lookup_catalog
+
+  # Leave empty to sync all discovered tables.
+  # Set to a specific table name to sync only that table (useful for testing).
+  p_table_name: ""
+
+  batch_size: 1000
+  parallelism: 10
+
++main:
+  +init_digest_tables:
+    td_for_each>: queries/discover_tables.sql
+    _do:
+      +create_digest:
+        td>:
+        database: ${td.database}
+        query: |
+          CREATE TABLE IF NOT EXISTS _wf_${td.each.table_name}_digests (
+            _key varchar,
+            payload_xxhash64 bigint,
+            time bigint
+          )
+
+  +sync_tables:
+    if>: ${p_table_name != ""}
+    _do:
+      +sync_single:
+        call>: sync_table.dig
+        _export:
+          table_name: ${p_table_name}
+    _else_do:
+      +sync_all:
+        td_for_each>: queries/discover_tables.sql
+        _do:
+          +sync_each:
+            call>: sync_table.dig
+            _export:
+              table_name: ${td.each.table_name}
