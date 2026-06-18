@@ -1,5 +1,8 @@
 _export:
-  # Obtain these values from Treasure AI Support or your Customer Success Manager
+  # Set reactor_importer_endpoint for your region:
+  #   US:    https://bulk-storage-importer-api-production-aws-us-east-1.internal.treasuredata.com
+  #   EU:    https://bulk-storage-importer-api-production-eu01-eu-central-1.internal.treasuredata.com
+  #   Tokyo: https://bulk-storage-importer-api-production-aws-tokyo-ap-northeast-1.internal.treasuredata.com
   reactor_importer_endpoint: "https://<your-endpoint>"
   reactor_instance: "<your-reactor-instance>"
 
