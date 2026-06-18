@@ -6,8 +6,8 @@ Use this variant when you have a small number of tables and want explicit contro
 
 1. Copy this directory into your TD Workflow project.
 2. Edit `lookup_catalog_sync.dig`:
-   - Set `reactor_importer_endpoint` (obtain from Treasure AI Support).
-   - Set `reactor_instance` (obtain from Treasure AI Support).
+   - Set `reactor_importer_endpoint` — see the [region-specific endpoint table](https://docs.treasuredata.com/products/customer-data-platform/real-time/lookup-catalog-workflow) or the comments in `lookup_catalog_sync.dig`.
+   - Set `reactor_instance` — provided by your Customer Success Manager or Treasure AI Support.
    - Define each table under `tables:` with `name`, `key_column`, and `col_expr`.
 3. Store your TD API key in Secrets as `td.apikey`.
 4. Set a schedule and run once manually to verify the initial upload.

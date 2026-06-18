@@ -2,14 +2,14 @@
 
 Use this variant when you manage many tables or want the workflow to automatically detect new tables added to `cdp_lookup_catalog`.
 
-**Requires an additional feature flag.** Contact Treasure AI Support to enable it before using this variant.
+This variant uses the TD Workflow custom script (`py>`) operator to dynamically generate SQL from table schema.
 
 ## Setup
 
 1. Copy this directory into your TD Workflow project.
 2. Edit `lookup_catalog_sync.dig`:
-   - Set `reactor_importer_endpoint` (obtain from Treasure AI Support).
-   - Set `reactor_instance` (obtain from Treasure AI Support).
+   - Set `reactor_importer_endpoint` — see the [region-specific endpoint table](https://docs.treasuredata.com/products/customer-data-platform/real-time/lookup-catalog-workflow) or the comments in `lookup_catalog_sync.dig`.
+   - Set `reactor_instance` — provided by your Customer Success Manager or Treasure AI Support.
 3. Store your TD API key in Secrets as `td.apikey`.
 4. Set a schedule and run once manually to verify the initial upload.
 
