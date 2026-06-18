@@ -84,10 +84,11 @@ def generate_extract_sql(database, table_name, columns, column_types=None, **kwa
     if not columns:
         raise ValueError(f"No columns found for table {table_name}")
 
-    if column_types and len(column_types) != len(columns):
+    if not column_types or len(column_types) != len(columns):
         raise ValueError(
-            f"column_types length ({len(column_types)}) does not match "
-            f"columns length ({len(columns)}) for table {table_name}"
+            f"column_types length ({len(column_types) if column_types else 0}) "
+            f"does not match columns length ({len(columns)}) for table {table_name}. "
+            f"Ensure the schema query returns both columns and column_types."
         )
 
     key_column = columns[0]
@@ -97,7 +98,7 @@ def generate_extract_sql(database, table_name, columns, column_types=None, **kwa
     for i, col in enumerate(columns):
         if col.lower() in excluded:
             continue
-        data_type = column_types[i] if column_types else "varchar"
+        data_type = column_types[i]
         expr = _sql_expr_for_type(col, data_type)
         json_parts.append(f"            '\"{col}\":' || {expr}")
 
