@@ -4,7 +4,7 @@ _export:
   #   EU:    https://bulk-storage-importer-api-production-eu01-eu-central-1.internal.treasuredata.com
   #   Tokyo: https://bulk-storage-importer-api-production-aws-tokyo-ap-northeast-1.internal.treasuredata.com
   reactor_importer_endpoint: "https://<your-endpoint>"
-  reactor_instance: "<your-reactor-instance>"
+  reactor_instance: "<your-reactor-instance>"  # Provided by your Customer Success Manager or Treasure AI Support
 
   td:
     database: cdp_lookup_catalog
