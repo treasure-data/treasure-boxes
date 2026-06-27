@@ -44,15 +44,147 @@ _export:
   +sync_tables:
     if>: ${p_table_name != ""}
     _do:
-      +sync_single:
-        call>: sync_table.dig
-        _export:
-          table_name: ${p_table_name}
+      +get_columns_single:
+        td>:
+        database: ${td.database}
+        store_last_results: true
+        query: |
+          SELECT
+            array_agg(column_name ORDER BY ordinal_position) AS columns,
+            array_agg(data_type ORDER BY ordinal_position) AS column_types
+          FROM information_schema.columns
+          WHERE table_schema = '${td.database}'
+            AND table_name = '${p_table_name}'
+      +generate_sql_single:
+        py>: scripts.generate_extract_sql_from_results
+        database: ${td.database}
+        table_name: ${p_table_name}
+        columns: ${td.last_results.columns}
+        column_types: ${td.last_results.column_types}
+        docker:
+          image: "digdag/digdag-python:3.10.1"
+      +extract_single:
+        td>:
+        database: ${td.database}
+        query: ${extract_sql}
+      +count_single:
+        td>:
+        database: ${td.database}
+        store_last_results: true
+        query: |
+          SELECT COUNT(*) as updated_count FROM _wf_${p_table_name}_updated
+      +upload_single:
+        if>: ${td.last_results.updated_count > 0}
+        _do:
+          +upload:
+            td>:
+            database: ${td.database}
+            query: |
+              SELECT ${key_column}, payload FROM _wf_${p_table_name}_updated
+            result_url: |
+              {
+                "type": "rest",
+                "method": "POST",
+                "authorization": "${secret:td.apikey}",
+                "endpoint": "${reactor_importer_endpoint}/internal/lookup-catalog/bulk-load",
+                "headers": "{\"x-reactor-instance-name\": \"${reactor_instance}\", \"x-lookup-table-name\": \"${p_table_name}\"}",
+                "parallelism": ${parallelism},
+                "page_size": ${batch_size}
+              }
+          +update_digests:
+            td>:
+            database: ${td.database}
+            query: |
+              INSERT INTO _wf_${p_table_name}_digests (${key_column}, payload_xxhash64, time)
+              SELECT
+                ${key_column},
+                from_big_endian_64(xxhash64(to_utf8(payload))) AS payload_xxhash64,
+                CAST(to_unixtime(current_timestamp) AS bigint) AS time
+              FROM _wf_${p_table_name}_updated
+          +cleanup:
+            td>:
+            database: ${td.database}
+            query: |
+              DROP TABLE IF EXISTS _wf_${p_table_name}_updated
+        _else_do:
+          +no_updates:
+            echo>: "No updates for ${p_table_name}"
+          +cleanup:
+            td>:
+            database: ${td.database}
+            query: |
+              DROP TABLE IF EXISTS _wf_${p_table_name}_updated
     _else_do:
-      +sync_all:
+      +sync_all_tables:
         td_for_each>: queries/discover_tables.sql
         _do:
-          +sync_each:
-            call>: sync_table.dig
-            _export:
-              table_name: ${td.each.table_name}
+          +get_columns:
+            td>:
+            database: ${td.database}
+            store_last_results: true
+            query: |
+              SELECT
+                array_agg(column_name ORDER BY ordinal_position) AS columns,
+                array_agg(data_type ORDER BY ordinal_position) AS column_types
+              FROM information_schema.columns
+              WHERE table_schema = '${td.database}'
+                AND table_name = '${td.each.table_name}'
+          +generate_sql:
+            py>: scripts.generate_extract_sql_from_results
+            database: ${td.database}
+            table_name: ${td.each.table_name}
+            columns: ${td.last_results.columns}
+            column_types: ${td.last_results.column_types}
+            docker:
+              image: "digdag/digdag-python:3.10.1"
+          +extract_updated:
+            td>:
+            database: ${td.database}
+            query: ${extract_sql}
+          +count_updated:
+            td>:
+            database: ${td.database}
+            store_last_results: true
+            query: |
+              SELECT COUNT(*) as updated_count FROM _wf_${td.each.table_name}_updated
+          +upload:
+            if>: ${td.last_results.updated_count > 0}
+            _do:
+              +upload_to_reactor:
+                td>:
+                database: ${td.database}
+                query: |
+                  SELECT ${key_column}, payload FROM _wf_${td.each.table_name}_updated
+                result_url: |
+                  {
+                    "type": "rest",
+                    "method": "POST",
+                    "authorization": "${secret:td.apikey}",
+                    "endpoint": "${reactor_importer_endpoint}/internal/lookup-catalog/bulk-load",
+                    "headers": "{\"x-reactor-instance-name\": \"${reactor_instance}\", \"x-lookup-table-name\": \"${td.each.table_name}\"}",
+                    "parallelism": ${parallelism},
+                    "page_size": ${batch_size}
+                  }
+              +update_digests:
+                td>:
+                database: ${td.database}
+                query: |
+                  INSERT INTO _wf_${td.each.table_name}_digests (${key_column}, payload_xxhash64, time)
+                  SELECT
+                    ${key_column},
+                    from_big_endian_64(xxhash64(to_utf8(payload))) AS payload_xxhash64,
+                    CAST(to_unixtime(current_timestamp) AS bigint) AS time
+                  FROM _wf_${td.each.table_name}_updated
+              +cleanup:
+                td>:
+                database: ${td.database}
+                query: |
+                  DROP TABLE IF EXISTS _wf_${td.each.table_name}_updated
+            _else_do:
+              +no_updates:
+                echo>: "No updates for ${td.each.table_name}"
+              +cleanup:
+                td>:
+                database: ${td.database}
+                query: |
+                  DROP TABLE IF EXISTS _wf_${td.each.table_name}_updated

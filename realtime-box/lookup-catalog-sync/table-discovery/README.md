@@ -18,6 +18,5 @@ This variant uses the TD Workflow custom script (`py>`) operator to dynamically 
 | File | Description |
 |------|-------------|
 | `lookup_catalog_sync.dig` | Main workflow — discovers and syncs all tables automatically |
-| `sync_table.dig` | Reusable single-table sync logic called by the main workflow |
-| `scripts/generate_sql.py` | Python script that generates type-aware extract SQL per table |
+| `scripts.py` | Python script that generates type-aware extract SQL per table |
 | `queries/discover_tables.sql` | Discovers eligible tables, excludes `_wf_*` internal tables |
