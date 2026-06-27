@@ -6,7 +6,7 @@ Workflow templates for **Treasure AI RT 2.0** features.
 
 ## Lookup Catalog Sync
 
-Digdag workflow template to sync tables from the `cdp_lookup_catalog` database to RT 2.0 internal storage. Only changed records are uploaded on each run (hash-based change detection).
+Treasure Workflow template to sync tables from the `cdp_lookup_catalog` database to RT 2.0 internal storage. Only changed records are uploaded on each run (hash-based change detection).
 
 ### How it works
 
