@@ -20,12 +20,23 @@ _export:
   +init_digest_tables:
     td_for_each>: queries/discover_tables.sql
     _do:
+      +get_key_column:
+        td>:
+        database: ${td.database}
+        store_last_results: true
+        query: |
+          SELECT column_name
+          FROM information_schema.columns
+          WHERE table_schema = '${td.database}'
+            AND table_name = '${td.each.table_name}'
+          ORDER BY ordinal_position
+          LIMIT 1
       +create_digest:
         td>:
         database: ${td.database}
         query: |
           CREATE TABLE IF NOT EXISTS _wf_${td.each.table_name}_digests (
-            _key varchar,
+            ${td.last_results.column_name} varchar,
             payload_xxhash64 bigint,
             time bigint
           )

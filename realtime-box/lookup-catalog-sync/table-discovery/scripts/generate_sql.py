@@ -23,7 +23,8 @@ def _sql_null_wrap(col, inner_expr):
 def _sql_string_expr(col):
     return _sql_null_wrap(
         col,
-        f"'\"' || replace(CAST({col} AS VARCHAR), '\"', '\\\\\"') || '\"'"
+        f"CASE WHEN TRY(CAST({col} AS DOUBLE)) IS NOT NULL THEN CAST({col} AS VARCHAR) "
+        f"ELSE '\"' || replace(CAST({col} AS VARCHAR), '\"', '\\\\\"') || '\"' END"
     )
 
 
@@ -67,12 +68,8 @@ def _sql_expr_for_type(col, data_type):
         raise ValueError(f"Unsupported array column type '{data_type}' for column '{col}'. Flatten before ingestion.")
     if t in ("double", "real"):
         return _sql_float_expr(col)
-    # Default: string with quote escaping
-    return _sql_null_wrap(
-        col,
-        f"CASE WHEN TRY(CAST({col} AS DOUBLE)) IS NOT NULL THEN CAST({col} AS VARCHAR) "
-        f"ELSE '\"' || replace(CAST({col} AS VARCHAR), '\"', '\\\\\"') || '\"' END"
-    )
+    # Default: string with quote escaping and numeric detection
+    return _sql_string_expr(col)
 
 
 def generate_extract_sql(database, table_name, columns, column_types=None, **kwargs):
