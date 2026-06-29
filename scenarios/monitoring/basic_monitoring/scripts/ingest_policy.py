@@ -19,11 +19,8 @@ def get_all_policy_with_permission(api_endpoint, headers, policyid_list):
         url = 'https://%s/v3/access_control/policies/%d/permissions' % (api_endpoint, i)
         print(url)
         res = requests.get(url=url, headers=headers)
-        try:
+        if res.status_code != requests.codes.ok:
             res.raise_for_status()
-        except requests.exceptions.HTTPError as e:
-            print('Skipping policy %d permissions: %s' % (i, e))
-            continue
         permissions = res.json()
         if len(permissions) != 0:
             data = {'id':i , 'permissions': json.dumps(permissions)}
@@ -36,11 +33,8 @@ def get_all_policy_with_column_permission(api_endpoint, headers, policyid_list):
         url = 'https://%s/v3/access_control/policies/%d/column_permissions' % (api_endpoint, i)
         print(url)
         res = requests.get(url=url, headers=headers)
-        try:
+        if res.status_code != requests.codes.ok:
             res.raise_for_status()
-        except requests.exceptions.HTTPError as e:
-            print('Skipping policy %d column_permissions: %s' % (i, e))
-            continue
         column_permissions = res.json()
         if len(column_permissions) != 0:
             data = {'id': i, 'column_permissions': json.dumps(column_permissions)}
@@ -53,11 +47,8 @@ def get_all_assign_users(api_endpoint, headers, policyid_list):
         url = 'https://%s/v3/access_control/policies/%s/users' % (api_endpoint, i)
         print(url)
         res = requests.get(url=url, headers=headers)
-        try:
+        if res.status_code != requests.codes.ok:
             res.raise_for_status()
-        except requests.exceptions.HTTPError as e:
-            print('Skipping policy %s users: %s' % (i, e))
-            continue
         assign_users = res.json()
         if len(assign_users) != 0:
             data = {'id': i, 'assign_users': json.dumps(assign_users)}
