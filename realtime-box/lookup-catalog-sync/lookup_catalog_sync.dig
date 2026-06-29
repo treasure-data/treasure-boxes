@@ -1,0 +1,190 @@
+_export:
+  # Set reactor_importer_endpoint for your region:
+  #   US:    https://bulk-storage-importer-api-production-aws-us-east-1.internal.treasuredata.com
+  #   EU:    https://bulk-storage-importer-api-production-eu01-eu-central-1.internal.treasuredata.com
+  #   Tokyo: https://bulk-storage-importer-api-production-aws-tokyo-ap-northeast-1.internal.treasuredata.com
+  reactor_importer_endpoint: "https://<your-endpoint>"
+  reactor_instance: "<your-reactor-instance>"  # Provided by your Customer Success Manager or Treasure AI Support
+
+  td:
+    database: cdp_lookup_catalog
+
+  # Leave empty to sync all discovered tables.
+  # Set to a specific table name to sync only that table (useful for testing).
+  p_table_name: ""
+
+  batch_size: 1000
+  parallelism: 10
+
++main:
+  +init_digest_tables:
+    td_for_each>: queries/discover_tables.sql
+    _do:
+      +get_key_column:
+        td>:
+        database: ${td.database}
+        store_last_results: true
+        query: |
+          SELECT column_name
+          FROM information_schema.columns
+          WHERE table_schema = '${td.database}'
+            AND table_name = '${td.each.table_name}'
+          ORDER BY ordinal_position
+          LIMIT 1
+      +create_digest:
+        td>:
+        database: ${td.database}
+        query: |
+          CREATE TABLE IF NOT EXISTS _wf_${td.each.table_name}_digests (
+            ${td.last_results.column_name} varchar,
+            payload_xxhash64 bigint,
+            time bigint
+          )
+
+  +sync_tables:
+    if>: ${p_table_name != ""}
+    _do:
+      +get_columns_single:
+        td>:
+        database: ${td.database}
+        store_last_results: true
+        query: |
+          SELECT
+            array_agg(column_name ORDER BY ordinal_position) AS columns,
+            array_agg(data_type ORDER BY ordinal_position) AS column_types
+          FROM information_schema.columns
+          WHERE table_schema = '${td.database}'
+            AND table_name = '${p_table_name}'
+      +generate_sql_single:
+        py>: scripts.generate_extract_sql_from_results
+        database: ${td.database}
+        table_name: ${p_table_name}
+        columns: ${td.last_results.columns}
+        column_types: ${td.last_results.column_types}
+        docker:
+          image: "digdag/digdag-python:3.10.1"
+      +extract_single:
+        td>:
+        database: ${td.database}
+        query: ${extract_sql}
+      +count_single:
+        td>:
+        database: ${td.database}
+        store_last_results: true
+        query: |
+          SELECT COUNT(*) as updated_count FROM _wf_${p_table_name}_updated
+      +upload_single:
+        if>: ${td.last_results.updated_count > 0}
+        _do:
+          +upload:
+            td>:
+            database: ${td.database}
+            query: |
+              SELECT ${key_column}, payload FROM _wf_${p_table_name}_updated
+            result_url: |
+              {
+                "type": "rest",
+                "method": "POST",
+                "authorization": "${secret:td.apikey}",
+                "endpoint": "${reactor_importer_endpoint}/internal/lookup-catalog/bulk-load",
+                "headers": "{\"x-reactor-instance-name\": \"${reactor_instance}\", \"x-lookup-table-name\": \"${p_table_name}\"}",
+                "parallelism": ${parallelism},
+                "page_size": ${batch_size}
+              }
+          +update_digests:
+            td>:
+            database: ${td.database}
+            query: |
+              INSERT INTO _wf_${p_table_name}_digests (${key_column}, payload_xxhash64, time)
+              SELECT
+                ${key_column},
+                from_big_endian_64(xxhash64(to_utf8(payload))) AS payload_xxhash64,
+                CAST(to_unixtime(current_timestamp) AS bigint) AS time
+              FROM _wf_${p_table_name}_updated
+          +cleanup:
+            td>:
+            database: ${td.database}
+            query: |
+              DROP TABLE IF EXISTS _wf_${p_table_name}_updated
+        _else_do:
+          +no_updates:
+            echo>: "No updates for ${p_table_name}"
+          +cleanup:
+            td>:
+            database: ${td.database}
+            query: |
+              DROP TABLE IF EXISTS _wf_${p_table_name}_updated
+    _else_do:
+      +sync_all_tables:
+        td_for_each>: queries/discover_tables.sql
+        _do:
+          +get_columns:
+            td>:
+            database: ${td.database}
+            store_last_results: true
+            query: |
+              SELECT
+                array_agg(column_name ORDER BY ordinal_position) AS columns,
+                array_agg(data_type ORDER BY ordinal_position) AS column_types
+              FROM information_schema.columns
+              WHERE table_schema = '${td.database}'
+                AND table_name = '${td.each.table_name}'
+          +generate_sql:
+            py>: scripts.generate_extract_sql_from_results
+            database: ${td.database}
+            table_name: ${td.each.table_name}
+            columns: ${td.last_results.columns}
+            column_types: ${td.last_results.column_types}
+            docker:
+              image: "digdag/digdag-python:3.10.1"
+          +extract_updated:
+            td>:
+            database: ${td.database}
+            query: ${extract_sql}
+          +count_updated:
+            td>:
+            database: ${td.database}
+            store_last_results: true
+            query: |
+              SELECT COUNT(*) as updated_count FROM _wf_${td.each.table_name}_updated
+          +upload:
+            if>: ${td.last_results.updated_count > 0}
+            _do:
+              +upload_to_reactor:
+                td>:
+                database: ${td.database}
+                query: |
+                  SELECT ${key_column}, payload FROM _wf_${td.each.table_name}_updated
+                result_url: |
+                  {
+                    "type": "rest",
+                    "method": "POST",
+                    "authorization": "${secret:td.apikey}",
+                    "endpoint": "${reactor_importer_endpoint}/internal/lookup-catalog/bulk-load",
+                    "headers": "{\"x-reactor-instance-name\": \"${reactor_instance}\", \"x-lookup-table-name\": \"${td.each.table_name}\"}",
+                    "parallelism": ${parallelism},
+                    "page_size": ${batch_size}
+                  }
+              +update_digests:
+                td>:
+                database: ${td.database}
+                query: |
+                  INSERT INTO _wf_${td.each.table_name}_digests (${key_column}, payload_xxhash64, time)
+                  SELECT
+                    ${key_column},
+                    from_big_endian_64(xxhash64(to_utf8(payload))) AS payload_xxhash64,
+                    CAST(to_unixtime(current_timestamp) AS bigint) AS time
+                  FROM _wf_${td.each.table_name}_updated
+              +cleanup:
+                td>:
+                database: ${td.database}
+                query: |
+                  DROP TABLE IF EXISTS _wf_${td.each.table_name}_updated
+            _else_do:
+              +no_updates:
+                echo>: "No updates for ${td.each.table_name}"
+              +cleanup:
+                td>:
+                database: ${td.database}
+                query: |
+                  DROP TABLE IF EXISTS _wf_${td.each.table_name}_updated
