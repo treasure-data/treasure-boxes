@@ -29,7 +29,7 @@ On the first run all rows are uploaded. Subsequent runs upload only rows that we
 ### Requirements
 
 - A `cdp_lookup_catalog` database must exist in Data Workbench with lookup tables already created.
-- Each lookup table must have its primary key as the **first column** (unique, non-null, not named `time`).
+- Each lookup table must have its primary key as the **first column** (unique, non-null, not named `time`, and must be **String type**).
 - A TD API key must be stored in the workflow project's Secrets as `td.apikey`.
 
 ### Setup
@@ -66,3 +66,25 @@ The key column (first column) and `time` are excluded from the payload.
 ### Documentation
 
 See the [Lookup Catalog Sync Workflow](https://docs.treasuredata.com/products/customer-data-platform/real-time/lookup-catalog-workflow) page in the Treasure AI documentation portal for full setup instructions, scheduling recommendations, and troubleshooting.
+
+### Error Handling
+
+#### Invalid JSON Payload
+
+The bulk-load API endpoint validates each record's JSON payload before ingestion. Records containing malformed JSON are rejected with an HTTP 400 Bad Request response.
+
+Common causes:
+
+1. Unescaped double quotes within string values
+2. Trailing or missing commas
+3. Mismatched or extra braces/brackets
+
+Error response format:
+
+```json
+{
+  "errorMessage": "Downstream service returned status: 400. Response: {\"statusCode\":400,\"body\":\"{\\\"message\\\":\\\"Invalid JSON data for key <record_key>: SyntaxError: <parse_error_detail>\\\"}\"}'"
+}
+```
+
+If this error occurs, inspect the source table for values that contain special characters (e.g. double quotes, backslashes) and ensure they are properly escaped before ingestion.
