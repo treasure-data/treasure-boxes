@@ -17,7 +17,19 @@ _export:
     api_endpoint: ${td.api_endpoint}
     cdp_api_endpoint: ${td.cdp_api_endpoint}
     docker:
-        image: "digdag/digdag-python:3.9"
+        image: "digdag/digdag-python:3.10.1"
+    _env:
+        TD_API_KEY: ${secret:td.apikey}
+
++initial_ingest_ps_configuration:
+    py>: scripts.ingest_ps_configuration.run
+    session_unixtime: ${session_unixtime}
+    dest_db: ${td.database}
+    dest_table: ${td.tables.parent_segments_configuration}
+    api_endpoint: ${td.api_endpoint}
+    cdp_api_endpoint: ${td.cdp_api_endpoint}
+    docker:
+        image: "digdag/digdag-python:3.10.1"
     _env:
         TD_API_KEY: ${secret:td.apikey}
 
@@ -36,7 +48,7 @@ _export:
         api_endpoint: ${td.api_endpoint}
         cdp_api_endpoint: ${td.cdp_api_endpoint}
         docker: 
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
@@ -55,7 +67,7 @@ _export:
         api_endpoint: ${td.api_endpoint}
         cdp_api_endpoint: ${td.cdp_api_endpoint}
         docker: 
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
@@ -76,7 +88,7 @@ _export:
         api_endpoint: ${td.api_endpoint}
         cdp_api_endpoint: ${td.cdp_api_endpoint}
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
@@ -96,7 +108,7 @@ _export:
         api_endpoint: ${td.api_endpoint}
         cdp_api_endpoint: ${td.cdp_api_endpoint}
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
 
@@ -116,6 +128,6 @@ _export:
         api_endpoint: ${td.api_endpoint}
         cdp_api_endpoint: ${td.cdp_api_endpoint}
         docker:
-            image: "digdag/digdag-python:3.9"
+            image: "digdag/digdag-python:3.10.1"
         _env:
             TD_API_KEY: ${secret:td.apikey}
