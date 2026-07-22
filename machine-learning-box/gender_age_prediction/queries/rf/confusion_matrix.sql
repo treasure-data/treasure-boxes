@@ -7,9 +7,7 @@ WITH test_data as (
   WHERE
     gender_age is not null
 	AND rnd > ${train_rate} -- using 30% for testing
-  GROUP BY
-    userid
-),
+)
 select
   l.actual,
   r.label as predicted,
