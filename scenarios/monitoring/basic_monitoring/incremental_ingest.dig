@@ -106,7 +106,7 @@ schedule:
         session_unixtime: ${session_unixtime}
         dest_db: ${td.database}
         dest_table: ${td.tables.jobs}
-        page_size: 1000
+        page_size: 400
         lower_job_id: ${td.last_results.max_id}
         api_endpoint: ${td.api_endpoint}
         if_exists: 'append'

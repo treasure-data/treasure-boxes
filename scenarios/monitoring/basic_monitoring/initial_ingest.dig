@@ -58,7 +58,7 @@ _export:
   session_unixtime: ${session_unixtime}
   dest_db: ${td.database}
   dest_table: ${td.tables.jobs}
-  page_size: 1000
+  page_size: 400
   lower_job_id: 1675368283
   api_endpoint: ${td.api_endpoint}
   if_exists: 'overwrite'
