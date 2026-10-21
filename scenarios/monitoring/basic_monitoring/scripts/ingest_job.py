@@ -32,7 +32,7 @@ def get_all_job(base_url, headers, page_size, lower_job_id):
     job_list.extend(jobs)
     return job_list
 
-def run(session_unixtime, dest_db, dest_table, page_size=1000, lower_job_id=9999999999, api_endpoint='api.treasuredata.com', if_exists='append'):
+def run(session_unixtime, dest_db, dest_table, page_size=400, lower_job_id=9999999999, api_endpoint='api.treasuredata.com', if_exists='append'):
     base_url = 'https://%s/v3/job/list' % api_endpoint + '?from=%d&to=%d'
     headers = {'Authorization': 'TD1 %s' % os.environ['TD_API_KEY']}
     job_list = get_all_job(base_url, headers, page_size, lower_job_id)
