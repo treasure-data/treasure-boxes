@@ -2,6 +2,8 @@
 
 A Claude Code skill that transforms cryptic Treasure Data Customer Journey Orchestration (CJO) `journey_<id>` tables into human-readable queries by mapping UUID step columns to their actual step names and formatting epoch-second timestamps.
 
+**Note**: Journey tables are internal system tables subject to change. This skill provides a convenience layer for analysis but should not be used as a customer-facing analytics interface.
+
 ## What It Does
 
 CJO journey tables store customer journey data with columns like:
@@ -39,6 +41,43 @@ Load this skill when you need to:
 3. **Mapping**: Applies column alias rules based on step type, stage, direction (enter/exit)
 4. **Formatting**: Wraps timestamp columns with `TD_TIME_FORMAT()`
 5. **Generation**: Creates a wide SELECT with all mapped columns
+
+## Limitations
+
+- **Current state only**: Does not reconstruct journey history, snapshots, jumps, or re-entry
+- **No execution by default**: Generates SQL; executes only when explicitly requested
+
+## Usage
+
+```bash
+# In Claude Code CLI
+/journey-table-readable-query
+
+# Or natural language
+"Make my journey 12345 table readable"
+"Generate a readable query for audience abc123, journey xyz789"
+```
+
+The skill will:
+1. Prompt for audience/journey IDs if not provided
+2. Use `tdx` to fetch journey definition and table schema
+3. Generate a commented SELECT query with all columns mapped
+4. Display the query (execute only if requested)
+
+## Related Skills
+
+- **tdx-skills:journey**: Create and manage journey definitions
+- **tdx-skills:tdx-basic**: Execute tdx commands and queries
+- **tdx-skills:parent-segment**: Work with audience segments
+
+## Technical Details
+
+- **Query engine**: Trino SQL
+- **Timestamp format**: `yyyy-MM-dd HH:mm:ss z` in UTC
+- **Column discovery**: `tdx journey columns "<journey_name>"`
+- **Schema verification**: `tdx describe cdp_audience_<id>.journey_<id>`
+
+--
 
 ## Column Mapping Rules
 
@@ -113,44 +152,3 @@ SELECT
 FROM cdp_audience_12345.journey_67890
 LIMIT 100;
 ```
-
-## Limitations
-
-- **Read-only mapping**: Generates SELECT queries only; does not modify tables
-- **Current state only**: Does not reconstruct journey history, snapshots, jumps, or re-entry
-- **Unsupported tables**: Works only with `journey_<id>` system tables (unsupported, subject to change)
-- **No execution by default**: Generates SQL; executes only when explicitly requested
-
-## Usage
-
-```bash
-# In Claude Code CLI
-/journey-table-readable-query
-
-# Or natural language
-"Make my journey 12345 table readable"
-"Generate a readable query for audience abc123, journey xyz789"
-```
-
-The skill will:
-1. Prompt for audience/journey IDs if not provided
-2. Use `tdx` to fetch journey definition and table schema
-3. Generate a commented SELECT query with all columns mapped
-4. Display the query (execute only if requested)
-
-## Related Skills
-
-- **tdx-skills:journey**: Create and manage journey definitions
-- **tdx-skills:tdx-basic**: Execute tdx commands and queries
-- **tdx-skills:parent-segment**: Work with audience segments
-
-## Technical Details
-
-- **Query engine**: Trino SQL
-- **Timestamp format**: `yyyy-MM-dd HH:mm:ss z` in UTC
-- **Column discovery**: `tdx journey columns "<journey_name>"`
-- **Schema verification**: `tdx describe cdp_audience_<id>.journey_<id>`
-
----
-
-**Note**: Journey tables are internal system tables subject to change. This skill provides a convenience layer for analysis but should not be used as a customer-facing analytics interface.
