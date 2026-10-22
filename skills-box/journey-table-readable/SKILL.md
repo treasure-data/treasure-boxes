@@ -37,7 +37,7 @@ If these don't give enough information, ask for the output or a user-authorized 
 - `cdp_customer_id` and `time` columns remain the same, no alias necessary.
 - Select each verified physical column explicitly, wrap confirmed epoch-second step timestamps with `TD_TIME_FORMAT(<column>, 'yyyy-MM-dd HH:mm:ss z', 'utc')`, and alias them with the verified stage/step/branch/variant labels. Preserve other columns by name. Do not invent example IDs or names.
 
-# Non-step Columns (Journey, Stage, Milestone, Goal, ..)
+### Non-step Columns (Journey, Stage, Milestone, Goal, ..)
 
 - These columns have `stepType=null` and can be described with the column name itself or by `category` and `direction`.
 - If there is a stage available, prefix alias with  `[Stage <stage_number>]
@@ -89,7 +89,7 @@ Examples:
     },
 ```
 
-# General Step Columns
+### General Step Columns
 
 The general format of a step column is: `intime_stage_<stage_index>_<step_id>`
 Format aliases as: `[Stage <stage_number>] <stepType>: <stepName> - [Enter|Exit]
@@ -142,7 +142,7 @@ Examples:
 },
 ```
 
-# Wait and Merge
+### Wait and Merge
 
 Wait and Merge steps don't have step names. Use "1st Wait Step", "2nd Wait Step", etc. Restart from 1 for every stage.
 
@@ -178,7 +178,7 @@ Examples:
 },
 ```
 
-# Decision Point
+### Decision Point
 
 There are two formats for decision points depending on the `category`:
 
@@ -239,7 +239,7 @@ Examples:
 },
 ```
 
-# AB Tests
+### AB Tests
 
 There are two formats for AB Tests depending on the `category`:
 
